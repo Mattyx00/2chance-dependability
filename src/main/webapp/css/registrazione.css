@@ -1,0 +1,93 @@
+@font-face {
+    font-family: LemonMilk;
+
+    src: url("../font/LEMONMILK-Medium.otf") format("opentype");
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@500&display=swap');
+
+*{
+    font-family: LemonMilk;
+}
+
+body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+}
+
+#registrazione-body{
+    width: 30vw;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-direction: column;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    background-color: white;
+    border-radius: 10px;
+}
+
+#logo{
+    height: 6vh;
+    max-height: 6vh;
+    margin-top: 10px;
+}
+
+.error{
+    width: 100%;
+    text-align: center;
+    background-color: RGBA(255, 140, 0, 0.5);
+    font-size: 12px;
+    margin: 0px;
+    margin-top: 5px;
+}
+
+
+#registrazione-body form{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+}
+
+#registrazione-body form input[type="email"], #registrazione-body form input[type="password"], #registrazione-body form input[type="text"], #registrazione-body form input[type="tel"], #registrazione-body form input[type="file"]{
+    width: 90%;
+    height: 3vh;
+    border-radius: 15px;
+    -moz-box-shadow:    inset 0 0 3px #000000;
+    -webkit-box-shadow: inset 0 0 3px #000000;
+    box-shadow:         inset 0 0 3px #000000;
+    border: none;
+    text-indent:10px;
+    outline: none;
+    color: #F08354;
+    font-family: 'Roboto Mono', monospace;
+}
+
+#registrazione-body form input[type="submit"]{
+    cursor: pointer;
+    background-color: transparent;
+    color: #F08354;
+    border: 2px solid #F08354;
+    transition: 0.2s;
+    margin-bottom: 15px;
+}
+
+#registrazione-body form input[type="submit"]:hover{
+    background-color: #F08354;
+    color: white;
+}
+
+#registrazione-body form input{
+    margin-top: 15px;
+}
+
+@media only screen and (max-width: 800px) {
+    #registrazione-body{
+        width: 90vw;
+    }
+}

@@ -1,0 +1,220 @@
+@font-face {
+    font-family: LemonMilk;
+    src: url("../font/LEMONMILK-Medium.otf") format("opentype");
+}
+
+*{
+    margin: 0;
+    padding: 0;
+}
+
+body{
+    height: 100vh;
+    width: 100vw;
+}
+
+#menu{
+    height: 8vh;
+    width: 100vw;
+    background-color: #F08354;
+    border-bottom: 2px solid black;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    font-family: LemonMilk;
+}
+
+#logo{
+    height: 6vh;
+    cursor: pointer;
+}
+
+#searchbox{
+    height: 4vh;
+    width: 20vw;
+    background-color: white;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#searchbox form{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 20vw;
+}
+
+#searchbox form i{
+    cursor: pointer;
+    color: #F08354;
+    margin: 2px;
+    padding-left: 5px;
+}
+
+#searchbox form input[type=text]{
+    background-color: #F08354;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    width: 18vw;
+    height: 3vh;
+    outline: none;
+    text-indent:10px;
+    font-family: LemonMilk;
+    margin: 5px;
+}
+
+#navigazione{
+    height: 3vh;
+    width: 40vw;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+    text-decoration: none;
+}
+
+#navigazione-mobile{
+    display: none;
+}
+
+#apri-mobile{
+    display: none;
+}
+
+.item-navigazione{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 18px;
+    text-decoration: none;
+    color: white;
+    transition: 0.2s;
+    text-align: center;
+}
+
+.item-navigazione i{
+    margin-left: 10px;
+}
+
+.item-navigazione:hover{
+    transform: scale(1.1);
+}
+@media only screen and (max-width: 1200px) {
+    .item-navigazione{
+        font-size: 13px !important;
+    }
+}
+
+@media only screen and (max-width: 850px) {
+    .item-navigazione{
+        font-size: 10px !important;
+    }
+}
+
+@media only screen and (max-width: 700px) {
+    #menu {
+        margin-top: 15px;
+        height: 15vh;
+        background-color: white;
+        border-bottom: none;
+        flex-direction: column;
+    }
+
+    #logo {
+        width: 100px;
+        height: auto;
+    }
+
+    #searchbox {
+        height: 4vh;
+        width: 50vw;
+        background-color: #F08354;
+    }
+
+    #searchbox form {
+        width: 50vw;
+    }
+
+    #searchbox form i {
+        color: white;
+    }
+
+    #searchbox form input[type=text] {
+        background-color: white;
+        color: white;
+        border: none;
+        width: 42vw;
+        height: 3vh;
+        color: #F08354;
+    }
+
+    #navigazione {
+        display: none;
+    }
+
+    #apri-mobile {
+        display: block;
+        position: absolute;
+        top: 35px;
+        left: 20px;
+        color: #F08354;
+    }
+
+    #navigazione-mobile {
+        display: block;
+        position: absolute;
+        top: 0;
+        left: -45vw;
+        height: 100vh;
+        width: 45vw;
+        background-color: #F08354;
+        z-index: 1000;
+        transition: 0.3s;
+    }
+
+    #chiudi-mobile {
+        position: absolute;
+        top: 30px;
+        right: 10px;
+        color: white;
+    }
+
+    #items-mobile {
+        height: 60%;
+        width: 100%;
+        justify-content: space-around;
+        align-items: center;
+        flex-direction: column;
+        display: flex;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+}
+
+.footer{
+    color: white;
+    background-color: #F08354;
+    height: 2vh;
+    text-align: center;
+    width: 100%;
+    text-align: center;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 10px;
+    z-index: 1000;
+    font-family: LemonMilk;
+}
+
+.footer p{
+    margin: 0;
+    padding: 0;
+}

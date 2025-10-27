@@ -1,0 +1,20 @@
+INIT              -> getCategorie  DONE
+LANDINGPAGE       -> primi 8 prodotti (arraylist di 8 prodotti) DONE
+CERCAPERCATEGORIE -> tutti i prodotti di una categoria (restituire arraylist di prodotti) DONE
+CERCAPERNOME      -> tutti i prodotti simili a quel nome (restituisce arraylist di prodotti)  DONE
+PRODOTTO          -> tutte le info di un prodotto (bean prodotto) DONE
+CATEGORIE         -> restituisce solo la jsp visualizzaCategorie (dato che le categorie sono già nel ServletContext) //SERVE PER IL MOBILE DONE
+LOGIN             -> ti passo psw ed email DONE
+REGISTRAZIONE     -> ti passo email, nome, cognome, tel, psw DONE
+INFOORDINE        -> ti passo id ordine e mi restituisci tutto
+GETWISHLIST       -> restituiscimi la wishlist di un utente in json (ajax)
+
+
+
+FRONTEND
+PAGINA INFO ORDINE
+QUANTITA MASSIMA
+
+CONFRONTA
+CARRELLO
+

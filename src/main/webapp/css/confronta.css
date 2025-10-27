@@ -1,0 +1,92 @@
+*{
+    font-family: LemonMilk;
+}
+
+#corpo-pagina{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 90vh;
+}
+
+.prodotto{
+    margin-top: 10px;
+    height: 100%;
+    width: 49%;
+    border: 1px solid #F08354;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    overflow-y: scroll;
+    text-align: center;
+}
+
+.nomeprodotto{
+    font-size: 20px;
+    color: #F08354;
+    margin-bottom: 15px;
+}
+
+.scheda-tecnica, .scheda-tecnica-mobile{
+    width: 95%;
+}
+
+.scheda-tecnica table{
+    text-align: center;
+    border:none;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+table{
+    width: 90% !important;
+}
+
+.scheda-tecnica table tr{
+    border-top: 1px solid white;
+    border-bottom: 1px solid white;
+}
+
+.scheda-tecnica table tr:first-child{
+    border-top: none;
+}
+
+.scheda-tecnica table tr:last-child{
+    border-bottom: none;
+}
+
+.nome-specifica{
+    background-color: #F08354;
+    color: white;
+}
+
+.valore-specifica{
+    color: black;
+}
+
+.scheda-tecnica-mobile{
+    display: none;
+}
+
+
+@media only screen and (max-width: 1350px) {
+    #corpo-pagina {
+        margin-top: 15px;
+        height: calc(80vh - 15px) !important;
+    }
+
+    .nomeprodotto{
+        font-size: 15px
+    }
+
+    .scheda-tecnica{
+        display: none;
+    }
+
+    .scheda-tecnica-mobile{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}

@@ -1,0 +1,28 @@
+#corpo-pagina{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    height: 90vh;
+    width: 90vw;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+#corpo-pagina table{
+    font-family: LemonMilk;
+    border-collapse:separate;
+    border-spacing:20px;
+    max-width: 90vw;
+}
+
+@media only screen and (max-width: 1350px) {
+    #corpo-pagina {
+        margin-top: 10px;
+        height: calc(80vh - 15px) !important;
+    }
+}
