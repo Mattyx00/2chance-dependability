@@ -1,42 +1,56 @@
 package controller;
 
 import model.beans.Carrello;
-import model.beans.Prodotto;
-import model.beans.ProdottoCarrello;
-import model.dao.ProdottoDAO;
+import services.EditCarrelloService;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import javax.servlet.annotation.*;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.sql.SQLException;
 
 @WebServlet(name = "EditCarrello", value = "/EditCarrello")
 public class EditCarrello extends HttpServlet {
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        Carrello carrello = (Carrello)session.getAttribute("carrello");
-        Prodotto prodotto_provv = new Prodotto();
 
-        try {
-            ProdottoDAO prodottoDAO = new ProdottoDAO();
-            int id_prodotto = Integer.parseInt(request.getParameter("prodotto"));
-            prodotto_provv = prodottoDAO.getProdottoById(id_prodotto);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+    private EditCarrelloService editCarrelloService = new EditCarrelloService();
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        HttpSession session = request.getSession();
+        Carrello carrello = (Carrello) session.getAttribute("carrello");
+        if (carrello == null) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Carrello vuoto o non trovato.");
+            return;
         }
 
-        if(request.getParameter("tipo").equals("elimina")) {
-            carrello.eliminaProdotto(prodotto_provv);
-        }else if(request.getParameter("tipo").equals("cambiaquantita")){
-            int qnt = Integer.parseInt(request.getParameter("quantita"));
-            carrello.cambiaQuantita(prodotto_provv, qnt);
+        try {
+            int idProdotto = Integer.parseInt(request.getParameter("prodotto"));
+            String tipo = request.getParameter("tipo");
+            int quantita = tipo.equals("cambiaquantita") ? Integer.parseInt(request.getParameter("quantita")) : 0;
+
+            // Chiamata al service
+            if(tipo.equals("cambiaquantita")){
+                carrello = editCarrelloService.modificaQuantitaProdotto(carrello, idProdotto, quantita);
+            }else if(tipo.equals("elimina")){
+                carrello = editCarrelloService.eliminaProdotto(carrello, idProdotto);
+            }
+
+            // Aggiorna il carrello in sessione
+            session.setAttribute("carrello", carrello);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         doGet(request, response);
     }
 }

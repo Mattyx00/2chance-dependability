@@ -5,10 +5,9 @@ import model.beans.Prodotto;
 import model.dao.CategoriaDAO;
 import model.dao.ProdottoDAO;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import javax.servlet.annotation.*;
-import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 

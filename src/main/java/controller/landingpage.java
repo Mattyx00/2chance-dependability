@@ -1,19 +1,17 @@
 package controller;
 
-import model.beans.Categoria;
 import model.beans.Prodotto;
-import model.dao.CategoriaDAO;
 import model.dao.ProdottoDAO;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import javax.servlet.annotation.*;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Enumeration;
 
 @WebServlet(name = "landingpage", value = "/landingpage", loadOnStartup = 1)
 public class landingpage extends HttpServlet {

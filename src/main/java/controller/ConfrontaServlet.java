@@ -1,41 +1,44 @@
 package controller;
 
 import model.beans.Prodotto;
-import model.dao.ProdottoDAO;
+import services.ConfrontaService;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import javax.servlet.annotation.*;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.SQLException;
 
 @WebServlet(name = "ConfrontaServlet", value = "/ConfrontaServlet")
 public class ConfrontaServlet extends HttpServlet {
+
+    private ConfrontaService confrontaService = new ConfrontaService();
+
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-       int id1 = Integer.parseInt(request.getParameter("prodotto1"));
-       int id2 = Integer.parseInt(request.getParameter("prodotto2"));
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
 
         try {
-            ProdottoDAO dao = new ProdottoDAO();
-            Prodotto p1 = dao.getProdottoById(id1);
-            Prodotto p2 = dao.getProdottoById(id2);
+            int id1 = Integer.parseInt(request.getParameter("prodotto1"));
+            int id2 = Integer.parseInt(request.getParameter("prodotto2"));
 
-            request.setAttribute("confronto1", p1);
-            request.setAttribute("confronto2", p2);
+            Prodotto[] prodotti = confrontaService.confrontaProdotti(id1, id2);
 
-            String address = "/confronta.jsp";
-            RequestDispatcher dispatcher = request.getRequestDispatcher(address);
-            dispatcher.forward(request, response);
+            request.setAttribute("confronto1", prodotti[0]);
+            request.setAttribute("confronto2", prodotti[1]);
 
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+            request.getRequestDispatcher("/confronta.jsp").forward(request, response);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
-
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         doGet(request, response);
     }
 }

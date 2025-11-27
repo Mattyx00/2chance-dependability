@@ -1,65 +1,66 @@
 package controller;
 
 import model.beans.Carrello;
-import model.beans.Ordine;
-import model.beans.ProdottoCarrello;
 import model.beans.Utente;
-import model.dao.OrdineDAO;
+import services.CheckOutService;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import javax.servlet.annotation.*;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.sql.SQLException;
-import java.util.ArrayList;
 
 @WebServlet(name = "CheckOutServlet", value = "/CheckOutServlet")
 public class CheckOutServlet extends HttpServlet {
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        if(request.getSession().getAttribute("user") == null){
-            response.sendRedirect( request.getServletContext().getContextPath()+"/login.jsp");
+    private CheckOutService checkOutService = new CheckOutService();
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        HttpSession session = request.getSession();
+
+        // Devi essere loggato
+        Utente utente = (Utente) session.getAttribute("user");
+        if (utente == null) {
+            response.sendRedirect(request.getContextPath() + "/login.jsp");
             return;
         }
 
-        Carrello carrello =  (Carrello)(request.getSession().getAttribute("carrello")); //prendo il carrello dalla sessione
-        ArrayList<ProdottoCarrello> prodotti =  carrello.getProdotti();
-        try {
-            OrdineDAO dao = new OrdineDAO();
-            Ordine ordine = new Ordine();
-
-                double totale = carrello.getTotaleCarrello();
-                String indirizzo = request.getParameter("indirizzo");
-                Utente utente = (Utente)(request.getSession().getAttribute("user"));
-
-                ordine.setUtente(utente);
-                ordine.setIndirizzo(indirizzo);
-                ordine.setPrezzoTotale(totale);
-                ordine.setCarrello(carrello);
-
-               dao.addOrdine(ordine);
-
-
-
-            HttpSession session = request.getSession();
-            session.removeAttribute("carrello");
-            OrdineDAO ordineprovv = new OrdineDAO();
-            ArrayList<Ordine> ordini = ordineprovv.getOrdiniByUtente(utente);
-            utente.setOrdini(ordini);
-            session.setAttribute("user", utente);
-            response.sendRedirect( request.getServletContext().getContextPath()+"/landingpage");
-
-
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        Carrello carrello = (Carrello) session.getAttribute("carrello");
+        if (carrello == null || carrello.getProdotti().isEmpty()) {
+            response.sendRedirect(request.getContextPath() + "/carrello.jsp");
+            return;
         }
 
+        String indirizzo = request.getParameter("indirizzo");
 
+        try {
+            // Checkout effettivo
+            checkOutService.effettuaCheckout(utente, carrello, indirizzo);
+
+            // Aggiorna ordini dell’utente in sessione
+            Utente utenteAggiornato = checkOutService.aggiornaOrdiniUtente(utente);
+            session.setAttribute("user", utenteAggiornato);
+
+            // Svuota il carrello
+            session.removeAttribute("carrello");
+
+            response.sendRedirect(request.getContextPath() + "/landingpage");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         doGet(request, response);
     }
 }
+
