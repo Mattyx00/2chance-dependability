@@ -24,6 +24,14 @@ public class AdminService {
     private UtenteDAO utenteDAO;
     private OrdineDAO ordineDAO;
 
+    /*@
+      @ public normal_behavior
+      @   ensures prodottoDAO != null;
+      @   ensures categoriaDAO != null;
+      @   ensures utenteDAO != null;
+      @   ensures ordineDAO != null;
+      @   signals (SQLException e) true;
+      @*/
     public AdminService() throws SQLException {
         this.prodottoDAO = new ProdottoDAO();
         this.categoriaDAO = new CategoriaDAO();
@@ -31,6 +39,17 @@ public class AdminService {
         this.ordineDAO = new OrdineDAO();
     }
 
+    /*@
+      @ public normal_behavior
+      @   requires prodottoDAO != null;
+      @   requires categoriaDAO != null;
+      @   requires utenteDAO != null;
+      @   requires ordineDAO != null;
+      @   ensures this.prodottoDAO == prodottoDAO;
+      @   ensures this.categoriaDAO == categoriaDAO;
+      @   ensures this.utenteDAO == utenteDAO;
+      @   ensures this.ordineDAO == ordineDAO;
+      @*/
     public AdminService(ProdottoDAO prodottoDAO, CategoriaDAO categoriaDAO, UtenteDAO utenteDAO, OrdineDAO ordineDAO) {
         this.prodottoDAO = prodottoDAO;
         this.categoriaDAO = categoriaDAO;
@@ -38,6 +57,15 @@ public class AdminService {
         this.ordineDAO = ordineDAO;
     }
 
+    /*@
+      @ public normal_behavior
+      @   requires p != null;
+      @   requires categoria != null;
+      @   requires immagine != null;
+      @   requires specifiche != null;
+      @   signals (IOException e) true;
+      @   signals (SQLException e) true;
+      @*/
     public void aggiungiProdotto(Prodotto p, Categoria categoria, Part immagine, String specifiche) throws IOException, SQLException {
         p.setCategoria(categoria);
         String fileName = Paths.get(immagine.getSubmittedFileName()).getFileName().toString();
@@ -68,6 +96,12 @@ public class AdminService {
         prodottoDAO.aggiungiSpecifiche(list, prodottoDAO.getLastProduct());
     }
 
+    /*@
+      @ public normal_behavior
+      @   ensures \result != null;
+      @   signals (IOException e) true;
+      @   signals (SQLException e) true;
+      @*/
     public String mostraProdotti() throws IOException, SQLException {
         /*Esempio di risposta
         {
@@ -103,10 +137,22 @@ public class AdminService {
         return jsonObject.toString();
     }
 
+    /*@
+      @ public normal_behavior
+      @   requires id > 0;
+      @   signals (IOException e) true;
+      @   signals (SQLException e) true;
+      @*/
     public void eliminaProdotto(int id) throws IOException, SQLException {
         prodottoDAO.eliminaProdotto(id);
     }
 
+    /*@
+      @ public normal_behavior
+      @   ensures \result != null;
+      @   signals (IOException e) true;
+      @   signals (SQLException e) true;
+      @*/
     public String mostraCategorie() throws IOException, SQLException {
         ArrayList<Categoria> categorie = categoriaDAO.getCategorie();
 
@@ -122,16 +168,42 @@ public class AdminService {
         return risultato;
     }
 
+    /*@
+      @ public invariant utenteDAO != null;
+      @ public invariant categoriaDAO != null;
+      @ public invariant prodottoDAO != null;
+      @ public invariant ordineDAO != null;
+      @*/
+
+    /*@
+      @ public normal_behavior
+      @   requires nome != null && nome.length() > 0;
+      @   ensures \result == null; // Void method
+      @   signals (IOException e) true;
+      @   signals (SQLException e) true;
+      @*/
     public void aggiungiCategoria(String nome) throws IOException, SQLException {
         Categoria c = new Categoria();
         c.setNomeCategoria(nome);
         categoriaDAO.addCategoria(c);
     }
 
+    /*@
+      @ public normal_behavior
+      @   requires nome != null && nome.length() > 0;
+      @   signals (IOException e) true;
+      @   signals (SQLException e) true;
+      @*/
     public void eliminaCategoria(String nome) throws IOException, SQLException {
         categoriaDAO.eliminaCategoria(nome);
     }
 
+    /*@
+      @ public normal_behavior
+      @   ensures \result != null;
+      @   signals (IOException e) true;
+      @   signals (SQLException e) true;
+      @*/
     public String mostraUtenti() throws IOException, SQLException {
         ArrayList<Utente> utenti = utenteDAO.getUtenti();
 
@@ -154,6 +226,12 @@ public class AdminService {
         return risultato;
     }
 
+    /*@
+      @ public normal_behavior
+      @   ensures \result != null;
+      @   signals (IOException e) true;
+      @   signals (SQLException e) true;
+      @*/
     public String mostraOrdini()  throws IOException, SQLException {
         ArrayList<Ordine> ordini = ordineDAO.getOrdini();
 
@@ -177,6 +255,13 @@ public class AdminService {
         return risultato;
     }
 
+    /*@
+      @ public normal_behavior
+      @   requires id != null;
+      @   ensures \result != null;
+      @   signals (IOException e) true;
+      @   signals (SQLException e) true;
+      @*/
     public String infoOrdine(Integer id) throws IOException, SQLException {
         Ordine o = ordineDAO.getOrdineById(id);
         Carrello c = ordineDAO.getProdottoOrdine(o);
@@ -207,6 +292,13 @@ public class AdminService {
         return risultato;
     }
 
+    /*@
+      @ public normal_behavior
+      @   requires id != null;
+      @   ensures \result != null;
+      @   signals (IOException e) true;
+      @   signals (SQLException e) true;
+      @*/
     public String getProdotto(Integer id) throws IOException, SQLException {
         Prodotto p = prodottoDAO.getProdottoById(id);
 
@@ -235,6 +327,14 @@ public class AdminService {
         return risultato;
     }
 
+    /*@
+      @ public normal_behavior
+      @   requires p != null;
+      @   requires categoria != null;
+      @   requires specifiche != null;
+      @   signals (IOException e) true;
+      @   signals (SQLException e) true;
+      @*/
     public void modificaProdotto(Prodotto p, Categoria categoria, Part immagine, String specifiche)
             throws IOException, SQLException {
 
