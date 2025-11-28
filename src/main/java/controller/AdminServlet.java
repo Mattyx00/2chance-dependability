@@ -21,7 +21,16 @@ import java.sql.SQLException;
 @MultipartConfig
 @WebServlet(name = "AdminServlet", urlPatterns = "/AdminServlet/*")
 public class AdminServlet extends HttpServlet {
-    private final AdminService adminService = new AdminService();
+    private AdminService adminService;
+
+    @Override
+    public void init() throws ServletException {
+        try {
+            this.adminService = new AdminService();
+        } catch (SQLException e) {
+            throw new ServletException("Failed to initialize AdminService", e);
+        }
+    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

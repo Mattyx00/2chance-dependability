@@ -19,12 +19,30 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class AdminService {
+    private ProdottoDAO prodottoDAO;
+    private CategoriaDAO categoriaDAO;
+    private UtenteDAO utenteDAO;
+    private OrdineDAO ordineDAO;
+
+    public AdminService() throws SQLException {
+        this.prodottoDAO = new ProdottoDAO();
+        this.categoriaDAO = new CategoriaDAO();
+        this.utenteDAO = new UtenteDAO();
+        this.ordineDAO = new OrdineDAO();
+    }
+
+    public AdminService(ProdottoDAO prodottoDAO, CategoriaDAO categoriaDAO, UtenteDAO utenteDAO, OrdineDAO ordineDAO) {
+        this.prodottoDAO = prodottoDAO;
+        this.categoriaDAO = categoriaDAO;
+        this.utenteDAO = utenteDAO;
+        this.ordineDAO = ordineDAO;
+    }
+
     public void aggiungiProdotto(Prodotto p, Categoria categoria, Part immagine, String specifiche) throws IOException, SQLException {
-        ProdottoDAO dao = new ProdottoDAO();
         p.setCategoria(categoria);
         String fileName = Paths.get(immagine.getSubmittedFileName()).getFileName().toString();
         p.setImmagine(fileName);
-        dao.addProdotto(p);
+        prodottoDAO.addProdotto(p);
 
         try (InputStream fileStream = immagine.getInputStream()) {
             String currentDirectory = System.getProperty("user.dir");
@@ -47,7 +65,7 @@ public class AdminService {
             list.add(s);
         }
 
-        dao.aggiungiSpecifiche(list, dao.getLastProduct());
+        prodottoDAO.aggiungiSpecifiche(list, prodottoDAO.getLastProduct());
     }
 
     public String mostraProdotti() throws IOException, SQLException {
@@ -62,8 +80,7 @@ public class AdminService {
         }
          */
         System.out.println("sono arrivato qui CAZAZ");
-        ProdottoDAO dao = new ProdottoDAO();
-        ArrayList<Prodotto> prodotti = dao.getProdotti();
+        ArrayList<Prodotto> prodotti = prodottoDAO.getProdotti();
         System.out.println(prodotti);
         JSONObject jsonObject = new JSONObject();
         JSONArray array = new JSONArray();
@@ -87,13 +104,11 @@ public class AdminService {
     }
 
     public void eliminaProdotto(int id) throws IOException, SQLException {
-        ProdottoDAO dao = new ProdottoDAO();
-        dao.eliminaProdotto(id);
+        prodottoDAO.eliminaProdotto(id);
     }
 
     public String mostraCategorie() throws IOException, SQLException {
-        CategoriaDAO dao = new CategoriaDAO();
-        ArrayList<Categoria> categorie = dao.getCategorie();
+        ArrayList<Categoria> categorie = categoriaDAO.getCategorie();
 
         JSONObject jsonObject = new JSONObject();
         JSONArray array = new JSONArray();
@@ -108,19 +123,16 @@ public class AdminService {
     }
 
     public void aggiungiCategoria(String nome) throws IOException, SQLException {
-        CategoriaDAO dao = new CategoriaDAO();
         Categoria c = new Categoria();
         c.setNomeCategoria(nome);
-        dao.addCategoria(c);
+        categoriaDAO.addCategoria(c);
     }
 
     public void eliminaCategoria(String nome) throws IOException, SQLException {
-        CategoriaDAO dao = new CategoriaDAO();
-        dao.eliminaCategoria(nome);
+        categoriaDAO.eliminaCategoria(nome);
     }
 
     public String mostraUtenti() throws IOException, SQLException {
-        UtenteDAO utenteDAO = new UtenteDAO();
         ArrayList<Utente> utenti = utenteDAO.getUtenti();
 
         JSONObject jsonObject = new JSONObject();
@@ -143,8 +155,7 @@ public class AdminService {
     }
 
     public String mostraOrdini()  throws IOException, SQLException {
-        OrdineDAO dao = new OrdineDAO();
-        ArrayList<Ordine> ordini = dao.getOrdini();
+        ArrayList<Ordine> ordini = ordineDAO.getOrdini();
 
         JSONObject jsonObject = new JSONObject();
         JSONArray array = new JSONArray();
@@ -167,9 +178,8 @@ public class AdminService {
     }
 
     public String infoOrdine(Integer id) throws IOException, SQLException {
-        OrdineDAO dao = new OrdineDAO();
-        Ordine o = dao.getOrdineById(id);
-        Carrello c = dao.getProdottoOrdine(o);
+        Ordine o = ordineDAO.getOrdineById(id);
+        Carrello c = ordineDAO.getProdottoOrdine(o);
         ArrayList<ProdottoCarrello> prodottiCarr = c.getProdotti();
         ArrayList<Prodotto> prodotti = new ArrayList<>();
 
@@ -198,8 +208,7 @@ public class AdminService {
     }
 
     public String getProdotto(Integer id) throws IOException, SQLException {
-        ProdottoDAO dao = new ProdottoDAO();
-        Prodotto p = dao.getProdottoById(id);
+        Prodotto p = prodottoDAO.getProdottoById(id);
 
         ArrayList<Specifiche> specifiche = p.getSpecifiche();
         JSONObject jsonObject= new JSONObject();
@@ -229,7 +238,6 @@ public class AdminService {
     public void modificaProdotto(Prodotto p, Categoria categoria, Part immagine, String specifiche)
             throws IOException, SQLException {
 
-        ProdottoDAO dao = new ProdottoDAO();
         p.setCategoria(categoria);
 
         // Se è stata passata una nuova immagine
@@ -252,10 +260,10 @@ public class AdminService {
         }
 
         // Aggiorno i dati base del prodotto
-        dao.modificaProdotto(p);
+        prodottoDAO.modificaProdotto(p);
 
         // Aggiorno le specifiche
-        dao.eliminaSpecificheProdotto(p.getId());
+        prodottoDAO.eliminaSpecificheProdotto(p.getId());
 
         JSONObject obj = new JSONObject(specifiche);
         JSONArray array = obj.getJSONArray("specifiche");
@@ -268,6 +276,6 @@ public class AdminService {
             list.add(s);
         }
 
-        dao.aggiungiSpecifiche(list, p.getId());
+        prodottoDAO.aggiungiSpecifiche(list, p.getId());
     }
 }
