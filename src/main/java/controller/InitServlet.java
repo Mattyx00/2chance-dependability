@@ -2,8 +2,7 @@ package controller;
 
 import model.beans.Categoria;
 import model.beans.Prodotto;
-import model.dao.CategoriaDAO;
-import model.dao.ProdottoDAO;
+import services.InitService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,24 +12,23 @@ import java.util.ArrayList;
 
 @WebServlet(name = "InitServlet", value = "/InitServlet", loadOnStartup = 0)
 public class InitServlet extends HttpServlet {
+    private InitService initService;
 
     @Override
     public void init() throws ServletException {
         super.init();
         try {
-            CategoriaDAO dao = new CategoriaDAO();
-            ArrayList<Categoria> categorie = dao.getCategorie();
-
+            this.initService = new InitService();
+            ArrayList<Categoria> categorie = initService.getCategorie();
             getServletContext().setAttribute("categorie", categorie);
 
-            ProdottoDAO pDao = new ProdottoDAO();
-            ArrayList<Prodotto> prodotti = pDao.getUltimiProdotti();
+            ArrayList<Prodotto> prodotti = initService.getUltimiProdotti();
             getServletContext().setAttribute("prodotti", prodotti);
-
 
         } catch (SQLException e) {
             e.printStackTrace();
+            throw new ServletException("Failed to initialize InitService", e);
         }
     }
-
 }
+

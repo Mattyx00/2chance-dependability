@@ -3,6 +3,9 @@ package controller;
 import model.beans.Carrello;
 import services.AggiungiCarrelloService;
 
+import java.sql.SQLException;
+
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -14,7 +17,17 @@ import java.io.IOException;
 @WebServlet(name = "AggiungiCarrelloServlet", value = "/AggiungiCarrelloServlet")
 public class AggiungiCarrelloServlet extends HttpServlet {
 
-    private AggiungiCarrelloService carrelloService = new AggiungiCarrelloService();
+    private AggiungiCarrelloService carrelloService;
+
+    @Override
+    public void init() throws ServletException {
+        try {
+            this.carrelloService = new AggiungiCarrelloService();
+        } catch (SQLException e) {
+            throw new ServletException("Failed to initialize AggiungiCarrelloService", e);
+        }
+    }
+
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)

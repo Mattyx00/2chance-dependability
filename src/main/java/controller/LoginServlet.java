@@ -1,7 +1,7 @@
 package controller;
 
 import model.beans.Utente;
-import model.dao.UtenteDAO;
+import services.LoginService;
 import utils.LoginErratoException;
 
 import javax.servlet.RequestDispatcher;
@@ -17,6 +17,17 @@ import java.util.ArrayList;
 
 @WebServlet(name = "LoginServlet", value = "/LoginServlet")
 public class LoginServlet extends HttpServlet {
+    private LoginService loginService;
+
+    @Override
+    public void init() throws ServletException {
+        try {
+            this.loginService = new LoginService();
+        } catch (SQLException e) {
+            throw new ServletException("Failed to initialize LoginService", e);
+        }
+    }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String email = request.getParameter("email");
@@ -25,26 +36,20 @@ public class LoginServlet extends HttpServlet {
         ArrayList<String> errori = new ArrayList<>();
 
         try {
-            UtenteDAO dao = new UtenteDAO();
-            Utente utente = dao.getUserByEmailPassword(email, password);
-            if(utente == null){
-                throw new LoginErratoException();
-            }
+            Utente utente = loginService.login(email, password);
 
             HttpSession session = request.getSession();
             session.setAttribute("user", utente);
 
-            if(utente.isAdmin()){
-                response.sendRedirect(request.getServletContext().getContextPath()+"/dashboard.jsp");
+            if (utente.isAdmin()) {
+                response.sendRedirect(request.getServletContext().getContextPath() + "/dashboard.jsp");
+            } else {
+                response.sendRedirect(request.getServletContext().getContextPath() + "/landingpage");
             }
-            else
-                response.sendRedirect( request.getServletContext().getContextPath()+"/landingpage");
-
 
         } catch (SQLException e) {
-           response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-        }
-        catch(LoginErratoException e2){
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        } catch (LoginErratoException e2) {
             errori.add("Email o password errati");
             request.setAttribute("errori", errori);
             request.setAttribute("email", email);
@@ -52,8 +57,6 @@ public class LoginServlet extends HttpServlet {
             RequestDispatcher dispatcher = request.getRequestDispatcher(address);
             dispatcher.forward(request, response);
         }
-
-
     }
 
     @Override
@@ -61,3 +64,4 @@ public class LoginServlet extends HttpServlet {
         doGet(request, response);
     }
 }
+

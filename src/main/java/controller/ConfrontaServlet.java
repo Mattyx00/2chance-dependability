@@ -3,6 +3,9 @@ package controller;
 import model.beans.Prodotto;
 import services.ConfrontaService;
 
+import java.sql.SQLException;
+
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -13,7 +16,17 @@ import java.io.IOException;
 @WebServlet(name = "ConfrontaServlet", value = "/ConfrontaServlet")
 public class ConfrontaServlet extends HttpServlet {
 
-    private ConfrontaService confrontaService = new ConfrontaService();
+    private ConfrontaService confrontaService;
+
+    @Override
+    public void init() throws ServletException {
+        try {
+            this.confrontaService = new ConfrontaService();
+        } catch (SQLException e) {
+            throw new ServletException("Failed to initialize ConfrontaService", e);
+        }
+    }
+
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)

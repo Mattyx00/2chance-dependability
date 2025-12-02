@@ -9,11 +9,18 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class CheckOutService {
+    private OrdineDAO ordineDAO;
+
+    public CheckOutService() throws SQLException {
+        this.ordineDAO = new OrdineDAO();
+    }
+
+    public CheckOutService(OrdineDAO ordineDAO) {
+        this.ordineDAO = ordineDAO;
+    }
 
     public void effettuaCheckout(Utente utente, Carrello carrello, String indirizzo)
             throws SQLException {
-
-        OrdineDAO dao = new OrdineDAO();
 
         Ordine ordine = new Ordine();
         ordine.setUtente(utente);
@@ -21,14 +28,14 @@ public class CheckOutService {
         ordine.setPrezzoTotale(carrello.getTotaleCarrello());
         ordine.setCarrello(carrello);
 
-        dao.addOrdine(ordine);
+        ordineDAO.addOrdine(ordine);
     }
 
 
     public Utente aggiornaOrdiniUtente(Utente utente) throws SQLException {
-        OrdineDAO dao = new OrdineDAO();
-        ArrayList<Ordine> ordini = dao.getOrdiniByUtente(utente);
+        ArrayList<Ordine> ordini = ordineDAO.getOrdiniByUtente(utente);
         utente.setOrdini(ordini);
         return utente;
     }
 }
+

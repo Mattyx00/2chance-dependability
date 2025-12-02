@@ -1,7 +1,7 @@
 package controller;
 
 import model.beans.Prodotto;
-import model.dao.ProdottoDAO;
+import services.ProdottoService;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -14,16 +14,22 @@ import java.sql.SQLException;
 
 @WebServlet(name = "ProdottoServlet", value = "/ProdottoServlet")
 public class ProdottoServlet extends HttpServlet {
+    private ProdottoService prodottoService;
+
+    @Override
+    public void init() throws ServletException {
+        try {
+            this.prodottoService = new ProdottoService();
+        } catch (SQLException e) {
+            throw new ServletException("Failed to initialize ProdottoService", e);
+        }
+    }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            ProdottoDAO dao = new ProdottoDAO();
-            Prodotto prod = dao.getProdottoById(Integer.parseInt(request.getParameter("prodotto")));
+            Prodotto prod = prodottoService.getProdottoById(Integer.parseInt(request.getParameter("prodotto")));
             request.setAttribute("prodotto", prod);
-            /* for(int i=0; i<prod.getRecensioni().size(); i++){
-                System.out.println(prod.getRecensioni().get(i).getTesto());
-                System.out.println(prod.getRecensioni().get(i).getUtente().getNome());
-            } */
 
             String address = "/paginaProdotto.jsp";
             RequestDispatcher dispatcher = request.getRequestDispatcher(address);
@@ -31,8 +37,8 @@ public class ProdottoServlet extends HttpServlet {
 
         } catch (SQLException throwables) {
             throwables.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
-
     }
 
     @Override
@@ -40,3 +46,4 @@ public class ProdottoServlet extends HttpServlet {
         doGet(request, response);
     }
 }
+

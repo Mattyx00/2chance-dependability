@@ -1,7 +1,7 @@
 package controller;
 
 import model.beans.Prodotto;
-import model.dao.ProdottoDAO;
+import services.RicercaService;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -15,20 +15,29 @@ import java.util.ArrayList;
 
 @WebServlet(name = "RicercaServlet", value = "/RicercaServlet")
 public class RicercaServlet extends HttpServlet {
+    private RicercaService ricercaService;
+
+    @Override
+    public void init() throws ServletException {
+        try {
+            this.ricercaService = new RicercaService();
+        } catch (SQLException e) {
+            throw new ServletException("Failed to initialize RicercaService", e);
+        }
+    }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        ProdottoDAO dao = null;
         try {
-            dao = new ProdottoDAO();
-            ArrayList<Prodotto> prodotti = dao.cercaProdotti("%"+ request.getParameter("val") + "%");
+            ArrayList<Prodotto> prodotti = ricercaService.cercaProdotti("%" + request.getParameter("val") + "%");
             request.setAttribute("prodotti", prodotti);
             String address = "/showProdotti.jsp";
             RequestDispatcher dispatcher = request.getRequestDispatcher(address);
             dispatcher.forward(request, response);
         } catch (SQLException e) {
             e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
-
     }
 
     @Override
@@ -36,3 +45,4 @@ public class RicercaServlet extends HttpServlet {
         doGet(request, response);
     }
 }
+

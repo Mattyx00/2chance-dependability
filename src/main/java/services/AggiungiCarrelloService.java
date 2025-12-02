@@ -8,19 +8,26 @@ import model.dao.ProdottoDAO;
 import java.sql.SQLException;
 
 public class AggiungiCarrelloService {
+    private ProdottoDAO prodottoDAO;
+
+    public AggiungiCarrelloService() throws SQLException {
+        this.prodottoDAO = new ProdottoDAO();
+    }
+
+    public AggiungiCarrelloService(ProdottoDAO prodottoDAO) {
+        this.prodottoDAO = prodottoDAO;
+    }
 
     public Carrello aggiungiAlCarrello(Carrello carrello, int idProdotto, int quantita)
             throws SQLException {
 
         // Recupera o crea un nuovo carrello
-
         if (carrello == null) {
             carrello = new Carrello();
         }
 
         // Recupero del prodotto dal DB
-        ProdottoDAO dao = new ProdottoDAO();
-        Prodotto prodotto = dao.getProdottoById(idProdotto);
+        Prodotto prodotto = prodottoDAO.getProdottoById(idProdotto);
 
         // Aggiorno il carrello
         boolean trovato = false;
@@ -43,3 +50,4 @@ public class AggiungiCarrelloService {
         return carrello;
     }
 }
+

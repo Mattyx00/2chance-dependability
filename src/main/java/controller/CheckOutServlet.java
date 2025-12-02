@@ -4,7 +4,11 @@ import model.beans.Carrello;
 import model.beans.Utente;
 import services.CheckOutService;
 
+import java.sql.SQLException;
+
+
 import javax.servlet.ServletException;
+
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -15,7 +19,17 @@ import java.io.IOException;
 @WebServlet(name = "CheckOutServlet", value = "/CheckOutServlet")
 public class CheckOutServlet extends HttpServlet {
 
-    private CheckOutService checkOutService = new CheckOutService();
+    private CheckOutService checkOutService;
+
+    @Override
+    public void init() throws ServletException {
+        try {
+            this.checkOutService = new CheckOutService();
+        } catch (SQLException e) {
+            throw new ServletException("Failed to initialize CheckOutService", e);
+        }
+    }
+
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)

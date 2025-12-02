@@ -49,9 +49,14 @@ function aggiungiRecensione(idProdotto){
         if (this.readyState == 4 && this.status == 200) {
             alert("Recensione aggiunta con successo!");
             location.reload();
+        }else if (this.readyState == 4 && this.status == 401) {
+            alert("Devi essere loggato per aggiungere una recensione.");
+            window.location.href = "login.jsp";
         }
     };
     let url = "RecensioniServlet/aggiungiRecensione?testo="+testo_recensione+"&valutazione="+valutazione+"&idProdotto="+idProdotto;
     xhttp.open("GET", url, true);
     xhttp.send();
+
+
 }

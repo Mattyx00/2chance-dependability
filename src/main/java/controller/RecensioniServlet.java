@@ -1,10 +1,7 @@
 package controller;
 
-import model.beans.Recensione;
 import model.beans.Utente;
-import model.dao.ProdottoDAO;
-import model.dao.RecensioneDAO;
-import model.dao.UtenteDAO;
+import services.RecensioniService;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -14,54 +11,60 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 @WebServlet(name = "RecensioniServlet", urlPatterns = "/RecensioniServlet/*")
 public class RecensioniServlet extends HttpServlet {
+    private RecensioniService recensioniService;
+
+    @Override
+    public void init() throws ServletException {
+        try {
+            this.recensioniService = new RecensioniService();
+        } catch (SQLException e) {
+            throw new ServletException("Failed to initialize RecensioniService", e);
+        }
+    }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String path = request.getPathInfo() == null ? "/" : request.getPathInfo();
 
-        if(path.equals("/aggiungiRecensione")){
+        if (path.equals("/aggiungiRecensione")) {
             try {
-                if(request.getSession().getAttribute("user") == null){
-                    String address = "/login.jsp";
-                    RequestDispatcher dispatcher = request.getRequestDispatcher(address);
-                    dispatcher.forward(request, response);
+                Utente u = (Utente) request.getSession().getAttribute("user");
+                if (u == null) {
+                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+                    return;
+                    // String address = "/login.jsp";
+                    // RequestDispatcher dispatcher = request.getRequestDispatcher(address);
+                    // dispatcher.forward(request, response);
+                    // return;
                 }
 
-                RecensioneDAO dao = new RecensioneDAO();
-                Recensione r = new Recensione();
-                r.setTesto(request.getParameter("testo"));
-                r.setValutazione(Integer.parseInt(request.getParameter("valutazione")));
-                r.setUtente((Utente)request.getSession().getAttribute("user"));
-                ProdottoDAO pDao = new ProdottoDAO();
-                r.setProdotto(pDao.getProdottoById(Integer.parseInt(request.getParameter("idProdotto"))));
-                dao.addRecensione(r);
-                Utente u = (Utente)request.getSession().getAttribute("user");
-                ArrayList<Recensione> recensioni = dao.getRecensioniByUtente(u);
-                u.setRecensioni(recensioni);
+                String testo = request.getParameter("testo");
+                int valutazione = Integer.parseInt(request.getParameter("valutazione"));
+                int idProdotto = Integer.parseInt(request.getParameter("idProdotto"));
+
+                u = recensioniService.aggiungiRecensione(u, testo, valutazione, idProdotto);
                 request.getSession().setAttribute("user", u);
+
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             }
-        }
-
-        else if(path.equals("/eliminaRecensione")){
+        } else if (path.equals("/eliminaRecensione")) {
             try {
-                RecensioneDAO dao = new RecensioneDAO();
-                dao.deleteRecensione(Integer.parseInt(request.getParameter("recensione")));
-                UtenteDAO uDao  = new UtenteDAO();
-                Utente provv = (Utente)request.getSession().getAttribute("user");
-                Utente u = uDao.getUtenteById(provv.getId());
+                Utente provv = (Utente) request.getSession().getAttribute("user");
+                int idRecensione = Integer.parseInt(request.getParameter("recensione"));
+                
+                Utente u = recensioniService.eliminaRecensione(idRecensione, provv.getId());
                 request.getSession().setAttribute("user", u);
-                response.sendRedirect( request.getServletContext().getContextPath()+"/paginaUtente.jsp");
+                response.sendRedirect(request.getServletContext().getContextPath() + "/paginaUtente.jsp");
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             }
-        }
-
-        else{
+        } else {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
     }
@@ -71,3 +74,4 @@ public class RecensioniServlet extends HttpServlet {
         doGet(request, response);
     }
 }
+

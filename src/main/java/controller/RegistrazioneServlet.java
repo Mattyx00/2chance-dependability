@@ -1,7 +1,8 @@
 package controller;
 
 import model.beans.Utente;
-import model.dao.UtenteDAO;
+import services.RegistrazioneService;
+
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -23,12 +24,20 @@ import java.util.ArrayList;
 @WebServlet(name = "RegistrazioneServlet", urlPatterns = "/RegistrazioneServlet/*")
 @MultipartConfig
 public class RegistrazioneServlet extends HttpServlet {
+    private RegistrazioneService registrazioneService;
+
+    @Override
+    public void init() throws ServletException {
+        try {
+            this.registrazioneService = new RegistrazioneService();
+        } catch (SQLException e) {
+            throw new ServletException("Failed to initialize RegistrazioneService", e);
+        }
+    }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            UtenteDAO dao = new UtenteDAO();
-            ArrayList errori = new ArrayList();
-            Utente u = new Utente();
             String nome = request.getParameter("nome");
             String cognome = request.getParameter("cognome");
             String password = request.getParameter("password");
@@ -38,7 +47,6 @@ public class RegistrazioneServlet extends HttpServlet {
             //prendo file dalla richiesta
             Part part = request.getPart("file");
             String fileName = Paths.get(part.getSubmittedFileName()).getFileName().toString();
-
 
             File file;
             try (InputStream fileStream = part.getInputStream()) {
@@ -53,63 +61,33 @@ public class RegistrazioneServlet extends HttpServlet {
                     Files.copy(fileStream, file.toPath());
             }
 
-            String emailRegex = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
-            String onlyTextRegex = "^[a-zA-Z]*$"; //solo testo
-            String telRegex = "^\\d{10}$"; //almeno 10 caratteri
-            String passwordRegex = "^(?=.*[A-Z]).{8,}$"; //almeno 8 caratteri ed una maiuscola
-            if(nome == null || nome.equals("") || !nome.matches(onlyTextRegex)){
-                errori.add("Errore nome, riprovare");
-            }
+            ArrayList<String> errori = registrazioneService.validateAndRegister(nome, cognome, password, email, telefono, fileName);
 
-            else if(cognome == null || cognome.equals("") || !cognome.matches(onlyTextRegex)){
-                errori.add("Errore cognome, riprovare");
-            }
-
-            else if(password == null || password.equals("") || !password.matches(passwordRegex)){
-                errori.add("Errore password, riprovare");
-            }
-
-            else if(email == null || email.equals("") || !email.matches(emailRegex)){
-                errori.add("Errore email, riprovare");
-            }
-
-            else if(UtenteDAO.isEmailPresent(email)){
-                errori.add("Email già in utilizzo");
-            }
-
-            else if(telefono == null || telefono.equals("") || !telefono.matches(telRegex)){
-                errori.add("Errore telefono, riprovare");
-            }
-
-            if(u == null){
-                throw new NullPointerException("Internal error");
-            }
-            else{
+            if (!errori.isEmpty()) {
+                Utente u = new Utente();
                 u.setNome(nome);
                 u.setCognome(cognome);
                 u.setPassword(password);
                 u.setEmail(email);
                 u.setTelefono(telefono);
                 u.setImmagine(fileName);
-
-
-                if(errori.size()>0){
-                    request.setAttribute("utente", u);
-                    request.setAttribute("errori", errori);
-                    String address = "/registrazione.jsp";
-                    RequestDispatcher dispatcher = request.getRequestDispatcher(address);
-                    dispatcher.forward(request, response);
-                }else{
-                    dao.addUtente(u); //salvo l'utente nel database
-                    u = dao.getUserByEmailPassword(email, password);
-                    request.setAttribute("utente", u);
-                    request.setAttribute("errori", errori);
-                    request.getSession().setAttribute("user", u);
-                    response.sendRedirect(request.getServletContext().getContextPath() + "/landingpage");
-                }
+                
+                request.setAttribute("utente", u);
+                request.setAttribute("errori", errori);
+                String address = "/registrazione.jsp";
+                RequestDispatcher dispatcher = request.getRequestDispatcher(address);
+                dispatcher.forward(request, response);
+            } else {
+                Utente u = registrazioneService.getUserByEmailPassword(email, password);
+                request.setAttribute("utente", u);
+                request.setAttribute("errori", errori);
+                request.getSession().setAttribute("user", u);
+                response.sendRedirect(request.getServletContext().getContextPath() + "/landingpage");
             }
+
         } catch (SQLException throwable) {
             throwable.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 

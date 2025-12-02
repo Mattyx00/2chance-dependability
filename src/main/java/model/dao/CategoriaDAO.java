@@ -11,38 +11,41 @@ import java.util.ArrayList;
 
 public class CategoriaDAO {
 
-    private Connection connection;
-
-    public CategoriaDAO() throws SQLException {
-        this.connection = ConPool.getConnection();
+    public CategoriaDAO() {
     }
 
     public ArrayList<Categoria> getCategorie() throws SQLException {
-        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM categoria");
-        ArrayList<Categoria> categorie = new ArrayList<>();
-        ResultSet set = stmt.executeQuery();
+        try (Connection connection = ConPool.getConnection();
+             PreparedStatement stmt = connection.prepareStatement("SELECT * FROM categoria")) {
+            ArrayList<Categoria> categorie = new ArrayList<>();
+            ResultSet set = stmt.executeQuery();
 
 
-        while(set.next()){
-            Categoria c = new Categoria();
-            c.setNomeCategoria(set.getString(1));
-            categorie.add(c);
+            while(set.next()){
+                Categoria c = new Categoria();
+                c.setNomeCategoria(set.getString(1));
+                categorie.add(c);
+            }
+            return categorie;
         }
-        return categorie;
     }
 
     public int addCategoria(Categoria c) throws SQLException {
-        PreparedStatement stmt = connection.prepareStatement("INSERT INTO categoria VALUES (?)");
-        stmt.setString(1, c.getNomeCategoria());
-        return stmt.executeUpdate();
+        try (Connection connection = ConPool.getConnection();
+             PreparedStatement stmt = connection.prepareStatement("INSERT INTO categoria VALUES (?)")) {
+            stmt.setString(1, c.getNomeCategoria());
+            return stmt.executeUpdate();
+        }
 
     }
 
     public void eliminaCategoria(String nome) throws SQLException {
-        PreparedStatement stmt = connection.prepareStatement("DELETE FROM categoria WHERE nome = ?");
-        stmt.setString(1, nome);
+        try (Connection connection = ConPool.getConnection();
+             PreparedStatement stmt = connection.prepareStatement("DELETE FROM categoria WHERE nome = ?")) {
+            stmt.setString(1, nome);
 
-        stmt.executeUpdate();
+            stmt.executeUpdate();
+        }
     }
 
 }

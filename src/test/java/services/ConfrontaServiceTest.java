@@ -21,7 +21,7 @@ class ConfrontaServiceTest {
     private ConfrontaService service;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws SQLException {
         service = new ConfrontaService();
     }
 

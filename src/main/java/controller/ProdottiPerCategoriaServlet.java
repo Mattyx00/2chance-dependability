@@ -1,7 +1,7 @@
 package controller;
 
 import model.beans.Prodotto;
-import model.dao.ProdottoDAO;
+import services.ProdottiPerCategoriaService;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -15,11 +15,21 @@ import java.util.ArrayList;
 
 @WebServlet(name = "ProdottiPerCategoriaServlet", value = "/ProdottiPerCategoriaServlet")
 public class ProdottiPerCategoriaServlet extends HttpServlet {
+    private ProdottiPerCategoriaService prodottiPerCategoriaService;
+
+    @Override
+    public void init() throws ServletException {
+        try {
+            this.prodottiPerCategoriaService = new ProdottiPerCategoriaService();
+        } catch (SQLException e) {
+            throw new ServletException("Failed to initialize ProdottiPerCategoriaService", e);
+        }
+    }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            ProdottoDAO dao = new ProdottoDAO();
-            ArrayList<Prodotto> prodotti = dao.getProdottiByCategoria(request.getParameter("val"));
+            ArrayList<Prodotto> prodotti = prodottiPerCategoriaService.getProdottiByCategoria(request.getParameter("val"));
             request.setAttribute("prodotti", prodotti);
             String address = "/showProdotti.jsp";
             RequestDispatcher dispatcher = request.getRequestDispatcher(address);
@@ -27,8 +37,8 @@ public class ProdottiPerCategoriaServlet extends HttpServlet {
 
         } catch (SQLException e) {
             e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
-
     }
 
     @Override
@@ -36,3 +46,4 @@ public class ProdottiPerCategoriaServlet extends HttpServlet {
         doGet(request, response);
     }
 }
+

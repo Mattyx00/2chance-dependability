@@ -23,7 +23,7 @@ class EditCarrelloServiceTest {
     private EditCarrelloService service;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws SQLException {
         service = new EditCarrelloService();
     }
 

@@ -1,7 +1,7 @@
 package controller;
 
 import model.beans.Utente;
-import model.dao.UtenteDAO;
+import services.UtenteService;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -14,18 +14,29 @@ import java.sql.SQLException;
 
 @WebServlet(name = "UtenteServlet", value = "/UtenteServlet")
 public class UtenteServlet extends HttpServlet {
+    private UtenteService utenteService;
+
+    @Override
+    public void init() throws ServletException {
+        try {
+            this.utenteService = new UtenteService();
+        } catch (SQLException e) {
+            throw new ServletException("Failed to initialize UtenteService", e);
+        }
+    }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            UtenteDAO dao = new UtenteDAO();
-            Utente utente = dao.getUtenteById(Integer.parseInt(request.getParameter("utente")));
-
+            Utente utente = utenteService.getUtenteById(Integer.parseInt(request.getParameter("utente")));
+            request.setAttribute("utente", utente);
 
             String address = "/paginaUtente.jsp";
             RequestDispatcher dispatcher = request.getRequestDispatcher(address);
             dispatcher.forward(request, response);
         } catch (SQLException e) {
             e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -34,3 +45,4 @@ public class UtenteServlet extends HttpServlet {
         doGet(request, response);
     }
 }
+

@@ -1,7 +1,7 @@
 package controller;
 
 import model.beans.Prodotto;
-import model.dao.ProdottoDAO;
+import services.LandingPageService;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -15,27 +15,32 @@ import java.util.ArrayList;
 
 @WebServlet(name = "landingpage", value = "/landingpage", loadOnStartup = 1)
 public class landingpage extends HttpServlet {
+    private LandingPageService landingPageService;
+
+    @Override
+    public void init() throws ServletException {
+        try {
+            this.landingPageService = new LandingPageService();
+        } catch (SQLException e) {
+            throw new ServletException("Failed to initialize LandingPageService", e);
+        }
+    }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            ProdottoDAO dao = new ProdottoDAO();
-            ArrayList<Prodotto> prodotti = dao.getUltimiProdotti();
+            ArrayList<Prodotto> prodotti = landingPageService.getUltimiProdotti();
             request.setAttribute("prodotti", prodotti);
-
-           /*
-            for(Prodotto e: prodotti ){
-                System.out.println(e.getCategoria().getNomeCategoria());
-            }
-            */
 
         } catch (SQLException e) {
             e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            return;
         }
 
         String address = "/index.jsp";
         RequestDispatcher dispatcher = request.getRequestDispatcher(address);
         dispatcher.forward(request, response);
-
     }
 
     @Override
@@ -43,3 +48,4 @@ public class landingpage extends HttpServlet {
         doGet(request, response);
     }
 }
+
