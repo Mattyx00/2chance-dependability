@@ -1,0 +1,556 @@
+================================================================================
+CATEGORY-PARTITION TESTING REPORT
+Class: WishListDAO
+Package: model.dao
+================================================================================
+
+### 1. CLASS OVERVIEW
+
+Class name: WishListDAO
+Package: model.dao
+
+Role in the domain:
+The WishListDAO class is a Data Access Object responsible for managing database 
+operations related to the WishList entity. It provides operations to add products 
+to a user's wishlist, retrieve a user's complete wishlist, and remove specific 
+products from the wishlist.
+
+Important fields:
+- No instance fields (stateless DAO).
+- Relies on ConPool for database connections.
+- Manages wishlist table (many-to-many relationship between users and products).
+
+Invariants:
+- Database connection must be properly managed.
+- All database operations must handle SQLException appropriately.
+- Parameter validation occurs before database operations.
+- null parameters are rejected with IllegalArgumentException.
+- ID parameters must be positive (> 0).
+
+================================================================================
+### 2. METHODS TO BE TESTED
+================================================================================
+
+--------------------------------------------------------------------------------
+#### 2.1 Constructor: WishListDAO()
+--------------------------------------------------------------------------------
+
+2.1.1. Parameters and relevant state
+
+Explicit parameters:
+- None
+
+Relevant object state:
+- None
+
+Preconditions:
+- None
+
+Postconditions:
+- A new WishListDAO instance is created
+
+2.1.2. Categories and choices
+
+Category C1 - Constructor invocation
+  C1.a: Constructor is called successfully
+
+2.1.3. Test frames
+
+F1: Create new WishListDAO instance
+  - Choices: C1.a
+  - Expected behavior: New instance is created without exceptions
+
+2.1.4. Suggested JUnit 5 test method names
+
+shouldCreateNewWishListDAOInstanceWhenConstructorCalled()
+  - Arrange: None
+  - Act: WishListDAO dao = new WishListDAO();
+  - Assert: assertNotNull(dao)
+
+2.1.5. Parameterized test candidates
+- Not applicable
+
+--------------------------------------------------------------------------------
+#### 2.2 Method: public void addToWishList(Utente u, Prodotto p) 
+                 throws SQLException
+--------------------------------------------------------------------------------
+
+2.2.1. Parameters and relevant state
+
+Explicit parameters:
+- u: Utente (the user whose wishlist to add to)
+- p: Prodotto (the product to add)
+
+Relevant object state:
+- Database connection availability
+- Database state (wishlist table)
+
+Preconditions:
+- u must not be null (enforced by IllegalArgumentException)
+- p must not be null (enforced by IllegalArgumentException)
+- u.getId() and p.getId() must return valid IDs
+- Database connection must be available
+
+Postconditions:
+- If successful: Entry (u.id, p.id) is inserted into wishlist table
+- Method returns void
+- Database connection is properly closed
+
+2.2.2. Categories and choices
+
+Category C1 - Utente parameter (u)
+  C1.a: u == null (invalid)
+  C1.b: u != null && u.getId() returns valid ID
+
+Category C2 - Prodotto parameter (p)
+  C2.a: p == null (invalid)
+  C2.b: p != null && p.getId() returns valid ID
+
+Category C3 - Database state
+  C3.a: Entry (u.id, p.id) does not exist (new addition)
+  C3.b: Entry (u.id, p.id) already exists (duplicate)
+
+Category C4 - Database connection
+  C4.a: Connection is successfully obtained
+  C4.b: Connection fails (SQLException)
+
+Category C5 - SQL execution
+  C5.a: INSERT executes successfully
+  C5.b: INSERT fails (SQLException, e.g., duplicate key or FK violation)
+
+2.2.3. Test frames (combinations of choices)
+
+F1: Add with null user
+  - Choices: C1.a
+  - Expected behavior: IllegalArgumentException is thrown
+  - Exception: IllegalArgumentException with message "L'utente non può essere null"
+
+F2: Add with null product
+  - Choices: C1.b + C2.a
+  - Expected behavior: IllegalArgumentException is thrown
+  - Exception: IllegalArgumentException with message "Il prodotto non può essere null"
+
+F3: Add product to wishlist successfully
+  - Choices: C1.b + C2.b + C3.a + C4.a + C5.a
+  - Expected behavior: Product is added to user's wishlist
+  - Return value: void (no exception)
+  - State: Database contains entry (u.id, p.id)
+
+F4: Add duplicate product to wishlist
+  - Choices: C1.b + C2.b + C3.b + C4.a + C5.b
+  - Expected behavior: SQLException is thrown (duplicate key violation)
+  - Exception: SQLException
+
+F5: Database connection fails
+  - Choices: C1.b + C2.b + C4.b
+  - Expected behavior: SQLException is thrown
+  - Exception: SQLException
+
+F6: Foreign key violation (user or product doesn't exist)
+  - Choices: C1.b + C2.b + C3.a + C4.a + C5.b
+  - Expected behavior: SQLException is thrown (FK constraint)
+  - Exception: SQLException
+
+2.2.4. Suggested JUnit 5 test method names and structure
+
+shouldThrowIllegalArgumentExceptionWhenUtenteIsNull()
+  - Arrange:
+    - Utente u = null;
+    - Prodotto p = new Prodotto(); p.setId(10);
+  - Act & Assert:
+    - IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+        () -> dao.addToWishList(u, p))
+    - assertEquals("L'utente non può essere null", ex.getMessage())
+
+shouldThrowIllegalArgumentExceptionWhenProdottoIsNull()
+  - Arrange:
+    - Utente u = new Utente(); u.setId(5);
+    - Prodotto p = null;
+  - Act & Assert:
+    - IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+        () -> dao.addToWishList(u, p))
+    - assertEquals("Il prodotto non può essere null", ex.getMessage())
+
+shouldAddProductToWishListWhenValidParametersProvided()
+  - Arrange:
+    - Create test user with ID 5
+    - Create test product with ID 10
+    - Ensure entry (5, 10) does not exist
+  - Act: dao.addToWishList(u, p);
+  - Assert:
+    - assertDoesNotThrow
+    - Verify entry (5, 10) exists in wishlist table
+
+shouldThrowSQLExceptionWhenDuplicateProductAdded()
+  - Arrange:
+    - Insert entry (5, 10) first
+    - Try to add same combination again
+  - Act & Assert: assertThrows(SQLException.class, 
+      () -> dao.addToWishList(u, p))
+
+shouldThrowSQLExceptionWhenDatabaseConnectionFails()
+  - Arrange: Mock ConPool to throw SQLException
+  - Act & Assert: assertThrows(SQLException.class, 
+      () -> dao.addToWishList(u, p))
+
+shouldThrowSQLExceptionWhenForeignKeyViolated()
+  - Arrange:
+    - Create Utente with non-existing ID 99999
+    - Create Prodotto with valid ID
+  - Act & Assert: assertThrows(SQLException.class, 
+      () -> dao.addToWishList(u, p))
+
+2.2.5. Parameterized test candidates
+
+Good candidate for testing various null combinations:
+
+CSV schema:
+Columns: utenteNull, prodottoNull, expectedExceptionMessage
+Example rows:
+  true, false, "L'utente non può essere null"
+  false, true, "Il prodotto non può essere null"
+  true, true, "L'utente non può essere null"
+
+--------------------------------------------------------------------------------
+#### 2.3 Method: public WishList getWishListByUser(Utente u) throws SQLException
+--------------------------------------------------------------------------------
+
+2.3.1. Parameters and relevant state
+
+Explicit parameters:
+- u: Utente (the user whose wishlist to retrieve)
+
+Relevant object state:
+- Database connection availability
+- Database state (wishlist table)
+
+Preconditions:
+- u must not be null (enforced by IllegalArgumentException)
+- u.getId() must return valid ID
+- Database connection must be available
+
+Postconditions:
+- Returns WishList object for the user
+- WishList contains all products from user's wishlist
+- Empty product list if user has no wishlist items
+- Database connection is properly closed
+
+2.3.2. Categories and choices
+
+Category C1 - Utente parameter (u)
+  C1.a: u == null (invalid)
+  C1.b: u != null && has wishlist items
+  C1.c: u != null && has NO wishlist items
+
+Category C2 - Database state (wishlist items)
+  C2.a: User has no wishlist items
+  C2.b: User has one wishlist item
+  C2.c: User has multiple wishlist items
+
+Category C3 - Database connection
+  C3.a: Connection is successfully obtained
+  C3.b: Connection fails (SQLException)
+
+Category C4 - SQL execution
+  C4.a: SELECT executes successfully
+  C4.b: SELECT fails (SQLException)
+
+Category C5 - ProdottoDAO calls
+  C5.a: All getProdottoById calls succeed
+  C5.b: Some getProdottoById calls fail or return null
+
+2.3.3. Test frames (combinations of choices)
+
+F1: Get wishlist for null user
+  - Choices: C1.a
+  - Expected behavior: IllegalArgumentException is thrown
+  - Exception: IllegalArgumentException with message "L'utente non può essere null"
+
+F2: Get wishlist for user with no items
+  - Choices: C1.c + C2.a + C3.a + C4.a
+  - Expected behavior: Returns WishList with empty product list
+  - Return value: WishList with utente set, empty prodotti list
+  - State: wishList.getProdotti().size() == 0
+
+F3: Get wishlist for user with one item
+  - Choices: C1.b + C2.b + C3.a + C4.a + C5.a
+  - Expected behavior: Returns WishList with one product
+  - Return value: WishList with 1 product
+  - State: Product is fully populated from ProdottoDAO
+
+F4: Get wishlist for user with multiple items
+  - Choices: C1.b + C2.c + C3.a + C4.a + C5.a
+  - Expected behavior: Returns WishList with all products
+  - Return value: WishList with multiple products
+  - State: All products correctly populated
+
+F5: Database connection fails
+  - Choices: C1.b + C3.b
+  - Expected behavior: SQLException is thrown
+  - Exception: SQLException
+
+F6: SQL execution fails
+  - Choices: C1.b + C3.a + C4.b
+  - Expected behavior: SQLException is thrown
+  - Exception: SQLException
+
+F7: ProdottoDAO returns null for some products
+  - Choices: C1.b + C2.c + C3.a + C4.a + C5.b
+  - Expected behavior: Depends on implementation
+  - May add null to list or skip the product
+
+2.3.4. Suggested JUnit 5 test method names and structure
+
+shouldThrowIllegalArgumentExceptionWhenUtenteIsNull()
+  - Arrange: Utente u = null;
+  - Act & Assert:
+    - IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+        () -> dao.getWishListByUser(u))
+    - assertEquals("L'utente non può essere null", ex.getMessage())
+
+shouldReturnWishListWithEmptyProductListWhenUserHasNoItems()
+  - Arrange:
+    - Create user with ID 5
+    - Ensure no wishlist entries for user 5
+  - Act: WishList result = dao.getWishListByUser(u);
+  - Assert:
+    - assertNotNull(result)
+    - assertNotNull(result.getUtente())
+    - assertEquals(5, result.getUtente().getId())
+    - assertEquals(0, result.getProdotti().size())
+
+shouldReturnWishListWithOneProductWhenUserHasOneItem()
+  - Arrange:
+    - Create user with ID 5
+    - Create product with ID 10
+    - Insert wishlist entry (5, 10)
+  - Act: WishList result = dao.getWishListByUser(u);
+  - Assert:
+    - assertEquals(1, result.getProdotti().size())
+    - assertEquals(10, result.getProdotti().get(0).getId())
+
+shouldReturnWishListWithAllProductsWhenUserHasMultipleItems()
+  - Arrange:
+    - Create user with ID 5
+    - Create 3 products and add to wishlist
+  - Act: WishList result = dao.getWishListByUser(u);
+  - Assert:
+    - assertEquals(3, result.getProdotti().size())
+
+shouldThrowSQLExceptionWhenDatabaseConnectionFails()
+  - Arrange: Mock ConPool to throw SQLException
+  - Act & Assert: assertThrows(SQLException.class, 
+      () -> dao.getWishListByUser(u))
+
+shouldHandleNullProductsFromDAOGracefully()
+  - Arrange:
+    - Create wishlist entry pointing to non-existent product
+  - Act: WishList result = dao.getWishListByUser(u);
+  - Assert:
+    - Verify list may contain null or skip the entry
+
+2.3.5. Parameterized test candidates
+
+Good candidate for testing different wishlist sizes:
+
+CSV schema:
+Columns: numberOfItems, expectedSize
+Example rows:
+  0, 0
+  1, 1
+  5, 5
+  20, 20
+
+--------------------------------------------------------------------------------
+#### 2.4 Method: public void removeFromWishList(int id_utente, int id_prodotto) 
+                 throws SQLException
+--------------------------------------------------------------------------------
+
+2.4.1. Parameters and relevant state
+
+Explicit parameters:
+- id_utente: int (user ID)
+- id_prodotto: int (product ID)
+
+Relevant object state:
+- Database connection availability
+- Database state (wishlist table)
+
+Preconditions:
+- id_utente must be > 0 (enforced by IllegalArgumentException)
+- id_prodotto must be > 0 (enforced by IllegalArgumentException)
+- Database connection must be available
+
+Postconditions:
+- If successful: Entry (id_utente, id_prodotto) is deleted from wishlist
+- Method returns void
+- Database connection is properly closed
+
+2.4.2. Categories and choices
+
+Category C1 - id_utente parameter
+  C1.a: id_utente <= 0 (invalid: zero)
+  C1.b: id_utente < 0 (invalid: negative)
+  C1.c: id_utente > 0 (valid)
+
+Category C2 - id_prodotto parameter
+  C2.a: id_prodotto <= 0 (invalid: zero)
+  C2.b: id_prodotto < 0 (invalid: negative)
+  C2.c: id_prodotto > 0 (valid)
+
+Category C3 - Database state
+  C3.a: Entry (id_utente, id_prodotto) exists
+  C3.b: Entry (id_utente, id_prodotto) does NOT exist
+
+Category C4 - Database connection
+  C4.a: Connection is successfully obtained
+  C4.b: Connection fails (SQLException)
+
+Category C5 - SQL execution
+  C5.a: DELETE executes successfully (0 or 1 rows affected)
+  C5.b: DELETE fails (SQLException)
+
+2.4.3. Test frames (combinations of choices)
+
+F1: Remove with zero user ID
+  - Choices: C1.a
+  - Expected behavior: IllegalArgumentException is thrown
+  - Exception: IllegalArgumentException with message 
+    "L'ID dell'utente deve essere maggiore di zero"
+
+F2: Remove with negative user ID
+  - Choices: C1.b
+  - Expected behavior: IllegalArgumentException is thrown
+  - Exception: IllegalArgumentException
+
+F3: Remove with zero product ID
+  - Choices: C1.c + C2.a
+  - Expected behavior: IllegalArgumentException is thrown
+  - Exception: IllegalArgumentException with message 
+    "L'ID del prodotto deve essere maggiore di zero"
+
+F4: Remove with negative product ID
+  - Choices: C1.c + C2.b
+  - Expected behavior: IllegalArgumentException is thrown
+  - Exception: IllegalArgumentException
+
+F5: Remove existing wishlist entry
+  - Choices: C1.c + C2.c + C3.a + C4.a + C5.a
+  - Expected behavior: Entry is deleted
+  - Return value: void (no exception)
+  - State: Entry (id_utente, id_prodotto) no longer exists
+
+F6: Remove non-existing wishlist entry
+  - Choices: C1.c + C2.c + C3.b + C4.a + C5.a
+  - Expected behavior: No error (silent, 0 rows affected)
+  - Return value: void
+  - State: Database unchanged
+
+F7: Database connection fails
+  - Choices: C1.c + C2.c + C4.b
+  - Expected behavior: SQLException is thrown
+  - Exception: SQLException
+
+F8: DELETE fails
+  - Choices: C1.c + C2.c + C3.a + C4.a + C5.b
+  - Expected behavior: SQLException is thrown
+  - Exception: SQLException
+
+2.4.4. Suggested JUnit 5 test method names and structure
+
+shouldThrowIllegalArgumentExceptionWhenUserIdIsZero()
+  - Arrange: int id_utente = 0, id_prodotto = 10;
+  - Act & Assert:
+    - IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+        () -> dao.removeFromWishList(id_utente, id_prodotto))
+    - assertTrue(ex.getMessage().contains("utente"))
+
+shouldThrowIllegalArgumentExceptionWhenUserIdIsNegative()
+  - Arrange: int id_utente = -5, id_prodotto = 10;
+  - Act & Assert: assertThrows(IllegalArgumentException.class,
+      () -> dao.removeFromWishList(id_utente, id_prodotto))
+
+shouldThrowIllegalArgumentExceptionWhenProductIdIsZero()
+  - Arrange: int id_utente = 5, id_prodotto = 0;
+  - Act & Assert:
+    - IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+        () -> dao.removeFromWishList(id_utente, id_prodotto))
+    - assertTrue(ex.getMessage().contains("prodotto"))
+
+shouldThrowIllegalArgumentExceptionWhenProductIdIsNegative()
+  - Arrange: int id_utente = 5, id_prodotto = -10;
+  - Act & Assert: assertThrows(IllegalArgumentException.class,
+      () -> dao.removeFromWishList(id_utente, id_prodotto))
+
+shouldRemoveWishListEntryWhenValidIdsProvided()
+  - Arrange:
+    - Insert entry (5, 10) into wishlist
+    - Verify it exists
+  - Act: dao.removeFromWishList(5, 10);
+  - Assert:
+    - assertDoesNotThrow
+    - Verify entry (5, 10) no longer exists
+
+shouldCompleteWithoutErrorWhenEntryDoesNotExist()
+  - Arrange: Ensure entry (5, 10) does not exist
+  - Act: dao.removeFromWishList(5, 10);
+  - Assert: assertDoesNotThrow
+
+shouldThrowSQLExceptionWhenDatabaseConnectionFails()
+  - Arrange: Mock ConPool to throw SQLException
+  - Act & Assert: assertThrows(SQLException.class,
+      () -> dao.removeFromWishList(5, 10))
+
+2.4.5. Parameterized test candidates
+
+Excellent candidate for testing various invalid ID combinations:
+
+CSV schema:
+Columns: id_utente, id_prodotto, description
+Example rows:
+  0, 10, "zero user ID"
+  5, 0, "zero product ID"
+  -1, 10, "negative user ID"
+  5, -1, "negative product ID"
+  0, 0, "both zero"
+  -1, -1, "both negative"
+
+================================================================================
+### 3. OVERALL TESTING STRATEGY
+================================================================================
+
+Integration Testing Considerations:
+- Requires database with wishlist, utente, and prodotto tables
+- Manages many-to-many relationship between users and products
+- Depends on ProdottoDAO for getWishListByUser method
+- Use in-memory database or test database
+- Set up referential integrity (foreign keys)
+
+Test Data Setup:
+- Create test users in utente table
+- Create test products in prodotto table
+- Create test wishlist entries
+- Use @BeforeEach to establish clean state
+- Use transactions for test isolation
+
+Special Testing Challenges:
+- getWishListByUser calls ProdottoDAO.getProdottoById in loop
+- Need to handle case where products may be deleted but wishlist entries remain
+- Duplicate key constraint testing
+- Foreign key constraint testing
+
+Coverage Goals:
+- All public methods tested
+- All exception paths verified
+- Boundary conditions (empty wishlist, single item, multiple items)
+- All parameter validation tested
+- Database integration verified
+
+Mock/Stub Strategy:
+- Mock ConPool for connection failure tests
+- Consider mocking ProdottoDAO for unit testing getWishListByUser
+- Use real database for integration tests
+
+================================================================================
+END OF REPORT
+================================================================================

@@ -1,0 +1,154 @@
+========================================================================
+CATEGORY-PARTITION TESTING REPORT
+========================================================================
+Class: Ordine
+Package: model.beans
+========================================================================
+
+### 1. CLASS OVERVIEW
+
+**Class Name**: Ordine
+**Package**: model.beans
+
+**Description**:
+Ordine represents a customer order in an e-commerce system. It contains order details including date, shipping address, total price, the customer (Utente), and the shopping cart (Carrello) with all ordered items.
+
+**Important Fields**:
+- id: int - Order identifier
+- dataOrdine: Date - Order placement date
+- indirizzo: String - Shipping address
+- prezzoTotale: double - Total order price
+- utente: Utente - Customer placing the order  
+- carrello: Carrello - Shopping cart with order items
+
+**Invariants** (from JML):
+- invariant prezzoTotale >= 0.0
+
+========================================================================
+### 2. METHODS TO BE TESTED
+========================================================================
+
+2.1 Constructor: Ordine()
+2.2 Method: void setDataOrdine(Date dataOrdine)
+2.3 Method: void setIndirizzo(String indirizzo)
+2.4 Method: void setPrezzoTotale(double prezzoTotale)
+2.5 Method: void setUtente(Utente utente)
+2.6 Method: void setCarrello(Carrello carrello)
+
+========================================================================
+### 2.2 Method: void setDataOrdine(Date dataOrdine)
+========================================================================
+
+2.2.1. **Parameters**
+
+- dataOrdine: Date (requires != null)
+
+2.2.2. **Categories**
+
+Category C1 - dataOrdine parameter
+  C1.a: null
+  C1.b: valid Date object
+
+2.2.3. **Test frames**
+
+F1: Set null date
+  Expected: IllegalArgumentException - "La data dell'ordine non può essere null"
+
+F2: Set valid date
+  Expected: Success, field set
+
+2.2.4. **Suggested tests**
+
+Test Method: shouldThrowExceptionWhenSettingNullDataOrdine()
+Test Method: shouldSetValidDataOrdine()
+
+========================================================================
+### 2.3 Method: void setIndirizzo(String indirizzo)
+========================================================================
+
+2.3.1. **Parameters**
+
+- indirizzo: String (requires != null && !trim().isEmpty())
+
+2.3.2. **Categories**
+
+Category C1 - indirizzo parameter
+  C1.a: null
+  C1.b: empty/whitespace
+  C1.c: valid address string
+
+2.3.3. **Test frames**
+
+F1: Set null address - throws
+F2: Set empty address - throws
+F3: Set valid address - succeeds
+
+2.3.4. **Suggested tests**
+
+Test Method: shouldThrowExceptionWhenSettingNullIndirizzo()
+Test Method: shouldThrowExceptionWhenSettingEmptyIndirizzo()
+Test Method: shouldSetValidIndirizzo()
+
+========================================================================
+### 2.4 Method: void setPrezzoTotale(double prezzoTotale)
+========================================================================
+
+2.4.1. **Parameters**
+
+- prezzoTotale: double (requires >= 0.0 to maintain invariant)
+
+2.4.2. **Categories**
+
+Category C1 - prezzoTotale value
+  C1.a: < 0.0 (negative - invalid)
+  C1.b: = 0.0 (boundary valid - free order)
+  C1.c: > 0.0 (normal valid)
+
+2.4.3. **Test frames**
+
+F1: Set negative price
+  Expected: IllegalArgumentException - "Il prezzo totale non può essere negativo"
+
+F2: Set zero price (valid boundary)
+  Expected: Success
+
+F3: Set positive price
+  Expected: Success
+
+2.4.4. **Suggested tests**
+
+Test Method: shouldThrowExceptionWhenSettingNegativePrezzoTotale()
+  Arrange: Ordine ordine = new Ordine()
+  Act & Assert: assertThrows(IllegalArgumentException.class, () -> ordine.setPrezzoTotale(-0.01))
+
+Test Method: shouldSetZeroPrezzoTotale()
+  Arrange: Ordine ordine = new Ordine()
+  Act: ordine.setPrezzoTotale(0.0)
+  Assert: assertEquals(0.0, ordine.getPrezzoTotale())
+
+Test Method: shouldSetPositivePrezzoTotale()
+  Arrange: Ordine ordine = new Ordine()
+  Act: ordine.setPrezzoTotale(99.99)
+  Assert: assertEquals(99.99, ordine.getPrezzoTotale(), 0.01)
+
+========================================================================
+### 2.5-2.6 Methods: setUtente, setCarrello
+========================================================================
+
+Both follow standard null-check pattern:
+
+setUtente(Utente utente):
+- Requires: utente != null
+- Throws: IllegalArgumentException if null
+
+setCarrello(Carrello carrello):
+- Requires: carrello != null
+- Throws: IllegalArgumentException if null
+
+Suggested tests for each:
+- shouldThrowExceptionWhenSettingNullX()
+- shouldSetValidX()
+
+========================================================================
+END OF REPORT
+========================================================================

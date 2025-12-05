@@ -55,6 +55,9 @@ public class Carrello {
      * @
      */
     public boolean aggiungiProdotto(ProdottoCarrello p) {
+        if (p == null) {
+            throw new IllegalArgumentException("Il prodotto da aggiungere non può essere null");
+        }
         return prodotti.add(p);
     }
 
@@ -66,11 +69,10 @@ public class Carrello {
      * @
      */
     public void eliminaProdotto(Prodotto p) {
-        for (ProdottoCarrello e : prodotti) {
-            if (e.getProdotto().getId() == p.getId()) {
-                prodotti.remove(e);
-            }
+        if (p == null) {
+            throw new IllegalArgumentException("Il prodotto da eliminare non può essere null");
         }
+        prodotti.removeIf(e -> e.getProdotto().getId() == p.getId());
     }
 
     /*
@@ -83,10 +85,19 @@ public class Carrello {
      * @
      */
     public void cambiaQuantita(Prodotto p, int qnt) {
-        for (int i = 0; i < prodotti.size(); i++) {
-            if (prodotti.get(i).getProdotto().getId() == p.getId()) {
-                prodotti.get(i).setQuantita(qnt);
+        if (p == null) {
+            throw new IllegalArgumentException("Il prodotto non può essere null");
+        }
+        if (qnt <= 0) {
+            throw new IllegalArgumentException("La quantità deve essere maggiore di zero");
+        }
+        for (ProdottoCarrello pc : prodotti) {
+            if (pc.getProdotto().getId() == p.getId()) {
+                pc.setQuantita(qnt);
+                return;
             }
         }
+        // Product not found - throw exception for consistency
+        throw new IllegalStateException("Il prodotto con id " + p.getId() + " non è presente nel carrello");
     }
 }

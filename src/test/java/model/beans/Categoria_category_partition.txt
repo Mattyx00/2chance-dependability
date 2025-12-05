@@ -1,0 +1,390 @@
+========================================================================
+CATEGORY-PARTITION TESTING REPORT
+========================================================================
+Class: Categoria
+Package: model.beans
+========================================================================
+
+### 1. CLASS OVERVIEW
+
+**Class Name**: Categoria
+**Package**: model.beans
+
+**Description**:
+The Categoria class represents a product category in an e-commerce system. It encapsulates a single field (nomeCategoria) that identifies the category name.
+
+**Important Fields**:
+- nomeCategoria: String - The name of the category
+
+**Invariants** (from JML):
+- invariant nomeCategoria != null && !nomeCategoria.isEmpty()
+  The category name must never be null or empty after proper initialization.
+
+========================================================================
+### 2. METHODS TO BE TESTED
+========================================================================
+
+2.1 Constructor: Categoria()
+2.2 Constructor: Categoria(String nomeCategoria)
+2.3 Method: String getNomeCategoria()
+2.4 Method: void setNomeCategoria(String nomeCategoria)
+
+========================================================================
+### 2.1 Constructor: Categoria()
+========================================================================
+
+2.1.1. **Parameters and relevant state**
+
+**Parameters**: None
+
+**Relevant object state after construction**:
+- nomeCategoria field (uninitialized, will be null)
+
+**Preconditions**: None
+
+**Postconditions**: 
+- Object is created but nomeCategoria is null (violates invariant until set)
+
+2.1.2. **Categories and choices**
+
+No input parameters, so no categories for input values.
+
+Category C1 – Post-construction state
+  C1.a: nomeCategoria is null (default state)
+
+2.1.3. **Test frames**
+
+F1: Default construction
+  Choices: C1.a
+  Expected behavior:  
+    - Object created successfully
+    - getNomeCategoria() returns null (before any setter call)
+    - Invariant is not yet satisfied (requires subsequent setNomeCategoria call)
+
+2.1.4. **Suggested JUnit 5 test method names and structure**
+
+Test Method: shouldCreateCategoriaWithNullNameWhenUsingDefaultConstructor()
+
+  Arrange (Given):
+    - None required
+    
+  Act (When):
+    - Categoria categoria = new Categoria()
+    
+  Assert (Then):
+    - assertNotNull(categoria)
+    - assertNull(categoria.getNomeCategoria()) // Before any setter
+
+2.1.5. **Parameterized tests**
+
+Not applicable for default constructor.
+
+========================================================================
+### 2.2 Constructor: Categoria(String nomeCategoria)
+========================================================================
+
+2.2.1. **Parameters and relevant state**
+
+**Parameters**:
+- nomeCategoria: String - The category name to set
+
+**Relevant object state after construction**:
+- this.nomeCategoria = nomeCategoria (if valid)
+
+**Preconditions** (from JML):
+- requires nomeCategoria != null && !nomeCategoria.trim().isEmpty()
+
+**Postconditions** (from JML):
+- ensures this.nomeCategoria == nomeCategoria
+- Invariant satisfied: nomeCategoria != null && !nomeCategoria.isEmpty()
+
+2.2.2. **Categories and choices**
+
+Category C1 – nomeCategoria parameter nullity
+  C1.a: nomeCategoria == null
+  C1.b: nomeCategoria != null
+  
+Category C2 – nomeCategoria emptiness (when not null)
+  C2.a: nomeCategoria.trim().isEmpty() (empty or whitespace-only)
+  C2.b: nomeCategoria has meaningful content
+
+Category C3 – nomeCategoria content characteristics (when valid)
+  C3.a: Single character (boundary: minimal valid)
+  C3.b: Normal multi-character string
+  C3.c: Very long string (boundary: large valid input)
+
+2.2.3. **Test frames**
+
+F1: Construct with null name
+  Choices: C1.a
+  Expected behavior:
+    - IllegalArgumentException thrown
+    - Message: "Il nome della categoria non può essere null o vuoto"
+
+F2: Construct with empty string
+  Choices: C1.b + C2.a
+  Expected behavior:
+    - IllegalArgumentException thrown
+    - Message: "Il nome della categoria non può essere null o vuoto"
+
+F3: Construct with whitespace-only string
+  Choices: C1.b + C2.a
+  Expected behavior:
+    - IllegalArgumentException thrown
+    - Message: "Il nome della categoria non può essere null o vuoto"
+
+F4: Construct with valid single-character name
+  Choices: C1.b + C2.b + C3.a
+  Expected behavior:
+    - Object created successfully
+    - getNomeCategoria() returns the input value
+    - Invariant satisfied
+
+F5: Construct with valid normal name
+  Choices: C1.b + C2.b + C3.b
+  Expected behavior:
+    - Object created successfully
+    - getNomeCategoria() returns the input value
+    - Invariant satisfied
+
+F6: Construct with valid very long name
+  Choices: C1.b + C2.b + C3.c
+  Expected behavior:
+    - Object created successfully
+    - getNomeCategoria() returns the input value
+    - Invariant satisfied
+
+2.2.4. **Suggested JUnit 5 test method names and structure**
+
+Test Method: shouldThrowIllegalArgumentExceptionWhenNomeCategoriaisNull()
+
+  Arrange (Given):
+    - String nomeCategoria = null
+    
+  Act & Assert (When/Then):
+    - assertThrows(IllegalArgumentException.class, () -> new Categoria(nomeCategoria))
+    - Verify exception message contains "null o vuoto"
+
+Test Method: shouldThrowIllegalArgumentExceptionWhenNomeCategoriaIsEmpty()
+
+  Arrange (Given):
+    - String nomeCategoria = ""
+    
+  Act & Assert (When/Then):
+    - assertThrows(IllegalArgumentException.class, () -> new Categoria(nomeCategoria))
+
+Test Method: shouldThrowIllegalArgumentExceptionWhenNomeCategoriaIsWhitespace()
+
+  Arrange (Given):
+    - String nomeCategoria = "   "
+    
+  Act & Assert (When/Then):
+    - assertThrows(IllegalArgumentException.class, () -> new Categoria(nomeCategoria))
+
+Test Method: shouldCreateCategoriaWhenNomeCategoriaIsValid()
+
+  Arrange (Given):
+    - String nomeCategoria = "Electronics"
+    
+  Act (When):
+    - Categoria categoria = new Categoria(nomeCategoria)
+    
+  Assert (Then):
+    - assertNotNull(categoria)
+    - assertEquals("Electronics", categoria.getNomeCategoria())
+
+2.2.5. **Parameterized tests**
+
+Good candidate for parameterized tests combining valid/invalid scenarios.
+
+CSV Schema:
+  Columns: scenario, inputName, shouldThrowException, expectedName
+  
+Example rows:
+  "null input", null, true, null
+  "empty string", "", true, null
+  "whitespace only", "   ", true, null
+  "single char", "A", false, "A"
+  "normal name", "Electronics", false, "Electronics"
+  "long name", "Very Long Category Name With Many Words", false, "Very Long Category Name With Many Words"
+
+========================================================================
+### 2.3 Method: String getNomeCategoria()
+========================================================================
+
+2.3.1. **Parameters and relevant state**
+
+**Parameters**: None
+
+**Relevant object state**:
+- nomeCategoria field value
+
+**Preconditions**: None (getter has no preconditions)
+
+**Postconditions** (from JML):
+- ensures \result == nomeCategoria
+
+2.3.2. **Categories and choices**
+
+Category C1 – Object state (nomeCategoria value)
+  C1.a: nomeCategoria is null (from default constructor)
+  C1.b: nomeCategoria has valid non-null value
+
+2.3.3. **Test frames**
+
+F1: Get name when null (default constructed)
+  Choices: C1.a
+  Expected behavior:
+    - Returns null (no exception thrown)
+
+F2: Get name when set to valid value
+  Choices: C1.b
+  Expected behavior:
+    - Returns the current nomeCategoria value
+
+2.3.4. **Suggested JUnit 5 test method names and structure**
+
+Test Method: shouldReturnNullWhenNomeCategoriaNotYetSet()
+
+  Arrange (Given):
+    - Categoria categoria = new Categoria()
+    
+  Act (When):
+    - String result = categoria.getNomeCategoria()
+    
+  Assert (Then):
+    - assertNull(result)
+
+Test Method: shouldReturnNomeCategoriaWhenSet()
+
+  Arrange (Given):
+    - Categoria categoria = new Categoria("Books")
+    
+  Act (When):
+    - String result = categoria.getNomeCategoria()
+    
+  Assert (Then):
+    - assertEquals("Books", result)
+
+2.3.5. **Parameterized tests**
+
+Not a high-value candidate for parameterization (simple getter).
+
+========================================================================
+### 2.4 Method: void setNomeCategoria(String nomeCategoria)
+========================================================================
+
+2.4.1. **Parameters and relevant state**
+
+**Parameters**:
+- nomeCategoria: String - The new category name
+
+**Relevant object state**:
+- Current this.nomeCategoria value (will be updated)
+
+**Preconditions** (from JML):
+- requires nomeCategoria != null && !nomeCategoria.trim().isEmpty()
+
+**Postconditions** (from JML):
+- ensures this.nomeCategoria == nomeCategoria
+- Invariant maintained: nomeCategoria != null && !nomeCategoria.isEmpty()
+
+2.4.2. **Categories and choices**
+
+Category C1 – nomeCategoria parameter nullity
+  C1.a: nomeCategoria == null
+  C1.b: nomeCategoria != null
+  
+Category C2 – nomeCategoria emptiness (when not null)
+  C2.a: nomeCategoria.trim().isEmpty()
+  C2.b: nomeCategoria has content
+
+Category C3 – Current object state
+  C3.a: Object created with default constructor (nome currently null)
+  C3.b: Object has existing valid nome (replacing)
+
+2.4.3. **Test frames**
+
+F1: Set null name
+  Choices: C1.a + C3.a or C3.b
+  Expected behavior:
+    - IllegalArgumentException thrown
+    - Message: "Il nome della categoria non può essere null o vuoto"
+    - Object state unchanged
+
+F2: Set empty name
+  Choices: C1.b + C2.a + C3.a or C3.b
+  Expected behavior:
+    - IllegalArgumentException thrown
+    - Object state unchanged
+
+F3: Set valid name on default-constructed object
+  Choices: C1.b + C2.b + C3.a
+  Expected behavior:
+    - No exception
+    - getNomeCategoria() returns new value
+
+F4: Replace existing valid name with new valid name
+  Choices: C1.b + C2.b + C3.b
+  Expected behavior:
+    - No exception
+    - getNomeCategoria() returns new value
+
+2.4.4. **Suggested JUnit 5 test method names and structure**
+
+Test Method: shouldThrowIllegalArgumentExceptionWhenSettingNullName()
+
+  Arrange (Given):
+    - Categoria categoria = new Categoria("Original")
+    
+  Act & Assert (When/Then):
+    - assertThrows(IllegalArgumentException.class, () -> categoria.setNomeCategoria(null))
+    - assertEquals("Original", categoria.getNomeCategoria()) // Unchanged
+
+Test Method: shouldThrowIllegalArgumentExceptionWhenSettingEmptyName()
+
+  Arrange (Given):
+    - Categoria categoria = new Categoria("Original")
+    
+  Act & Assert (When/Then):
+    - assertThrows(IllegalArgumentException.class, () -> categoria.setNomeCategoria(""))
+    - assertEquals("Original", categoria.getNomeCategoria())
+
+Test Method: shouldSetValidNameOnDefaultConstructedObject()
+
+  Arrange (Given):
+    - Categoria categoria = new Categoria()
+    
+  Act (When):
+    - categoria.setNomeCategoria("NewCategory")
+    
+  Assert (Then):
+    - assertEquals("NewCategory", categoria.getNomeCategoria())
+
+Test Method: shouldReplaceExistingNameWithNewValidName()
+
+  Arrange (Given):
+    - Categoria categoria = new Categoria("OldCategory")
+    
+  Act (When):
+    - categoria.setNomeCategoria("NewCategory")
+    
+  Assert (Then):
+    - assertEquals("NewCategory", categoria.getNomeCategoria())
+
+2.4.5. **Parameterized tests**
+
+Moderate candidate for parameterized tests.
+
+CSV Schema:
+  Columns: scenario, initialName, newName, shouldThrowException, expectedFinalName
+  
+Example rows:
+  "set null on existing", "Original", null, true, "Original"
+  "set empty on existing", "Original", "", true, "Original"
+  "set valid on null", null, "New", false, "New"
+  "replace valid with valid", "Old", "New", false, "New"
+
+========================================================================
+END OF REPORT
+========================================================================

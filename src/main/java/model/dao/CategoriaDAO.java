@@ -16,12 +16,11 @@ public class CategoriaDAO {
 
     public ArrayList<Categoria> getCategorie() throws SQLException {
         try (Connection connection = ConPool.getConnection();
-             PreparedStatement stmt = connection.prepareStatement("SELECT * FROM categoria")) {
+                PreparedStatement stmt = connection.prepareStatement("SELECT * FROM categoria")) {
             ArrayList<Categoria> categorie = new ArrayList<>();
             ResultSet set = stmt.executeQuery();
 
-
-            while(set.next()){
+            while (set.next()) {
                 Categoria c = new Categoria();
                 c.setNomeCategoria(set.getString(1));
                 categorie.add(c);
@@ -31,8 +30,11 @@ public class CategoriaDAO {
     }
 
     public int addCategoria(Categoria c) throws SQLException {
+        if (c == null) {
+            throw new IllegalArgumentException("La categoria non può essere null");
+        }
         try (Connection connection = ConPool.getConnection();
-             PreparedStatement stmt = connection.prepareStatement("INSERT INTO categoria VALUES (?)")) {
+                PreparedStatement stmt = connection.prepareStatement("INSERT INTO categoria VALUES (?)")) {
             stmt.setString(1, c.getNomeCategoria());
             return stmt.executeUpdate();
         }
@@ -40,8 +42,11 @@ public class CategoriaDAO {
     }
 
     public void eliminaCategoria(String nome) throws SQLException {
+        if (nome == null || nome.trim().isEmpty()) {
+            throw new IllegalArgumentException("Il nome della categoria non può essere null o vuoto");
+        }
         try (Connection connection = ConPool.getConnection();
-             PreparedStatement stmt = connection.prepareStatement("DELETE FROM categoria WHERE nome = ?")) {
+                PreparedStatement stmt = connection.prepareStatement("DELETE FROM categoria WHERE nome = ?")) {
             stmt.setString(1, nome);
 
             stmt.executeUpdate();

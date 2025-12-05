@@ -17,15 +17,18 @@ public class RecensioneDAO {
     public RecensioneDAO() {
     }
 
-
     public ArrayList<Recensione> getRecensioniByUtente(Utente utente) throws SQLException {
+        if (utente == null) {
+            throw new IllegalArgumentException("L'utente non può essere null");
+        }
         try (Connection connection = ConPool.getConnection();
-             PreparedStatement stmt = connection.prepareStatement("SELECT * FROM recensione, utente, prodotto WHERE recensione.cliente = ? AND recensione.cliente = utente.id_utente AND recensione.prodotto = prodotto.id_prodotto")) {
+                PreparedStatement stmt = connection.prepareStatement(
+                        "SELECT * FROM recensione, utente, prodotto WHERE recensione.cliente = ? AND recensione.cliente = utente.id_utente AND recensione.prodotto = prodotto.id_prodotto")) {
             stmt.setInt(1, utente.getId());
             ResultSet rs = stmt.executeQuery();
             ArrayList<Recensione> recensioni = new ArrayList<>();
 
-            while(rs.next()){
+            while (rs.next()) {
                 Recensione recensione = new Recensione();
                 recensione.setId(rs.getInt(1));
                 Utente utenteProvvisorio = new Utente();
@@ -63,13 +66,17 @@ public class RecensioneDAO {
     }
 
     public ArrayList<Recensione> getRecensioniByProdotto(Prodotto prodotto) throws SQLException {
+        if (prodotto == null) {
+            throw new IllegalArgumentException("Il prodotto non può essere null");
+        }
         try (Connection connection = ConPool.getConnection();
-             PreparedStatement stmt = connection.prepareStatement("SELECT * FROM recensione, utente, prodotto WHERE recensione.prodotto = ? AND recensione.cliente = utente.id_utente AND recensione.prodotto = prodotto.id_prodotto")) {
+                PreparedStatement stmt = connection.prepareStatement(
+                        "SELECT * FROM recensione, utente, prodotto WHERE recensione.prodotto = ? AND recensione.cliente = utente.id_utente AND recensione.prodotto = prodotto.id_prodotto")) {
             stmt.setInt(1, prodotto.getId());
             ResultSet rs = stmt.executeQuery();
             ArrayList<Recensione> recensioni = new ArrayList<>();
 
-            while(rs.next()){
+            while (rs.next()) {
                 Recensione recensione = new Recensione();
                 recensione.setId(rs.getInt(1));
                 Utente utenteProvvisorio = new Utente();
@@ -106,10 +113,13 @@ public class RecensioneDAO {
         }
     }
 
-
-    public int addRecensione (Recensione recensione) throws SQLException{
+    public int addRecensione(Recensione recensione) throws SQLException {
+        if (recensione == null) {
+            throw new IllegalArgumentException("La recensione non può essere null");
+        }
         try (Connection connection = ConPool.getConnection();
-             PreparedStatement stmt = connection.prepareStatement("INSERT INTO recensione VALUES (default, ?, ?, default, ?, ?);")) {
+                PreparedStatement stmt = connection
+                        .prepareStatement("INSERT INTO recensione VALUES (default, ?, ?, default, ?, ?);")) {
             System.out.println(recensione.getUtente().getId());
             stmt.setInt(1, recensione.getUtente().getId());
             stmt.setInt(2, recensione.getProdotto().getId());
@@ -120,13 +130,16 @@ public class RecensioneDAO {
     }
 
     public void deleteRecensione(int id_recensione) throws SQLException {
+        if (id_recensione <= 0) {
+            throw new IllegalArgumentException("L'ID della recensione deve essere maggiore di zero");
+        }
         try (Connection connection = ConPool.getConnection();
-             PreparedStatement stmt = connection.prepareStatement("DELETE FROM recensione WHERE id_recensione = ?")) {
+                PreparedStatement stmt = connection
+                        .prepareStatement("DELETE FROM recensione WHERE id_recensione = ?")) {
             stmt.setInt(1, id_recensione);
 
             stmt.executeUpdate();
         }
     }
-
 
 }

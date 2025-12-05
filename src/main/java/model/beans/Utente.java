@@ -47,8 +47,19 @@ public class Utente {
         return nome;
     }
 
-    /* @ ensures this.nome == nome; @ */
+    /*
+     * @
+     * 
+     * @ requires nome != null && !nome.trim().isEmpty();
+     * 
+     * @ ensures this.nome == nome;
+     * 
+     * @
+     */
     public void setNome(String nome) {
+        if (nome == null || nome.trim().isEmpty()) {
+            throw new IllegalArgumentException("Il nome non può essere null o vuoto");
+        }
         this.nome = nome;
     }
 
@@ -57,8 +68,19 @@ public class Utente {
         return cognome;
     }
 
-    /* @ ensures this.cognome == cognome; @ */
+    /*
+     * @
+     * 
+     * @ requires cognome != null && !cognome.trim().isEmpty();
+     * 
+     * @ ensures this.cognome == cognome;
+     * 
+     * @
+     */
     public void setCognome(String cognome) {
+        if (cognome == null || cognome.trim().isEmpty()) {
+            throw new IllegalArgumentException("Il cognome non può essere null o vuoto");
+        }
         this.cognome = cognome;
     }
 
@@ -67,8 +89,19 @@ public class Utente {
         return email;
     }
 
-    /* @ ensures this.email == email; @ */
+    /*
+     * @
+     * 
+     * @ requires email != null && !email.trim().isEmpty();
+     * 
+     * @ ensures this.email == email;
+     * 
+     * @
+     */
     public void setEmail(String email) {
+        if (email == null || email.trim().isEmpty()) {
+            throw new IllegalArgumentException("L'email non può essere null o vuota");
+        }
         this.email = email;
     }
 
@@ -77,8 +110,19 @@ public class Utente {
         return telefono;
     }
 
-    /* @ ensures this.telefono == telefono; @ */
+    /*
+     * @
+     * 
+     * @ requires telefono != null && !telefono.trim().isEmpty();
+     * 
+     * @ ensures this.telefono == telefono;
+     * 
+     * @
+     */
     public void setTelefono(String telefono) {
+        if (telefono == null || telefono.trim().isEmpty()) {
+            throw new IllegalArgumentException("Il telefono non può essere null o vuoto");
+        }
         this.telefono = telefono;
     }
 
@@ -97,8 +141,19 @@ public class Utente {
         return ordini;
     }
 
-    /* @ ensures this.ordini == ordini; @ */
+    /*
+     * @
+     * 
+     * @ requires ordini != null;
+     * 
+     * @ ensures this.ordini == ordini;
+     * 
+     * @
+     */
     public void setOrdini(ArrayList<Ordine> ordini) {
+        if (ordini == null) {
+            throw new IllegalArgumentException("La lista degli ordini non può essere null");
+        }
         this.ordini = ordini;
     }
 
@@ -107,8 +162,19 @@ public class Utente {
         return recensioni;
     }
 
-    /* @ ensures this.recensioni == recensioni; @ */
+    /*
+     * @
+     * 
+     * @ requires recensioni != null;
+     * 
+     * @ ensures this.recensioni == recensioni;
+     * 
+     * @
+     */
     public void setRecensioni(ArrayList<Recensione> recensioni) {
+        if (recensioni == null) {
+            throw new IllegalArgumentException("La lista delle recensioni non può essere null");
+        }
         this.recensioni = recensioni;
     }
 
@@ -122,6 +188,9 @@ public class Utente {
      * @
      */
     public void setPassword(String password) {
+        if (password == null || password.trim().isEmpty()) {
+            throw new IllegalArgumentException("La password non può essere null o vuota");
+        }
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-1");
             digest.reset();
@@ -142,16 +211,22 @@ public class Utente {
      * 
      * @ requires o != null;
      * 
-     * @ ensures \result >= 0;
+     * @ ensures \result >= -1;
      * 
      * @
      */
     public int getOrdineIndex(Ordine o) {
+        if (o == null) {
+            throw new IllegalArgumentException("L'ordine non può essere null");
+        }
+        if (ordini == null) {
+            return -1;
+        }
         for (Ordine e : ordini) {
             if (e.getId() == o.getId()) {
                 return ordini.indexOf(e);
             }
         }
-        return 0;
+        return -1;
     }
 }

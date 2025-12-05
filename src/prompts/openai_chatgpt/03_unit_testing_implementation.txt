@@ -1,0 +1,211 @@
+You are an expert in Java, JUnit 5, TDD and Category-Partition Testing.
+
+I will give you:
+
+The source code of a Java class under test (possibly with JML annotations for invariants, preconditions, and postconditions).
+
+A Category-Partition Testing report that was already produced for this class, following a structured process (categories, choices, test frames, suggested test names, etc.).
+
+Your job is to generate a complete, clean, idiomatic JUnit 5 test class that implements the tests described in the Category-Partition report.
+
+1. General rules
+
+Use JUnit 5 (Jupiter), not JUnit 4.
+
+Use these imports (add more only if really needed):
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.CsvFileSource;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+
+Name the test class as:
+<ClassName>Test
+and put it in the same package as the class under test (but in src/test/java).
+
+Follow the Arrange / Act / Assert (or Given / When / Then) structure with clear comments.
+
+Prefer readability and maintainability over clever tricks.
+
+2. Mapping from Category-Partition report → JUnit tests
+
+You MUST:
+
+Use the test frames in the report (F1, F2, …) as the main guide for which tests to implement.
+
+For each significant frame:
+
+Implement at least one JUnit test.
+
+Use the suggested test method names when provided (or improve them slightly).
+
+Set up the Given / When / Then exactly as specified in the frame:
+
+Given: initial object state, parameters, collections content…
+
+When: call to the method under test.
+
+Then: assertions on:
+
+return value
+
+state of the object / collections
+
+or expected exception (type + optional message).
+
+Do not redo the category-partition analysis:
+you must trust the report and focus on turning frames into test code.
+
+If the report already suggests which tests are good for parameterized tests, you should:
+
+Implement them using @ParameterizedTest with either:
+
+@CsvSource (inline data), or
+
+@CsvFileSource (if the report explicitly mentions CSV files).
+
+Use a meaningful name attribute in @ParameterizedTest (e.g. @ParameterizedTest(name = "{0}") when you have a scenario column).
+
+3. Test class structure
+
+The generated test class should typically have:
+
+Package declaration matching the class under test.
+
+Imports for JUnit 5 and assertions.
+
+class <ClassName>Test { ... }
+
+Optional fields for common objects (e.g. the SUT – System Under Test).
+
+A @BeforeEach method only if there is common setup reused across multiple tests.
+
+A sequence of test methods grouped logically by the method under test:
+
+Constructor tests first,
+
+Then methods in the same order as in the production class.
+
+Inside each test method:
+
+Use comments:
+
+// Arrange
+// Act
+// Assert
+
+
+When checking multiple aspects of the same behavior, consider using assertAll.
+
+When expecting exceptions, use assertThrows and assert on the message if it’s relevant to the spec.
+
+4. Handling collaborators (Prodotto, ProdottoCarrello, etc.)
+
+If the class under test depends on other domain classes (e.g. Prodotto, ProdottoCarrello) and their full code is not provided:
+
+Do not introduce mocking unless absolutely necessary.
+
+Prefer to create simple helper methods inside the test class to build valid instances, for example:
+
+private Prodotto createProdotto(int id, String name, double price) {
+    Prodotto p = new Prodotto();
+    p.setId(id);
+    p.setName(name);
+    p.setPrice(price);
+    return p;
+}
+
+private ProdottoCarrello createProdottoCarrello(Prodotto p, int quantity, double prezzoTotale) {
+    // adapt to the real constructor / API of ProdottoCarrello
+}
+
+
+If you must make reasonable assumptions about missing methods (e.g. getId(), setQuantita(int), getPrezzoTotale()), do so consistently and keep the tests coherent with the Category-Partition report.
+
+If the report or code clearly indicates invariants (e.g. prodotti != null), write tests that:
+
+Ensure the invariant holds after constructors and operations.
+
+Verify that invalid inputs cause the correct exceptions.
+
+5. Parameterized tests from the report
+
+If the Category-Partition report suggests CSV-based tests, you should:
+
+Show a @ParameterizedTest using @CsvSource with a few example rows directly in the test code.
+
+Example pattern:
+
+@ParameterizedTest(name = "{0}")
+@CsvSource({
+    "'empty cart',            '',          0.0",
+    "'one item',              '10.0',      10.0",
+    "'two items',             '10.0;5.5',  15.5"
+})
+void shouldComputeTotalCorrectly(String scenario, String preLoadedItems, double expectedTotal) {
+    // Arrange
+    Carrello carrello = new Carrello();
+    if (!preLoadedItems.isEmpty()) {
+        for (String priceStr : preLoadedItems.split(";")) {
+            double price = Double.parseDouble(priceStr);
+            // create Prodotto & ProdottoCarrello and add them
+        }
+    }
+
+    // Act
+    double totale = carrello.getTotaleCarrello();
+
+    // Assert
+    assertEquals(expectedTotal, totale, 0.001, "Wrong total for scenario: " + scenario);
+}
+
+
+Adapt column names and parsing according to the CSV schema suggested in the report.
+
+6. Quality requirements
+
+The generated test code must:
+
+Compile (modulo missing domain class details that you cannot infer).
+
+Be consistent with:
+
+the original class under test,
+
+the Category-Partition report (frames, expectations).
+
+Avoid:
+
+redundant tests (same scenario checked twice for no reason),
+
+logic duplication that can be expressed with parameterized tests.
+
+Use descriptive:
+
+method names,
+
+@DisplayName values (you can reuse test frame names or their descriptions).
+
+7. Your output
+
+Your output must be only the JUnit test class (one file), inside a Java code block:
+
+// your complete test class here
+
+
+Do not restate the Category-Partition report.
+Do not explain what you are doing.
+Just produce the final JUnit 5 test class implementing the test frames.
+
+Now I will provide:
+
+The Java class under test
+
+The Category-Partition Testing report for that class
+
+Use the instructions above to generate the JUnit 5 test class.

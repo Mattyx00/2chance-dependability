@@ -14,14 +14,18 @@ public class SpecificheDAO {
     public SpecificheDAO() {
     }
 
-    public ArrayList<Specifiche> getSpecificheByProd (int id) throws SQLException {
+    public ArrayList<Specifiche> getSpecificheByProd(int id) throws SQLException {
+        if (id <= 0) {
+            throw new IllegalArgumentException("L'ID del prodotto deve essere maggiore di zero");
+        }
         try (Connection connection = ConPool.getConnection();
-             PreparedStatement stmt = connection.prepareStatement("SELECT nome, valore FROM specifiche WHERE id_prodotto = ?")) {
+                PreparedStatement stmt = connection
+                        .prepareStatement("SELECT nome, valore FROM specifiche WHERE id_prodotto = ?")) {
             stmt.setInt(1, id);
             ArrayList<Specifiche> list = new ArrayList<>();
             ResultSet rs = stmt.executeQuery();
 
-            while(rs.next()){
+            while (rs.next()) {
                 Specifiche spec = new Specifiche();
 
                 spec.setNome(rs.getString(1));
@@ -33,4 +37,3 @@ public class SpecificheDAO {
         }
     }
 }
-

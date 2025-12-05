@@ -1,0 +1,258 @@
+========================================================================
+CATEGORY-PARTITION TESTING REPORT
+========================================================================
+Class: Specifiche
+Package: model.beans
+========================================================================
+
+### 1. CLASS OVERVIEW
+
+**Class Name**: Specifiche
+**Package**: model.beans
+
+**Description**:
+The Specifiche class represents a product specification (technical detail) in an e-commerce system. It encapsulates a key-value pair where 'nome' is the specification name (e.g., "RAM", "Processor") and 'valore' is its value (e.g., "16GB", "Intel i7").
+
+**Important Fields**:
+- nome: String - The specification name/key
+- valore: String - The specification value
+
+**Invariants** (from JML):
+- invariant nome != null && !nome.isEmpty()
+- invariant valore != null && !valore.isEmpty()
+
+Both fields must be non-null and non-empty, ensuring every specification is complete and meaningful.
+
+========================================================================
+### 2. METHODS TO BE TESTED
+========================================================================
+
+2.1 Constructor: Specifiche()
+2.2 Constructor: Specifiche(String nome, String valore)
+2.3 Method: String getNome()
+2.4 Method: void setNome(String nome)
+2.5 Method: String getValore()
+2.6 Method: void setValore(String valore)
+
+========================================================================
+### 2.1 Constructor: Specifiche()
+========================================================================
+
+2.1.1. **Parameters and relevant state**
+
+**Parameters**: None
+
+**Relevant object state after construction**:
+- nome and valore fields are null (uninitialized)
+
+**Preconditions**: None
+
+**Postconditions**: Object created but fields are null (invariants not yet satisfied)
+
+2.1.2. **Categories and choices**
+
+No input parameters.
+
+Category C1 – Post-construction state
+  C1.a: Both nome and valore are null
+
+2.1.3. **Test frames**
+
+F1: Default construction
+  Choices: C1.a
+  Expected behavior:
+    - Object created
+    - Both fields null until setters called
+
+2.1.4. **Suggested JUnit 5 test method names and structure**
+
+Test Method: shouldCreateSpecificheWithNullFieldsWhenUsingDefaultConstructor()
+
+  Arrange: None
+  Act: Specifiche spec = new Specifiche()
+  Assert: 
+    - assertNotNull(spec)
+    - assertNull(spec.getNome())
+    - assertNull(spec.getValore())
+
+2.1.5. **Parameterized tests**
+
+Not applicable.
+
+========================================================================
+### 2.2 Constructor: Specifiche(String nome, String valore)
+========================================================================
+
+2.2.1. **Parameters and relevant state**
+
+**Parameters**:
+- nome: String - Specification name
+- valore: String - Specification value
+
+**Preconditions** (from JML):
+- requires nome != null && !nome.trim().isEmpty()
+- requires valore != null && !valore.trim().isEmpty()
+
+**Postconditions** (from JML):
+- ensures this.nome == nome && this.valore == valore
+- Both invariants satisfied
+
+2.2.2. **Categories and choices**
+
+Category C1 – nome parameter
+  C1.a: nome == null
+  C1.b: nome is empty/whitespace
+  C1.c: nome is valid
+
+Category C2 – valore parameter  
+  C2.a: valore == null
+  C2.b: valore is empty/whitespace
+  C2.c: valore is valid
+
+Category C3 – Combination validity
+  C3.a: Both valid
+  C3.b: One or both invalid
+
+2.2.3. **Test frames**
+
+F1: Both parameters valid
+  Choices: C1.c + C2.c
+  Expected: Object created, fields set correctly
+
+F2: nome is null
+  Choices: C1.a + C2.c
+  Expected: IllegalArgumentException - "Il nome della specifica non può essere null o vuoto"
+
+F3: nome is empty
+  Choices: C1.b + C2.c
+  Expected: IllegalArgumentException
+
+F4: valore is null
+  Choices: C1.c + C2.a
+  Expected: IllegalArgumentException - "Il valore della specifica non può essere null o vuoto"
+
+F5: valore is empty
+  Choices: C1.c + C2.b
+  Expected: IllegalArgumentException
+
+F6: Both null
+  Choices: C1.a + C2.a
+  Expected: IllegalArgumentException (nome checked first)
+
+2.2.4. **Suggested JUnit 5 test method names and structure**
+
+Test Method: shouldCreateSpecificheWhenBothParametersAreValid()
+  Arrange: String nome = "RAM", valore = "16GB"
+  Act: Specifiche spec = new Specifiche(nome, valore)
+  Assert: 
+    - assertNotNull(spec)
+    - assertEquals("RAM", spec.getNome())
+    - assertEquals("16GB", spec.getValore())
+
+Test Method: shouldThrowExceptionWhenNomeIsNull()
+  Arrange: String nome = null, valore = "16GB"
+  Act & Assert: assertThrows(IllegalArgumentException.class, () -> new Specifiche(nome, valore))
+
+Test Method: shouldThrowExceptionWhenValoreIsNull()
+  Arrange: String nome = "RAM", valore = null
+  Act & Assert: assertThrows(IllegalArgumentException.class, () -> new Specifiche(nome, valore))
+
+Test Method: shouldThrowExceptionWhenNomeIsEmpty()
+  Arrange: String nome = "", valore = "16GB"
+  Act & Assert: assertThrows(IllegalArgumentException.class, () -> new Specifiche(nome, valore))
+
+Test Method: shouldThrowExceptionWhenValoreIsWhitespace()
+  Arrange: String nome = "RAM", valore = "   "
+  Act & Assert: assertThrows(IllegalArgumentException.class, () -> new Specifiche(nome, valore))
+
+2.2.5. **Parameterized tests**
+
+Excellent candidate.
+
+CSV Schema:
+Columns: scenario, nome, valore, shouldThrow, expectedMessage
+
+Example rows:
+"valid pair", "CPU", "Intel i7", false, null
+"nome null", null, "Value", true, "nome"
+"valore null", "Key", null, true, "valore"
+"nome empty", "", "Value", true, "nome"
+"valore whitespace", "Key", "   ", true, "valore"
+
+========================================================================
+### 2.3 Method: String getNome()
+========================================================================
+
+Simple getter - similar analysis to Categoria.getNomeCategoria().
+
+2.3.1-2.3.5: **Analysis**
+
+Test frames:
+- F1: Get when null (default constructor used)
+- F2: Get when set to valid value
+
+Suggested tests:
+- shouldReturnNullWhenNomeNotSet()
+- shouldReturnNomeWhenSet()
+
+========================================================================
+### 2.4 Method: void setNome(String nome)
+========================================================================
+
+2.4.1. **Parameters and relevant state**
+
+**Parameters**: nome (String)
+
+**Preconditions** (from JML):
+- requires nome != null && !nome.trim().isEmpty()
+
+**Postconditions**:
+- ensures this.nome == nome
+
+2.4.2. **Categories and choices**
+
+Category C1 – nome parameter
+  C1.a: null
+  C1.b: empty/whitespace
+  C1.c: valid
+
+Category C2 – Current state
+  C2.a: nome currently null
+  C2.b: nome currently has value
+
+2.4.3. **Test frames**
+
+F1: Set null - should throw
+F2: Set empty - should throw
+F3: Set valid on null object - should succeed
+F4: Replace existing with new valid - should succeed
+
+2.4.4. **Suggested tests**
+
+- shouldThrowExceptionWhenSettingNullNome()
+- shouldThrowExceptionWhenSettingEmptyNome()
+- shouldSetValidNomeOnDefaultObject()
+- shouldReplaceExistingNomeWithNewValidNome()
+
+========================================================================
+### 2.5 Method: String getValore()
+========================================================================
+
+Mirror of getNome(). Similar test strategy.
+
+========================================================================
+### 2.6 Method: void setValore(String valore)
+========================================================================
+
+Mirror of setNome(). Same categories and test frames adapted for valore field.
+
+2.6.4. **Suggested tests**
+
+- shouldThrowExceptionWhenSettingNullValore()
+- shouldThrowExceptionWhenSettingEmptyValore()
+- shouldSetValidValoreOnDefaultObject()
+- shouldReplaceExistingValoreWithNewValidValore()
+
+========================================================================
+END OF REPORT
+========================================================================

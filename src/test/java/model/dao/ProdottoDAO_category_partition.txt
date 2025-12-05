@@ -1,0 +1,859 @@
+================================================================================
+CATEGORY-PARTITION TESTING REPORT
+Class: ProdottoDAO
+Package: model.dao
+================================================================================
+
+### 1. CLASS OVERVIEW
+
+Class name: ProdottoDAO
+Package: model.dao
+
+Role in the domain:
+The ProdottoDAO class is a Data Access Object responsible for managing database 
+operations related to the Prodotto (Product) entity. It provides comprehensive 
+CRUD operations including retrieval (all, by ID, by category, by search term), 
+insertion, soft deletion, modification, and specification management. It also 
+handles product-specific queries like getting the most recent products.
+
+Important fields:
+- No instance fields (stateless DAO).
+- Relies on ConPool for database connections.
+- Manages prodotto table and related specifiche table.
+- Implements soft delete pattern using 'disabilitato' flag.
+
+Invariants:
+- Database connection must be properly managed.
+- All database operations must handle SQLException appropriately.
+- Parameter validation occurs before database operations.
+- null parameters are rejected with IllegalArgumentException.
+- ID parameters must be positive (> 0).
+- Empty/whitespace strings are invalid for search operations.
+- Soft delete: disabilitato flag is used instead of physical deletion.
+
+================================================================================
+### 2. METHODS TO BE TESTED
+================================================================================
+
+--------------------------------------------------------------------------------
+#### 2.1 Constructor: ProdottoDAO()
+--------------------------------------------------------------------------------
+
+2.1.1. Parameters and relevant state
+
+Explicit parameters:
+- None
+
+Postconditions:
+- A new ProdottoDAO instance is created
+
+2.1.2. Categories and choices
+
+Category C1 - Constructor invocation
+  C1.a: Constructor is called successfully
+
+2.1.3. Test frames
+
+F1: Create new ProdottoDAO instance
+  - Expected behavior: New instance created without exceptions
+
+2.1.4. Suggested JUnit 5 test method names
+
+shouldCreateNewProdottoDAOInstanceWhenConstructorCalled()
+  - Arrange: None
+  - Act: ProdottoDAO dao = new ProdottoDAO();
+  - Assert: assertNotNull(dao)
+
+2.1.5. Parameterized test candidates
+- Not applicable
+
+--------------------------------------------------------------------------------
+#### 2.2 Method: public ArrayList<Prodotto> getProdotti() throws SQLException
+--------------------------------------------------------------------------------
+
+2.2.1. Parameters and relevant state
+
+Explicit parameters:
+- None
+
+Relevant object state:
+- Database connection availability
+- Database state (prodotto table, only non-disabled products)
+
+Preconditions:
+- Database connection must be available
+
+Postconditions:
+- Returns ArrayList<Prodotto> containing all non-disabled products
+- Empty list if no products exist or all are disabled
+- Each Prodotto has basic fields populated (no specifiche or recensioni)
+- Database connection is properly closed
+
+2.2.2. Categories and choices
+
+Category C1 - Database content
+  C1.a: No products exist
+  C1.b: Only disabled products exist (disabilitato = 1)
+  C1.c: One enabled product exists (disabilitato = 0)
+  C1.d: Multiple enabled products exist
+  C1.e: Mix of enabled and disabled products
+
+Category C2 - Database connection
+  C2.a: Connection is successfully obtained
+  C2.b: Connection fails (SQLException)
+
+Category C3 - SQL execution
+  C3.a: SELECT executes successfully
+  C3.b: SELECT fails (SQLException)
+
+2.2.3. Test frames (combinations of choices)
+
+F1: Retrieve products from empty database
+  - Choices: C1.a + C2.a + C3.a
+  - Expected behavior: Returns empty ArrayList
+  - Return value: Non-null, empty list (size == 0)
+
+F2: Retrieve products when only disabled products exist
+  - Choices: C1.b + C2.a + C3.a
+  - Expected behavior: Returns empty ArrayList
+  - Return value: Non-null, empty list (size == 0)
+  - Note: WHERE clause filters out disabled products
+
+F3: Retrieve single enabled product
+  - Choices: C1.c + C2.a + C3.a
+  - Expected behavior: Returns ArrayList with one Prodotto
+  - Return value: List with size == 1
+  - State: Prodotto fully populated with basic fields
+
+F4: Retrieve multiple enabled products
+  - Choices: C1.d + C2.a + C3.a
+  - Expected behavior: Returns ArrayList with all enabled products
+  - Return value: List with size > 1
+
+F5: Retrieve only enabled products from mixed database
+  - Choices: C1.e + C2.a + C3.a
+  - Expected behavior: Returns only non-disabled products
+  - Return value: List containing only products with disabilitato = 0
+
+F6: Database connection fails
+  - Choices: C2.b
+  - Expected behavior: SQLException is thrown
+  - Exception: SQLException
+
+2.2.4. Suggested JUnit 5 test method names and structure
+
+shouldReturnEmptyListWhenNoProductsExist()
+  - Arrange: Clear prodotto table
+  - Act: ArrayList<Prodotto> result = dao.getProdotti();
+  - Assert:
+    - assertNotNull(result)
+    - assertEquals(0, result.size())
+
+shouldReturnEmptyListWhenOnlyDisabledProductsExist()
+  - Arrange: Insert 3 products with disabilitato = 1
+  - Act: ArrayList<Prodotto> result = dao.getProdotti();
+  - Assert:
+    - assertEquals(0, result.size())
+
+shouldReturnSingleProductWhenOneEnabledProductExists()
+  - Arrange: Insert one product with disabilitato = 0
+  - Act: ArrayList<Prodotto> result = dao.getProdotti();
+  - Assert:
+    - assertEquals(1, result.size())
+    - assertNotNull(result.get(0).getCategoria())
+
+shouldReturnAllEnabledProductsWhenMultipleEnabledProductsExist()
+  - Arrange: Insert 5 enabled products
+  - Act: ArrayList<Prodotto> result = dao.getProdotti();
+  - Assert:
+    - assertEquals(5, result.size())
+
+shouldReturnOnlyEnabledProductsWhenMixedProductsExist()
+  - Arrange:
+    - Insert 3 enabled products (disabilitato = 0)
+    - Insert 2 disabled products (disabilitato = 1)
+  - Act: ArrayList<Prodotto> result = dao.getProdotti();
+  - Assert:
+    - assertEquals(3, result.size())
+
+shouldThrowSQLExceptionWhenDatabaseConnectionFails()
+  - Arrange: Mock ConPool to throw SQLException
+  - Act & Assert: assertThrows(SQLException.class, () -> dao.getProdotti())
+
+2.2.5. Parameterized test candidates
+
+Good candidate for testing various database states:
+
+CSV schema:
+Columns: enabledProducts, disabledProducts, expectedSize
+Example rows:
+  0, 0, 0
+  1, 0, 1
+  5, 0, 5
+  3, 2, 3
+  0, 5, 0
+
+--------------------------------------------------------------------------------
+#### 2.3 Method: public Prodotto getProdottoById(int idProdotto) throws SQLException
+--------------------------------------------------------------------------------
+
+2.3.1. Parameters and relevant state
+
+Explicit parameters:
+- idProdotto: int (the product ID to retrieve)
+
+Relevant object state:
+- Database connection availability
+- Database state (prodotto, specifiche, recensione tables)
+
+Preconditions:
+- idProdotto must be > 0 (enforced by IllegalArgumentException)
+- Database connection must be available
+
+Postconditions:
+- If product exists: Returns fully populated Prodotto with specifiche and recensioni
+- If product doesn't exist or is disabled: Returns null
+- Database connection is properly closed
+
+2.3.2. Categories and choices
+
+Category C1 - idProdotto parameter
+  C1.a: idProdotto <= 0 (invalid: zero)
+  C1.b: idProdotto < 0 (invalid: negative)
+  C1.c: idProdotto > 0 && product exists && enabled
+  C1.d: idProdotto > 0 && product exists && disabled
+  C1.e: idProdotto > 0 && product does NOT exist
+
+Category C2 - Database state
+  C2.a: Product exists, enabled, with specifiche and recensioni
+  C2.b: Product exists, enabled, no specifiche or recensioni
+  C2.c: Product exists but is disabled
+  C2.d: Product does not exist
+
+Category C3 - Database connection
+  C3.a: Connection is successfully obtained
+  C3.b: Connection fails (SQLException)
+
+Category C4 - DAO dependencies
+  C4.a: SpecificheDAO and RecensioneDAO calls succeed
+  C4.b: SpecificheDAO or RecensioneDAO calls fail
+
+2.3.3. Test frames (combinations of choices)
+
+F1: Get product with zero ID
+  - Choices: C1.a
+  - Expected behavior: IllegalArgumentException is thrown
+  - Exception: IllegalArgumentException with message 
+    "L'ID del prodotto deve essere maggiore di zero"
+
+F2: Get product with negative ID
+  - Choices: C1.b
+  - Expected behavior: IllegalArgumentException is thrown
+
+F3: Get existing enabled product with full data
+  - Choices: C1.c + C2.a + C3.a + C4.a
+  - Expected behavior: Returns fully populated Prodotto
+  - Return value: Prodotto with all fields, specifiche, and recensioni
+  - State: SpecificheDAO and RecensioneDAO were called
+
+F4: Get existing enabled product without specifiche/recensioni
+  - Choices: C1.c + C2.b + C3.a + C4.a
+  - Expected behavior: Returns Prodotto with empty lists
+  - Return value: Prodotto with basic fields, empty specifiche and recensioni
+
+F5: Get disabled product
+  - Choices: C1.d + C2.c + C3.a
+  - Expected behavior: Returns null (WHERE clause filters by disabilitato = 0)
+  - Return value: null
+
+F6: Get non-existing product
+  - Choices: C1.e + C2.d + C3.a
+  - Expected behavior: Returns null
+  - Return value: null
+
+F7: Database connection fails
+  - Choices: C1.c + C3.b
+  - Expected behavior: SQLException is thrown
+
+2.3.4. Suggested JUnit 5 test method names and structure
+
+shouldThrowIllegalArgumentExceptionWhenIdIsZero()
+  - Arrange: int id = 0;
+  - Act & Assert: assertThrows(IllegalArgumentException.class, 
+      () -> dao.getProdottoById(id))
+
+shouldThrowIllegalArgumentExceptionWhenIdIsNegative()
+  - Arrange: int id = -10;
+  - Act & Assert: assertThrows(IllegalArgumentException.class, 
+      () -> dao.getProdottoById(id))
+
+shouldReturnFullyPopulatedProductWhenValidEnabledProductExists()
+  - Arrange:
+    - Insert product with ID 100 (disabilitato = 0)
+    - Insert specifiche for product
+    - Insert recensioni for product
+  - Act: Prodotto result = dao.getProdottoById(100);
+  - Assert:
+    - assertNotNull(result)
+    - assertEquals(100, result.getId())
+    - assertNotNull(result.getSpecifiche())
+    - assertNotNull(result.getRecensioni())
+
+shouldReturnNullWhenProductIsDisabled()
+  - Arrange: Insert product with ID 100 (disabilitato = 1)
+  - Act: Prodotto result = dao.getProdottoById(100);
+  - Assert: assertNull(result)
+
+shouldReturnNullWhenProductDoesNotExist()
+  - Arrange: Ensure product with ID 99999 does not exist
+  - Act: Prodotto result = dao.getProdottoById(99999);
+  - Assert: assertNull(result)
+
+2.3.5. Parameterized test candidates
+
+Good for testing invalid IDs and various product states
+
+--------------------------------------------------------------------------------
+#### 2.4 Method: public ArrayList<Prodotto> getProdottiByCategoria(String categoria) 
+                 throws SQLException
+--------------------------------------------------------------------------------
+
+2.4.1. Parameters and relevant state
+
+Explicit parameters:
+- categoria: String (category name to filter by)
+
+Preconditions:
+- categoria must not be null (enforced by IllegalArgumentException)
+- categoria must not be empty or whitespace-only (enforced by IllegalArgumentException)
+
+Postconditions:
+- Returns ArrayList<Prodotto> containing all enabled products in category
+- Empty list if no products in category or all are disabled
+
+2.4.2. Categories and choices
+
+Category C1 - categoria parameter
+  C1.a: categoria == null (invalid)
+  C1.b: categoria is empty "" (invalid)
+  C1.c: categoria is whitespace "   " (invalid)
+  C1.d: categoria is valid && products exist in category
+  C1.e: categoria is valid && NO products in category
+
+Category C2 - Database state
+  C2.a: No products in category
+  C2.b: One enabled product in category
+  C2.c: Multiple enabled products in category
+  C2.d: Mix of enabled and disabled products in category
+
+2.4.3. Test frames
+
+F1: Get products with null category
+  - Choices: C1.a
+  - Expected: IllegalArgumentException with message 
+    "La categoria non può essere null o vuota"
+
+F2: Get products with empty category
+  - Choices: C1.b
+  - Expected: IllegalArgumentException
+
+F3: Get products with whitespace category
+  - Choices: C1.c
+  - Expected: IllegalArgumentException
+
+F4: Get products for category with no products
+  - Choices: C1.e + C2.a
+  - Expected: Empty ArrayList
+
+F5: Get products for category with one enabled product
+  - Choices: C1.d + C2.b
+  - Expected: ArrayList with size == 1
+
+F6: Get products for category with multiple enabled products
+  - Choices: C1.d + C2.c
+  - Expected: ArrayList with all enabled products in category
+
+F7: Get products for category with mixed enabled/disabled
+  - Choices: C1.d + C2.d
+  - Expected: Only enabled products returned
+
+2.4.4. Suggested JUnit 5 test method names
+
+shouldThrowIllegalArgumentExceptionWhenCategoriaIsNull()
+shouldThrowIllegalArgumentExceptionWhenCategoriaIsEmpty()
+shouldThrowIllegalArgumentExceptionWhenCategoriaIsWhitespace()
+shouldReturnEmptyListWhenNoCategoryProducts()
+shouldReturnSingleProductWhenOneEnabledProductInCategory()
+shouldReturnAllEnabledProductsInCategory()
+shouldReturnOnlyEnabledProductsInMixedCategory()
+
+2.4.5. Parameterized test candidates
+
+Excellent for testing various categories and states
+
+--------------------------------------------------------------------------------
+#### 2.5 Method: public int addProdotto(Prodotto p) throws SQLException
+--------------------------------------------------------------------------------
+
+2.5.1. Parameters and relevant state
+
+Explicit parameters:
+- p: Prodotto (the product to add)
+
+Preconditions:
+- p must not be null (enforced by IllegalArgumentException)
+- p must have all required fields set (categoria, descrizione, etc.)
+
+Postconditions:
+- Product is inserted into database
+- Returns number of rows affected (typically 1)
+
+2.5.2. Categories and choices
+
+Category C1 - Prodotto parameter
+  C1.a: p == null (invalid)
+  C1.b: p != null && all fields valid
+  C1.c: p != null BUT categoria is null (NullPointerException risk)
+  C1.d: p != null BUT other required fields are null
+
+Category C2 - SQL execution
+  C2.a: INSERT executes successfully
+  C2.b: INSERT fails (SQLException)
+
+2.5.3. Test frames
+
+F1: Add null product
+  - Choices: C1.a
+  - Expected: IllegalArgumentException with message "Il prodotto non può essere null"
+
+F2: Add valid product
+  - Choices: C1.b + C2.a
+  - Expected: Returns 1, product exists in database
+
+F3: Add product with null categoria
+  - Choices: C1.c
+  - Expected: NullPointerException when calling p.getCategoria().getNomeCategoria()
+
+2.5.4. Suggested JUnit 5 test method names
+
+shouldThrowIllegalArgumentExceptionWhenProdottoIsNull()
+shouldInsertProductAndReturnOneWhenValidProductProvided()
+shouldThrowNullPointerExceptionWhenCategoriaIsNull()
+
+--------------------------------------------------------------------------------
+#### 2.6 Method: public ArrayList<Prodotto> getUltimiProdotti() throws SQLException
+--------------------------------------------------------------------------------
+
+2.6.1. Parameters and relevant state
+
+Explicit parameters:
+- None
+
+Postconditions:
+- Returns up to 8 most recent enabled products (highest IDs)
+- Ordered by id_prodotto DESC
+
+2.6.2. Categories and choices
+
+Category C1 - Database content
+  C1.a: No enabled products
+  C1.b: Fewer than 8 enabled products
+  C1.c: Exactly 8 enabled products
+  C1.d: More than 8 enabled products
+
+2.6.3. Test frames
+
+F1: Get recent products from empty database
+  - Choices: C1.a
+  - Expected: Empty ArrayList
+
+F2: Get recent products when fewer than 8 exist
+  - Choices: C1.b
+  - Expected: Returns all enabled products (e.g., 5)
+
+F3: Get recent products when exactly 8 exist
+  - Choices: C1.c
+  - Expected: Returns all 8 products
+
+F4: Get recent products when more than 8 exist
+  - Choices: C1.d
+  - Expected: Returns only 8 most recent (highest IDs)
+
+2.6.4. Suggested JUnit 5 test method names
+
+shouldReturnEmptyListWhenNoProductsExist()
+shouldReturnAllProductsWhenFewerThan8Exist()
+shouldReturn8ProductsWhenExactly8Exist()
+shouldReturnOnly8MostRecentProductsWhenMoreThan8Exist()
+shouldReturnProductsInDescendingIdOrder()
+
+--------------------------------------------------------------------------------
+#### 2.7 Method: public ArrayList<Prodotto> cercaProdotti(String nome) 
+                 throws SQLException
+--------------------------------------------------------------------------------
+
+2.7.1. Parameters and relevant state
+
+Explicit parameters:
+- nome: String (search term)
+
+Preconditions:
+- nome must not be null (enforced by IllegalArgumentException)
+- nome must not be empty or whitespace-only (enforced by IllegalArgumentException)
+
+Postconditions:
+- Returns products matching search term (case-insensitive, LIKE query)
+- Searches in marca, modello, descrizione, categoria fields
+- Only enabled products returned
+
+2.7.2. Categories and choices
+
+Category C1 - nome parameter
+  C1.a: nome == null (invalid)
+  C1.b: nome is empty "" (invalid)
+  C1.c: nome is whitespace "   " (invalid)
+  C1.d: nome is valid && matches exist
+  C1.e: nome is valid && NO matches
+
+Category C2 - Search results
+  C2.a: No matches found
+  C2.b: One match found
+  C2.c: Multiple matches found
+  C2.d: Partial match (substring)
+
+2.7.3. Test frames
+
+F1: Search with null term
+  - Choices: C1.a
+  - Expected: IllegalArgumentException with message 
+    "Il nome di ricerca non può essere null o vuoto"
+
+F2: Search with empty term
+  - Choices: C1.b
+  - Expected: IllegalArgumentException
+
+F3: Search with no matches
+  - Choices: C1.e + C2.a
+  - Expected: Empty ArrayList
+
+F4: Search with single match
+  - Choices: C1.d + C2.b
+  - Expected: ArrayList with 1 product
+
+F5: Search with multiple matches
+  - Choices: C1.d + C2.c
+  - Expected: ArrayList with all matching products
+
+F6: Search with partial match
+  - Choices: C1.d + C2.d
+  - Expected: Products containing search term
+
+2.7.4. Suggested JUnit 5 test method names
+
+shouldThrowIllegalArgumentExceptionWhenSearchTermIsNull()
+shouldThrowIllegalArgumentExceptionWhenSearchTermIsEmpty()
+shouldReturnEmptyListWhenNoMatchesFound()
+shouldReturnMatchingProductsWhenSearchTermMatches()
+shouldPerformCaseInsensitiveSearch()
+shouldSearchAcrossAllFields()
+
+--------------------------------------------------------------------------------
+#### 2.8 Method: public void eliminaProdotto(int idProdotto) throws SQLException
+--------------------------------------------------------------------------------
+
+2.8.1. Parameters and relevant state
+
+Explicit parameters:
+- idProdotto: int
+
+Preconditions:
+- idProdotto must be > 0 (enforced by IllegalArgumentException)
+
+Postconditions:
+- Product is soft-deleted (disabilitato set to 1)
+- Returns void
+
+2.8.2. Categories and choices
+
+Category C1 - idProdotto parameter
+  C1.a: idProdotto <= 0 (invalid)
+  C1.b: idProdotto > 0 && product exists && enabled
+  C1.c: idProdotto > 0 && product exists && already disabled
+  C1.d: idProdotto > 0 && product does NOT exist
+
+2.8.3. Test frames
+
+F1: Delete with zero/negative ID
+  - Choices: C1.a
+  - Expected: IllegalArgumentException
+
+F2: Delete existing enabled product
+  - Choices: C1.b
+  - Expected: Product now has disabilitato = 1
+
+F3: Delete already disabled product
+  - Choices: C1.c
+  - Expected: No error, still disabled
+
+F4: Delete non-existing product
+  - Choices: C1.d
+  - Expected: No error (0 rows affected)
+
+2.8.4. Suggested JUnit 5 test method names
+
+shouldThrowIllegalArgumentExceptionWhenIdIsZeroOrNegative()
+shouldSoftDeleteProductWhenValidIdProvided()
+shouldCompleteWithoutErrorWhenProductAlreadyDisabled()
+shouldCompleteWithoutErrorWhenProductDoesNotExist()
+
+--------------------------------------------------------------------------------
+#### 2.9 Method: public void aggiungiSpecifiche(ArrayList<Specifiche> specifiche, 
+                 int idProdotto) throws SQLException
+--------------------------------------------------------------------------------
+
+2.9.1. Parameters and relevant state
+
+Explicit parameters:
+- specifiche: ArrayList<Specifiche>
+- idProdotto: int
+
+Preconditions:
+- specifiche must not be null (enforced by IllegalArgumentException)
+- idProdotto must be > 0 (enforced by IllegalArgumentException)
+
+Postconditions:
+- All specifiche are inserted into database for product
+- Returns void
+
+2.9.2. Categories and choices
+
+Category C1 - specifiche parameter
+  C1.a: specifiche == null (invalid)
+  C1.b: specifiche is empty list
+  C1.c: specifiche has one item
+  C1.d: specifiche has multiple items
+
+Category C2 - idProdotto parameter
+  C2.a: idProdotto <= 0 (invalid)
+  C2.b: idProdotto > 0 && product exists
+  C2.c: idProdotto > 0 && product does NOT exist
+
+2.9.3. Test frames
+
+F1: Add null specifiche list
+  - Choices: C1.a
+  - Expected: IllegalArgumentException
+
+F2: Add with invalid ID
+  - Choices: C2.a
+  - Expected: IllegalArgumentException
+
+F3: Add empty specifiche list
+  - Choices: C1.b + C2.b
+  - Expected: No inserts, no error (loop doesn't execute)
+
+F4: Add one specification
+  - Choices: C1.c + C2.b
+  - Expected: One specification inserted
+
+F5: Add multiple specifications
+  - Choices: C1.d + C2.b
+  - Expected: All specifications inserted
+
+F6: Add specifications for non-existing product
+  - Choices: C1.c + C2.c
+  - Expected: SQLException (FK violation)
+
+2.9.4. Suggested JUnit 5 test method names
+
+shouldThrowIllegalArgumentExceptionWhenSpecificheIsNull()
+shouldThrowIllegalArgumentExceptionWhenIdIsInvalid()
+shouldCompleteWithoutErrorWhenSpecificheListIsEmpty()
+shouldInsertSingleSpecificationWhenOneProvided()
+shouldInsertAllSpecificationsWhenMultipleProvided()
+shouldThrowSQLExceptionWhenProductDoesNotExist()
+
+--------------------------------------------------------------------------------
+#### 2.10 Method: public int getLastProduct() throws SQLException
+--------------------------------------------------------------------------------
+
+2.10.1. Parameters and relevant state
+
+Explicit parameters:
+- None
+
+Postconditions:
+- Returns the maximum id_prodotto from enabled products
+- Returns the value even if product is the only one
+
+2.10.2. Categories and choices
+
+Category C1 - Database content
+  C1.a: No enabled products
+  C1.b: One enabled product
+  C1.c: Multiple enabled products
+
+2.10.3. Test frames
+
+F1: Get last product ID from empty database
+  - Choices: C1.a
+  - Expected: Returns 0 or NULL-related value (depends on SQL MAX behavior)
+
+F2: Get last product ID when one product exists
+  - Choices: C1.b
+  - Expected: Returns that product's ID
+
+F3: Get last product ID when multiple products exist
+  - Choices: C1.c
+  - Expected: Returns highest ID
+
+2.10.4. Suggested JUnit 5 test method names
+
+shouldReturnZeroOrNullValueWhenNoProductsExist()
+shouldReturnProductIdWhenOneProductExists()
+shouldReturnHighestIdWhenMultipleProductsExist()
+
+--------------------------------------------------------------------------------
+#### 2.11 Method: public int eliminaSpecificheProdotto(int idProdotto) 
+                  throws SQLException
+--------------------------------------------------------------------------------
+
+2.11.1. Parameters and relevant state
+
+Explicit parameters:
+- idProdotto: int
+
+Preconditions:
+- idProdotto must be > 0 (enforced by IllegalArgumentException)
+
+Postconditions:
+- All specifications for product are deleted
+- Returns number of rows deleted
+
+2.11.2. Categories and choices
+
+Category C1 - idProdotto parameter
+  C1.a: idProdotto <= 0 (invalid)
+  C1.b: idProdotto > 0 && has specifications
+  C1.c: idProdotto > 0 && has NO specifications
+
+2.11.3. Test frames
+
+F1: Delete with invalid ID
+  - Choices: C1.a
+  - Expected: IllegalArgumentException
+
+F2: Delete specifications when they exist
+  - Choices: C1.b
+  - Expected: Returns number deleted (> 0)
+
+F3: Delete specifications when none exist
+  - Choices: C1.c
+  - Expected: Returns 0 (no rows deleted)
+
+2.11.4. Suggested JUnit 5 test method names
+
+shouldThrowIllegalArgumentExceptionWhenIdIsInvalid()
+shouldDeleteAllSpecificationsAndReturnCountWhenSpecificationsExist()
+shouldReturnZeroWhenNoSpecificationsExist()
+
+--------------------------------------------------------------------------------
+#### 2.12 Method: public void modificaProdotto(Prodotto p) throws SQLException
+--------------------------------------------------------------------------------
+
+2.12.1. Parameters and relevant state
+
+Explicit parameters:
+- p: Prodotto (the product to update)
+
+Preconditions:
+- p must not be null (enforced by IllegalArgumentException)
+- p must have valid ID set
+
+Postconditions:
+- Product is updated in database
+- If p.getImmagine() is null: updates without changing image
+- If p.getImmagine() is not null: updates including image
+
+2.12.2. Categories and choices
+
+Category C1 - Prodotto parameter
+  C1.a: p == null (invalid)
+  C1.b: p != null && immagine is null
+  C1.c: p != null && immagine is not null
+
+Category C2 - Database state
+  C2.a: Product with p.getId() exists
+  C2.b: Product with p.getId() does NOT exist
+
+2.12.3. Test frames
+
+F1: Modify null product
+  - Choices: C1.a
+  - Expected: IllegalArgumentException
+
+F2: Modify product without updating image
+  - Choices: C1.b + C2.a
+  - Expected: Product updated, image unchanged
+
+F3: Modify product including image
+  - Choices: C1.c + C2.a
+  - Expected: Product updated including image
+
+F4: Modify non-existing product
+  - Choices: C1.c + C2.b
+  - Expected: No error (0 rows updated)
+
+2.12.4. Suggested JUnit 5 test method names
+
+shouldThrowIllegalArgumentExceptionWhenProdottoIsNull()
+shouldUpdateProductWithoutImageWhenImageIsNull()
+shouldUpdateProductWithImageWhenImageIsNotNull()
+shouldCompleteWithoutErrorWhenProductDoesNotExist()
+
+================================================================================
+### 3. OVERALL TESTING STRATEGY
+================================================================================
+
+Integration Testing Considerations:
+- Most complex DAO with 12 public methods
+- Requires database with prodotto, specifiche, categoria, recensione tables
+- Implements soft delete pattern
+- Depends on SpecificheDAO and RecensioneDAO
+- Use in-memory database or test database
+
+Test Data Setup:
+- Create test categories first (FK dependency)
+- Create test products with various states (enabled/disabled)
+- Create test specifiche and recensioni
+- Use @BeforeEach for clean state
+- Use transactions for isolation
+
+Special Testing Challenges:
+- Soft delete complicates all query methods (must filter disabilitato = 0)
+- modificaProdotto has two different UPDATE statements based on image
+- aggiungiSpecifiche loops over list
+- Some methods call other DAOs (coupling)
+- Multiple System.out.println statements (testing consideration)
+
+Coverage Goals:
+- All 12 public methods tested
+- All exception paths verified
+- Soft delete behavior verified
+- Both branches of modificaProdotto tested
+- Search functionality thoroughly tested
+- Specification management verified
+
+Mock/Stub Strategy:
+- Mock ConPool for connection failures
+- Consider mocking SpecificheDAO and RecensioneDAO for unit testing
+- Use real database for integration tests
+
+Performance Considerations:
+- getUltimiProdotti uses LIMIT 8
+- cercaProdotti uses LIKE (may be slow on large datasets)
+- getProdottoById makes multiple DAO calls
+
+================================================================================
+END OF REPORT
+================================================================================

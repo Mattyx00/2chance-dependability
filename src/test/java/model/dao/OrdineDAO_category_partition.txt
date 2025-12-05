@@ -1,0 +1,783 @@
+================================================================================
+CATEGORY-PARTITION TESTING REPORT
+Class: OrdineDAO
+Package: model.dao
+================================================================================
+
+### 1. CLASS OVERVIEW
+
+Class name: OrdineDAO
+Package: model.dao
+
+Role in the domain:
+The OrdineDAO class is a Data Access Object responsible for managing database 
+operations related to the Ordine (Order) entity. It handles complex order 
+operations including retrieval by ID and user, order creation with associated 
+cart products, and fetching all orders. It manages relationships between orders, 
+users, carts, and products.
+
+Important fields:
+- No instance fields (stateless DAO).
+- Relies on ConPool for database connections.
+- Interacts with multiple tables: ordine, composto, prodotto, utente.
+
+Invariants:
+- Database connection must be properly managed.
+- All database operations must handle SQLException appropriately.
+- Parameter validation occurs before database operations.
+- null parameters are rejected with IllegalArgumentException.
+- ID parameters must be positive (> 0).
+- Orders have associated users and carts with products.
+
+================================================================================
+### 2. METHODS TO BE TESTED
+================================================================================
+
+--------------------------------------------------------------------------------
+#### 2.1 Constructor: OrdineDAO()
+--------------------------------------------------------------------------------
+
+2.1.1. Parameters and relevant state
+
+Explicit parameters:
+- None
+
+Relevant object state:
+- None (default constructor creates fresh instance)
+
+Preconditions:
+- None explicit
+
+Postconditions:
+- A new OrdineDAO instance is created
+- The instance is ready to perform database operations
+
+2.1.2. Categories and choices
+
+Category C1 - Constructor invocation
+  C1.a: Constructor is called successfully
+
+2.1.3. Test frames (combinations of choices)
+
+F1: Create new OrdineDAO instance
+  - Choices: C1.a
+  - Expected behavior: New instance is created without exceptions
+  - Return value: Non-null OrdineDAO object
+
+2.1.4. Suggested JUnit 5 test method names and structure
+
+shouldCreateNewOrdineDAOInstanceWhenConstructorCalled()
+  - Arrange: None required
+  - Act: OrdineDAO dao = new OrdineDAO();
+  - Assert: assertNotNull(dao)
+
+2.1.5. Parameterized test candidates
+- Not applicable (simple constructor with no parameters)
+
+--------------------------------------------------------------------------------
+#### 2.2 Method: public Ordine getOrdineById(int id) throws SQLException
+--------------------------------------------------------------------------------
+
+2.2.1. Parameters and relevant state
+
+Explicit parameters:
+- id: int (the order ID to retrieve)
+
+Relevant object state:
+- Database connection availability
+- Database state (ordine table content)
+
+Preconditions:
+- id must be greater than 0 (enforced by IllegalArgumentException)
+- Database connection must be available
+
+Postconditions:
+- If order exists: Returns fully populated Ordine object
+- If order doesn't exist: Returns Ordine object with default/unset values
+- Database connection is properly closed
+
+2.2.2. Categories and choices
+
+Category C1 - ID parameter
+  C1.a: id <= 0 (invalid: zero)
+  C1.b: id < 0 (invalid: negative)
+  C1.c: id > 0 && order exists in database
+  C1.d: id > 0 && order does NOT exist in database
+
+Category C2 - Database connection
+  C2.a: Connection is successfully obtained
+  C2.b: Connection fails (SQLException)
+
+Category C3 - Database state
+  C3.a: Order with ID exists and has valid data
+  C3.b: Order with ID does not exist
+  C3.c: Order exists but has NULL/invalid foreign key references
+
+Category C4 - SQL execution
+  C4.a: SELECT executes successfully
+  C4.b: SELECT fails (SQLException)
+
+2.2.3. Test frames (combinations of choices)
+
+F1: Get order with zero ID
+  - Choices: C1.a
+  - Expected behavior: IllegalArgumentException is thrown
+  - Exception: IllegalArgumentException with message 
+    "L'ID dell'ordine deve essere maggiore di zero"
+
+F2: Get order with negative ID
+  - Choices: C1.b
+  - Expected behavior: IllegalArgumentException is thrown
+  - Exception: IllegalArgumentException with message 
+    "L'ID dell'ordine deve essere maggiore di zero"
+
+F3: Get existing order
+  - Choices: C1.c + C2.a + C3.a + C4.a
+  - Expected behavior: Returns fully populated Ordine object
+  - Return value: Ordine with all fields set (id, utente, dataOrdine, 
+    indirizzo, prezzoTotale)
+  - State: Ordine object matches database record
+
+F4: Get non-existing order
+  - Choices: C1.d + C2.a + C3.b + C4.a
+  - Expected behavior: Returns Ordine with default values (ID set but other fields unset)
+  - Return value: Ordine object (not null, but mostly empty)
+  - Note: Current implementation creates empty Ordine if no results
+
+F5: Database connection fails
+  - Choices: C1.c + C2.b
+  - Expected behavior: SQLException is thrown
+  - Exception: SQLException
+
+F6: SQL execution fails
+  - Choices: C1.c + C2.a + C4.b
+  - Expected behavior: SQLException is thrown
+  - Exception: SQLException
+
+2.2.4. Suggested JUnit 5 test method names and structure
+
+shouldThrowIllegalArgumentExceptionWhenIdIsZero()
+  - Arrange: int id = 0;
+  - Act & Assert:
+    - IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+        () -> dao.getOrdineById(id))
+    - assertTrue(ex.getMessage().contains("maggiore di zero"))
+
+shouldThrowIllegalArgumentExceptionWhenIdIsNegative()
+  - Arrange: int id = -5;
+  - Act & Assert: assertThrows(IllegalArgumentException.class, 
+      () -> dao.getOrdineById(id))
+
+shouldReturnPopulatedOrdineWhenValidIdExists()
+  - Arrange:
+    - Insert test order with ID = 100
+    - Expected data: userId=1, date=today, address="Test St", total=99.99
+  - Act: Ordine result = dao.getOrdineById(100);
+  - Assert:
+    - assertNotNull(result)
+    - assertEquals(100, result.getId())
+    - assertNotNull(result.getUtente())
+    - assertEquals(1, result.getUtente().getId())
+    - assertEquals("Test St", result.getIndirizzo())
+    - assertEquals(99.99, result.getPrezzoTotale(), 0.01)
+
+shouldReturnEmptyOrdineWhenIdDoesNotExist()
+  - Arrange: Ensure order with ID 99999 does not exist
+  - Act: Ordine result = dao.getOrdineById(99999);
+  - Assert:
+    - assertNotNull(result)
+    - Verify fields are in default state
+
+shouldThrowSQLExceptionWhenDatabaseConnectionFails()
+  - Arrange: Mock ConPool to throw SQLException
+  - Act & Assert: assertThrows(SQLException.class, () -> dao.getOrdineById(1))
+
+2.2.5. Parameterized test candidates
+
+Good candidate for testing various invalid IDs:
+
+CSV schema:
+Columns: invalidId, description
+Example rows:
+  0, "zero ID"
+  -1, "negative ID"
+  -100, "large negative ID"
+
+--------------------------------------------------------------------------------
+#### 2.3 Method: public Carrello getProdottoOrdine(Ordine o) throws SQLException
+--------------------------------------------------------------------------------
+
+2.3.1. Parameters and relevant state
+
+Explicit parameters:
+- o: Ordine (the order whose cart/products to retrieve)
+
+Relevant object state:
+- Database connection availability
+- Database state (composto table, linking orders to products)
+
+Preconditions:
+- o must not be null (enforced by IllegalArgumentException)
+- o.getId() must return valid order ID
+- Database connection must be available
+
+Postconditions:
+- Returns Carrello containing all ProdottoCarrello items for the order
+- Empty Carrello if no products in order
+- Database connection is properly closed
+
+2.3.2. Categories and choices
+
+Category C1 - Ordine parameter (o)
+  C1.a: o == null (invalid)
+  C1.b: o != null && o.getId() returns valid ID && order has products
+  C1.c: o != null && o.getId() returns valid ID && order has NO products
+  C1.d: o != null BUT o.getId() might throw exception
+
+Category C2 - Database state (composto table)
+  C2.a: Order has no associated products
+  C2.b: Order has one associated product
+  C2.c: Order has multiple associated products
+
+Category C3 - Database connection
+  C3.a: Connection is successfully obtained
+  C3.b: Connection fails (SQLException)
+
+Category C4 - SQL execution
+  C4.a: JOIN query executes successfully
+  C4.b: JOIN query fails (SQLException)
+
+2.3.3. Test frames (combinations of choices)
+
+F1: Get products for null order
+  - Choices: C1.a
+  - Expected behavior: IllegalArgumentException is thrown
+  - Exception: IllegalArgumentException with message "L'ordine non può essere null"
+
+F2: Get products for order with no products
+  - Choices: C1.c + C2.a + C3.a + C4.a
+  - Expected behavior: Returns empty Carrello
+  - Return value: Non-null Carrello with empty product list
+  - State: carrello.getProdotti().size() == 0
+
+F3: Get products for order with one product
+  - Choices: C1.b + C2.b + C3.a + C4.a
+  - Expected behavior: Returns Carrello with one ProdottoCarrello
+  - Return value: Carrello with 1 product
+  - State: Product details match database (quantity, price, marca, modello)
+
+F4: Get products for order with multiple products
+  - Choices: C1.b + C2.c + C3.a + C4.a
+  - Expected behavior: Returns Carrello with multiple ProdottoCarrello items
+  - Return value: Carrello with size > 1
+  - State: All products correctly populated
+
+F5: Database connection fails
+  - Choices: C1.b + C3.b
+  - Expected behavior: SQLException is thrown
+  - Exception: SQLException
+
+F6: SQL execution fails
+  - Choices: C1.b + C3.a + C4.b
+  - Expected behavior: SQLException is thrown
+  - Exception: SQLException
+
+2.3.4. Suggested JUnit 5 test method names and structure
+
+shouldThrowIllegalArgumentExceptionWhenOrdineIsNull()
+  - Arrange: Ordine o = null;
+  - Act & Assert:
+    - IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+        () -> dao.getProdottoOrdine(o))
+    - assertEquals("L'ordine non può essere null", ex.getMessage())
+
+shouldReturnEmptyCarrelloWhenOrderHasNoProducts()
+  - Arrange:
+    - Create order with ID 100 in database with no products
+    - Ordine o = new Ordine(); o.setId(100);
+  - Act: Carrello result = dao.getProdottoOrdine(o);
+  - Assert:
+    - assertNotNull(result)
+    - assertEquals(0, result.getProdotti().size())
+
+shouldReturnCarrelloWithOneProductWhenOrderHasSingleProduct()
+  - Arrange:
+    - Create order with ID 100
+    - Link one product (ID 50, qty 2) to order
+    - Ordine o = new Ordine(); o.setId(100);
+  - Act: Carrello result = dao.getProdottoOrdine(o);
+  - Assert:
+    - assertNotNull(result)
+    - assertEquals(1, result.getProdotti().size())
+    - assertEquals(2, result.getProdotti().get(0).getQuantita())
+    - assertEquals(50, result.getProdotti().get(0).getProdotto().getId())
+
+shouldReturnCarrelloWithAllProductsWhenOrderHasMultipleProducts()
+  - Arrange:
+    - Create order with ID 100
+    - Link 3 products to order
+  - Act: Carrello result = dao.getProdottoOrdine(o);
+  - Assert:
+    - assertEquals(3, result.getProdotti().size())
+
+shouldThrowSQLExceptionWhenDatabaseConnectionFails()
+  - Arrange: 
+    - Mock ConPool to throw SQLException
+    - Ordine o = new Ordine(); o.setId(1);
+  - Act & Assert: assertThrows(SQLException.class, () -> dao.getProdottoOrdine(o))
+
+2.3.5. Parameterized test candidates
+
+Good candidate for testing different cart sizes:
+
+CSV schema:
+Columns: orderId, numberOfProducts, expectedCartSize
+Example rows:
+  100, 0, 0
+  101, 1, 1
+  102, 3, 3
+  103, 10, 10
+
+--------------------------------------------------------------------------------
+#### 2.4 Method: public ArrayList<Ordine> getOrdiniByUtente(Utente utente) 
+                 throws SQLException
+--------------------------------------------------------------------------------
+
+2.4.1. Parameters and relevant state
+
+Explicit parameters:
+- utente: Utente (the user whose orders to retrieve)
+
+Relevant object state:
+- Database connection availability
+- Database state (ordine table)
+
+Preconditions:
+- utente must not be null (enforced by IllegalArgumentException)
+- utente.getId() must return valid user ID
+- Database connection must be available
+
+Postconditions:
+- Returns ArrayList<Ordine> containing all orders for the user
+- Each Ordine includes its Carrello with products
+- Empty list if user has no orders
+- Database connection is properly closed
+
+2.4.2. Categories and choices
+
+Category C1 - Utente parameter
+  C1.a: utente == null (invalid)
+  C1.b: utente != null && has orders
+  C1.c: utente != null && has NO orders
+  C1.d: utente != null BUT getId() might fail
+
+Category C2 - Database state
+  C2.a: User has no orders
+  C2.b: User has one order
+  C2.c: User has multiple orders
+  C2.d: User has orders with and without products
+
+Category C3 - Database connection
+  C3.a: Connection is successfully obtained
+  C3.b: Connection fails (SQLException)
+
+Category C4 - SQL execution
+  C4.a: SELECT executes successfully
+  C4.b: SELECT fails (SQLException)
+
+2.4.3. Test frames (combinations of choices)
+
+F1: Get orders for null user
+  - Choices: C1.a
+  - Expected behavior: IllegalArgumentException is thrown
+  - Exception: IllegalArgumentException with message "L'utente non può essere null"
+
+F2: Get orders for user with no orders
+  - Choices: C1.c + C2.a + C3.a + C4.a
+  - Expected behavior: Returns empty ArrayList
+  - Return value: Non-null, empty list (size == 0)
+
+F3: Get orders for user with one order
+  - Choices: C1.b + C2.b + C3.a + C4.a
+  - Expected behavior: Returns ArrayList with one Ordine
+  - Return value: List with size == 1
+  - State: Ordine is fully populated including Carrello
+
+F4: Get orders for user with multiple orders
+  - Choices: C1.b + C2.c + C3.a + C4.a
+  - Expected behavior: Returns ArrayList with multiple Ordine objects
+  - Return value: List with size > 1
+  - State: All Ordine objects fully populated
+
+F5: Get orders where some have products and some don't
+  - Choices: C1.b + C2.d + C3.a + C4.a
+  - Expected behavior: Returns all orders with appropriate Carrello states
+  - Return value: List with mixed cart contents
+
+F6: Database connection fails
+  - Choices: C1.b + C3.b
+  - Expected behavior: SQLException is thrown
+  - Exception: SQLException
+
+2.4.4. Suggested JUnit 5 test method names and structure
+
+shouldThrowIllegalArgumentExceptionWhenUtenteIsNull()
+  - Arrange: Utente utente = null;
+  - Act & Assert:
+    - IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+        () -> dao.getOrdiniByUtente(utente))
+    - assertEquals("L'utente non può essere null", ex.getMessage())
+
+shouldReturnEmptyListWhenUserHasNoOrders()
+  - Arrange:
+    - Create user with ID 100 in database
+    - Ensure no orders for this user
+    - Utente u = new Utente(); u.setId(100);
+  - Act: ArrayList<Ordine> result = dao.getOrdiniByUtente(u);
+  - Assert:
+    - assertNotNull(result)
+    - assertEquals(0, result.size())
+
+shouldReturnSingleOrderWhenUserHasOneOrder()
+  - Arrange:
+    - Create user with ID 100
+    - Create one order for user
+    - Utente u = new Utente(); u.setId(100);
+  - Act: ArrayList<Ordine> result = dao.getOrdiniByUtente (u);
+  - Assert:
+    - assertEquals(1, result.size())
+    - assertNotNull(result.get(0).getCarrello())
+
+shouldReturnAllOrdersWhenUserHasMultipleOrders()
+  - Arrange:
+    - Create user with ID 100
+    - Create 3 orders for user
+  - Act: ArrayList<Ordine> result = dao.getOrdiniByUtente(u);
+  - Assert:
+    - assertEquals(3, result.size())
+    - Verify all orders belong to correct user
+
+shouldPopulateCarrelloForEachOrderWhenRetrievingUserOrders()
+  - Arrange:
+    - Create user with 2 orders
+    - First order has 2 products, second has 1 product
+  - Act: ArrayList<Ordine> result = dao.getOrdiniByUtente(u);
+  - Assert:
+    - assertEquals(2, result.get(0).getCarrello().getProdotti().size())
+    - assertEquals(1, result.get(1).getCarrello().getProdotti().size())
+
+2.4.5. Parameterized test candidates
+
+Good candidate for testing different numbers of orders:
+
+CSV schema:
+Columns: userId, numberOfOrders, expectedSize
+Example rows:
+  100, 0, 0
+  101, 1, 1
+  102, 5, 5
+
+--------------------------------------------------------------------------------
+#### 2.5 Method: public void addOrdine(Ordine ordine) throws SQLException
+--------------------------------------------------------------------------------
+
+2.5.1. Parameters and relevant state
+
+Explicit parameters:
+- ordine: Ordine (the order to add to database)
+
+Relevant object state:
+- Database connection availability
+- Database state (ordine and composto tables)
+
+Preconditions:
+- ordine must not be null (enforced by IllegalArgumentException)
+- ordine.getUtente() must not be null
+- ordine.getUtente().getId() must be valid
+- ordine.getCarrello() must not be null
+- ordine.getCarrello().getProdotti() must not be null
+- Database connection must be available
+
+Postconditions:
+- If successful: Order is inserted into ordine table
+- Associated products are inserted into composto table
+- Method returns void (no return value)
+- Database connection is properly closed
+
+2.5.2. Categories and choices
+
+Category C1 - Ordine parameter
+  C1.a: ordine == null (invalid)
+  C1.b: ordine != null && fully valid (utente, carrello, products set)
+  C1.c: ordine != null BUT utente is null (NullPointerException risk)
+  C1.d: ordine != null BUT carrello is null (NullPointerException risk)
+  C1.e: ordine != null BUT carrello has no products (empty cart)
+
+Category C2 - Cart state
+  C2.a: Carrello has no products (empty)
+  C2.b: Carrello has one product
+  C2.c: Carrello has multiple products
+
+Category C3 - Database connection
+  C3.a: Connection is successfully obtained
+  C3.b: Connection fails (SQLException)
+
+Category C4 - SQL execution
+  C4.a: INSERT operations execute successfully
+  C4.b: INSERT fails (SQLException)
+
+2.5.3. Test frames (combinations of choices)
+
+F1: Add null order
+  - Choices: C1.a
+  - Expected behavior: IllegalArgumentException is thrown
+  - Exception: IllegalArgumentException with message "L'ordine non può essere null"
+
+F2: Add valid order with one product
+  - Choices: C1.b + C2.b + C3.a + C4.a
+  - Expected behavior: Order and product entry inserted
+  - Return value: void (no exception)
+  - State: Database contains new order and composto entry
+
+F3: Add valid order with multiple products
+  - Choices: C1.b + C2.c + C3.a + C4.a
+  - Expected behavior: Order and all product entries inserted
+  - Return value: void (no exception)
+  - State: Database contains order and multiple composto entries
+
+F4: Add order with null utente
+  - Choices: C1.c + C3.a
+  - Expected behavior: NullPointerException or SQLException
+  - Exception: NullPointerException when calling ordine.getUtente().getId()
+
+F5: Add order with null carrello
+  - Choices: C1.d + C3.a
+  - Expected behavior: NullPointerException
+  - Exception: NullPointerException when calling ordine.getCarrello().getProdotti()
+
+F6: Add order with empty cart
+  - Choices: C1.e + C2.a + C3.a + C4.a
+  - Expected behavior: Order inserted, but no composto entries
+  - Return value: void
+  - State: Order in database, no products linked
+  - Note: Loop doesn't execute if cart is empty
+
+F7: Database connection fails
+  - Choices: C1.b + C3.b
+  - Expected behavior: SQLException is thrown
+  - Exception: SQLException
+
+F8: INSERT fails
+  - Choices: C1.b + C3.a + C4.b
+  - Expected behavior: SQLException is thrown
+  - Exception: SQLException
+
+2.5.4. Suggested JUnit 5 test method names and structure
+
+shouldThrowIllegalArgumentExceptionWhenOrdineIsNull()
+  - Arrange: Ordine ordine = null;
+  - Act & Assert:
+    - IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+        () -> dao.addOrdine(ordine))
+    - assertEquals("L'ordine non può essere null", ex.getMessage())
+
+shouldInsertOrderAndProductsWhenValidOrderWithOneProductProvided()
+  - Arrange:
+    - Create Ordine with valid Utente
+    - Create Carrello with one ProdottoCarrello
+    - Set all required fields (indirizzo, prezzoTotale)
+  - Act: dao.addOrdine(ordine);
+  - Assert:
+    - Verify order exists in ordine table
+    - Verify one entry in composto table with correct data
+
+shouldInsertOrderAndAllProductsWhenValidOrderWithMultipleProductsProvided()
+  - Arrange:
+    - Create Ordine with 3 products in cart
+  - Act: dao.addOrdine(ordine);
+  - Assert:
+    - Verify order exists in ordine table
+    - Verify 3 entries in composto table
+
+shouldThrowNullPointerExceptionWhenUtenteIsNull()
+  - Arrange:
+    - Create Ordine with utente = null
+    - Set valid carrello
+  - Act & Assert: assertThrows(NullPointerException.class, 
+      () -> dao.addOrdine(ordine))
+
+shouldThrowNullPointerExceptionWhenCarrelloIsNull()
+  - Arrange:
+    - Create Ordine with valid utente
+    - Set carrello = null
+  - Act & Assert: assertThrows(NullPointerException.class, 
+      () -> dao.addOrdine(ordine))
+
+shouldInsertOrderWithoutProductsWhenCarrelloIsEmpty()
+  - Arrange:
+    - Create Ordine with empty Carrello
+  - Act: dao.addOrdine(ordine);
+  - Assert:
+    - Verify order exists in ordine table
+    - Verify no entries in composto table for this order
+
+shouldThrowSQLExceptionWhenDatabaseConnectionFails()
+  - Arrange: Mock ConPool to throw SQLException
+  - Act & Assert: assertThrows(SQLException.class, 
+      () -> dao.addOrdine(validOrdine))
+
+2.5.5. Parameterized test candidates
+
+Good candidate for testing different cart sizes:
+
+CSV schema:
+Columns: numberOfProducts, expectedCompostoEntries
+Example rows:
+  0, 0
+  1, 1
+  3, 3
+  10, 10
+
+--------------------------------------------------------------------------------
+#### 2.6 Method: public ArrayList<Ordine> getOrdini() throws SQLException
+--------------------------------------------------------------------------------
+
+2.6.1. Parameters and relevant state
+
+Explicit parameters:
+- None
+
+Relevant object state:
+- Database connection availability
+- Database state (ordine table content)
+
+Preconditions:
+- Database connection must be available
+
+Postconditions:
+- Returns ArrayList<Ordine> containing all orders in database
+- Empty list if no orders exist
+- Each Ordine is partially populated (no Carrello, just basic fields)
+- Database connection is properly closed
+
+2.6.2. Categories and choices
+
+Category C1 - Database content
+  C1.a: ordine table is empty
+  C1.b: ordine table contains one order
+  C1.c: ordine table contains multiple orders
+
+Category C2 - Database connection
+  C2.a: Connection is successfully obtained
+  C2.b: Connection fails (SQLException)
+
+Category C3 - SQL execution
+  C3.a: SELECT executes successfully
+  C3.b: SELECT fails (SQLException)
+
+2.6.3. Test frames (combinations of choices)
+
+F1: Retrieve all orders from empty database
+  - Choices: C1.a + C2.a + C3.a
+  - Expected behavior: Returns empty ArrayList
+  - Return value: Non-null, empty list (size == 0)
+
+F2: Retrieve all orders with one order in database
+  - Choices: C1.b + C2.a + C3.a
+  - Expected behavior: Returns ArrayList with one Ordine
+  - Return value: List with size == 1
+  - State: Ordine has id, utente, dataOrdine, indirizzo, prezzoTotale set
+
+F3: Retrieve all orders with multiple orders in database
+  - Choices: C1.c + C2.a + C3.a
+  - Expected behavior: Returns ArrayList with all Ordine objects
+  - Return value: List with size == number of orders in database
+
+F4: Database connection fails
+  - Choices: C2.b
+  - Expected behavior: SQLException is thrown
+  - Exception: SQLException
+
+F5: SQL execution fails
+  - Choices: C2.a + C3.b
+  - Expected behavior: SQLException is thrown
+  - Exception: SQLException
+
+2.6.4. Suggested JUnit 5 test method names and structure
+
+shouldReturnEmptyListWhenNoOrdersExist()
+  - Arrange: Clear ordine table
+  - Act: ArrayList<Ordine> result = dao.getOrdini();
+  - Assert:
+    - assertNotNull(result)
+    - assertEquals(0, result.size())
+
+shouldReturnSingleOrderWhenOneOrderExists()
+  - Arrange: Insert one test order
+  - Act: ArrayList<Ordine> result = dao.getOrdini();
+  - Assert:
+    - assertEquals(1, result.size())
+    - assertNotNull(result.get(0).getUtente())
+    - Verify order fields are populated
+
+shouldReturnAllOrdersWhenMultipleOrdersExist()
+  - Arrange: Insert 5 test orders
+  - Act: ArrayList<Ordine> result = dao.getOrdini();
+  - Assert:
+    - assertEquals(5, result.size())
+    - Verify all orders have required fields set
+
+shouldThrowSQLExceptionWhenDatabaseConnectionFails()
+  - Arrange: Mock ConPool to throw SQLException
+  - Act & Assert: assertThrows(SQLException.class, () -> dao.getOrdini())
+
+2.6.5. Parameterized test candidates
+
+Good candidate for testing different database states:
+
+CSV schema:
+Columns: numberOfOrdersInDb, expectedSize
+Example rows:
+  0, 0
+  1, 1
+  5, 5
+  50, 50
+
+================================================================================
+### 3. OVERALL TESTING STRATEGY
+================================================================================
+
+Integration Testing Considerations:
+- Requires actual database with ordine, composto, prodotto, utente tables
+- Complex multi-table operations (JOINs, cascading inserts)
+- Use in-memory database (H2) or dedicated test database
+- Set up referential integrity (foreign keys)
+- Use transactions for test isolation
+
+Test Data Setup:
+- Create test fixtures with users, products, orders
+- Use @BeforeEach to establish clean database state
+- Create helper methods for common setup (createTestOrder, createTestUser)
+- Use @AfterEach or transactions to clean up
+
+Special Testing Challenges:
+- addOrdine method is complex: inserts to 2 tables, retrieves last ID
+- getProdottoOrdine requires complex JOIN across 3 tables
+- getOrdiniByUtente calls getProdottoOrdine internally (recursive DAO calls)
+- Need to mock or control ConPool for connection failure tests
+
+Coverage Goals:
+- All public methods tested
+- All exception paths verified
+- Boundary conditions (empty carts, no orders)
+- Multi-table consistency verified
+- Proper handling of null and invalid inputs
+
+Mock/Stub Strategy:
+- Mock ConPool for connection failure scenarios
+- Use real database for integration tests
+- Consider mocking internal DAO calls (UtenteDAO in getOrdini)
+
+================================================================================
+END OF REPORT
+================================================================================

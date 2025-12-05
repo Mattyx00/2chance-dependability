@@ -37,8 +37,19 @@ public class Ordine {
         return dataOrdine;
     }
 
-    /* @ ensures this.dataOrdine == dataOrdine; @ */
+    /*
+     * @
+     * 
+     * @ requires dataOrdine != null;
+     * 
+     * @ ensures this.dataOrdine == dataOrdine;
+     * 
+     * @
+     */
     public void setDataOrdine(Date dataOrdine) {
+        if (dataOrdine == null) {
+            throw new IllegalArgumentException("La data dell'ordine non può essere null");
+        }
         this.dataOrdine = dataOrdine;
     }
 
@@ -47,8 +58,19 @@ public class Ordine {
         return indirizzo;
     }
 
-    /* @ ensures this.indirizzo == indirizzo; @ */
+    /*
+     * @
+     * 
+     * @ requires indirizzo != null && !indirizzo.trim().isEmpty();
+     * 
+     * @ ensures this.indirizzo == indirizzo;
+     * 
+     * @
+     */
     public void setIndirizzo(String indirizzo) {
+        if (indirizzo == null || indirizzo.trim().isEmpty()) {
+            throw new IllegalArgumentException("L'indirizzo non può essere null o vuoto");
+        }
         this.indirizzo = indirizzo;
     }
 
@@ -67,6 +89,9 @@ public class Ordine {
      * @
      */
     public void setPrezzoTotale(double prezzoTotale) {
+        if (prezzoTotale < 0) {
+            throw new IllegalArgumentException("Il prezzo totale non può essere negativo");
+        }
         this.prezzoTotale = prezzoTotale;
     }
 
@@ -75,8 +100,19 @@ public class Ordine {
         return utente;
     }
 
-    /* @ ensures this.utente == utente; @ */
+    /*
+     * @
+     * 
+     * @ requires utente != null;
+     * 
+     * @ ensures this.utente == utente;
+     * 
+     * @
+     */
     public void setUtente(Utente utente) {
+        if (utente == null) {
+            throw new IllegalArgumentException("L'utente non può essere null");
+        }
         this.utente = utente;
     }
 
@@ -85,8 +121,19 @@ public class Ordine {
         return carrello;
     }
 
-    /* @ ensures this.carrello == carrello; @ */
+    /*
+     * @
+     * 
+     * @ requires carrello != null;
+     * 
+     * @ ensures this.carrello == carrello;
+     * 
+     * @
+     */
     public void setCarrello(Carrello carrello) {
+        if (carrello == null) {
+            throw new IllegalArgumentException("Il carrello non può essere null");
+        }
         this.carrello = carrello;
     }
 }

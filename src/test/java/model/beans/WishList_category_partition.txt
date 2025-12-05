@@ -1,0 +1,187 @@
+========================================================================
+CATEGORY-PARTITION TESTING REPORT
+========================================================================
+Class: WishList
+Package: model.beans
+========================================================================
+
+### 1. CLASS OVERVIEW
+
+**Class Name**: WishList
+**Package**: model.beans
+
+**Description**:
+WishList represents a user's wish list of desired products. It associates a user with a collection of products they want to purchase in the future.
+
+**Important Fields**:
+- utente: Utente (private) - The user who owns this wishlist
+- prodotti: ArrayList<Prodotto> (private) - Collection of desired products
+
+**Invariants** (from JML):
+- invariant utente != null
+- invariant prodotti != null
+
+========================================================================
+### 2. METHODS TO BE TESTED
+========================================================================
+
+2.1 Constructor: WishList()
+2.2 Constructor: WishList(Utente utente)
+2.3 Method: Utente getUtente()
+2.4 Method: void setUtente(Utente utente)
+2.5 Method: ArrayList<Prodotto> getProdotti()
+2.6 Method: void setProdotti(ArrayList<Prodotto> prodotti)
+
+========================================================================
+### 2.1 Constructor: WishList()
+========================================================================
+
+2.1.1. **Parameters and state**
+
+**Parameters**: None
+
+**Postconditions**:
+- prodotti initialized to empty ArrayList (non-null)
+- utente remains null until set
+
+2.1.2. **Categories**
+
+Category C1 - Post-construction state
+  C1.a: prodotti is non-null empty ArrayList, utente is null
+
+2.1.3. **Test frames**
+
+F1: Default construction
+  Expected: prodotti initialized, utente null
+
+2.1.4. **Suggested tests**
+
+Test Method: shouldInitializeEmptyProductListWhenDefaultConstructed()
+  Arrange: None
+  Act: WishList wishList = new WishList()
+  Assert:
+    - assertNotNull(wishList)
+    - assertNotNull(wishList.getProdotti())
+    -assertTrue(wishList.getProdotti().isEmpty())
+    - assertNull(wishList.getUtente())
+
+========================================================================
+### 2.2 Constructor: WishList(Utente utente)
+========================================================================
+
+2.2.1. **Parameters**
+
+- utente: Utente (requires != null)
+
+**Postconditions**:
+- this.utente = utente
+- prodotti initialized to empty ArrayList
+
+2.2.2. **Categories**
+
+Category C1 - utente parameter
+  C1.a: null
+  C1.b: valid Utente object
+
+2.2.3. **Test frames**
+
+F1: Valid utente
+  Choices: C1.b
+  Expected: Object created, utente set, prodotti initialized
+
+F2: Null utente
+  Choices: C1.a
+  Expected: IllegalArgumentException - "L'utente non può essere null"
+
+2.2.4. **Suggested tests**
+
+Test Method: shouldCreateWishListWithValidUtente()
+  Arrange: Utente u = createValidUtente()
+  Act: WishList wishList = new WishList(u)
+  Assert:
+    - assertNotNull(wishList)
+    - assertEquals(u, wishList.getUtente())
+    - assertNotNull(wishList.getProdotti())
+    - assertTrue(wishList.getProdotti().isEmpty())
+
+Test Method: shouldThrowExceptionWhenConstructingWithNullUtente()
+  Arrange: Utente u = null
+  Act & Assert: assertThrows(IllegalArgumentException.class, () -> new WishList(u))
+
+========================================================================
+### 2.4 Method: void setUtente(Utente utente)
+========================================================================
+
+2.4.1. **Parameters**
+
+- utente: Utente (requires != null)
+
+2.4.2. **Categories**
+
+Category C1 - utente parameter
+  C1.a: null
+  C1.b: valid
+
+Category C2 - Current state
+  C2.a: utente currently null
+  C2.b: utente already set
+
+2.4.3. **Test frames**
+
+F1: Set null - should throw
+F2: Set valid on null object - should succeed
+F3: Replace existing utente - should succeed
+
+2.4.4. **Suggested tests**
+
+Test Method: shouldThrowExceptionWhenSettingNullUtente()
+  Arrange: WishList wl = new WishList(createValidUtente())
+  Act & Assert: assertThrows(IllegalArgumentException.class, () -> wl.setUtente(null))
+
+Test Method: shouldSetValidUtenteOnDefaultWishList()
+  Arrange: WishList wl = new WishList(); Utente u = createValidUtente()
+  Act: wl.setUtente(u)
+  Assert: assertEquals(u, wl.getUtente())
+
+========================================================================
+### 2.6 Method: void setProdotti(ArrayList<Prodotto> prodotti)
+========================================================================
+
+2.6.1. **Parameters**
+
+- prodotti: ArrayList<Prodotto> (requires != null)
+
+2.6.2. **Categories**
+
+Category C1 - prodotti parameter
+  C1.a: null
+  C1.b: empty ArrayList
+  C1.c: ArrayList with products
+
+2.6.3. **Test frames**
+
+F1: Set null - should throw
+  Expected: IllegalArgumentException - "La lista dei prodotti non può essere null"
+
+F2: Set empty list - should succeed
+F3: Set list with products - should succeed
+
+2.6.4. **Suggested tests**
+
+Test Method: shouldThrowExceptionWhenSettingNullProdottiList()
+  Arrange: WishList wl = new WishList()
+  Act & Assert: assertThrows(IllegalArgumentException.class, () -> wl.setProdotti(null))
+
+Test Method: shouldSetEmptyProdottiList()
+  Arrange: WishList wl = new WishList(); ArrayList<Prodotto> list = new ArrayList<>()
+  Act: wl.setProdotti(list)
+  Assert: assertEquals(list, wl.getProdotti())
+
+Test Method: shouldSetProdottiListWithProducts()
+  Arrange: WishList wl = new WishList(); ArrayList<Prodotto> list with 2 products
+  Act: wl.setProdotti(list)
+  Assert: assertEquals(2, wl.getProdotti().size())
+
+========================================================================
+END OF REPORT
+========================================================================

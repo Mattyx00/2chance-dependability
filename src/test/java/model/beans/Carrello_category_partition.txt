@@ -1,0 +1,418 @@
+========================================================================
+CATEGORY-PARTITION TESTING REPORT
+========================================================================
+Class: Carrello
+Package: model.beans
+========================================================================
+
+### 1. CLASS OVERVIEW
+
+**Class Name**: Carrello
+**Package**: model.beans
+
+**Description**:
+Carrello represents a shopping cart in an e-commerce system. It manages a collection of ProdottoCarrello items and provides operations to add products, remove products, change quantities, and calculate the total price.
+
+**Important Fields**:
+- prodotti: ArrayList<ProdottoCarrello> - Collection of cart items
+
+**Invariants** (from JML):
+- invariant prodotti != null
+  The products list must never be null (initialized in constructor).
+
+**Design Note**:
+The constructor ensures prodotti is always an empty non-null ArrayList. Operations manipulate this list.
+
+========================================================================
+### 2. METHODS TO BE TESTED
+========================================================================
+
+2.1 Constructor: Carrello()
+2.2 Method: double getTotaleCarrello()
+2.3 Method: ArrayList<ProdottoCarrello> getProdotti()
+2.4 Method: boolean aggiungiProdotto(ProdottoCarrello p)
+2.5 Method: void eliminaProdotto(Prodotto p)
+2.6 Method: void cambiaQuantita(Prodotto p, int qnt)
+
+========================================================================
+### 2.1 Constructor: Carrello()
+========================================================================
+
+2.1.1. **Parameters and relevant state**
+
+**Parameters**: None
+
+**Postconditions** (from JML):
+- ensures prodotti != null && prodotti.isEmpty()
+
+2.1.2. **Categories and choices**
+
+No parameters.
+
+Category C1 - Post-construction state
+  C1.a: prodotti is non-null empty ArrayList
+
+2.1.3. **Test frames**
+
+F1: Default construction
+  Expected: prodotti initialized to empty non-null ArrayList
+
+2.1.4. **Suggested tests**
+
+Test Method: shouldInitializeEmptyNonNullProductListWhenConstructed()
+  Arrange: None
+  Act: Carrello carrello = new Carrello()
+  Assert:
+    - assertNotNull(carrello)
+    - assertNotNull(carrello.getProdotti())
+    - assertTrue(carrello.getProdotti().isEmpty())
+    - assertEquals(0, carrello.getProdotti().size())
+
+========================================================================
+### 2.2 Method: double getTotaleCarrello()
+========================================================================
+
+2.2.1. **Parameters and relevant state**
+
+**Parameters**: None
+
+**Relevant state**:
+- prodotti collection (empty vs. with items)
+- Each ProdottoCarrello's getPrezzoTotale() value
+
+**Postconditions** (from JML):
+- ensures \result >= 0.0
+
+2.2.2. **Categories and choices**
+
+Category C1 - Cart state (prodotti content)
+  C1.a: Empty cart (no items)
+  C1.b: One item in cart
+  C1.c: Multiple items in cart
+
+Category C2 - Item prices (when cart not empty)
+  C2.a: All items have zero total price
+  C2.b: Mix of zero and positive prices
+  C2.c: All items have positive prices
+
+2.2.3. **Test frames**
+
+F1: Empty cart
+  Choices: C1.a
+  Expected: result = 0.0
+
+F2: One item with positive price
+  Choices: C1.b + C2.c
+  Expected: result = item.getPrezzoTotale()
+
+F3: Multiple items with positive prices
+  Choices: C1.c + C2.c
+  Expected: result = sum of all item.getPrezzoTotale()
+
+F4: Multiple items with some zero prices
+  Choices: C1.c + C2.b
+  Expected: result = sum (only non-zero contribute)
+
+2.2.4. **Suggested tests**
+
+Test Method: shouldReturnZeroForEmptyCart()
+  Arrange: Carrello carrello = new Carrello()
+  Act: double total = carrello.getTotaleCarrello()
+  Assert: assertEquals(0.0, total)
+
+Test Method: shouldCalculateCorrectTotalForSingleItem()
+  Arrange:
+    - Carrello carrello = new Carrello()
+    - ProdottoCarrello pc = createProdottoCarrello(price=10.0, qty=2) // total=20.0
+    - carrello.aggiungiProdotto(pc)
+  Act: double total = carrello.getTotaleCarrello()
+  Assert: assertEquals(20.0, total)
+
+Test Method: shouldCalculateCorrectTotalForMultipleItems()
+  Arrange:
+    - Carrello carrello = new Carrello()
+    - Add pc1 (total=20.0), pc2 (total=15.5)
+  Act: double total = carrello.getTotaleCarrello()
+  Assert: assertEquals(35.5, total, 0.01)
+
+2.2.5. **Parameterized tests**
+
+CSV Schema:
+Columns: scenario, itemTotals, expectedCartTotal
+
+Example rows:
+"empty cart", "", 0.0
+"one item", "20.0", 20.0
+"two items", "20.0;15.5", 35.5
+"three items", "10.0;5.0;3.25", 18.25
+
+========================================================================
+### 2.4 Method: boolean aggiungiProdotto(ProdottoCarrello p)
+========================================================================
+
+2.4.1. **Parameters and relevant state**
+
+**Parameters**:
+- p: ProdottoCarrello - Item to add
+
+**Relevant state**:
+- prodotti list (can be empty or contain items)
+
+**Preconditions** (from JML):
+- requires p != null
+
+**Postconditions** (from JML):
+- ensures prodotti.contains(p)
+
+2.4.2. **Categories and choices**
+
+Category C1 - Parameter p
+  C1.a: p == null
+  C1.b: p != null (valid ProdottoCarrello)
+
+Category C2 - Cart state before add
+  C2.a: Cart is empty
+  C2.b: Cart has items (none matching p's product)
+  C2.c: Cart already contains same product ID (duplicate handling)
+
+2.4.3. **Test frames**
+
+F1: Add null product
+  Choices: C1.a
+  Expected: IllegalArgumentException - "Il prodotto da aggiungere non può essere null"
+
+F2: Add to empty cart
+  Choices: C1.b + C2.a
+  Expected: true returned, prodotti.size() == 1, contains(p)
+
+F3: Add to cart with different items
+  Choices: C1.b + C2.b
+  Expected: true returned, item added to list
+
+F4: Add duplicate product (same ID)
+  Choices: C1.b + C2.c
+  Expected: Item still added (current implementation allows duplicates per ArrayList.add())
+
+2.4.4. **Suggested tests**
+
+Test Method: shouldThrowExceptionWhenAddingNullProduct()
+  Arrange: Carrello carrello = new Carrello()
+  Act & Assert: assertThrows(IllegalArgumentException.class, () -> carrello.aggiungiProdotto(null))
+
+Test Method: shouldAddProductToEmptyCart()
+  Arrange:
+    - Carrello carrello = new Carrello()
+    - ProdottoCarrello pc = createValidProdottoCarrello()
+  Act: boolean result = carrello.aggiungiProdotto(pc)
+  Assert:
+    - assertTrue(result)
+    - assertEquals(1, carrello.getProdotti().size())
+    - assertTrue(carrello.getProdotti().contains(pc))
+
+Test Method: shouldAddMultipleProductsToCart()
+  Arrange:
+    - Carrello carrello = new Carrello()
+    - ProdottoCarrello pc1, pc2
+  Act:
+    - carrello.aggiungiProdotto(pc1)
+    - carrello.aggiungiProdotto(pc2)
+  Assert: assertEquals(2, carrello.getProdotti().size())
+
+========================================================================
+### 2.5 Method: void eliminaProdotto(Prodotto p)
+========================================================================
+
+2.5.1. **Parameters and relevant state**
+
+**Parameters**:
+- p: Prodotto - Product to remove (by ID matching)
+
+**Relevant state**:
+- prodotti list content
+
+**Preconditions** (from JML):
+- requires p != null
+
+**Postconditions**: None explicit (removeIf operation)
+
+**Implementation note**:
+Uses removeIf with ID matching: e -> e.getProdotto().getId() == p.getId()
+
+2.5.2. **Categories and choices**
+
+Category C1 - Parameter p
+  C1.a: p == null
+  C1.b: p != null
+
+Category C2 - Cart state relative to p
+  C2.a: Cart is empty
+  C2.b: Cart contains one item with matching ID
+  C2.c: Cart contains multiple items with matching ID
+  C2.d: Cart contains items but none match p's ID
+
+2.5.3. **Test frames**
+
+F1: Remove null product
+  Choices: C1.a
+  Expected: IllegalArgumentException - "Il prodotto da eliminare non può essere null"
+
+F2: Remove from empty cart
+  Choices: C1.b + C2.a
+  Expected: No exception, cart remains empty (no-op)
+
+F3: Remove existing product
+  Choices: C1.b + C2.b
+  Expected: Item removed, cart size decreases by 1
+
+F4: Remove non-existing product
+  Choices: C1.b + C2.d
+  Expected: No exception, cart unchanged (no-op)
+
+F5: Remove when multiple matches exist
+  Choices: C1.b + C2.c
+  Expected: ALL matching items removed
+
+2.5.4. **Suggested tests**
+
+Test Method: shouldThrowExceptionWhenRemovingNullProduct()
+  Arrange: Carrello carrello = new Carrello()
+  Act & Assert: assertThrows(IllegalArgumentException.class, () -> carrello.eliminaProdotto(null))
+
+Test Method: shouldDoNothingWhenRemovingFromEmptyCart()
+  Arrange:
+    - Carrello carrello = new Carrello()
+    - Prodotto p = createProdotto(id=1)
+  Act: carrello.eliminaProdotto(p)
+  Assert: assertTrue(carrello.getProdotti().isEmpty())
+
+Test Method: shouldRemoveExistingProductFromCart()
+  Arrange:
+    - Carrello carrello = new Carrello()
+    - Prodotto p = createProdotto(id=1)
+    - ProdottoCarrello pc = new ProdottoCarrello(p, 2)
+    - carrello.aggiungiProdotto(pc)
+  Act: carrello.eliminaProdotto(p)
+  Assert:
+    - assertTrue(carrello.getProdotti().isEmpty())
+    - assertEquals(0, carrello.getProdotti().size())
+
+Test Method: shouldRemoveAllMatchingProductsByIdFromCart()
+  Arrange:
+    - Carrello carrello = new Carrello()
+    - Prodotto p = createProdotto(id=1)
+    - carrello.aggiungiProdotto(new ProdottoCarrello(p, 2))
+    - carrello.aggiungiProdotto(new ProdottoCarrello(p, 3))
+  Act: carrello.eliminaProdotto(p)
+  Assert: assertTrue(carrello.getProdotti().isEmpty())
+
+========================================================================
+### 2.6 Method: void cambiaQuantita(Prodotto p, int qnt)
+========================================================================
+
+2.6.1. **Parameters and relevant state**
+
+**Parameters**:
+- p: Prodotto - Product to update
+- qnt: int - New quantity
+
+**Relevant state**:
+- prodotti list content
+
+**Preconditions** (from JML):
+- requires p != null
+- requires qnt > 0
+
+**Postconditions**: None explicit
+
+**Implementation note** (CHANGED):
+Now throws IllegalStateException if product not found (was silent no-op).
+
+2.6.2. **Categories and choices**
+
+Category C1 - Parameter p
+  C1.a: p == null
+  C1.b: p != null
+
+Category C2 - Parameter qnt
+  C2.a: qnt <= 0 (zero or negative)
+  C2.b: qnt > 0 (valid)
+
+Category C3 - Cart state relative to p
+  C3.a: Cart is empty
+  C3.b: Cart contains product with matching ID
+  C3.c: Cart contains products but none match p's ID
+
+2.6.3. **Test frames**
+
+F1: Null product
+  Choices: C1.a + (any qnt) + (any cart state)
+  Expected: IllegalArgumentException - "Il prodotto non può essere null"
+
+F2: Non-positive quantity
+  Choices: C1.b + C2.a + (any cart state)
+  Expected: IllegalArgumentException - "La quantità deve essere maggiore di zero"
+
+F3: Valid params, product exists in cart
+  Choices: C1.b + C2.b + C3.b
+  Expected: Matching item's quantity updated to qnt, method returns normally
+
+F4: Valid params, product not in cart
+  Choices: C1.b + C2.b + C3.c
+  Expected: IllegalStateException - "Il prodotto con id X non è presente nel carrello"
+
+F5: Valid params, empty cart
+  Choices: C1.b + C2.b + C3.a
+  Expected: IllegalStateException
+
+2.6.4. **Suggested tests**
+
+Test Method: shouldThrowExceptionWhenChangingQuantityWithNullProduct()
+  Arrange: Carrello carrello = new Carrello()
+  Act & Assert: assertThrows(IllegalArgumentException.class, () -> carrello.cambiaQuantita(null, 5))
+
+Test Method: shouldThrowExceptionWhenChangingQuantityToZero()
+  Arrange:
+    - Carrello carrello = new Carrello()
+    - Prodotto p = createProdotto(id=1)
+  Act & Assert: assertThrows(IllegalArgumentException.class, () -> carrello.cambiaQuantita(p, 0))
+
+Test Method: shouldThrowExceptionWhenChangingQuantityToNegative()
+  Arrange: Carrello carrello = new Carrello()
+  Act & Assert: assertThrows(IllegalArgumentException.class, () -> carrello.cambiaQuantita(createProdotto(), -1))
+
+Test Method: shouldUpdateQuantityForExistingProduct()
+  Arrange:
+    - Carrello carrello = new Carrello()
+    - Prodotto p = createProdotto(id=1)
+    - ProdottoCarrello pc = new ProdottoCarrello(p, 2)
+    - carrello.aggiungiProdotto(pc)
+  Act: carrello.cambiaQuantita(p, 10)
+  Assert:
+    - assertEquals(1, carrello.getProdotti().size())
+    - assertEquals(10, carrello.getProdotti().get(0).getQuantita())
+
+Test Method: shouldThrowExceptionWhenChangingQuantityOfNonExistingProduct()
+  Arrange:
+    - Carrello carrello = new Carrello()
+    - Prodotto p1 = createProdotto(id=1)
+    - Prodotto p2 = createProdotto(id=2)
+    - carrello.aggiungiProdotto(new ProdottoCarrello(p1, 5))
+  Act & Assert: 
+    - assertThrows(IllegalStateException.class, () -> carrello.cambiaQuantita(p2, 10))
+    - Verify exception message contains "non è presente nel carrello"
+
+2.6.5. **Parameterized tests**
+
+CSV Schema:
+Columns: scenario, productInCart, targetProductId, newQty, shouldThrow, exceptionType
+
+Example rows:
+"null product", true, null, 5, true, "IllegalArgumentException"
+"zero quantity", true, 1, 0, true, "IllegalArgumentException"
+"negative quantity", true, 1, -1, true, "IllegalArgumentException"
+"product exists", true, 1, 10, false, null
+"product not in cart", false, 2, 10, true, "IllegalStateException"
+
+========================================================================
+END OF REPORT
+========================================================================

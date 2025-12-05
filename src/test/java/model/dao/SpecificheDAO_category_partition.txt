@@ -1,0 +1,266 @@
+================================================================================
+CATEGORY-PARTITION TESTING REPORT
+Class: SpecificheDAO
+Package: model.dao
+================================================================================
+
+### 1. CLASS OVERVIEW
+
+Class name: SpecificheDAO
+Package: model.dao
+
+Role in the domain:
+The SpecificheDAO class is a Data Access Object responsible for managing database 
+operations related to the Specifiche (Specifications) entity. It provides a single 
+query operation to retrieve all specifications associated with a specific product.
+
+Important fields:
+- No instance fields (stateless DAO).
+- Relies on ConPool for database connections.
+
+Invariants:
+- Database connection must be properly managed.
+- All database operations must handle SQLException appropriately.
+- Parameter validation occurs before database operations.
+- Product ID must be positive (> 0).
+
+================================================================================
+### 2. METHODS TO BE TESTED
+================================================================================
+
+--------------------------------------------------------------------------------
+#### 2.1 Constructor: SpecificheDAO()
+--------------------------------------------------------------------------------
+
+2.1.1. Parameters and relevant state
+
+Explicit parameters:
+- None
+
+Relevant object state:
+- None (default constructor creates fresh instance)
+
+Preconditions:
+- None explicit
+
+Postconditions:
+- A new SpecificheDAO instance is created
+
+2.1.2. Categories and choices
+
+Category C1 - Constructor invocation
+  C1.a: Constructor is called successfully
+
+2.1.3. Test frames
+
+F1: Create new SpecificheDAO instance
+  - Choices: C1.a
+  - Expected behavior: New instance is created without exceptions
+  - Return value: Non-null SpecificheDAO object
+
+2.1.4. Suggested JUnit 5 test method names and structure
+
+shouldCreateNewSpecificheDAOInstanceWhenConstructorCalled()
+  - Arrange: None required
+  - Act: SpecificheDAO dao = new SpecificheDAO();
+  - Assert: assertNotNull(dao)
+
+2.1.5. Parameterized test candidates
+- Not applicable
+
+--------------------------------------------------------------------------------
+#### 2.2 Method: public ArrayList<Specifiche> getSpecificheByProd(int id) 
+                 throws SQLException
+--------------------------------------------------------------------------------
+
+2.2.1. Parameters and relevant state
+
+Explicit parameters:
+- id: int (the product ID whose specifications to retrieve)
+
+Relevant object state:
+- Database connection availability
+- Database state (specifiche table content)
+
+Preconditions:
+- id must be greater than 0 (enforced by IllegalArgumentException)
+- Database connection must be available
+
+Postconditions:
+- Returns ArrayList<Specifiche> containing all specifications for the product
+- Empty list if product has no specifications
+- Each Specifiche has nome and valore set
+- Database connection is properly closed
+
+2.2.2. Categories and choices
+
+Category C1 - ID parameter
+  C1.a: id <= 0 (invalid: zero)
+  C1.b: id < 0 (invalid: negative)
+  C1.c: id > 0 && product exists && has specifications
+  C1.d: id > 0 && product exists && has NO specifications
+  C1.e: id > 0 && product does NOT exist
+
+Category C2 - Database state (specifiche table)
+  C2.a: No specifications exist for product ID
+  C2.b: One specification exists for product ID
+  C2.c: Multiple specifications exist for product ID
+
+Category C3 - Database connection
+  C3.a: Connection is successfully obtained
+  C3.b: Connection fails (SQLException)
+
+Category C4 - SQL execution
+  C4.a: SELECT executes successfully
+  C4.b: SELECT fails (SQLException)
+
+2.2.3. Test frames (combinations of choices)
+
+F1: Get specifications with zero ID
+  - Choices: C1.a
+  - Expected behavior: IllegalArgumentException is thrown
+  - Exception: IllegalArgumentException with message 
+    "L'ID del prodotto deve essere maggiore di zero"
+
+F2: Get specifications with negative ID
+  - Choices: C1.b
+  - Expected behavior: IllegalArgumentException is thrown
+  - Exception: IllegalArgumentException with message 
+    "L'ID del prodotto deve essere maggiore di zero"
+
+F3: Get specifications for product with no specifications
+  - Choices: C1.d + C2.a + C3.a + C4.a
+  - Expected behavior: Returns empty ArrayList
+  - Return value: Non-null, empty list (size == 0)
+
+F4: Get specifications for product with one specification
+  - Choices: C1.c + C2.b + C3.a + C4.a
+  - Expected behavior: Returns ArrayList with one Specifiche object
+  - Return value: List with size == 1
+  - State: Specifiche has nome and valore set correctly
+
+F5: Get specifications for product with multiple specifications
+  - Choices: C1.c + C2.c + C3.a + C4.a
+  - Expected behavior: Returns ArrayList with multiple Specifiche objects
+  - Return value: List with size > 1
+  - State: All Specifiche objects correctly populated
+
+F6: Get specifications for non-existing product
+  - Choices: C1.e + C2.a + C3.a + C4.a
+  - Expected behavior: Returns empty ArrayList (silently)
+  - Return value: Non-null, empty list
+
+F7: Database connection fails
+  - Choices: C1.c + C3.b
+  - Expected behavior: SQLException is thrown
+  - Exception: SQLException
+
+F8: SQL execution fails
+  - Choices: C1.c + C3.a + C4.b
+  - Expected behavior: SQLException is thrown
+  - Exception: SQLException
+
+2.2.4. Suggested JUnit 5 test method names and structure
+
+shouldThrowIllegalArgumentExceptionWhenIdIsZero()
+  - Arrange: int id = 0;
+  - Act & Assert:
+    - IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+        () -> dao.getSpecificheByProd(id))
+    - assertTrue(ex.getMessage().contains("maggiore di zero"))
+
+shouldThrowIllegalArgumentExceptionWhenIdIsNegative()
+  - Arrange: int id = -10;
+  - Act & Assert: assertThrows(IllegalArgumentException.class, 
+      () -> dao.getSpecificheByProd(id))
+
+shouldReturnEmptyListWhenProductHasNoSpecifications()
+  - Arrange:
+    - Ensure product with ID 100 exists
+    - Ensure no specifications for product 100
+  - Act: ArrayList<Specifiche> result = dao.getSpecificheByProd(100);
+  - Assert:
+    - assertNotNull(result)
+    - assertEquals(0, result.size())
+
+shouldReturnSingleSpecificationWhenProductHasOneSpecification()
+  - Arrange:
+    - Insert product with ID 100
+    - Insert one specification: (nome="CPU", valore="Intel i7")
+  - Act: ArrayList<Specifiche> result = dao.getSpecificheByProd(100);
+  - Assert:
+    - assertEquals(1, result.size())
+    - assertEquals("CPU", result.get(0).getNome())
+    - assertEquals("Intel i7", result.get(0).getValore())
+
+shouldReturnAllSpecificationsWhenProductHasMultipleSpecifications()
+  - Arrange:
+    - Insert product with ID 100
+    - Insert 3 specifications
+  - Act: ArrayList<Specifiche> result = dao.getSpecificheByProd(100);
+  - Assert:
+    - assertEquals(3, result.size())
+    - Verify all specifications are retrieved correctly
+
+shouldReturnEmptyListWhenProductDoesNotExist()
+  - Arrange: Ensure product with ID 99999 does not exist
+  - Act: ArrayList<Specifiche> result = dao.getSpecificheByProd(99999);
+  - Assert:
+    - assertNotNull(result)
+    - assertEquals(0, result.size())
+
+shouldThrowSQLExceptionWhenDatabaseConnectionFails()
+  - Arrange: Mock ConPool to throw SQLException
+  - Act & Assert: assertThrows(SQLException.class, 
+      () -> dao.getSpecificheByProd(1))
+
+2.2.5. Parameterized test candidates
+
+Good candidate for testing various ID scenarios and database states:
+
+CSV schema:
+Columns: productId, numberOfSpecs, expectedSize, description
+Example rows:
+  100, 0, 0, "product with no specs"
+  101, 1, 1, "product with one spec"
+  102, 5, 5, "product with multiple specs"
+  99999, 0, 0, "non-existing product"
+
+Also good for testing various invalid IDs:
+
+CSV schema:
+Columns: invalidId, description
+Example rows:
+  0, "zero ID"
+  -1, "negative ID"
+  -100, "large negative ID"
+
+================================================================================
+### 3. OVERALL TESTING STRATEGY
+================================================================================
+
+Integration Testing Considerations:
+- Simple DAO with only one query method
+- Requires database with specifiche table
+- Foreign key relationship with prodotto table
+- Use in-memory database (H2) or test database
+
+Test Data Setup:
+- Create test products in prodotto table
+- Create test specifications in specifiche table
+- Use @BeforeEach to establish clean state
+- Use @AfterEach or transactions for cleanup
+
+Coverage Goals:
+- All parameter validation tested
+- All database states covered (empty, single, multiple results)
+- Exception paths verified
+- Boundary conditions tested
+
+Mock/Stub Strategy:
+- Mock ConPool for connection failure tests
+- Use real database for integration tests
+
+================================================================================
+END OF REPORT
+================================================================================

@@ -1,0 +1,236 @@
+========================================================================
+CATEGORY-PARTITION TESTING REPORT
+========================================================================
+Class: Utente
+Package: model.beans
+========================================================================
+
+### 1. CLASS OVERVIEW
+
+**Class Name**: Utente
+**Package**: model.beans
+
+**Description**:
+Utente represents a user/customer in the e-commerce system. It stores user profile information, credentials, and associations with orders and reviews.
+
+**Important Fields**:
+- id: int - User identifier
+- nome, cognome: String - User name
+- email: String - User email (login)
+- telefono: String - Phone number
+- passwordHash: String - Hashed password
+- immagine: String - Profile image URL
+- admin: boolean - Admin privileges flag
+- ordini: ArrayList<Ordine> - User's orders
+- recensioni: ArrayList<Recensione> - User's reviews
+
+**Invariants**: None explicitly defined via JML, but validation enforces non-null/non-empty for nome, cognome, email, telefono, password
+
+========================================================================
+### 2. KEY METHODS TO TEST
+========================================================================
+
+2.1 Method: void setNome(String nome)
+2.2 Method: void setCognome(String cognome)
+2.3 Method: void setEmail(String email)
+2.4 Method: void setTelefono(String telefono)
+2.5 Method: void setPassword(String password)
+2.6 Method: void setOrdini(ArrayList<Ordine> ordini)
+2.7 Method: void setRecensioni(ArrayList<Recensione> recensioni)
+2.8 Method: int getOrdineIndex(Ordine o)
+
+========================================================================
+### 2.1-2.4 String Setters: setNome, setCognome, setEmail, setTelefono
+========================================================================
+
+All require: != null && !trim().isEmpty()
+
+Standard categories:
+  C1.a: null
+  C1.b: empty/whitespace
+  C1.c: valid string
+
+Test frames for each:
+F1: Set null - throws IllegalArgumentException
+F2: Set empty - throws
+F3: Set valid - succeeds
+
+Suggested tests (repeated pattern for each):
+- shouldThrowExceptionWhenSettingNullX()
+- shouldThrowExceptionWhenSettingEmptyX()
+- shouldSetValidX()
+
+========================================================================
+### 2.5 Method: void setPassword(String password)
+========================================================================
+
+2.5.1. **Parameters**
+
+- password: String (requires != null && !trim().isEmpty())
+
+**Special behavior**: Applies SHA-1 hashing via MessageDigest
+
+2.5.2. **Categories**
+
+Category C1 - password parameter
+  C1.a: null
+  C1.b: empty/whitespace
+  C1.c: valid password string
+
+Category C2 - Hashing behavior
+  C2.a: SHA-1 algorithm available (normal case)
+  C2.b: NoSuchAlgorithmException thrown (exceptional - runtime error)
+
+2.5.3. **Test frames**
+
+F1: Set null password
+  Expected: IllegalArgumentException - "La password non può essere null o vuota"
+
+F2: Set empty password
+  Expected: IllegalArgumentException
+
+F3: Set valid password
+  Expected: Success, passwordHash set to SHA-1 hash
+
+F4: Hashing algorithm not available (exceptional)
+  Expected: RuntimeException wrapping NoSuchAlgorithmException
+
+2.5.4. **Suggested tests**
+
+Test Method: shouldThrowExceptionWhenSettingNullPassword()
+Test Method: shouldThrowExceptionWhenSettingEmptyPassword()
+
+Test Method: shouldHashPasswordWhenSettingValidPassword()
+  Arrange: Utente u = new Utente(); String password = "myPassword123"
+  Act: u.setPassword(password)
+  Assert:
+    - assertNotNull(u.getPasswordHash())
+    - assertNotEquals(password, u.getPasswordHash()) // Should be hashed
+    - assertTrue(u.getPasswordHash().length() > 0)
+
+**Note**: Testing the exceptional case (F4) requires mocking or is typically skipped as it's a JVM-level failure.
+
+========================================================================
+### 2.6-2.7 Collection Setters: setOrdini, setRecensioni
+========================================================================
+
+Both require: != null
+
+Categories for each:
+  C1.a: null
+  C1.b: empty ArrayList
+  C1.c: ArrayList with items
+
+Test frames:
+F1: Set null - throws IllegalArgumentException
+F2: Set empty list - succeeds
+F3: Set list with items - succeeds
+
+Suggested tests for each:
+- shouldThrowExceptionWhenSettingNullX()
+- shouldSetEmptyXList()
+- shouldSetXListWithItems()
+
+========================================================================
+### 2.8 Method: int getOrdineIndex(Ordine o)
+========================================================================
+
+2.8.1. **Parameters**
+
+- o: Ordine (requires != null)
+
+**Return**: Index of order in ordini list, or -1 if not found
+
+**Preconditions** (from JML):
+- requires o != null
+
+**Postconditions** (from JML - CORRECTED):
+- ensures \result >= -1 (was >= 0, but implementation returns -1 when not found)
+
+2.8.2. **Categories**
+
+Category C1 - Parameter o
+  C1.a: null
+  C1.b: valid Ordine object
+
+Category C2 - ordini list state
+  C2.a: ordini is null
+  C2.b: ordini is empty ArrayList
+  C2.c: ordini contains order with matching ID
+  C2.d: ordini contains orders but none match o's ID
+
+2.8.3. **Test frames**
+
+F1: Null parameter
+  Choices: C1.a
+  Expected: IllegalArgumentException - "L'ordine non può essere null"
+
+F2: ordini list is null
+  Choices: C1.b + C2.a
+  Expected: Return -1 (not found)
+
+F3: ordini is empty
+  Choices: C1.b + C2.b
+  Expected: Return -1 (not found)
+
+F4: Order found in list
+  Choices: C1.b + C2.c
+  Expected: Return index of matching order (>= 0)
+
+F5: Order not in list
+  Choices: C1.b + C2.d
+  Expected: Return -1 (not found)
+
+2.8.4. **Suggested tests**
+
+Test Method: shouldThrowExceptionWhenSearchingForNullOrdine()
+  Arrange: Utente u = new Utente()
+  Act & Assert: assertThrows(IllegalArgumentException.class, () -> u.getOrdineIndex(null))
+
+Test Method: shouldReturnNegativeOneWhenOrdiniListIsNull()
+  Arrange: Utente u = new Utente() // ordini is null initially
+  Act: int index = u.getOrdineIndex(createValidOrdine())
+  Assert: assertEquals(-1, index)
+
+Test Method: shouldReturnNegativeOneWhenOrdiniListIsEmpty()
+  Arrange:
+    - Utente u = new Utente()
+    - u.setOrdini(new ArrayList<>())
+  Act: int index = u.getOrdineIndex(createValidOrdine())
+  Assert: assertEquals(-1, index)
+
+Test Method: shouldReturnCorrectIndexWhenOrdineIsFound()
+  Arrange:
+    - Utente u = new Utente()
+    - Ordine o1 = createOrdine(id=1)
+    - Ordine o2 = createOrdine(id=2)
+    - ArrayList<Ordine> ordini = new ArrayList<>(Arrays.asList(o1, o2))
+    - u.setOrdini(ordini)
+  Act: int index = u.getOrdineIndex(o2)
+  Assert: assertEquals(1, index)
+
+Test Method: shouldReturnNegativeOneWhenOrdineNotInList()
+  Arrange:
+    - Utente u = new Utente()
+    - Ordine o1 = createOrdine(id=1)
+    - Ordine o2 = createOrdine(id=2)
+    - Ordine o3 = createOrdine(id=3)
+    - u.setOrdini(new ArrayList<>(Arrays.asList(o1, o2)))
+  Act: int index = u.getOrdineIndex(o3)
+  Assert: assertEquals(-1, index)
+
+2.8.5. **Parameterized tests**
+
+CSV Schema:
+Columns: scenario, ordiniState, searchOrderInList, expectedIndex
+
+Example rows:
+"null ordini", "null", false, -1
+"empty ordini", "empty", false, -1
+"order at index 0", "with_orders", true, 0
+"order at index 2", "with_orders", true, 2
+"order not in list", "with_orders", false, -1
+
+========================================================================
+END OF REPORT
+========================================================================

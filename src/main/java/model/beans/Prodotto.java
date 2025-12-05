@@ -29,8 +29,19 @@ public class Prodotto {
         return specifiche;
     }
 
-    /* @ ensures this.specifiche == specifiche; @ */
+    /*
+     * @
+     * 
+     * @ requires specifiche != null;
+     * 
+     * @ ensures this.specifiche == specifiche;
+     * 
+     * @
+     */
     public void setSpecifiche(ArrayList<Specifiche> specifiche) {
+        if (specifiche == null) {
+            throw new IllegalArgumentException("La lista delle specifiche non può essere null");
+        }
         this.specifiche = specifiche;
     }
 
@@ -39,8 +50,19 @@ public class Prodotto {
         return recensioni;
     }
 
-    /* @ ensures this.recensioni == recensioni; @ */
+    /*
+     * @
+     * 
+     * @ requires recensioni != null;
+     * 
+     * @ ensures this.recensioni == recensioni;
+     * 
+     * @
+     */
     public void setRecensioni(ArrayList<Recensione> recensioni) {
+        if (recensioni == null) {
+            throw new IllegalArgumentException("La lista delle recensioni non può essere null");
+        }
         this.recensioni = recensioni;
     }
 
@@ -69,6 +91,9 @@ public class Prodotto {
      * @
      */
     public void setQuantitaProdotto(int quantitaProdotto) {
+        if (quantitaProdotto < 0) {
+            throw new IllegalArgumentException("La quantità del prodotto non può essere negativa");
+        }
         this.quantitaProdotto = quantitaProdotto;
     }
 
@@ -87,6 +112,9 @@ public class Prodotto {
      * @
      */
     public void setPrezzo(double prezzo) {
+        if (prezzo < 0) {
+            throw new IllegalArgumentException("Il prezzo non può essere negativo");
+        }
         this.prezzo = prezzo;
     }
 
@@ -105,6 +133,9 @@ public class Prodotto {
      * @
      */
     public void setPeso(double peso) {
+        if (peso < 0) {
+            throw new IllegalArgumentException("Il peso non può essere negativo");
+        }
         this.peso = peso;
     }
 
@@ -123,8 +154,19 @@ public class Prodotto {
         return marca;
     }
 
-    /* @ ensures this.marca == marca; @ */
+    /*
+     * @
+     * 
+     * @ requires marca != null && !marca.trim().isEmpty();
+     * 
+     * @ ensures this.marca == marca;
+     * 
+     * @
+     */
     public void setMarca(String marca) {
+        if (marca == null || marca.trim().isEmpty()) {
+            throw new IllegalArgumentException("La marca non può essere null o vuota");
+        }
         this.marca = marca;
     }
 
@@ -133,8 +175,19 @@ public class Prodotto {
         return modello;
     }
 
-    /* @ ensures this.modello == modello; @ */
+    /*
+     * @
+     * 
+     * @ requires modello != null && !modello.trim().isEmpty();
+     * 
+     * @ ensures this.modello == modello;
+     * 
+     * @
+     */
     public void setModello(String modello) {
+        if (modello == null || modello.trim().isEmpty()) {
+            throw new IllegalArgumentException("Il modello non può essere null o vuoto");
+        }
         this.modello = modello;
     }
 
@@ -153,8 +206,19 @@ public class Prodotto {
         return descrizione;
     }
 
-    /* @ ensures this.descrizione == descrizione; @ */
+    /*
+     * @
+     * 
+     * @ requires descrizione != null && !descrizione.trim().isEmpty();
+     * 
+     * @ ensures this.descrizione == descrizione;
+     * 
+     * @
+     */
     public void setDescrizione(String descrizione) {
+        if (descrizione == null || descrizione.trim().isEmpty()) {
+            throw new IllegalArgumentException("La descrizione non può essere null o vuota");
+        }
         this.descrizione = descrizione;
     }
 
@@ -163,8 +227,19 @@ public class Prodotto {
         return categoria;
     }
 
-    /* @ ensures this.categoria == categoria; @ */
+    /*
+     * @
+     * 
+     * @ requires categoria != null;
+     * 
+     * @ ensures this.categoria == categoria;
+     * 
+     * @
+     */
     public void setCategoria(Categoria categoria) {
+        if (categoria == null) {
+            throw new IllegalArgumentException("La categoria non può essere null");
+        }
         this.categoria = categoria;
     }
 }
