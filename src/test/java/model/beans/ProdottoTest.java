@@ -1,4 +1,4 @@
-﻿package model.beans;
+package model.beans;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

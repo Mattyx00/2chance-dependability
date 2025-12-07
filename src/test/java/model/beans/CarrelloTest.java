@@ -1,4 +1,4 @@
-﻿package model.beans;
+package model.beans;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -329,6 +329,8 @@ class CarrelloTest {
                 "Should throw IllegalArgumentException for zero quantity"
         );
         assertTrue(exception.getMessage().contains("quantità deve essere maggiore di zero"),
+                "Exception message should mention quantity requirement");
+    }
  
 
     @Test

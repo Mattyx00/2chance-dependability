@@ -39,12 +39,16 @@ public class FileServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
 
-        String currentDirectory = System.getProperty("user.dir");
-        Path currentPath = Paths.get(currentDirectory);
-        Path parentPath = currentPath.getParent(); // Ottiene il percorso del genitore
-        Path uploadPath = parentPath.resolve("upload"); // Risolve "upload" nel percorso del genitore
-
-        this.basePath = uploadPath.toString() + File.separator;
+        String envUploadPath = System.getenv("UPLOAD_PATH");
+        if (envUploadPath != null) {
+            this.basePath = envUploadPath + File.separator;
+        } else {
+            String currentDirectory = System.getProperty("user.dir");
+            Path currentPath = Paths.get(currentDirectory);
+            Path parentPath = currentPath.getParent(); // Ottiene il percorso del genitore
+            Path uploadPath = parentPath.resolve("upload"); // Risolve "upload" nel percorso del genitore
+            this.basePath = uploadPath.toString() + File.separator;
+        }
         // Validate base path.
         if (this.basePath == null) {
             throw new ServletException("FileServlet init param 'basePath' is required.");

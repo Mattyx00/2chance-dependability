@@ -1,4 +1,4 @@
-﻿package model.beans;
+package model.beans;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -165,7 +165,6 @@ class WishListTest {
         utente.setPassword("Password123");
         utente.setNome("Mario");
         utente.setCognome("Rossi");
-        utente.setSesso("M");
         return utente;
     }
 

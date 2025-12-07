@@ -14,7 +14,11 @@ public class ConPool {
             PoolProperties p = new PoolProperties();
             
             // JDBC URL aggiornato
-            p.setUrl("jdbc:mysql://127.0.0.1:3306/second_chance?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC");
+            String dbHost = System.getenv("DB_HOST");
+            if (dbHost == null) {
+                dbHost = "127.0.0.1";
+            }
+            p.setUrl("jdbc:mysql://" + dbHost + ":3306/second_chance?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC");
             p.setDriverClassName("com.mysql.cj.jdbc.Driver");
             p.setUsername("root");
             p.setPassword("admin");

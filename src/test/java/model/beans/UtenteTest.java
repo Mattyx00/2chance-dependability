@@ -1,4 +1,4 @@
-﻿package model.beans;
+package model.beans;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -179,9 +179,9 @@ class UtenteTest {
         utente.setPassword(password);
 
         // Assert
-        assertNotNull(utente.getPasswordHash(), "PasswordHash should not be null");
-        assertNotEquals(password, utente.getPasswordHash(), "Password should be hashed");
-        assertTrue(utente.getPasswordHash().length() > 0, "PasswordHash should have content");
+        assertNotNull(utente.getPassword(), "Password should not be null");
+        assertNotEquals(password, utente.getPassword(), "Password should be hashed");
+        assertTrue(utente.getPassword().length() > 0, "Password should have content");
     }
 
     // ========================================================================
