@@ -113,7 +113,6 @@ public class AdminService {
             ]
         }
          */
-        System.out.println("sono arrivato qui CAZAZ");
         ArrayList<Prodotto> prodotti = prodottoDAO.getProdotti();
         System.out.println(prodotti);
         JSONObject jsonObject = new JSONObject();
