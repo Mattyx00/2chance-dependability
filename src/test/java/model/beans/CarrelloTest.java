@@ -16,11 +16,19 @@ import static org.junit.jupiter.api.Assertions.*;
  * - Constructor initialization
  * - getTotaleCarrello() with empty/single/multiple items
  * - aggiungiProdotto() with null checks and various cart states
- * - eliminaProdotto() with null checks, empty cart, existing/non-existing products
+ * - eliminaProdotto() with null checks, empty cart, existing/non-existing
+ * products
  * - cambiaQuantita() with null/invalid inputs and state exceptions
  */
 @DisplayName("Carrello Tests")
 class CarrelloTest {
+
+    private Carrello cart;
+
+    @BeforeEach
+    void setUp() {
+        cart = new Carrello();
+    }
 
     // ========================================================================
     // Constructor Tests: Carrello()
@@ -29,14 +37,11 @@ class CarrelloTest {
     @Test
     @DisplayName("Constructor should initialize empty non-null product list")
     void shouldInitializeEmptyNonNullProductListWhenConstructed() {
-        // Arrange & Act
-        Carrello carrello = new Carrello();
-
         // Assert
-        assertNotNull(carrello, "Carrello instance should be created");
-        assertNotNull(carrello.getProdotti(), "Product list should not be null");
-        assertTrue(carrello.getProdotti().isEmpty(), "Product list should be empty");
-        assertEquals(0, carrello.getProdotti().size(), "Product list size should be 0");
+        assertNotNull(cart, "Carrello instance should be created");
+        assertNotNull(cart.getProdotti(), "Product list should not be null");
+        assertTrue(cart.getProdotti().isEmpty(), "Product list should be empty");
+        assertEquals(0, cart.getProdotti().size(), "Product list size should be 0");
     }
 
     // ========================================================================
@@ -46,68 +51,62 @@ class CarrelloTest {
     @Test
     @DisplayName("getTotaleCarrello should return zero for empty cart")
     void shouldReturnZeroForEmptyCart() {
-        // Arrange
-        Carrello carrello = new Carrello();
-
         // Act
-        double total = carrello.getTotaleCarrello();
+        double totalCartProductsCost = cart.getTotaleCarrello();
 
         // Assert
-        assertEquals(0.0, total, 0.001, "Empty cart should have zero total");
+        assertEquals(0.0, totalCartProductsCost, 0.001, "Empty cart should have zero total");
     }
 
     @Test
     @DisplayName("getTotaleCarrello should calculate correct total for single item")
     void shouldCalculateCorrectTotalForSingleItem() {
         // Arrange
-        Carrello carrello = new Carrello();
-        Prodotto prodotto = createProdotto(1, "Product1", 10.0);
-        ProdottoCarrello pc = new ProdottoCarrello(prodotto, 2); // total = 20.0
-        carrello.aggiungiProdotto(pc);
+        Prodotto product = createProduct(1, "Product1", 10.0);
+        ProdottoCarrello productCart = new ProdottoCarrello(product, 2); // total = 20.0
+        cart.aggiungiProdotto(productCart);
 
         // Act
-        double total = carrello.getTotaleCarrello();
+        double totalCartProductsCost = cart.getTotaleCarrello();
 
         // Assert
-        assertEquals(20.0, total, 0.001, "Cart total should be 20.0 (10.0 * 2)");
+        assertEquals(20.0, totalCartProductsCost, 0.001, "Cart total should be 20.0 (10.0 * 2)");
     }
 
     @Test
     @DisplayName("getTotaleCarrello should calculate correct total for multiple items")
     void shouldCalculateCorrectTotalForMultipleItems() {
         // Arrange
-        Carrello carrello = new Carrello();
-        Prodotto p1 = createProdotto(1, "Product1", 10.0);
-        Prodotto p2 = createProdotto(2, "Product2", 7.75);
-        ProdottoCarrello pc1 = new ProdottoCarrello(p1, 2); // total = 20.0
-        ProdottoCarrello pc2 = new ProdottoCarrello(p2, 2); // total = 15.5
-        carrello.aggiungiProdotto(pc1);
-        carrello.aggiungiProdotto(pc2);
+        Prodotto product1 = createProduct(1, "Product1", 10.0);
+        Prodotto product2 = createProduct(2, "Product2", 7.75);
+        ProdottoCarrello productCart1 = new ProdottoCarrello(product1, 2);
+        ProdottoCarrello productCart2 = new ProdottoCarrello(product2, 2);
+        cart.aggiungiProdotto(productCart1);
+        cart.aggiungiProdotto(productCart2);
 
         // Act
-        double total = carrello.getTotaleCarrello();
+        double totalCartProductsCost = cart.getTotaleCarrello();
 
         // Assert
-        assertEquals(35.5, total, 0.01, "Cart total should be 35.5 (20.0 + 15.5)");
+        assertEquals(35.5, totalCartProductsCost, 0.01, "Cart total should be 35.5 (20.0 + 15.5)");
     }
 
     @Test
     @DisplayName("getTotaleCarrello should handle items with zero price")
     void shouldCalculateTotalWithZeroPriceItems() {
         // Arrange
-        Carrello carrello = new Carrello();
-        Prodotto p1 = createProdotto(1, "FreeProduct", 0.0);
-        Prodotto p2 = createProdotto(2, "PaidProduct", 10.0);
-        ProdottoCarrello pc1 = new ProdottoCarrello(p1, 5); // total = 0.0
-        ProdottoCarrello pc2 = new ProdottoCarrello(p2, 3); // total = 30.0
-        carrello.aggiungiProdotto(pc1);
-        carrello.aggiungiProdotto(pc2);
+        Prodotto product1 = createProduct(1, "FreeProduct", 0.0);
+        Prodotto product2 = createProduct(2, "PaidProduct", 10.0);
+        ProdottoCarrello productCart1 = new ProdottoCarrello(product1, 5);
+        ProdottoCarrello productCart2 = new ProdottoCarrello(product2, 3);
+        cart.aggiungiProdotto(productCart1);
+        cart.aggiungiProdotto(productCart2);
 
         // Act
-        double total = carrello.getTotaleCarrello();
+        double totalCartProductsCost = cart.getTotaleCarrello();
 
         // Assert
-        assertEquals(30.0, total, 0.001, "Cart total should be 30.0 (0.0 + 30.0)");
+        assertEquals(30.0, totalCartProductsCost, 0.001, "Cart total should be 30.0 (0.0 + 30.0)");
     }
 
     // ========================================================================
@@ -117,16 +116,13 @@ class CarrelloTest {
     @Test
     @DisplayName("aggiungiProdotto should throw exception when adding null product")
     void shouldThrowExceptionWhenAddingNullProduct() {
-        // Arrange
-        Carrello carrello = new Carrello();
-
         // Act & Assert
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
-                () -> carrello.aggiungiProdotto(null),
-                "Should throw IllegalArgumentException when adding null"
-        );
-        assertTrue(exception.getMessage().contains("prodotto da aggiungere non può essere null"),
+                () -> cart.aggiungiProdotto(null),
+                "Should throw IllegalArgumentException when adding null");
+        assertTrue(exception.getMessage().contains(
+                "prodotto da aggiungere non può essere null"),
                 "Exception message should mention null product");
     }
 
@@ -134,55 +130,56 @@ class CarrelloTest {
     @DisplayName("aggiungiProdotto should add product to empty cart")
     void shouldAddProductToEmptyCart() {
         // Arrange
-        Carrello carrello = new Carrello();
-        Prodotto prodotto = createProdotto(1, "Product1", 10.0);
-        ProdottoCarrello pc = new ProdottoCarrello(prodotto, 2);
+        Prodotto product = createProduct(1, "Product1", 10.0);
+        ProdottoCarrello productCart = new ProdottoCarrello(product, 2);
 
         // Act
-        boolean result = carrello.aggiungiProdotto(pc);
+        boolean result = cart.aggiungiProdotto(productCart);
 
         // Assert
         assertTrue(result, "aggiungiProdotto should return true");
-        assertEquals(1, carrello.getProdotti().size(), "Cart should have 1 item");
-        assertTrue(carrello.getProdotti().contains(pc), "Cart should contain the added product");
+        assertEquals(1, cart.getProdotti().size(), "Cart should have 1 item");
+        assertTrue(cart.getProdotti().contains(productCart), "Cart should contain the added product");
     }
 
     @Test
     @DisplayName("aggiungiProdotto should add multiple different products to cart")
     void shouldAddMultipleProductsToCart() {
         // Arrange
-        Carrello carrello = new Carrello();
-        Prodotto p1 = createProdotto(1, "Product1", 10.0);
-        Prodotto p2 = createProdotto(2, "Product2", 15.0);
-        ProdottoCarrello pc1 = new ProdottoCarrello(p1, 2);
-        ProdottoCarrello pc2 = new ProdottoCarrello(p2, 1);
+        Prodotto product1 = createProduct(1, "Product1", 10.0);
+        Prodotto product2 = createProduct(2, "Product2", 15.0);
+        ProdottoCarrello productCart1 = new ProdottoCarrello(product1, 2);
+        ProdottoCarrello productCart2 = new ProdottoCarrello(product2, 1);
 
         // Act
-        carrello.aggiungiProdotto(pc1);
-        carrello.aggiungiProdotto(pc2);
+        cart.aggiungiProdotto(productCart1);
+        cart.aggiungiProdotto(productCart2);
 
         // Assert
-        assertEquals(2, carrello.getProdotti().size(), "Cart should have 2 items");
-        assertTrue(carrello.getProdotti().contains(pc1), "Cart should contain first product");
-        assertTrue(carrello.getProdotti().contains(pc2), "Cart should contain second product");
+        assertEquals(2, cart.getProdotti().size(), "Cart should have 2 items");
+        assertTrue(cart.getProdotti().contains(productCart1), "Cart should contain first product");
+        assertTrue(cart.getProdotti().contains(productCart2), "Cart should contain second product");
     }
 
     @Test
     @DisplayName("aggiungiProdotto should allow adding duplicate product (same ID)")
     void shouldAllowAddingDuplicateProduct() {
         // Arrange
-        Carrello carrello = new Carrello();
-        Prodotto prodotto = createProdotto(1, "Product1", 10.0);
-        ProdottoCarrello pc1 = new ProdottoCarrello(prodotto, 2);
-        ProdottoCarrello pc2 = new ProdottoCarrello(prodotto, 3);
+        Prodotto product = createProduct(1, "Product1", 10.0);
+        ProdottoCarrello productCart1 = new ProdottoCarrello(product, 2);
+        ProdottoCarrello productCart2 = new ProdottoCarrello(product, 3);
 
         // Act
-        carrello.aggiungiProdotto(pc1);
-        carrello.aggiungiProdotto(pc2);
+        cart.aggiungiProdotto(productCart1);
+        cart.aggiungiProdotto(productCart2);
 
         // Assert
-        assertEquals(2, carrello.getProdotti().size(), 
+        assertEquals(2, cart.getProdotti().size(),
                 "Cart should allow duplicate products (ArrayList behavior)");
+        assertTrue(cart.getProdotti().contains(productCart1),
+                "Cart should contain first product");
+        assertTrue(cart.getProdotti().contains(productCart2),
+                "Cart should contain second product");
     }
 
     // ========================================================================
@@ -192,16 +189,13 @@ class CarrelloTest {
     @Test
     @DisplayName("eliminaProdotto should throw exception when removing null product")
     void shouldThrowExceptionWhenRemovingNullProduct() {
-        // Arrange
-        Carrello carrello = new Carrello();
-
         // Act & Assert
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
-                () -> carrello.eliminaProdotto(null),
-                "Should throw IllegalArgumentException when removing null"
-        );
-        assertTrue(exception.getMessage().contains("prodotto da eliminare non può essere null"),
+                () -> cart.eliminaProdotto(null),
+                "Should throw IllegalArgumentException when removing null");
+        assertTrue(
+                exception.getMessage().contains("prodotto da eliminare non può essere null"),
                 "Exception message should mention null product");
     }
 
@@ -209,68 +203,65 @@ class CarrelloTest {
     @DisplayName("eliminaProdotto should do nothing when removing from empty cart")
     void shouldDoNothingWhenRemovingFromEmptyCart() {
         // Arrange
-        Carrello carrello = new Carrello();
-        Prodotto prodotto = createProdotto(1, "Product1", 10.0);
+        Prodotto product = createProduct(1, "Product1", 10.0);
 
         // Act
-        carrello.eliminaProdotto(prodotto);
+        cart.eliminaProdotto(product);
 
         // Assert
-        assertTrue(carrello.getProdotti().isEmpty(), "Cart should remain empty");
-        assertEquals(0, carrello.getProdotti().size(), "Cart size should be 0");
+        assertTrue(cart.getProdotti().isEmpty(), "Cart should remain empty");
+        assertEquals(0, cart.getProdotti().size(), "Cart size should be 0");
     }
 
     @Test
     @DisplayName("eliminaProdotto should remove existing product from cart")
     void shouldRemoveExistingProductFromCart() {
         // Arrange
-        Carrello carrello = new Carrello();
-        Prodotto prodotto = createProdotto(1, "Product1", 10.0);
-        ProdottoCarrello pc = new ProdottoCarrello(prodotto, 2);
-        carrello.aggiungiProdotto(pc);
+        Prodotto product = createProduct(1, "Product1", 10.0);
+        ProdottoCarrello productCart = new ProdottoCarrello(product, 2);
+        cart.aggiungiProdotto(productCart);
 
         // Act
-        carrello.eliminaProdotto(prodotto);
+        cart.eliminaProdotto(product);
 
         // Assert
-        assertTrue(carrello.getProdotti().isEmpty(), "Cart should be empty after removal");
-        assertEquals(0, carrello.getProdotti().size(), "Cart size should be 0");
+        assertTrue(cart.getProdotti().isEmpty(), "Cart should be empty after removal");
+        assertEquals(0, cart.getProdotti().size(), "Cart size should be 0");
     }
 
     @Test
     @DisplayName("eliminaProdotto should do nothing when product not in cart")
     void shouldDoNothingWhenRemovingNonExistingProduct() {
         // Arrange
-        Carrello carrello = new Carrello();
-        Prodotto p1 = createProdotto(1, "Product1", 10.0);
-        Prodotto p2 = createProdotto(2, "Product2", 15.0);
-        ProdottoCarrello pc1 = new ProdottoCarrello(p1, 2);
-        carrello.aggiungiProdotto(pc1);
+        Prodotto product1 = createProduct(1, "Product1", 10.0);
+        Prodotto product2 = createProduct(2, "Product2", 15.0);
+        ProdottoCarrello productCart1 = new ProdottoCarrello(product1, 2);
+        cart.aggiungiProdotto(productCart1);
 
         // Act
-        carrello.eliminaProdotto(p2);
+        cart.eliminaProdotto(product2);
 
         // Assert
-        assertEquals(1, carrello.getProdotti().size(), "Cart should still have 1 item");
-        assertTrue(carrello.getProdotti().contains(pc1), "Original product should remain");
+        assertEquals(1, cart.getProdotti().size(), "Cart should still have 1 item");
+        assertTrue(cart.getProdotti().contains(productCart1), "Original product should remain");
     }
 
     @Test
     @DisplayName("eliminaProdotto should remove all matching products by ID")
     void shouldRemoveAllMatchingProductsByIdFromCart() {
         // Arrange
-        Carrello carrello = new Carrello();
-        Prodotto prodotto = createProdotto(1, "Product1", 10.0);
-        ProdottoCarrello pc1 = new ProdottoCarrello(prodotto, 2);
-        ProdottoCarrello pc2 = new ProdottoCarrello(prodotto, 3);
-        carrello.aggiungiProdotto(pc1);
-        carrello.aggiungiProdotto(pc2);
+        Prodotto product = createProduct(1, "Product1", 10.0);
+        ProdottoCarrello productCart1 = new ProdottoCarrello(product, 2);
+        ProdottoCarrello productCart2 = new ProdottoCarrello(product, 3);
+        cart.aggiungiProdotto(productCart1);
+        cart.aggiungiProdotto(productCart2);
 
         // Act
-        carrello.eliminaProdotto(prodotto);
+        cart.eliminaProdotto(product);
 
         // Assert
-        assertTrue(carrello.getProdotti().isEmpty(), 
+        assertTrue(
+                cart.getProdotti().isEmpty(),
                 "All products with matching ID should be removed");
     }
 
@@ -278,21 +269,20 @@ class CarrelloTest {
     @DisplayName("eliminaProdotto should only remove products with matching ID")
     void shouldRemoveOnlyMatchingProducts() {
         // Arrange
-        Carrello carrello = new Carrello();
-        Prodotto p1 = createProdotto(1, "Product1", 10.0);
-        Prodotto p2 = createProdotto(2, "Product2", 15.0);
-        ProdottoCarrello pc1 = new ProdottoCarrello(p1, 2);
-        ProdottoCarrello pc2 = new ProdottoCarrello(p2, 1);
-        carrello.aggiungiProdotto(pc1);
-        carrello.aggiungiProdotto(pc2);
+        Prodotto product1 = createProduct(1, "Product1", 10.0);
+        Prodotto product2 = createProduct(2, "Product2", 15.0);
+        ProdottoCarrello productCart1 = new ProdottoCarrello(product1, 2);
+        ProdottoCarrello productCart2 = new ProdottoCarrello(product2, 1);
+        cart.aggiungiProdotto(productCart1);
+        cart.aggiungiProdotto(productCart2);
 
         // Act
-        carrello.eliminaProdotto(p1);
+        cart.eliminaProdotto(product1);
 
         // Assert
-        assertEquals(1, carrello.getProdotti().size(), "Cart should have 1 item");
-        assertEquals(p2.getId(), carrello.getProdotti().get(0).getProdotto().getId(),
-                "Remaining product should be p2");
+        assertEquals(1, cart.getProdotti().size(), "Cart should have 1 item");
+        assertEquals(product2.getId(), cart.getProdotti().get(0).getProdotto().getId(),
+                "Remaining product should be product2");
     }
 
     // ========================================================================
@@ -302,15 +292,11 @@ class CarrelloTest {
     @Test
     @DisplayName("cambiaQuantita should throw exception when product is null")
     void shouldThrowExceptionWhenChangingQuantityWithNullProduct() {
-        // Arrange
-        Carrello carrello = new Carrello();
-
         // Act & Assert
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
-                () -> carrello.cambiaQuantita(null, 5),
-                "Should throw IllegalArgumentException for null product"
-        );
+                () -> cart.cambiaQuantita(null, 5),
+                "Should throw IllegalArgumentException for null product");
         assertTrue(exception.getMessage().contains("prodotto non può essere null"),
                 "Exception message should mention null product");
     }
@@ -319,31 +305,32 @@ class CarrelloTest {
     @DisplayName("cambiaQuantita should throw exception when quantity is zero")
     void shouldThrowExceptionWhenChangingQuantityToZero() {
         // Arrange
-        Carrello carrello = new Carrello();
-        Prodotto prodotto = createProdotto(1, "Product1", 10.0);
+        Prodotto product = createProduct(1, "Product1", 10.0);
+        ProdottoCarrello productCart = new ProdottoCarrello(product, 2);
+        cart.aggiungiProdotto(productCart);
 
         // Act & Assert
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
-                () -> carrello.cambiaQuantita(prodotto, 0),
-                "Should throw IllegalArgumentException for zero quantity"
-        );
+                () -> cart.cambiaQuantita(product, 0),
+                "Should throw IllegalArgumentException for zero quantity");
         assertTrue(exception.getMessage().contains("quantità deve essere maggiore di zero"),
- 
+                "Exception message should mention zero quantity");
+    }
 
     @Test
     @DisplayName("cambiaQuantita should throw exception when quantity is negative")
     void shouldThrowExceptionWhenChangingQuantityToNegative() {
         // Arrange
-        Carrello carrello = new Carrello();
-        Prodotto prodotto = createProdotto(1, "Product1", 10.0);
+        Prodotto product = createProduct(1, "Product1", 10.0);
+        ProdottoCarrello productCart = new ProdottoCarrello(product, 2);
+        cart.aggiungiProdotto(productCart);
 
         // Act & Assert
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
-                () -> carrello.cambiaQuantita(prodotto, -1),
-                "Should throw IllegalArgumentException for negative quantity"
-        );
+                () -> cart.cambiaQuantita(product, -1),
+                "Should throw IllegalArgumentException for negative quantity");
         assertTrue(exception.getMessage().contains("quantità deve essere maggiore di zero"),
                 "Exception message should mention quantity requirement");
     }
@@ -352,17 +339,16 @@ class CarrelloTest {
     @DisplayName("cambiaQuantita should update quantity for existing product")
     void shouldUpdateQuantityForExistingProduct() {
         // Arrange
-        Carrello carrello = new Carrello();
-        Prodotto prodotto = createProdotto(1, "Product1", 10.0);
-        ProdottoCarrello pc = new ProdottoCarrello(prodotto, 2);
-        carrello.aggiungiProdotto(pc);
+        Prodotto product = createProduct(1, "Product1", 10.0);
+        ProdottoCarrello productCart = new ProdottoCarrello(product, 2);
+        cart.aggiungiProdotto(productCart);
 
         // Act
-        carrello.cambiaQuantita(prodotto, 10);
+        cart.cambiaQuantita(product, 10);
 
         // Assert
-        assertEquals(1, carrello.getProdotti().size(), "Cart should still have 1 item");
-        assertEquals(10, carrello.getProdotti().get(0).getQuantita(),
+        assertEquals(1, cart.getProdotti().size(), "Cart should still have 1 item");
+        assertEquals(10, cart.getProdotti().get(0).getQuantita(),
                 "Product quantity should be updated to 10");
     }
 
@@ -370,16 +356,15 @@ class CarrelloTest {
     @DisplayName("cambiaQuantita should update quantity to 1 (minimum valid)")
     void shouldUpdateQuantityToMinimumValid() {
         // Arrange
-        Carrello carrello = new Carrello();
-        Prodotto prodotto = createProdotto(1, "Product1", 10.0);
-        ProdottoCarrello pc = new ProdottoCarrello(prodotto, 5);
-        carrello.aggiungiProdotto(pc);
+        Prodotto product = createProduct(1, "Product1", 10.0);
+        ProdottoCarrello productCart = new ProdottoCarrello(product, 5);
+        cart.aggiungiProdotto(productCart);
 
         // Act
-        carrello.cambiaQuantita(prodotto, 1);
+        cart.cambiaQuantita(product, 1);
 
         // Assert
-        assertEquals(1, carrello.getProdotti().get(0).getQuantita(),
+        assertEquals(1, cart.getProdotti().get(0).getQuantita(),
                 "Product quantity should be updated to 1");
     }
 
@@ -387,21 +372,18 @@ class CarrelloTest {
     @DisplayName("cambiaQuantita should throw exception when product not in cart")
     void shouldThrowExceptionWhenChangingQuantityOfNonExistingProduct() {
         // Arrange
-        Carrello carrello = new Carrello();
-        Prodotto p1 = createProdotto(1, "Product1", 10.0);
-        Prodotto p2 = createProdotto(2, "Product2", 15.0);
-        ProdottoCarrello pc1 = new ProdottoCarrello(p1, 5);
-        carrello.aggiungiProdotto(pc1);
+        Prodotto product = createProduct(1, "Product1", 10.0);
+        ProdottoCarrello productCart = new ProdottoCarrello(product, 5);
+        cart.aggiungiProdotto(productCart);
 
         // Act & Assert
         IllegalStateException exception = assertThrows(
                 IllegalStateException.class,
-                () -> carrello.cambiaQuantita(p2, 10),
-                "Should throw IllegalStateException when product not in cart"
-        );
+                () -> cart.cambiaQuantita(product, 10),
+                "Should throw IllegalStateException when product not in cart");
         assertTrue(exception.getMessage().contains("non è presente nel carrello"),
                 "Exception message should mention product not in cart");
-        assertTrue(exception.getMessage().contains("" + p2.getId()),
+        assertTrue(exception.getMessage().contains("" + product.getId()),
                 "Exception message should mention product ID");
     }
 
@@ -409,15 +391,13 @@ class CarrelloTest {
     @DisplayName("cambiaQuantita should throw exception for empty cart")
     void shouldThrowExceptionWhenChangingQuantityInEmptyCart() {
         // Arrange
-        Carrello carrello = new Carrello();
-        Prodotto prodotto = createProdotto(1, "Product1", 10.0);
+        Prodotto product = createProduct(1, "Product1", 10.0);
 
         // Act & Assert
         IllegalStateException exception = assertThrows(
                 IllegalStateException.class,
-                () -> carrello.cambiaQuantita(prodotto, 5),
-                "Should throw IllegalStateException for empty cart"
-        );
+                () -> cart.cambiaQuantita(product, 5),
+                "Should throw IllegalStateException for empty cart");
         assertTrue(exception.getMessage().contains("non è presente nel carrello"),
                 "Exception message should indicate product not found");
     }
@@ -426,21 +406,20 @@ class CarrelloTest {
     @DisplayName("cambiaQuantita should update only first matching product when duplicates exist")
     void shouldUpdateFirstMatchingProductWhenDuplicatesExist() {
         // Arrange
-        Carrello carrello = new Carrello();
-        Prodotto prodotto = createProdotto(1, "Product1", 10.0);
-        ProdottoCarrello pc1 = new ProdottoCarrello(prodotto, 2);
-        ProdottoCarrello pc2 = new ProdottoCarrello(prodotto, 3);
-        carrello.aggiungiProdotto(pc1);
-        carrello.aggiungiProdotto(pc2);
+        Prodotto product = createProduct(1, "Product1", 10.0);
+        ProdottoCarrello productCart1 = new ProdottoCarrello(product, 2);
+        ProdottoCarrello productCart2 = new ProdottoCarrello(product, 3);
+        cart.aggiungiProdotto(productCart1);
+        cart.aggiungiProdotto(productCart2);
 
         // Act
-        carrello.cambiaQuantita(prodotto, 10);
+        cart.cambiaQuantita(product, 10);
 
         // Assert
-        assertEquals(2, carrello.getProdotti().size(), "Cart should still have 2 items");
-        assertEquals(10, carrello.getProdotti().get(0).getQuantita(),
+        assertEquals(2, cart.getProdotti().size(), "Cart should still have 2 items");
+        assertEquals(10, cart.getProdotti().get(0).getQuantita(),
                 "First product quantity should be updated to 10");
-        assertEquals(3, carrello.getProdotti().get(1).getQuantita(),
+        assertEquals(3, cart.getProdotti().get(1).getQuantita(),
                 "Second product quantity should remain 3");
     }
 
@@ -451,15 +430,15 @@ class CarrelloTest {
     /**
      * Helper method to create a Prodotto instance for testing.
      */
-    private Prodotto createProdotto(int id, String modello, double prezzo) {
-        Prodotto prodotto = new Prodotto();
-        prodotto.setId(id);
-        prodotto.setModello(modello);
-        prodotto.setMarca("TestMarca");
-        prodotto.setDescrizione("Test Description");
-        prodotto.setPrezzo(prezzo);
-        prodotto.setPeso(1.0);
-        prodotto.setQuantitaProdotto(10);
-        return prodotto;
+    private Prodotto createProduct(int id, String modello, double prezzo) {
+        Prodotto product = new Prodotto();
+        product.setId(id);
+        product.setModello(modello);
+        product.setMarca("TestMarca");
+        product.setDescrizione("Test Description");
+        product.setPrezzo(prezzo);
+        product.setPeso(1.0);
+        product.setQuantitaProdotto(10);
+        return product;
     }
 }

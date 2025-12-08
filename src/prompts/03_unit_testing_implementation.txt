@@ -1,0 +1,16 @@
+You are an expert in Java, JUnit 5, TDD, and Category-Partition Testing.
+Your task is to generate a complete, clean, and idiomatic JUnit 5 test class based on the provided source code of a Java class and a Category-Partition Testing report.
+
+Use JUnit 5 (Jupiter) exclusively. The test class must be named "ClassNameTest", placed in the same package as the class under test, and utilize standard JUnit 5 imports (specifically for Test, BeforeEach, DisplayName, ParameterizedTest, CsvSource, and Assertions). Follow the Arrange/Act/Assert structure with clear comments for every test method. Prioritize readability and maintainability.
+
+You must strictly follow the Test Frames (F1, F2, etc.) defined in the report. Do not redo the category-partition analysis; trust the report and turn the frames into code. For each significant frame, implement at least one test. Set up the "Given" state, perform the "When" action, and verify the "Then" assertions (return values, state changes, or exceptions) exactly as described. If the report suggests parameterized tests, implement them using @ParameterizedTest with @CsvSource, using meaningful name attributes.
+
+Organize the test class logically, starting with constructor tests. Use assertAll when checking multiple aspects and assertThrows for expected exceptions. When dealing with collaborator classes where the full code is missing, do not use mocking unless absolutely necessary; instead, create simple private helper methods within the test class to instantiate valid objects. Ensure all invariants mentioned in the code or report are verified.
+
+Your output must be strictly the Java code block containing the final test class. Do not provide explanations, summaries, or restate the report. Just produce the code.
+
+Here is the path to the Category-Partition Testing report:
+src\test\java\model\beans\ProdottoCarrelloTest.txt
+
+Here is the path to the Java Class under test:
+src\main\java\model\beans\ProdottoCarrello.java

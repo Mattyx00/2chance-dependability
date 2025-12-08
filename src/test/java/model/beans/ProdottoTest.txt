@@ -1,0 +1,341 @@
+Class Overview
+The Prodotto class represents a product entity within the e-commerce system. It serves as a data transfer object (DTO) holding product details such as unique identifier, quantity, price, weight, dimensions, brand, model, image, description, and associations to a category, reviews, and specifications. Key validation logic is enforced in setter methods to ensure data integrity: numerical values (quantity, price, weight) must be non-negative, and essential string fields (brand, model, description) as well as object references (category, lists) must not be null or empty.
+
+---
+
+Method: Prodotto()
+Parameters: None
+State: None
+
+Categories and Choices:
+- Initialization:
+  - Default: Valid (Object created with default values)
+
+Test Frames:
+- F1: Create a new Prodotto instance. Expected: Object is successfully instantiated; fields are initialized to their default values (0, 0.0, null).
+
+Suggested JUnit 5 Test:
+- testDefaultConstructor
+  - Arrange: None.
+  - Act: Prodotto prodotto = new Prodotto();
+  - Assert: assertNotNull(prodotto); assertNull(prodotto.getMarca()); assertEquals(0, prodotto.getQuantitaProdotto());
+
+---
+
+Method: setSpecifiche(ArrayList<Specifiche> specifiche)
+Parameters: specifiche (ArrayList<Specifiche>)
+State: None
+
+Categories and Choices:
+- specifiche:
+  - Null: Invalid
+  - Empty List: Valid
+  - Populated List: Valid
+
+Test Frames:
+- F1: specifiche is null. Expected: IllegalArgumentException ("La lista delle specifiche non può essere null").
+- F2: specifiche is an empty ArrayList. Expected: Field updated successfully.
+- F3: specifiche is a populated ArrayList. Expected: Field updated successfully.
+
+Suggested JUnit 5 Test:
+- shouldThrowExceptionWhenSpecificheIsNull
+  - Arrange: Prodotto p = new Prodotto();
+  - Act: p.setSpecifiche(null);
+  - Assert: assertThrows(IllegalArgumentException.class, ...);
+- shouldSetSpecificheWhenValid
+  - Arrange: Prodotto p = new Prodotto(); ArrayList<Specifiche> list = new ArrayList<>();
+  - Act: p.setSpecifiche(list);
+  - Assert: assertEquals(list, p.getSpecifiche());
+
+---
+
+Method: setRecensioni(ArrayList<Recensione> recensioni)
+Parameters: recensioni (ArrayList<Recensione>)
+State: None
+
+Categories and Choices:
+- recensioni:
+  - Null: Invalid
+  - Empty List: Valid
+  - Populated List: Valid
+
+Test Frames:
+- F1: recensioni is null. Expected: IllegalArgumentException ("La lista delle recensioni non può essere null").
+- F2: recensioni is an empty ArrayList. Expected: Field updated successfully.
+- F3: recensioni is a populated ArrayList. Expected: Field updated successfully.
+
+Suggested JUnit 5 Test:
+- shouldThrowExceptionWhenRecensioniIsNull
+  - Arrange: Prodotto p = new Prodotto();
+  - Act: p.setRecensioni(null);
+  - Assert: assertThrows(IllegalArgumentException.class, ...);
+- shouldSetRecensioniWhenValid
+  - Arrange: Prodotto p = new Prodotto(); ArrayList<Recensione> list = new ArrayList<>();
+  - Act: p.setRecensioni(list);
+  - Assert: assertEquals(list, p.getRecensioni());
+
+---
+
+Method: setQuantitaProdotto(int quantitaProdotto)
+Parameters: quantitaProdotto (int)
+State: None
+
+Categories and Choices:
+- Value:
+  - Negative: Invalid
+  - Zero: Valid
+  - Positive: Valid
+
+Test Frames:
+- F1: quantitaProdotto is -1. Expected: IllegalArgumentException ("La quantità del prodotto non può essere negativa").
+- F2: quantitaProdotto is 0. Expected: Field updated successfully.
+- F3: quantitaProdotto is 10. Expected: Field updated successfully.
+
+Suggested JUnit 5 Test:
+- shouldThrowExceptionWhenQuantitaProdottoIsNegative
+  - Arrange: Prodotto p = new Prodotto();
+  - Act: p.setQuantitaProdotto(-5);
+  - Assert: assertThrows(IllegalArgumentException.class, ...);
+- shouldSetQuantitaProdottoWhenValid
+  - Arrange: Prodotto p = new Prodotto();
+  - Act: p.setQuantitaProdotto(10);
+  - Assert: assertEquals(10, p.getQuantitaProdotto());
+
+CSV Schema for Parameterized Test:
+valore, isValid
+-1, false
+0, true
+100, true
+
+---
+
+Method: setPrezzo(double prezzo)
+Parameters: prezzo (double)
+State: None
+
+Categories and Choices:
+- Value:
+  - Negative: Invalid
+  - Zero: Valid
+  - Positive: Valid
+
+Test Frames:
+- F1: prezzo is -1.0. Expected: IllegalArgumentException ("Il prezzo non può essere negativo").
+- F2: prezzo is 0.0. Expected: Field updated successfully.
+- F3: prezzo is 19.99. Expected: Field updated successfully.
+
+Suggested JUnit 5 Test:
+- shouldThrowExceptionWhenPrezzoIsNegative
+  - Arrange: Prodotto p = new Prodotto();
+  - Act: p.setPrezzo(-1.0);
+  - Assert: assertThrows(IllegalArgumentException.class, ...);
+- shouldSetPrezzoWhenValid
+  - Arrange: Prodotto p = new Prodotto();
+  - Act: p.setPrezzo(50.0);
+  - Assert: assertEquals(50.0, p.getPrezzo(), 0.001);
+
+---
+
+Method: setPeso(double peso)
+Parameters: peso (double)
+State: None
+
+Categories and Choices:
+- Value:
+  - Negative: Invalid
+  - Zero: Valid
+  - Positive: Valid
+
+Test Frames:
+- F1: peso is -0.5. Expected: IllegalArgumentException ("Il peso non può essere negativo").
+- F2: peso is 0.0. Expected: Field updated successfully.
+- F3: peso is 1.5. Expected: Field updated successfully.
+
+Suggested JUnit 5 Test:
+- shouldThrowExceptionWhenPesoIsNegative
+  - Arrange: Prodotto p = new Prodotto();
+  - Act: p.setPeso(-2.0);
+  - Assert: assertThrows(IllegalArgumentException.class, ...);
+- shouldSetPesoWhenValid
+  - Arrange: Prodotto p = new Prodotto();
+  - Act: p.setPeso(2.5);
+  - Assert: assertEquals(2.5, p.getPeso(), 0.001);
+
+---
+
+Method: setMarca(String marca)
+Parameters: marca (String)
+State: None
+
+Categories and Choices:
+- Value:
+  - Null: Invalid
+  - Empty String: Invalid
+  - Blank String (Whitespace only): Invalid
+  - Valid String: Valid
+
+Test Frames:
+- F1: marca is null. Expected: IllegalArgumentException ("La marca non può essere null o vuota").
+- F2: marca is "". Expected: IllegalArgumentException ("La marca non può essere null o vuota").
+- F3: marca is "   ". Expected: IllegalArgumentException ("La marca non può essere null o vuota").
+- F4: marca is "Samsung". Expected: Field updated successfully.
+
+Suggested JUnit 5 Test:
+- shouldThrowExceptionWhenMarcaIsInvalid
+  - Arrange: Prodotto p = new Prodotto();
+  - Act: p.setMarca(invalidValue);
+  - Assert: assertThrows(IllegalArgumentException.class, ...);
+  (Note: ParameterizedTest with @NullAndEmptySource and @ValueSource(strings = {"   "}))
+- shouldSetMarcaWhenValid
+  - Arrange: Prodotto p = new Prodotto();
+  - Act: p.setMarca("ValidBrand");
+  - Assert: assertEquals("ValidBrand", p.getMarca());
+
+---
+
+Method: setModello(String modello)
+Parameters: modello (String)
+State: None
+
+Categories and Choices:
+- Value:
+  - Null: Invalid
+  - Empty String: Invalid
+  - Blank String (Whitespace only): Invalid
+  - Valid String: Valid
+
+Test Frames:
+- F1: modello is null. Expected: IllegalArgumentException ("Il modello non può essere null o vuoto").
+- F2: modello is "". Expected: IllegalArgumentException.
+- F3: modello is "   ". Expected: IllegalArgumentException.
+- F4: modello is "Galaxy S10". Expected: Field updated successfully.
+
+Suggested JUnit 5 Test:
+- shouldThrowExceptionWhenModelloIsInvalid
+  - Arrange: Prodotto p = new Prodotto();
+  - Act: p.setModello(invalidValue);
+  - Assert: assertThrows(IllegalArgumentException.class, ...);
+- shouldSetModelloWhenValid
+  - Arrange: Prodotto p = new Prodotto();
+  - Act: p.setModello("ValidModel");
+  - Assert: assertEquals("ValidModel", p.getModello());
+
+---
+
+Method: setDescrizione(String descrizione)
+Parameters: descrizione (String)
+State: None
+
+Categories and Choices:
+- Value:
+  - Null: Invalid
+  - Empty String: Invalid
+  - Blank String (Whitespace only): Invalid
+  - Valid String: Valid
+
+Test Frames:
+- F1: descrizione is null. Expected: IllegalArgumentException ("La descrizione non può essere null o vuota").
+- F2: descrizione is "". Expected: IllegalArgumentException.
+- F3: descrizione is "   ". Expected: IllegalArgumentException.
+- F4: descrizione is "A high quality product.". Expected: Field updated successfully.
+
+Suggested JUnit 5 Test:
+- shouldThrowExceptionWhenDescrizioneIsInvalid
+  - Arrange: Prodotto p = new Prodotto();
+  - Act: p.setDescrizione(invalidValue);
+  - Assert: assertThrows(IllegalArgumentException.class, ...);
+- shouldSetDescrizioneWhenValid
+  - Arrange: Prodotto p = new Prodotto();
+  - Act: p.setDescrizione("Valid description");
+  - Assert: assertEquals("Valid description", p.getDescrizione());
+
+---
+
+Method: setCategoria(Categoria categoria)
+Parameters: categoria (Categoria)
+State: None
+
+Categories and Choices:
+- Value:
+  - Null: Invalid
+  - Valid Categoria Object: Valid
+
+Test Frames:
+- F1: categoria is null. Expected: IllegalArgumentException ("La categoria non può essere null").
+- F2: categoria is new Categoria(). Expected: Field updated successfully.
+
+Suggested JUnit 5 Test:
+- shouldThrowExceptionWhenCategoriaIsNull
+  - Arrange: Prodotto p = new Prodotto();
+  - Act: p.setCategoria(null);
+  - Assert: assertThrows(IllegalArgumentException.class, ...);
+- shouldSetCategoriaWhenValid
+  - Arrange: Prodotto p = new Prodotto(); Categoria c = new Categoria();
+  - Act: p.setCategoria(c);
+  - Assert: assertEquals(c, p.getCategoria());
+
+---
+
+Method: setId(int id)
+Parameters: id (int)
+State: None
+
+Categories and Choices:
+- Value:
+  - Negative: Valid (No check enforced, assuming database autoincrement behavior compatibility or allow setting manually)
+  - Zero: Valid
+  - Positive: Valid
+
+Test Frames:
+- F1: id is -1. Expected: Field updated.
+- F2: id is 0. Expected: Field updated.
+- F3: id is 1. Expected: Field updated.
+
+Suggested JUnit 5 Test:
+- shouldSetId
+  - Arrange: Prodotto p = new Prodotto();
+  - Act: p.setId(5);
+  - Assert: assertEquals(5, p.getId());
+
+---
+
+Method: setDimensioni(String dimensioni)
+Parameters: dimensioni (String)
+State: None
+
+Categories and Choices:
+- Value:
+  - Null: Valid (No validation check in code)
+  - Empty: Valid
+  - Valid String: Valid
+
+Test Frames:
+- F1: dimensioni is null. Expected: Field updated.
+- F2: dimensioni is "20x30x10". Expected: Field updated.
+
+Suggested JUnit 5 Test:
+- shouldSetDimensioni
+  - Arrange: Prodotto p = new Prodotto();
+  - Act: p.setDimensioni("10x10");
+  - Assert: assertEquals("10x10", p.getDimensioni());
+
+---
+
+Method: setImmagine(String immagine)
+Parameters: immagine (String)
+State: None
+
+Categories and Choices:
+- Value:
+  - Null: Valid (No validation check in code)
+  - Valid String (path/url): Valid
+
+Test Frames:
+- F1: immagine is null. Expected: Field updated.
+- F2: immagine is "img.png". Expected: Field updated.
+
+Suggested JUnit 5 Test:
+- shouldSetImmagine
+  - Arrange: Prodotto p = new Prodotto();
+  - Act: p.setImmagine("pic.jpg");
+  - Assert: assertEquals("pic.jpg", p.getImmagine());

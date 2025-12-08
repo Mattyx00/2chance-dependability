@@ -1,0 +1,155 @@
+# Test Plan: ProdottoCarrello
+# Class Under Test: model.beans.ProdottoCarrello
+
+## Class Overview
+The `ProdottoCarrello` class represents an item in a shopping cart, associating a specific `Prodotto` (product) with a `quantita` (quantity). It encapsulates the logic for ensuring valid associations (non-null product, non-negative quantity) and calculating the total price line item.
+
+**Key State Variables:**
+- `prodotto` (Prodotto): The product object. Must not be null.
+- `quantita` (int): The number of items. Must be >= 0.
+
+---
+
+## 1. Constructor: ProdottoCarrello(Prodotto prodotto, int quantita)
+
+### Method Overview
+Initializes a new `ProdottoCarrello` instance. Enforces validation rules on inputs.
+
+### Categories and Choices
+1.  **Prodotto (Input)**
+    *   C1.1: Null (Invalid)
+    *   C1.2: Valid Prodotto instance (Valid)
+
+2.  **Quantita (Input)**
+    *   C2.1: Negative (< 0) (Invalid)
+    *   C2.2: Zero (0) (Valid/Boundary)
+    *   C2.3: Positive (> 0) (Valid)
+
+### Test Frames
+| ID | Prodotto | Quantita | Expected Behavior |
+| :--- | :--- | :--- | :--- |
+| **F01** | Null | Valid (>= 0) | Throw `IllegalArgumentException` ("Il prodotto non può essere null") |
+| **F02** | Valid | Negative | Throw `IllegalArgumentException` ("La quantità non può essere negativa") |
+| **F03** | Valid | Zero | Object created successfully; `getQuantita()` returns 0. |
+| **F04** | Valid | Positive | Object created successfully; fields initialized correctly. |
+
+**Note on Precedence:** If both inputs are invalid, the exception thrown depends on implementation order (first check is usually checked first). In the code, `prodotto` is checked first.
+
+### Suggested JUnit 5 Tests
+*   **Test**: `shouldThrowExceptionWhenProdottoIsNull_Constructor`
+    *   **Arrange**: `Prodotto p = null; int q = 1;`
+    *   **Act**: `new ProdottoCarrello(p, q);`
+    *   **Assert**: `assertThrows(IllegalArgumentException.class, ...)`
+
+*   **Test**: `shouldThrowExceptionWhenQuantitaIsNegative_Constructor`
+    *   **Arrange**: `Prodotto p = new Prodotto(); int q = -1;`
+    *   **Act**: `new ProdottoCarrello(p, q);`
+    *   **Assert**: `assertThrows(IllegalArgumentException.class, ...)`
+
+*   **Test**: `shouldCreateObjectWhenInputsAreValid`
+    *   **Arrange**: `Prodotto p = new Prodotto(); int q = 5;`
+    *   **Act**: `ProdottoCarrello pc = new ProdottoCarrello(p, q);`
+    *   **Assert**: `assertAll(() -> assertEquals(p, pc.getProdotto()), () -> assertEquals(q, pc.getQuantita()));`
+
+---
+
+## 2. Method: setProdotto(Prodotto prodotto)
+
+### Method Overview
+Update the product associated with this line item.
+
+### Categories and Choices
+1.  **Prodotto (Input)**
+    *   C1.1: Null (Invalid)
+    *   C1.2: Valid Prodotto instance (Valid)
+
+### Test Frames
+| ID | Prodotto | Key State (Before) | Expected Behavior |
+| :--- | :--- | :--- | :--- |
+| **F05** | Null | Any | Throw `IllegalArgumentException` ("Il prodotto non può essere null") |
+| **F06** | Valid | Any | `prodotto` field is updated. `getProdotto()` returns new value. |
+
+### Suggested JUnit 5 Tests
+*   **Test**: `shouldThrowExceptionWhenSettingNullProdotto`
+    *   **Arrange**: `ProdottoCarrello pc = new ProdottoCarrello();`
+    *   **Act**: `pc.setProdotto(null);`
+    *   **Assert**: `assertThrows(IllegalArgumentException.class, ...)`
+
+*   **Parameterized Test**: `shouldUpdateProdottoWhenValid` (Optional, simpler as standard test)
+
+---
+
+## 3. Method: setQuantita(int quantita)
+
+### Method Overview
+Update the quantity of the product.
+
+### Categories and Choices
+1.  **Quantita (Input)**
+    *   C1.1: Negative (< 0) (Invalid)
+    *   C1.2: Zero (0) (Valid/Boundary)
+    *   C1.3: Positive (> 0) (Valid)
+
+### Test Frames
+| ID | Quantita | Expected Behavior |
+| :--- | :--- | :--- |
+| **F07** | Negative | Throw `IllegalArgumentException` ("La quantità non può essere negativa") |
+| **F08** | Zero | `quantita` field updated to 0. |
+| **F09** | Positive | `quantita` field updated to value. |
+
+### Suggested JUnit 5 Tests
+*   **Test**: `shouldThrowExceptionWhenSettingNegativeQuantita`
+    *   **Arrange**: `ProdottoCarrello pc = new ProdottoCarrello();`
+    *   **Act**: `pc.setQuantita(-5);`
+    *   **Assert**: `assertThrows(IllegalArgumentException.class, ...)`
+
+*   **Parameterized Test**: `shouldUpdateQuantitaWhenValidValuesProvided`
+    *   **CSV Source Schema**: `value`
+    *   **Rows**:
+        *   `0`
+        *   `1`
+        *   `100`
+
+---
+
+## 4. Method: getPrezzoTotale()
+
+### Method Overview
+Calculates total price based on product price and quantity.
+
+### Categories and Choices
+1.  **State: Prodotto**
+    *   C1.1: Null (Object created with default constructor and not set) (Invalid/Exception state)
+    *   C1.2: Valid (Valid)
+
+2.  **State: Quantita**
+    *   C2.1: Zero (0)
+    *   C2.2: Positive (> 0)
+
+3.  **State: Prodotto Price** (Indirect input via Prodotto)
+    *   C3.1: Zero (Free product)
+    *   C3.2: Positive value
+
+### Test Frames
+| ID | Prodotto State | Quantita State | Prodotto Price | Expected Behavior |
+| :--- | :--- | :--- | :--- | :--- |
+| **F10** | Null | Any | N/A | Throw `IllegalStateException` ("Impossibile calcolare il prezzo..."); |
+| **F11** | Valid | Zero | Any | Return 0.0 |
+| **F12** | Valid | Positive | Zero | Return 0.0 |
+| **F13** | Valid | Positive | Positive | Return `price * quantita` |
+
+### Suggested JUnit 5 Tests
+*   **Test**: `shouldThrowIllegalStateWhenProdottoNotSet_GetPrezzoTotale`
+    *   **Arrange**: `ProdottoCarrello pc = new ProdottoCarrello();` (Default constructor leaves product null)
+    *   **Act**: `pc.getPrezzoTotale();`
+    *   **Assert**: `assertThrows(IllegalStateException.class, ...)`
+
+*   **Parameterized Test**: `shouldCalculateCorrectTotal`
+    *   **CSV Source Schema**: `price, quantity, expectedTotal`
+    *   **Rows**:
+        *   `10.0, 2, 20.0`
+        *   `5.5, 0, 0.0`
+        *   `0.0, 5, 0.0`
+    *   **Implementation Logic**: Create mock `Prodotto`, stub `getPrezzo()`, set quantita, verify result.
+
+---

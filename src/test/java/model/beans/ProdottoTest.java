@@ -1,314 +1,373 @@
-﻿package model.beans;
+package model.beans;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 
-/**
- * Comprehensive test suite for the Prodotto class.
- * Generated from Category-Partition Testing Report.
- * 
- * Tests cover:
- * - setPrezzo(), setPeso(), setQuantitaProdotto() with boundary values (>= 0)
- * - String setters (setMarca, setModello, setDescrizione) with null/empty
- * validation
- * - setCategoria() with null check
- * - setRecensioni() and setSpecifiche() with null check
- */
-@DisplayName("Prodotto Tests")
 class ProdottoTest {
 
-    @Test
-    @DisplayName("Default constructor should create Prodotto")
-    void shouldCreateProdottoWithDefaultConstructor() {
-        // Arrange & Act
-        Prodotto prodotto = new Prodotto();
+    private Prodotto product;
 
-        // Assert
-        assertNotNull(prodotto, "Prodotto instance should be created");
+    @BeforeEach
+    void setUp() {
+        product = new Prodotto();
     }
 
-    // ========================================================================
-    // setPrezzo() Tests
-    // ========================================================================
+    // --- Constructor ---
 
     @Test
-    @DisplayName("setPrezzo should throw exception when setting negative price")
-    void shouldThrowExceptionWhenSettingNegativePrezzo() {
+    @DisplayName("F1: Default constructor initializes fields correctly")
+    void testDefaultConstructor() {
+        // Act & Assert
+        assertNotNull(product);
+        assertAll("Default values",
+                () -> assertEquals(0, product.getId()),
+                () -> assertEquals(0, product.getQuantitaProdotto()),
+                () -> assertEquals(0.0, product.getPrezzo()),
+                () -> assertEquals(0.0, product.getPeso()),
+                () -> assertNull(product.getDimensioni()),
+                () -> assertNull(product.getMarca()),
+                () -> assertNull(product.getModello()),
+                () -> assertNull(product.getImmagine()),
+                () -> assertNull(product.getDescrizione()),
+                () -> assertNull(product.getCategoria()),
+                () -> assertNull(product.getRecensioni()),
+                () -> assertNull(product.getSpecifiche()));
+    }
+
+    // --- setSpecifiche ---
+
+    @Test
+    @DisplayName("F1: setSpecifiche throws IllegalArgumentException when specifiche is null")
+    void shouldThrowExceptionWhenSpecificheIsNull() {
+        // Act & Assert
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> product.setSpecifiche(null));
+        assertEquals("La lista delle specifiche non può essere null", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("F2: setSpecifiche sets the list when empty")
+    void shouldSetSpecificheWhenEmpty() {
         // Arrange
-        Prodotto prodotto = new Prodotto();
+        ArrayList<Specifiche> emptySpecsList = new ArrayList<>();
+
+        // Act
+        product.setSpecifiche(emptySpecsList);
+
+        // Assert
+        assertEquals(emptySpecsList, product.getSpecifiche());
+    }
+
+    @Test
+    @DisplayName("F3: setSpecifiche sets the list when populated")
+    void shouldSetSpecificheWhenPopulated() {
+        // Arrange
+        ArrayList<Specifiche> populatedSpecsList = new ArrayList<>();
+        Specifiche mockSpecification = mock(Specifiche.class);
+        populatedSpecsList.add(mockSpecification);
+
+        // Act
+        product.setSpecifiche(populatedSpecsList);
+
+        // Assert
+        assertEquals(populatedSpecsList, product.getSpecifiche());
+    }
+
+    // --- setRecensioni ---
+
+    @Test
+    @DisplayName("F1: setRecensioni throws IllegalArgumentException when recensioni is null")
+    void shouldThrowExceptionWhenRecensioniIsNull() {
+        // Act & Assert
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> product.setRecensioni(null));
+        assertEquals("La lista delle recensioni non può essere null", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("F2: setRecensioni sets the list when empty")
+    void shouldSetRecensioniWhenEmpty() {
+        // Arrange
+        ArrayList<Recensione> emptyReviewList = new ArrayList<>();
+
+        // Act
+        product.setRecensioni(emptyReviewList);
+
+        // Assert
+        assertEquals(emptyReviewList, product.getRecensioni());
+    }
+
+    @Test
+    @DisplayName("F3: setRecensioni sets the list when populated")
+    void shouldSetRecensioniWhenPopulated() {
+        // Arrange
+        ArrayList<Recensione> populatedReviewList = new ArrayList<>();
+        Recensione mockReview = mock(Recensione.class);
+        populatedReviewList.add(mockReview);
+
+        // Act
+        product.setRecensioni(populatedReviewList);
+
+        // Assert
+        assertEquals(populatedReviewList, product.getRecensioni());
+    }
+
+    // --- setQuantitaProdotto ---
+
+    @ParameterizedTest
+    @ValueSource(ints = { 0, 10 })
+    @DisplayName("F2, F3: setQuantitaProdotto sets value when valid")
+    void shouldSetQuantitaProdottoWhenValid(int validQuantity) {
+        // Act
+        product.setQuantitaProdotto(validQuantity);
+
+        // Assert
+        assertEquals(validQuantity, product.getQuantitaProdotto());
+    }
+
+    @Test
+    @DisplayName("F1: setQuantitaProdotto throws exception when value is negative")
+    void shouldThrowExceptionWhenQuantitaProdottoIsNegative() {
+        // Arrange
+        int incorrectQuantityValue = -1;
 
         // Act & Assert
-        assertThrows(IllegalArgumentException.class,
-                () -> prodotto.setPrezzo(-0.01));
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> product.setQuantitaProdotto(incorrectQuantityValue));
+        assertEquals("La quantità del prodotto non può essere negativa", exception.getMessage());
     }
 
-    @Test
-    @DisplayName("setPrezzo should set zero price (boundary)")
-    void shouldSetZeroPrezzo() {
-        // Arrange
-        Prodotto prodotto = new Prodotto();
+    // --- setPrezzo ---
 
+    @ParameterizedTest
+    @ValueSource(doubles = { 0.0, 19.99 })
+    @DisplayName("F2, F3: setPrezzo sets value when valid")
+    void shouldSetPrezzoWhenValid(double validPrice) {
         // Act
-        prodotto.setPrezzo(0.0);
+        product.setPrezzo(validPrice);
 
         // Assert
-        assertEquals(0.0, prodotto.getPrezzo(), 0.001);
+        assertEquals(validPrice, product.getPrezzo(), 0.001);
     }
 
     @Test
-    @DisplayName("setPrezzo should set positive price")
-    void shouldSetPositivePrezzo() {
+    @DisplayName("F1: setPrezzo throws exception when value is negative")
+    void shouldThrowExceptionWhenPrezzoIsNegative() {
         // Arrange
-        Prodotto prodotto = new Prodotto();
-
-        // Act
-        prodotto.setPrezzo(99.99);
-
-        // Assert
-        assertEquals(99.99, prodotto.getPrezzo(), 0.01);
-    }
-
-    // ========================================================================
-    // setPeso() Tests
-    // ========================================================================
-
-    @Test
-    @DisplayName("setPeso should throw exception when setting negative weight")
-    void shouldThrowExceptionWhenSettingNegativePeso() {
-        // Arrange
-        Prodotto prodotto = new Prodotto();
+        double incorrectPriceValue = -1.0;
 
         // Act & Assert
-        assertThrows(IllegalArgumentException.class,
-                () -> prodotto.setPeso(-0.01));
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> product.setPrezzo(incorrectPriceValue));
+        assertEquals("Il prezzo non può essere negativo", exception.getMessage());
     }
 
-    @Test
-    @DisplayName("setPeso should set zero weight (boundary)")
-    void shouldSetZeroPeso() {
-        // Arrange
-        // Arrange
-        Prodotto prodotto = new Prodotto();
+    // --- setPeso ---
 
+    @ParameterizedTest
+    @ValueSource(doubles = { 0.0, 1.5 })
+    @DisplayName("F2, F3: setPeso sets value when valid")
+    void shouldSetPesoWhenValid(double validWeight) {
         // Act
-        prodotto.setPeso(1.5);
+        product.setPeso(validWeight);
 
         // Assert
-        assertEquals(1.5, prodotto.getPeso(), 0.001);
+        assertEquals(validWeight, product.getPeso(), 0.001);
     }
 
-    // ========================================================================
-    // setQuantitaProdotto() Tests
-    // ========================================================================
-
     @Test
-    @DisplayName("setQuantitaProdotto should throw exception when setting negative quantity")
-    void shouldThrowExceptionWhenSettingNegativeQuantitaProdotto() {
+    @DisplayName("F1: setPeso throws exception when value is negative")
+    void shouldThrowExceptionWhenPesoIsNegative() {
         // Arrange
-        Prodotto prodotto = new Prodotto();
+        double incorrectWeightValue = -0.5;
 
         // Act & Assert
-        assertThrows(IllegalArgumentException.class,
-                () -> prodotto.setQuantitaProdotto(-1));
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> product.setPeso(incorrectWeightValue));
+        assertEquals("Il peso non può essere negativo", exception.getMessage());
     }
 
-    @Test
-    @DisplayName("setQuantitaProdotto should set zero quantity (boundary)")
-    void shouldSetZeroQuantitaProdotto() {
-        // Arrange
-        Prodotto prodotto = new Prodotto();
+    // --- setMarca ---
 
-        // Act
-        prodotto.setQuantitaProdotto(0);
-
-        // Assert
-        assertEquals(0, prodotto.getQuantitaProdotto());
-    }
-
-    @Test
-    @DisplayName("setQuantitaProdotto should set positive quantity")
-    void shouldSetPositiveQuantitaProdotto() {
-        // Arrange
-        Prodotto prodotto = new Prodotto();
-
-        // Act
-        prodotto.setQuantitaProdotto(10);
-
-        // Assert
-        assertEquals(10, prodotto.getQuantitaProdotto());
-    }
-
-    // ========================================================================
-    // String Setter Tests
-    // ========================================================================
-
-    @Test
-    @DisplayName("setMarca should throw exception when setting null")
-    void shouldThrowExceptionWhenSettingNullMarca() {
-        // Arrange
-        Prodotto prodotto = new Prodotto();
-
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = { "   " })
+    @DisplayName("F1, F2, F3: setMarca throws exception for invalid values (null, empty, blank)")
+    void shouldThrowExceptionWhenMarcaIsInvalid(String invalidBrand) {
         // Act & Assert
-        assertThrows(IllegalArgumentException.class,
-                () -> prodotto.setMarca(null));
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> product.setMarca(invalidBrand));
+        assertEquals("La marca non può essere null o vuota", exception.getMessage());
     }
 
     @Test
-    @DisplayName("setMarca should throw exception when setting empty")
-    void shouldThrowExceptionWhenSettingEmptyMarca() {
+    @DisplayName("F4: setMarca sets the value when valid")
+    void shouldSetMarcaWhenValid() {
         // Arrange
-        Prodotto prodotto = new Prodotto();
-
-        // Act & Assert
-        assertThrows(IllegalArgumentException.class,
-                () -> prodotto.setMarca(""));
-    }
-
-    @Test
-    @DisplayName("setMarca should set valid marca")
-    void shouldSetValidMarca() {
-        // Arrange
-        Prodotto prodotto = new Prodotto();
+        String validBrand = "Samsung";
 
         // Act
-        prodotto.setMarca("BrandName");
+        product.setMarca(validBrand);
 
         // Assert
-        assertEquals("BrandName", prodotto.getMarca());
+        assertEquals(validBrand, product.getMarca());
     }
 
-    @Test
-    @DisplayName("setModello should throw exception when setting null")
-    void shouldThrowExceptionWhenSettingNullModello() {
-        // Arrange
-        Prodotto prodotto = new Prodotto();
+    // --- setModello ---
 
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = { "   " })
+    @DisplayName("F1, F2, F3: setModello throws exception for invalid values (null, empty, blank)")
+    void shouldThrowExceptionWhenModelloIsInvalid(String invalidModel) {
         // Act & Assert
-        assertThrows(IllegalArgumentException.class,
-                () -> prodotto.setModello(null));
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> product.setModello(invalidModel));
+        assertEquals("Il modello non può essere null o vuoto", exception.getMessage());
     }
 
     @Test
-    @DisplayName("setModello should set valid modello")
-    void shouldSetValidModello() {
+    @DisplayName("F4: setModello sets the value when valid")
+    void shouldSetModelloWhenValid() {
         // Arrange
-        Prodotto prodotto = new Prodotto();
+        String validModel = "Galaxy S10";
 
         // Act
-        prodotto.setModello("Model123");
+        product.setModello(validModel);
 
         // Assert
-        assertEquals("Model123", prodotto.getModello());
+        assertEquals(validModel, product.getModello());
     }
 
-    @Test
-    @DisplayName("setDescrizione should throw exception when setting null")
-    void shouldThrowExceptionWhenSettingNullDescrizione() {
-        // Arrange
-        Prodotto prodotto = new Prodotto();
+    // --- setDescrizione ---
 
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = { "   " })
+    @DisplayName("F1, F2, F3: setDescrizione throws exception for invalid values (null, empty, blank)")
+    void shouldThrowExceptionWhenDescrizioneIsInvalid(String invalidDescription) {
         // Act & Assert
-        assertThrows(IllegalArgumentException.class,
-                () -> prodotto.setDescrizione(null));
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> product.setDescrizione(invalidDescription));
+        assertEquals("La descrizione non può essere null o vuota", exception.getMessage());
     }
 
     @Test
-    @DisplayName("setDescrizione should set valid descrizione")
-    void shouldSetValidDescrizione() {
+    @DisplayName("F4: setDescrizione sets the value when valid")
+    void shouldSetDescrizioneWhenValid() {
         // Arrange
-        Prodotto prodotto = new Prodotto();
+        String validDescription = "A high quality product.";
 
         // Act
-        prodotto.setDescrizione("Product description");
+        product.setDescrizione(validDescription);
 
         // Assert
-        assertEquals("Product description", prodotto.getDescrizione());
+        assertEquals(validDescription, product.getDescrizione());
     }
 
-    // ========================================================================
-    // setCategoria() Tests
-    // ========================================================================
+    // --- setCategoria ---
 
     @Test
-    @DisplayName("setCategoria should throw exception when setting null")
-    void shouldThrowExceptionWhenSettingNullCategoria() {
-        // Arrange
-        Prodotto prodotto = new Prodotto();
-
+    @DisplayName("F1: setCategoria throws IllegalArgumentException when categoria is null")
+    void shouldThrowExceptionWhenCategoriaIsNull() {
         // Act & Assert
-        assertThrows(IllegalArgumentException.class,
-                () -> prodotto.setCategoria(null));
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> product.setCategoria(null));
+        assertEquals("La categoria non può essere null", exception.getMessage());
     }
 
     @Test
-    @DisplayName("setCategoria should set valid categoria")
-    void shouldSetValidCategoria() {
+    @DisplayName("F2: setCategoria sets the value when valid")
+    void shouldSetCategoriaWhenValid() {
         // Arrange
-        Prodotto prodotto = new Prodotto();
-        Categoria categoria = new Categoria("Electronics");
+        Categoria category = new Categoria();
 
         // Act
-        prodotto.setCategoria(categoria);
+        product.setCategoria(category);
 
         // Assert
-        assertEquals(categoria, prodotto.getCategoria());
+        assertEquals(category, product.getCategoria());
     }
 
-    // ========================================================================
-    // Collection Setter Tests
-    // ========================================================================
+    // --- setId ---
+
+    @ParameterizedTest
+    @ValueSource(ints = { -1, 0, 1 })
+    @DisplayName("F1, F2, F3: setId sets the value for negative, zero, and positive inputs")
+    void shouldSetId(int id) {
+        // Act
+        product.setId(id);
+
+        // Assert
+        assertEquals(id, product.getId());
+    }
+
+    // --- setDimensioni ---
 
     @Test
-    @DisplayName("setRecensioni should throw exception when setting null")
-    void shouldThrowExceptionWhenSettingNullRecensioni() {
-        // Arrange
-        Prodotto prodotto = new Prodotto();
+    @DisplayName("F1: setDimensioni sets value when null")
+    void shouldSetDimensioniWhenNull() {
+        // Act
+        product.setDimensioni(null);
 
-        // Act & Assert
-        assertThrows(IllegalArgumentException.class,
-                () -> prodotto.setRecensioni(null));
+        // Assert
+        assertNull(product.getDimensioni());
     }
 
     @Test
-    @DisplayName("setRecensioni should set empty list")
-    void shouldSetEmptyRecensioniList() {
+    @DisplayName("F2: setDimensioni sets value when valid string")
+    void shouldSetDimensioniWhenValid() {
         // Arrange
-        Prodotto prodotto = new Prodotto();
-        ArrayList<Recensione> recensioni = new ArrayList<>();
+        String validDimension = "20x30x10";
 
         // Act
-        prodotto.setRecensioni(recensioni);
+        product.setDimensioni(validDimension);
 
         // Assert
-        assertEquals(recensioni, prodotto.getRecensioni());
+        assertEquals(validDimension, product.getDimensioni());
+    }
+
+    // --- setImmagine ---
+
+    @Test
+    @DisplayName("F1: setImmagine sets value when null")
+    void shouldSetImmagineWhenNull() {
+        // Act
+        product.setImmagine(null);
+
+        // Assert
+        assertNull(product.getImmagine());
     }
 
     @Test
-    @DisplayName("setSpecifiche should throw exception when setting null")
-    void shouldThrowExceptionWhenSettingNullSpecifiche() {
+    @DisplayName("F2: setImmagine sets value when valid string")
+    void shouldSetImmagineWhenValid() {
         // Arrange
-        Prodotto prodotto = new Prodotto();
-
-        // Act & Assert
-        assertThrows(IllegalArgumentException.class,
-                () -> prodotto.setSpecifiche(null));
-    }
-
-    @Test
-    @DisplayName("setSpecifiche should set empty list")
-    void shouldSetEmptySpecificheList() {
-        // Arrange
-        Prodotto prodotto = new Prodotto();
-        ArrayList<Specifiche> specifiche = new ArrayList<>();
+        String validImage = "pic.jpg";
 
         // Act
-        prodotto.setSpecifiche(specifiche);
+        product.setImmagine(validImage);
 
         // Assert
-        assertEquals(specifiche, prodotto.getSpecifiche());
+        assertEquals(validImage, product.getImmagine());
     }
 }

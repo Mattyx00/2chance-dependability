@@ -1,0 +1,15 @@
+You are an expert in Java, JUnit 5, and Category-Partition Testing. Your task is to perform a systematic Category-Partition analysis on a single specific Java class and generate a detailed test plan report. You must read the provided source code, analyze its logic and state, and produce a text report saved in a specific destination folder. You must not modify the original source code.
+
+The output must be a single text file named in the format "ClassNameTest.txt", saved directly in the destination folder provided at the end of this prompt. The report should be structured and human-readable. It must start with a "Class Overview" section that describes the class's responsibility and identifies key fields or state variables that influence behavior.
+
+Next, analyze every public constructor and public method. For each method, create a specific section in the report. Begin by listing the method's parameters and any relevant object state required for the method to function. Then, define "Categories and Choices." Identify logical categories for inputs and state (such as null/non-null, positive/negative, boundaries, empty/populated collections) and list specific choices for each, including valid, invalid, and boundary cases.
+
+Based on these choices, define "Test Frames." A test frame is a specific combination of choices that represents a unique scenario. For each frame, assign an ID (e.g., F1, F2), describe the combination of inputs, and explicitly state the expected behavior. The expected behavior must include the return value, any state changes within the object, or any exceptions that should be thrown. Ensure the frames cover all standard usage, edge cases, and error conditions without redundant repetition.
+
+For every significant test frame, provide a "Suggested JUnit 5 Test." Propose a test method name following the pattern "should\<ExpectedBehavior\>When\<Condition\>". Briefly describe the "Arrange" step (how to set up the object and inputs), the "Act" step (the method call), and the "Assert" step (what to verify). If a method logic is suitable for data-driven testing, suggest a CSV schema for a Parameterized Test, including column names and a few example rows.
+
+Here is the path of the Java class to analyze:
+src\main\java\model\beans\ProdottoCarrello.java
+
+Here is the destination folder where you must save the report:
+src\test\java\model\beans\

@@ -1,423 +1,203 @@
-﻿package model.beans;
+package model.beans;
 
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-/**
- * Comprehensive test suite for the ProdottoCarrello class.
- * Generated from Category-Partition Testing Report.
- * 
- * Tests cover:
- * - Default constructor behavior
- * - Parameterized constructor with various product/quantity combinations
- * - setProdotto() and getProdotto()
- * - setQuantita() and getQuantita() with boundary values
- * - getPrezzoTotale() calculation with various states
- */
-@DisplayName("ProdottoCarrello Tests")
 class ProdottoCarrelloTest {
 
-    // ========================================================================
-    // Constructor Tests: ProdottoCarrello()
-    // ========================================================================
+    private Prodotto defaultProdotto;
 
-    @Test
-    @DisplayName("Default constructor should create ProdottoCarrello with null product")
-    void shouldCreateProdottoCarrelloWithDefaultConstructor() {
-        // Arrange & Act
-        ProdottoCarrello pc = new ProdottoCarrello();
-
-        // Assert
-        assertNotNull(pc, "ProdottoCarrello instance should be created");
-        assertNull(pc.getProdotto(), "Product should be null with default constructor");
+    @BeforeEach
+    void setUp() {
+        // Initialize a valid Prodotto generic instance for tests that require a
+        // non-null product
+        defaultProdotto = createValidProdotto(10.0);
     }
 
-    // ========================================================================
-    // Constructor Tests: ProdottoCarrello(Prodotto, int)
-    // ========================================================================
-
-    @Test
-    @DisplayName("Parameterized constructor should create ProdottoCarrello when both parameters are valid")
-    void shouldCreateProdottoCarrelloWhenBothParametersAreValid() {
-        // Arrange
-        Prodotto prodotto = createValidProdotto(1, "TestProduct", 10.0);
-        int quantita = 5;
-
-        // Act
-        ProdottoCarrello pc = new ProdottoCarrello(prodotto, quantita);
-
-        // Assert
-        assertNotNull(pc, "ProdottoCarrello should be created");
-        assertEquals(prodotto, pc.getProdotto(), "Product should match");
-        assertEquals(5, pc.getQuantita(), "Quantity should be 5");
+    // Helper method to create a Prodotto with a specific price
+    private Prodotto createValidProdotto(double prezzo) {
+        Prodotto p = new Prodotto();
+        p.setPrezzo(prezzo);
+        return p;
     }
 
+    // --- Constructor Tests ---
+
+    // F01: Prodotto is Null, Quantita is Valid -> IllegalArgumentException
     @Test
-    @DisplayName("Parameterized constructor should throw exception when prodotto is null")
-    void shouldThrowExceptionWhenProdottoIsNull() {
+    @DisplayName("Constructor: Should throw IllegalArgumentException when Prodotto is null")
+    void shouldThrowExceptionWhenProdottoIsNull_Constructor() {
         // Arrange
-        Prodotto prodotto = null;
-        int quantita = 5;
+        Prodotto p = null;
+        int q = 1;
 
         // Act & Assert
-        IllegalArgumentException exception = assertThrows(
-                IllegalArgumentException.class,
-                () -> new ProdottoCarrello(prodotto, quantita),
-                "Should throw exception for null product");
-        assertTrue(exception.getMessage().contains("prodotto non può essere null"),
-                "Exception message should mention null product");
-    }
-
-    @Test
-    @DisplayName("Parameterized constructor should throw exception when quantita is negative")
-    void shouldThrowExceptionWhenQuantitaIsNegative() {
-        // Arrange
-        Prodotto prodotto = createValidProdotto(1, "TestProduct", 10.0);
-        int quantita = -1;
-
-        // Act & Assert
-        IllegalArgumentException exception = assertThrows(
-                IllegalArgumentException.class,
-                () -> new ProdottoCarrello(prodotto, quantita),
-                "Should throw exception for negative quantity");
-        assertTrue(exception.getMessage().contains("quantità non può essere negativa"),
-                "Exception message should mention negative quantity");
-    }
-
-    @Test
-    @DisplayName("Parameterized constructor should create ProdottoCarrello when quantita is zero (boundary)")
-    void shouldCreateProdottoCarrelloWhenQuantitaIsZero() {
-        // Arrange
-        Prodotto prodotto = createValidProdotto(1, "TestProduct", 10.0);
-        int quantita = 0;
-
-        // Act
-        ProdottoCarrello pc = new ProdottoCarrello(prodotto, quantita);
-
-        // Assert
-        assertNotNull(pc, "ProdottoCarrello should be created");
-        assertEquals(0, pc.getQuantita(), "Quantity should be 0 (valid boundary case)");
-    }
-
-    @Test
-    @DisplayName("Parameterized constructor should create ProdottoCarrello when quantita is 1 (boundary)")
-    void shouldCreateProdottoCarrelloWhenQuantitaIsOne() {
-        // Arrange
-        Prodotto prodotto = createValidProdotto(1, "TestProduct", 10.0);
-        int quantita = 1;
-
-        // Act
-        ProdottoCarrello pc = new ProdottoCarrello(prodotto, quantita);
-
-        // Assert
-        assertEquals(1, pc.getQuantita(), "Quantity should be 1 (minimum positive)");
-    }
-
-    // ========================================================================
-    // Parameterized Constructor Tests
-    // ========================================================================
-
-    @ParameterizedTest(name = "[{index}] {0}: quantita={1}")
-    @CsvSource({
-            "Valid typical case, 5",
-            "Boundary zero, 0",
-            "Boundary one, 1",
-            "Large quantity, 100"
-    })
-    @DisplayName("Parameterized constructor should handle valid quantities")
-    void shouldHandleValidQuantitiesInConstructor(String scenario, int quantita) {
-        // Arrange
-        Prodotto prodotto = createValidProdotto(1, "TestProduct", 10.0);
-
-        // Act & Assert
-        assertDoesNotThrow(() -> {
-            ProdottoCarrello pc = new ProdottoCarrello(prodotto, quantita);
-            assertEquals(quantita, pc.getQuantita(),
-                    "Quantity should match for: " + scenario);
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            new ProdottoCarrello(p, q);
         });
+        assertEquals("Il prodotto non può essere null", exception.getMessage());
     }
 
-    // ========================================================================
-    // setProdotto() Tests
-    // ========================================================================
-
+    // F02: Prodotto is Valid, Quantita is Negative -> IllegalArgumentException
     @Test
-    @DisplayName("setProdotto should throw exception when setting null product")
+    @DisplayName("Constructor: Should throw IllegalArgumentException when Quantita is negative")
+    void shouldThrowExceptionWhenQuantitaIsNegative_Constructor() {
+        // Arrange
+        Prodotto p = defaultProdotto;
+        int q = -1;
+
+        // Act & Assert
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            new ProdottoCarrello(p, q);
+        });
+        assertEquals("La quantità non può essere negativa", exception.getMessage());
+    }
+
+    // F03: Prodotto is Valid, Quantita is Zero -> Success
+    @Test
+    @DisplayName("Constructor: Should create object successfully when Quantita is zero")
+    void shouldCreateObjectWhenQuantitaIsZero() {
+        // Arrange
+        Prodotto p = defaultProdotto;
+        int q = 0;
+
+        // Act
+        ProdottoCarrello pc = new ProdottoCarrello(p, q);
+
+        // Assert
+        assertAll("Verify object creation with zero quantity",
+                () -> assertNotNull(pc),
+                () -> assertEquals(p, pc.getProdotto()),
+                () -> assertEquals(0, pc.getQuantita()));
+    }
+
+    // F04: Prodotto is Valid, Quantita is Positive -> Success
+    @Test
+    @DisplayName("Constructor: Should create object successfully when Quantita is positive")
+    void shouldCreateObjectWhenQuantitaIsPositive() {
+        // Arrange
+        Prodotto p = defaultProdotto;
+        int q = 5;
+
+        // Act
+        ProdottoCarrello pc = new ProdottoCarrello(p, q);
+
+        // Assert
+        assertAll("Verify object creation with positive quantity",
+                () -> assertNotNull(pc),
+                () -> assertEquals(p, pc.getProdotto()),
+                () -> assertEquals(5, pc.getQuantita()));
+    }
+
+    // --- setProdotto Tests ---
+
+    // F05: Prodotto is Null -> IllegalArgumentException
+    @Test
+    @DisplayName("setProdotto: Should throw IllegalArgumentException when setting null Prodotto")
     void shouldThrowExceptionWhenSettingNullProdotto() {
         // Arrange
-        ProdottoCarrello pc = new ProdottoCarrello();
+        ProdottoCarrello pc = new ProdottoCarrello(); // Default constructor
 
         // Act & Assert
-        IllegalArgumentException exception = assertThrows(
-                IllegalArgumentException.class,
-                () -> pc.setProdotto(null),
-                "Should throw exception when setting null product");
-        assertTrue(exception.getMessage().contains("prodotto non può essere null"));
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            pc.setProdotto(null);
+        });
+        Assertions.assertEquals("Il prodotto non può essere null", exception.getMessage());
     }
 
+    // F06: Prodotto is Valid -> Success
     @Test
-    @DisplayName("setProdotto should set valid product")
-    void shouldSetValidProdotto() {
+    @DisplayName("setProdotto: Should update Prodotto when valid")
+    void shouldUpdateProdottoWhenValid() {
         // Arrange
         ProdottoCarrello pc = new ProdottoCarrello();
-        Prodotto prodotto = createValidProdotto(1, "TestProduct", 10.0);
+        Prodotto newProdotto = createValidProdotto(20.0);
 
         // Act
-        pc.setProdotto(prodotto);
+        pc.setProdotto(newProdotto);
 
         // Assert
-        assertEquals(prodotto, pc.getProdotto(), "Product should be set correctly");
+        assertEquals(newProdotto, pc.getProdotto());
     }
 
+    // --- setQuantita Tests ---
+
+    // F07: Quantita is Negative -> IllegalArgumentException
     @Test
-    @DisplayName("setProdotto should replace existing product")
-    void shouldReplaceExistingProdotto() {
-        // Arrange
-        Prodotto p1 = createValidProdotto(1, "Product1", 10.0);
-        Prodotto p2 = createValidProdotto(2, "Product2", 20.0);
-        ProdottoCarrello pc = new ProdottoCarrello(p1, 5);
-
-        // Act
-        pc.setProdotto(p2);
-
-        // Assert
-        assertEquals(p2, pc.getProdotto(), "Product should be replaced");
-        assertEquals(2, pc.getProdotto().getId(), "New product ID should be 2");
-    }
-
-    // ========================================================================
-    // setQuantita() Tests
-    // ========================================================================
-
-    @Test
-    @DisplayName("setQuantita should throw exception when setting negative quantidade")
+    @DisplayName("setQuantita: Should throw IllegalArgumentException when setting negative Quantita")
     void shouldThrowExceptionWhenSettingNegativeQuantita() {
         // Arrange
-        Prodotto prodotto = createValidProdotto(1, "TestProduct", 10.0);
-        ProdottoCarrello pc = new ProdottoCarrello(prodotto, 5);
-
-        // Act & Assert
-        IllegalArgumentException exception = assertThrows(
-                IllegalArgumentException.class,
-                () -> pc.setQuantita(-1),
-                "Should throw exception for negative quantity");
-        assertTrue(exception.getMessage().contains("quantità non può essere negativa"));
-        assertEquals(5, pc.getQuantita(), "Quantity should remain unchanged after exception");
-    }
-
-    @Test
-    @DisplayName("setQuantita should set quantity to zero (boundary)")
-    void shouldSetQuantitaToZeroWhenValid() {
-        // Arrange
-        Prodotto prodotto = createValidProdotto(1, "TestProduct", 10.0);
-        ProdottoCarrello pc = new ProdottoCarrello(prodotto, 5);
-
-        // Act
-        pc.setQuantita(0);
-
-        // Assert
-        assertEquals(0, pc.getQuantita(), "Quantity should be updated to 0");
-    }
-
-    @Test
-    @DisplayName("setQuantita should update quantity to new positive value")
-    void shouldUpdateQuantitaToNewPositiveValue() {
-        // Arrange
-        Prodotto prodotto = createValidProdotto(1, "TestProduct", 10.0);
-        ProdottoCarrello pc = new ProdottoCarrello(prodotto, 5);
-
-        // Act
-        pc.setQuantita(10);
-
-        // Assert
-        assertEquals(10, pc.getQuantita(), "Quantity should be updated to 10");
-    }
-
-    @Test
-    @DisplayName("setQuantita should update from zero to positive")
-    void shouldUpdateQuantitaFromZeroToPositive() {
-        // Arrange
-        Prodotto prodotto = createValidProdotto(1, "TestProduct", 10.0);
-        ProdottoCarrello pc = new ProdottoCarrello(prodotto, 0);
-
-        // Act
-        pc.setQuantita(7);
-
-        // Assert
-        assertEquals(7, pc.getQuantita(), "Quantity should be updated from 0 to 7");
-    }
-
-    // ========================================================================
-    // getPrezzoTotale() Tests
-    // ========================================================================
-
-    @Test
-    @DisplayName("getPrezzoTotale should throw exception when prodotto is null")
-    void shouldThrowExceptionWhenCalculatingPrezzoTotaleWithNullProdotto() {
-        // Arrange
         ProdottoCarrello pc = new ProdottoCarrello();
 
         // Act & Assert
-        IllegalStateException exception = assertThrows(
-                IllegalStateException.class,
-                () -> pc.getPrezzoTotale(),
-                "Should throw exception when calculating price with null product");
-        assertTrue(exception.getMessage().contains("Impossibile calcolare il prezzo totale"),
-                "Exception message should mention calculation issue");
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            pc.setQuantita(-5);
+        });
+        assertEquals("La quantità non può essere negativa", exception.getMessage());
     }
 
-    @Test
-    @DisplayName("getPrezzoTotale should return zero when quantita is zero")
-    void shouldReturnZeroWhenQuantitaIsZero() {
-        // Arrange
-        Prodotto prodotto = createValidProdotto(1, "TestProduct", 10.0);
-        ProdottoCarrello pc = new ProdottoCarrello(prodotto, 0);
-
-        // Act
-        double total = pc.getPrezzoTotale();
-
-        // Assert
-        assertEquals(0.0, total, 0.001, "Total should be 0 when quantity is 0");
-    }
-
-    @Test
-    @DisplayName("getPrezzoTotale should calculate correct total for single item")
-    void shouldCalculateCorrectTotalForSingleItem() {
-        // Arrange
-        Prodotto prodotto = createValidProdotto(1, "TestProduct", 10.0);
-        ProdottoCarrello pc = new ProdottoCarrello(prodotto, 1);
-
-        // Act
-        double total = pc.getPrezzoTotale();
-
-        // Assert
-        assertEquals(10.0, total, 0.001, "Total should be 10.0 (10.0 * 1)");
-    }
-
-    @Test
-    @DisplayName("getPrezzoTotale should calculate correct total for multiple items")
-    void shouldCalculateCorrectTotalForMultipleItems() {
-        // Arrange
-        Prodotto prodotto = createValidProdotto(1, "TestProduct", 10.0);
-        ProdottoCarrello pc = new ProdottoCarrello(prodotto, 5);
-
-        // Act
-        double total = pc.getPrezzoTotale();
-
-        // Assert
-        assertEquals(50.0, total, 0.001, "Total should be 50.0 (10.0 * 5)");
-    }
-
-    @Test
-    @DisplayName("getPrezzoTotale should return zero for free product with multiple items")
-    void shouldReturnZeroForFreeProductWithMultipleItems() {
-        // Arrange
-        Prodotto prodotto = createValidProdotto(1, "FreeProduct", 0.0);
-        ProdottoCarrello pc = new ProdottoCarrello(prodotto, 10);
-
-        // Act
-        double total = pc.getPrezzoTotale();
-
-        // Assert
-        assertEquals(0.0, total, 0.001, "Total should be 0 for free product");
-    }
-
-    @Test
-    @DisplayName("getPrezzoTotale should calculate correct total with decimal price")
-    void shouldCalculateCorrectTotalWithDecimalPrice() {
-        // Arrange
-        Prodotto prodotto = createValidProdotto(1, "TestProduct", 9.99);
-        ProdottoCarrello pc = new ProdottoCarrello(prodotto, 3);
-
-        // Act
-        double total = pc.getPrezzoTotale();
-
-        // Assert
-        assertEquals(29.97, total, 0.01, "Total should be 29.97 (9.99 * 3)");
-    }
-
-    // ========================================================================
-    // Parameterized getPrezzoTotale() Tests
-    // ========================================================================
-
-    @ParameterizedTest(name = "[{index}] {0}: price={1}, qty={2}, expected={3}")
+    // F08, F09: Quantita is Valid (Zero or Positive) -> Success
+    @ParameterizedTest
     @CsvSource({
-            "Zero quantity, 10.0, 0, 0.0",
-            "Single item, 10.0, 1, 10.0",
-            "Multiple items, 10.0, 5, 50.0",
-            "Free product, 0.0, 5, 0.0",
-            "Decimal price, 9.99, 3, 29.97"
+            "0", // F08
+            "1", // F09
+            "100" // F09
     })
-    @DisplayName("getPrezzoTotale should calculate correctly for various inputs")
-    void shouldCalculatePrezzoTotaleCorrectly(String scenario, double price, int quantity, double expected) {
+    @DisplayName("setQuantita: Should update Quantita when valid values provided")
+    void shouldUpdateQuantitaWhenValidValuesProvided(int quantity) {
         // Arrange
-        Prodotto prodotto = createValidProdotto(1, "TestProduct", price);
-        ProdottoCarrello pc = new ProdottoCarrello(prodotto, quantity);
+        ProdottoCarrello pc = new ProdottoCarrello();
 
         // Act
-        double total = pc.getPrezzoTotale();
+        pc.setQuantita(quantity);
 
         // Assert
-        assertEquals(expected, total, 0.01, "Total should match expected for: " + scenario);
+        assertEquals(quantity, pc.getQuantita());
     }
 
-    // ========================================================================
-    // Integration Tests
-    // ========================================================================
+    // --- getPrezzoTotale Tests ---
 
+    // F10: Prodotto is Null -> IllegalStateException
     @Test
-    @DisplayName("Should update total price when quantity is changed")
-    void shouldUpdateTotalPriceWhenQuantityChanged() {
+    @DisplayName("getPrezzoTotale: Should throw IllegalStateException when Prodotto is not set")
+    void shouldThrowIllegalStateWhenProdottoNotSet_GetPrezzoTotale() {
         // Arrange
-        Prodotto prodotto = createValidProdotto(1, "TestProduct", 10.0);
-        ProdottoCarrello pc = new ProdottoCarrello(prodotto, 2);
-        assertEquals(20.0, pc.getPrezzoTotale(), 0.001, "Initial total should be 20.0");
+        ProdottoCarrello pc = new ProdottoCarrello(); // Prodotto is null by default
 
-        // Act
-        pc.setQuantita(5);
-
-        // Assert
-        assertEquals(50.0, pc.getPrezzoTotale(), 0.001,
-                "Total should be updated to 50.0 after quantity change");
+        // Act & Assert
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
+            pc.getPrezzoTotale();
+        });
+        assertEquals("Impossibile calcolare il prezzo totale: prodotto non impostato", exception.getMessage());
     }
 
-    @Test
-    @DisplayName("Should update total price when product is changed")
-    void shouldUpdateTotalPriceWhenProductChanged() {
+    // F11-F13: Valid combinations of Price and Quantity -> Return correct total
+    @ParameterizedTest(name = "Price: {0}, Quantity: {1} -> Expected: {2}")
+    @CsvSource({
+            "10.0, 2, 20.0", // F13: Positive price, Positive quantity
+            "5.5, 0, 0.0", // F11: Positive price, Zero quantity
+            "0.0, 5, 0.0", // F12: Zero price, Positive quantity
+            "15.5, 3, 46.5" // F13 additional case
+    })
+    @DisplayName("getPrezzoTotale: Should calculate correct total")
+    void shouldCalculateCorrectTotal(double price, int quantity, double expectedTotal) {
         // Arrange
-        Prodotto p1 = createValidProdotto(1, "Product1", 10.0);
-        Prodotto p2 = createValidProdotto(2, "Product2", 20.0);
-        ProdottoCarrello pc = new ProdottoCarrello(p1, 3);
-        assertEquals(30.0, pc.getPrezzoTotale(), 0.001, "Initial total should be 30.0");
+        Prodotto p = createValidProdotto(price);
+        ProdottoCarrello pc = new ProdottoCarrello(p, quantity);
 
         // Act
-        pc.setProdotto(p2);
+        double actualTotal = pc.getPrezzoTotale();
 
         // Assert
-        assertEquals(60.0, pc.getPrezzoTotale(), 0.001,
-                "Total should be updated to 60.0 after product change");
-    }
-
-    // ========================================================================
-    // Helper Methods
-    // ========================================================================
-
-    /**
-     * Helper method to create a valid Prodotto instance for testing.
-     */
-    private Prodotto createValidProdotto(int id, String modello, double prezzo) {
-        Prodotto prodotto = new Prodotto();
-        prodotto.setId(id);
-        prodotto.setModello(modello);
-        prodotto.setMarca("TestBrand");
-        prodotto.setDescrizione("Test Description");
-        prodotto.setPrezzo(prezzo);
-        prodotto.setPeso(1.0);
-        prodotto.setQuantitaProdotto(100);
-        return prodotto;
+        assertEquals(expectedTotal, actualTotal, 0.001, "Total price calculation is incorrect");
     }
 }
