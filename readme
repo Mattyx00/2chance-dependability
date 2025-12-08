@@ -1,1 +1,17 @@
 Progetto 2chance
+
+Per runnare i test:
+mvn clean test
+
+Per runnare i test e ignorare i fallimenti:
+mvn clean test -Dmaven.test.failure.ignore=true
+
+Per runnare i test e ottenere report html:
+mvn surefire-report:report
+il report lo troviamo in target/site/surefire-report.html
+
+I risultati della code coverage li troviamo in target/site/jacoco/index.html
+
+Per runnare il docker
+docker-compose up --build
+lo trovate online su http://localhost:8080

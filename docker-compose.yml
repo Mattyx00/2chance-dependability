@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  webapp:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_HOST=mysql-db
+      - UPLOAD_PATH=/usr/local/tomcat/upload
+    depends_on:
+      mysql-db:
+        condition: service_healthy
+    networks:
+      - app-network
+    volumes:
+      # Mount the upload directory to persist uploads if needed, 
+      # though the Dockerfile copies it initially. 
+      # If we want persistence, we should map it to a host directory or volume.
+      # For now, following the user's request to "copy" it, 
+      # but usually we want persistence for uploads.
+      # Let's keep it simple as per request, but if we want to see changes 
+      # reflected in the host, we'd mount it.
+      # For now, just the build context copy is enough for "copying".
+      - ./upload:/usr/local/tomcat/upload
+
+  mysql-db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: second_chance
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost", "-u", "root", "-padmin"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - ./db_import.sql:/docker-entrypoint-initdb.d/init.sql
+      - mysql-data:/var/lib/mysql
+    networks:
+      - app-network
+    command: --default-authentication-plugin=mysql_native_password
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mysql-data:
