@@ -1,0 +1,266 @@
+Class Overview
+The Recensione class represents a review entity. Its primary responsibility is to hold data details about a review, including the user who made it, the product being reviewed, a numerical rating, text content, and the date.
+Key state variables:
+- id: Integer identifier (no specific validation logic shown in code, default int behavior).
+- valutazione: Integer rating, strictly constrained between 1 and 5.
+- dataRecensione: Date object, must not be null.
+- testo: String content, must not be null or empty/blank.
+- utente: Utente object involved, must not be null.
+- prodotto: Prodotto object involved, must not be null.
+
+Input validation is enforced in the full constructor and individual setters, throwing IllegalArgumentException for violations.
+
+---
+
+Method: Recensione(Utente utente, Prodotto prodotto, int valutazione, String testo, Date dataRecensione)
+
+Parameters:
+- utente: Utente object
+- prodotto: Prodotto object
+- valutazione: int
+- testo: String
+- dataRecensione: Date
+
+Categories and Choices:
+1. utente:
+   - Null (Invalid)
+   - Non-null (Valid)
+
+2. prodotto:
+   - Null (Invalid)
+   - Non-null (Valid)
+
+3. valutazione:
+   - Below Lower Bound (< 1) (Invalid)
+   - Lower Bound (1) (Valid)
+   - Within Range (2-4) (Valid)
+   - Upper Bound (5) (Valid)
+   - Above Upper Bound (> 5) (Invalid)
+
+4. testo:
+   - Null (Invalid)
+   - Empty String ("") (Invalid)
+   - Blank String ("   ") (Invalid)
+   - Valid String ("Great product") (Valid)
+
+5. dataRecensione:
+   - Null (Invalid)
+   - Non-null (Valid)
+
+Test Frames:
+F1: Valid Construction
+   - Inputs: Valid utente, Valid prodotto, valutazione=3, testo="Good", Valid Date
+   - Expected: Object created; all fields set correctly.
+
+F2: Invalid Utente (Null)
+   - Inputs: utente=null, others valid
+   - Expected: IllegalArgumentException ("L'utente non può essere null")
+
+F3: Invalid Prodotto (Null)
+   - Inputs: prodotto=null, others valid
+   - Expected: IllegalArgumentException ("Il prodotto non può essere null")
+
+F4: Invalid Valutazione (Too Low)
+   - Inputs: valutazione=0, others valid
+   - Expected: IllegalArgumentException ("La valutazione deve essere compresa tra 1 e 5")
+
+F5: Invalid Valutazione (Too High)
+   - Inputs: valutazione=6, others valid
+   - Expected: IllegalArgumentException ("La valutazione deve essere compresa tra 1 e 5")
+
+F6: Invalid Testo (Null)
+   - Inputs: testo=null, others valid
+   - Expected: IllegalArgumentException ("Il testo della recensione non può essere null o vuoto")
+
+F7: Invalid Testo (Empty)
+   - Inputs: testo="", others valid
+   - Expected: IllegalArgumentException ("Il testo della recensione non può essere null o vuoto")
+
+F8: Invalid Testo (Blank)
+   - Inputs: testo="   ", others valid
+   - Expected: IllegalArgumentException ("Il testo della recensione non può essere null o vuoto")
+
+F9: Invalid DataRecensione (Null)
+   - Inputs: dataRecensione=null, others valid
+   - Expected: IllegalArgumentException ("La data della recensione non può essere null")
+
+Suggested JUnit 5 Tests:
+1. shouldCreateRecensioneWhenAllInputsAreValid
+   - Arrange: Create valid mock/stub Utente, Prodotto, Date.
+   - Act: Call constructor.
+   - Assert: assertNotNull(recensione), verify getters return input values.
+
+2. shouldThrowExceptionWhenUtenteIsNull
+   - Arrange: null utente.
+   - Act: Call constructor.
+   - Assert: assertThrows(IllegalArgumentException.class).
+
+3. shouldThrowExceptionWhenProdottoIsNull
+   - Arrange: null prodotto.
+   - Act: Call constructor.
+   - Assert: assertThrows(IllegalArgumentException.class).
+
+4. parameterizedShouldThrowExceptionWhenValutazioneIsInvalid
+   - CSV Schema: valutazione (int)
+   - Rows: 0, 6, -1, 10
+   - Test logic: assertThrows(IllegalArgumentException.class) for new Recensione(..., valutazione, ...).
+
+5. parameterizedShouldThrowExceptionWhenTestoIsInvalid
+   - CSV Schema: testo (String)
+   - Rows: null, "", "   "
+   - Test logic: assertThrows(IllegalArgumentException.class).
+
+6. shouldThrowExceptionWhenDataRecensioneIsNull
+   - Arrange: null date.
+   - Act: Call constructor.
+   - Assert: assertThrows(IllegalArgumentException.class).
+
+---
+
+Method: setValutazione(int valutazione)
+
+Parameters:
+- valutazione: int
+
+Categories and Choices:
+1. Valutazione:
+   - Below Range (< 1) (Invalid)
+   - Lower Bound (1) (Valid)
+   - Within Range (2-4) (Valid)
+   - Upper Bound (5) (Valid)
+   - Above Range (> 5) (Invalid)
+
+Test Frames:
+F10: Set Valid Valutazione
+   - Inputs: valutazione=1, 5, 3
+   - Expected: Field updated.
+
+F11: Set Invalid Valutazione (Too Low)
+   - Inputs: valutazione=0
+   - Expected: IllegalArgumentException ("La valutazione deve essere compresa tra 1 e 5")
+
+F12: Set Invalid Valutazione (Too High)
+   - Inputs: valutazione=6
+   - Expected: IllegalArgumentException ("La valutazione deve essere compresa tra 1 e 5")
+
+Suggested JUnit 5 Tests:
+1. parameterizedShouldSetValutazioneWhenValid
+   - CSV Schema: valutazione (int)
+   - Rows: 1, 3, 5
+   - Test: call setter, verify getter.
+
+2. parameterizedShouldThrowExceptionWhenSetValutazioneIsInvalid
+   - CSV Schema: valutazione (int)
+   - Rows: 0, 6, -5, 10
+   - Test: assertThrows(IllegalArgumentException.class).
+
+---
+
+Method: setTesto(String testo)
+
+Parameters:
+- testo: String
+
+Categories and Choices:
+1. Text Content:
+   - Null (Invalid)
+   - Empty (Invalid)
+   - Blank (Invalid)
+   - Valid (Valid)
+
+Test Frames:
+F13: Set Valid Testo
+   - Inputs: "Excellent"
+   - Expected: Field updated.
+
+F14: Set Invalid Testo (Null)
+   - Inputs: null
+   - Expected: IllegalArgumentException
+
+F15: Set Invalid Testo (Empty/Blank)
+   - Inputs: "", "  "
+   - Expected: IllegalArgumentException
+
+Suggested JUnit 5 Tests:
+1. shouldSetTestoWhenValid
+   - Test: call setter "Content", verify getter.
+
+2. parameterizedShouldThrowExceptionWhenSetTestoIsInvalid
+   - CSV Schema: testo (String)
+   - Rows: null, "", "   "
+   - Test: assertThrows(IllegalArgumentException.class).
+
+---
+
+Method: setUtente(Utente utente)
+
+Parameters:
+- utente: Utente
+
+Categories and Choices:
+1. input:
+   - Null (Invalid)
+   - Valid Object (Valid)
+
+Test Frames:
+F16: Set Valid Utente
+   - Inputs: Valid Utente
+   - Expected: Field updated.
+
+F17: Set Invalid Utente (Null)
+   - Inputs: null
+   - Expected: IllegalArgumentException
+
+Suggested JUnit 5 Tests:
+1. shouldSetUtenteWhenValid
+2. shouldThrowExceptionWhenSetUtenteIsNull
+
+---
+
+Method: setProdotto(Prodotto prodotto)
+
+Parameters:
+- prodotto: Prodotto
+
+Categories and Choices:
+1. input:
+   - Null (Invalid)
+   - Valid Object (Valid)
+
+Test Frames:
+F18: Set Valid Prodotto
+   - Inputs: Valid Prodotto
+   - Expected: Field updated.
+
+F19: Set Invalid Prodotto (Null)
+   - Inputs: null
+   - Expected: IllegalArgumentException
+
+Suggested JUnit 5 Tests:
+1. shouldSetProdottoWhenValid
+2. shouldThrowExceptionWhenSetProdottoIsNull
+
+---
+
+Method: setDataRecensione(Date dataRecensione)
+
+Parameters:
+- dataRecensione: Date
+
+Categories and Choices:
+1. input:
+   - Null (Invalid)
+   - Valid Date (Valid)
+
+Test Frames:
+F20: Set Valid Date
+   - Inputs: Valid Date
+   - Expected: Field updated.
+
+F21: Set Invalid Date
+   - Inputs: null
+   - Expected: IllegalArgumentException
+
+Suggested JUnit 5 Tests:
+1. shouldSetDataRecensioneWhenValid
+2. shouldThrowExceptionWhenSetDataRecensioneIsNull

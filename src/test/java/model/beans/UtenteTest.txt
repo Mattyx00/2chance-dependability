@@ -1,0 +1,251 @@
+Class Overview
+The Utente class represents a registered user in the system. It maintains personal information (name, surname, email, phone), authentication details (password), system roles (admin status), and references to related entities (orders, reviews).
+Key state variables:
+- id: Distinct integer identifier.
+- nome, cognome, email, telefono: User's personal details (cannot be null/empty).
+- password: User's hashed password (cannot be null/empty, stored as SHA-1 hash).
+- ordini: List of orders placed by the user.
+- recensioni: List of reviews written by the user.
+- admin: Boolean flag for administrative privileges.
+
+---
+
+Method: Utente()
+Parameters: None
+State: None
+Categories and Choices:
+- Initialization:
+  - Default: Creates an empty object.
+Test Frames:
+- F1: Initialize a new Utente object. Expected: Object is not null.
+
+Suggested JUnit 5 Test:
+- testDefaultConstructor()
+  - Arrange: Call new Utente().
+  - Act: -
+  - Assert: Verify object is not null.
+
+---
+
+Method: setId(int id) / getId()
+Parameters: id (int)
+State: None
+Categories and Choices:
+- id:
+  - Positive integer (Valid)
+  - Zero (Valid boundary)
+  - Negative integer (Valid/Boundary)
+Test Frames:
+- F1: Set positive ID. Expected: getId() returns the set value.
+- F2: Set zero ID. Expected: getId() returns 0.
+- F3: Set negative ID. Expected: getId() returns the negative value.
+
+Suggested JUnit 5 Test:
+- shouldReturnSetIdWhenIdIsPositive()
+- parameterizedTestId(int id) with @ValueSource
+
+---
+
+Method: setNome(String nome) / getNome()
+Parameters: nome (String)
+State: None
+Categories and Choices:
+- Length/Content:
+  - Normal String (Valid)
+  - Null (Invalid)
+  - Empty String (Invalid)
+  - String with only spaces (Invalid)
+Test Frames:
+- F4: Set valid name. Expected: getNome() returns the name.
+- F5: Set null name. Expected: IllegalArgumentException.
+- F6: Set empty name. Expected: IllegalArgumentException.
+- F7: Set blank name. Expected: IllegalArgumentException.
+
+Suggested JUnit 5 Test:
+- shouldSetNomeWhenValid()
+- shouldThrowExceptionWhenNomeIsInvalid() parameterized with @NullAndEmptySource and @ValueSource(strings = {"   "})
+
+---
+
+Method: setCognome(String cognome) / getCognome()
+Parameters: cognome (String)
+State: None
+Categories and Choices:
+- Length/Content:
+  - Normal String (Valid)
+  - Null (Invalid)
+  - Empty String (Invalid)
+  - String with only spaces (Invalid)
+Test Frames:
+- F8: Set valid surname. Expected: getCognome() returns the surname.
+- F9: Set null surname. Expected: IllegalArgumentException.
+- F10: Set empty surname. Expected: IllegalArgumentException.
+- F11: Set blank surname. Expected: IllegalArgumentException.
+
+Suggested JUnit 5 Test:
+- shouldSetCognomeWhenValid()
+- shouldThrowExceptionWhenCognomeIsInvalid() parameterized
+
+---
+
+Method: setEmail(String email) / getEmail()
+Parameters: email (String)
+State: None
+Categories and Choices:
+- Length/Content:
+  - Normal String (Valid)
+  - Null (Invalid)
+  - Empty String (Invalid)
+  - String with only spaces (Invalid)
+Test Frames:
+- F12: Set valid email. Expected: getEmail() returns the email.
+- F13: Set null email. Expected: IllegalArgumentException.
+- F14: Set empty email. Expected: IllegalArgumentException.
+- F15: Set blank email. Expected: IllegalArgumentException.
+
+Suggested JUnit 5 Test:
+- shouldSetEmailWhenValid()
+- shouldThrowExceptionWhenEmailIsInvalid() parameterized
+
+---
+
+Method: setTelefono(String telefono) / getTelefono()
+Parameters: telefono (String)
+State: None
+Categories and Choices:
+- Length/Content:
+  - Normal String (Valid)
+  - Null (Invalid)
+  - Empty String (Invalid)
+  - String with only spaces (Invalid)
+Test Frames:
+- F16: Set valid phone. Expected: getTelefono() returns the phone.
+- F17: Set null phone. Expected: IllegalArgumentException.
+- F18: Set empty phone. Expected: IllegalArgumentException.
+- F19: Set blank phone. Expected: IllegalArgumentException.
+
+Suggested JUnit 5 Test:
+- shouldSetTelefonoWhenValid()
+- shouldThrowExceptionWhenTelefonoIsInvalid() parameterized
+
+---
+
+Method: setImmagine(String immagine) / getImmagine()
+Parameters: immagine (String)
+State: None
+Categories and Choices:
+- Content:
+  - Valid Path/URL (Valid)
+  - Null (Valid)
+  - Empty String (Valid)
+Test Frames:
+- F20: Set valid image path. Expected: getImmagine() returns the path.
+- F21: Set null image. Expected: getImmagine() returns null.
+
+Suggested JUnit 5 Test:
+- shouldSetImmagineWhenValid()
+
+---
+
+Method: setAdmin(boolean admin) / isAdmin()
+Parameters: admin (boolean)
+State: None
+Categories and Choices:
+- Value:
+  - true
+  - false
+Test Frames:
+- F22: Set admin true. Expected: isAdmin() returns true.
+- F23: Set admin false. Expected: isAdmin() returns false.
+
+Suggested JUnit 5 Test:
+- shouldSetAdminStatus() parameterized
+
+---
+
+Method: setOrdini(ArrayList<Ordine> ordini) / getOrdini()
+Parameters: ordini (ArrayList<Ordine>)
+State: None
+Categories and Choices:
+- List Status:
+  - Populated List (Valid)
+  - Empty List (Valid)
+  - Null (Invalid)
+Test Frames:
+- F24: Set populated list. Expected: getOrdini() returns the list.
+- F25: Set empty list. Expected: getOrdini() returns empty list.
+- F26: Set null list. Expected: IllegalArgumentException.
+
+Suggested JUnit 5 Test:
+- shouldSetOrdiniWhenValid()
+- shouldThrowExceptionWhenOrdiniIsNull()
+
+---
+
+Method: setRecensioni(ArrayList<Recensione> recensioni) / getRecensioni()
+Parameters: recensioni (ArrayList<Recensione>)
+State: None
+Categories and Choices:
+- List Status:
+  - Populated List (Valid)
+  - Empty List (Valid)
+  - Null (Invalid)
+Test Frames:
+- F27: Set populated list. Expected: getRecensioni() returns the list.
+- F28: Set empty list. Expected: getRecensioni() returns empty list.
+- F29: Set null list. Expected: IllegalArgumentException.
+
+Suggested JUnit 5 Test:
+- shouldSetRecensioniWhenValid()
+- shouldThrowExceptionWhenRecensioniIsNull()
+
+---
+
+Method: setPassword(String password) / getPassword()
+Parameters: password (String)
+State: None
+Categories and Choices:
+- Input Password:
+  - Valid Plaintext (Valid)
+  - Null (Invalid)
+  - Empty/Blank (Invalid)
+Test Frames:
+- F30: Set valid password. Expected: getPassword() returns a 40-character hex string (SHA-1 hash), NOT the value of input.
+- F31: Set null password. Expected: IllegalArgumentException.
+- F32: Set empty/blank password. Expected: IllegalArgumentException.
+
+Suggested JUnit 5 Test:
+- shouldHashPasswordAndSetWhenValid()
+  - Act: user.setPassword("secret")
+  - Assert: assertNotEquals("secret", user.getPassword()), assertEquals(40, user.getPassword().length())
+- shouldThrowExceptionWhenPasswordIsInvalid()
+
+---
+
+Method: getOrdineIndex(Ordine o)
+Parameters: o (Ordine)
+State: ordini (ArrayList<Ordine>)
+Categories and Choices:
+- Input Ordine (o):
+  - Null (Invalid)
+  - Valid Ordine (Valid)
+- State 'ordini':
+  - Null (Valid state, returns -1)
+  - Empty List (Returns -1)
+  - Populated List containing 'o' (Returns index >= 0)
+  - Populated List NOT containing 'o' (Returns -1)
+Test Frames:
+- F33: Input order is null. Expected: IllegalArgumentException.
+- F34: State 'ordini' is null. Input valid. Expected: Returns -1.
+- F35: State 'ordini' is empty. Input valid. Expected: Returns -1.
+- F36: State 'ordini' contains the order (match by ID). Expected: Returns the correct index.
+- F37: State 'ordini' does not contain the order. Expected: Returns -1.
+
+Suggested JUnit 5 Test:
+- shouldReturnCorrectIndexWhenOrderExists()
+  - Arrange: Set ordini list with [Order(1), Order(2)]. Input Order(1).
+  - Act: getOrdineIndex(Order(1))
+  - Assert: Returns 0.
+- shouldReturnMinusOneWhenOrderNotFound()
+- shouldThrowExceptionWhenOrderIsNull()
+- shouldReturnMinusOneWhenOrdiniListIsNull()

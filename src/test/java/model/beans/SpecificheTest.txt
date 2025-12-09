@@ -1,0 +1,176 @@
+Class Overview
+The Specifiche class represents a product specification consisting of a name (nome) and a value (valore).
+Key state variables:
+- nome: String (enforced to be non-null and non-empty/non-blank in validated methods)
+- valore: String (enforced to be non-null and non-empty/non-blank in validated methods)
+The class provides a no-argument constructor (which initializes fields to default null) and a validated parameterized constructor that enforces state invariants.
+
+================================================================================
+Constructor: Specifiche(String nome, String valore)
+================================================================================
+Parameters:
+- nome (String): The name of the specification.
+- valore (String): The value of the specification.
+
+Categories and Choices:
+  Category: nome Validity
+    Choice: Valid (non-null, non-empty, non-blank string)
+    Choice: Null
+    Choice: Empty ("")
+    Choice: Blank ("   ")
+
+  Category: valore Validity
+    Choice: Valid (non-null, non-empty, non-blank string)
+    Choice: Null
+    Choice: Empty ("")
+    Choice: Blank ("   ")
+
+Test Frames:
+  F1: Valid Construction
+    Inputs: nome="Materiale", valore="Legno"
+    Expected: Object created successfully. getNome() returns "Materiale", getValore() returns "Legno".
+  
+  F2: Invalid Construction - Name is Null
+    Inputs: nome=null, valore="Legno"
+    Expected: IllegalArgumentException thrown ("Il nome della specifica non può essere null o vuoto").
+  
+  F3: Invalid Construction - Name is Empty
+    Inputs: nome="", valore="Legno"
+    Expected: IllegalArgumentException thrown ("Il nome della specifica non può essere null o vuoto").
+  
+  F4: Invalid Construction - Name is Blank
+    Inputs: nome="   ", valore="Legno"
+    Expected: IllegalArgumentException thrown ("Il nome della specifica non può essere null o vuoto").
+  
+  F5: Invalid Construction - Value is Null
+    Inputs: nome="Materiale", valore=null
+    Expected: IllegalArgumentException thrown ("Il valore della specifica non può essere null o vuoto").
+  
+  F6: Invalid Construction - Value is Empty
+    Inputs: nome="Materiale", valore=""
+    Expected: IllegalArgumentException thrown ("Il valore della specifica non può essere null o vuoto").
+  
+  F7: Invalid Construction - Value is Blank
+    Inputs: nome="Materiale", valore="   "
+    Expected: IllegalArgumentException thrown ("Il valore della specifica non può essere null o vuoto").
+
+Suggested JUnit 5 Tests:
+  Test: shouldConstructorCreateObjectWhenInputsAreValid
+    Arrange: Prepare valid strings.
+    Act: new Specifiche("Materiale", "Legno")
+    Assert: Check that properties match inputs.
+
+  Test: shouldConstructorThrowExceptionWhenNomeIsInvalid
+    Type: ParameterizedTest
+    Source: NullSource, ValueSource(strings = {"", "   "})
+    Act: new Specifiche(invalidNome, "ValidValore")
+    Assert: assertThrows(IllegalArgumentException.class)
+
+  Test: shouldConstructorThrowExceptionWhenValoreIsInvalid
+    Type: ParameterizedTest
+    Source: NullSource, ValueSource(strings = {"", "   "})
+    Act: new Specifiche("ValidNome", invalidValore)
+    Assert: assertThrows(IllegalArgumentException.class)
+
+================================================================================
+Constructor: Specifiche()
+================================================================================
+Parameters: None
+
+Test Frames:
+  F8: Default Construction
+    Inputs: None
+    Expected: Object created successfully. Fields nome and valore are null.
+
+Suggested JUnit 5 Tests:
+  Test: shouldCreateEmptyObjectUsingDefaultConstructor
+    Act: new Specifiche()
+    Assert: Object is not null. getNome() and getValore() return null.
+
+================================================================================
+Method: setNome(String nome)
+================================================================================
+Parameters:
+- nome (String)
+
+State: Object initialized.
+
+Categories and Choices:
+  Category: nome Validity
+    Choice: Valid (non-null, non-empty, non-blank)
+    Choice: Null
+    Choice: Empty ("")
+    Choice: Blank ("   ")
+
+Test Frames:
+  F9: Set Valid Name
+    Inputs: nome="Dimensione"
+    Expected: Field nome is updated to "Dimensione".
+  
+  F10: Set Null Name
+    Inputs: nome=null
+    Expected: IllegalArgumentException thrown.
+  
+  F11: Set Empty Name
+    Inputs: nome=""
+    Expected: IllegalArgumentException thrown.
+  
+  F12: Set Blank Name
+    Inputs: nome="  "
+    Expected: IllegalArgumentException thrown.
+
+Suggested JUnit 5 Tests:
+  Test: shouldSetNomeWhenInputIsValid
+    Arrange: new Specifiche()
+    Act: setNome("Dimensione")
+    Assert: getNome() returns "Dimensione".
+
+  Test: shouldSetNomeThrowExceptionWhenInputIsInvalid
+    Type: ParameterizedTest
+    Source: NullSource, ValueSource(strings = {"", "   "})
+    Act: setNome(invalidInput)
+    Assert: assertThrows(IllegalArgumentException.class)
+
+================================================================================
+Method: setValore(String valore)
+================================================================================
+Parameters:
+- valore (String)
+
+State: Object initialized.
+
+Categories and Choices:
+  Category: valore Validity
+    Choice: Valid (non-null, non-empty, non-blank)
+    Choice: Null
+    Choice: Empty ("")
+    Choice: Blank ("   ")
+
+Test Frames:
+  F13: Set Valid Value
+    Inputs: valore="Grande"
+    Expected: Field valore is updated to "Grande".
+  
+  F14: Set Null Value
+    Inputs: valore=null
+    Expected: IllegalArgumentException thrown.
+  
+  F15: Set Empty Value
+    Inputs: valore=""
+    Expected: IllegalArgumentException thrown.
+  
+  F16: Set Blank Value
+    Inputs: valore="  "
+    Expected: IllegalArgumentException thrown.
+
+Suggested JUnit 5 Tests:
+  Test: shouldSetValoreWhenInputIsValid
+    Arrange: new Specifiche()
+    Act: setValore("Grande")
+    Assert: getValore() returns "Grande".
+
+  Test: shouldSetValoreThrowExceptionWhenInputIsInvalid
+    Type: ParameterizedTest
+    Source: NullSource, ValueSource(strings = {"", "   "})
+    Act: setValore(invalidInput)
+    Assert: assertThrows(IllegalArgumentException.class)

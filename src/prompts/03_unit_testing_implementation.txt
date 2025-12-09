@@ -10,7 +10,7 @@ Organize the test class logically, starting with constructor tests. Use assertAl
 Your output must be strictly the Java code block containing the final test class. Do not provide explanations, summaries, or restate the report. Just produce the code.
 
 Here is the path to the Category-Partition Testing report:
-src\test\java\model\beans\ProdottoCarrelloTest.txt
+src\test\java\model\beans\WishListTest.txt
 
 Here is the path to the Java Class under test:
-src\main\java\model\beans\ProdottoCarrello.java
+src\main\java\model\beans\WishList.java

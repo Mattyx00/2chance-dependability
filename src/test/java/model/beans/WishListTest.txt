@@ -1,0 +1,166 @@
+Class Overview
+==============
+The WishList class represents a user's collection of desired products. It maintains a reference to the owner (Utente) and a list of products (ArrayList<Prodotto>).
+Key responsibilities include:
+- Managing the association with a user.
+- Managing the list of products.
+- Enforcing non-null constraints on the user and the product list during valid state transitions (constructors and setters).
+
+Key State Variables:
+- utente (Utente): The owner of the wishlist. Can be null if the default constructor is used, but setters and parameterized constructors enforce non-nullity.
+- prodotti (ArrayList<Prodotto>): The list of items. Initialized to empty in constructors, enforced non-null in setter.
+
+Constructors and Methods Analysis
+=================================
+
+1. WishList()
+-------------
+Default constructor. Initializes the product list to an empty ArrayList.
+Parameters: None
+State: Clean initialization.
+
+Categories and Choices:
+- Initialization:
+  - Default: Creates object with null utente and empty product list.
+
+Test Frames:
+- F1: Default initialization.
+  - Setup: Call new WishList().
+  - Expected: utente is null, products list is not null and empty.
+
+Suggested JUnit 5 Test:
+- testDefaultConstructor
+  - Arrange: None.
+  - Act: WishList wl = new WishList();
+  - Assert: assertNull(wl.getUtente()); assertNotNull(wl.getProdotti()); assertTrue(wl.getProdotti().isEmpty());
+
+2. WishList(Utente utente)
+--------------------------
+Parameterized constructor. Sets the user and initializes the product list.
+Parameters: utente (Utente)
+
+Categories and Choices:
+- utente:
+  - Valid: A valid Utente object.
+  - Invalid: null.
+
+Test Frames:
+- F2: Valid utente.
+  - Setup: Create valid Utente.
+  - Act: new WishList(utente).
+  - Expected: utente is set, products list is not null/empty.
+- F3: Null utente.
+  - Setup: utente = null.
+  - Act: new WishList(null).
+  - Expected: IllegalArgumentException ("L'utente non può essere null").
+
+Suggested JUnit 5 Test:
+- shouldCreateWishListWhenUtenteIsValid
+  - Arrange: Utente u = new Utente();
+  - Act: WishList wl = new WishList(u);
+  - Assert: assertEquals(u, wl.getUtente()); assertNotNull(wl.getProdotti());
+- shouldThrowExceptionWhenConstructorUtenteIsNull
+  - Arrange: None.
+  - Act: () -> new WishList(null).
+  - Assert: IllegalArgumentException.class.
+
+3. getUtente()
+--------------
+Retrieves the associated user.
+Parameters: None
+
+Categories and Choices:
+- State of utente:
+  - Null (from default constructor).
+  - Set (from parameterized constructor or setter).
+
+Test Frames:
+- F4: Get utente when null.
+  - Setup: new WishList().
+  - Expected: Returns null.
+- F5: Get utente when set.
+  - Setup: new WishList(validUtente).
+  - Expected: Returns validUtente.
+
+Suggested JUnit 5 Test:
+- included in constructor/setter tests implicitly, but explicit test: testGetUtente
+
+4. setUtente(Utente utente)
+---------------------------
+Sets the associated user. Enforces non-nullity.
+Parameters: utente (Utente)
+
+Categories and Choices:
+- utente:
+  - Valid: A valid Utente instance.
+  - Invalid: null.
+
+Test Frames:
+- F6: Valid utente.
+  - Setup: WishList wl = new WishList(); Utente u = new Utente();
+  - Act: wl.setUtente(u);
+  - Expected: getUtente() returns u.
+- F7: Null utente.
+  - Setup: WishList wl = new WishList();
+  - Act: wl.setUtente(null);
+  - Expected: IllegalArgumentException ("L'utente non può essere null").
+
+Suggested JUnit 5 Test:
+- shouldSetUtenteWhenValid
+- shouldThrowExceptionWhenSetUtenteIsNull
+
+5. getProdotti()
+----------------
+Retrieves the list of products.
+Parameters: None
+
+Categories and Choices:
+- State of prodotti:
+  - Empty (default).
+  - Populated (after setter or addition - though no add method exists, we test via setter).
+
+Test Frames:
+- F8: Get products (initial state).
+  - Setup: new WishList().
+  - Expected: Empty list.
+- F9: Get products (populated).
+  - Setup: wl.setProdotti(populatedList).
+  - Expected: Returns populatedList.
+
+Suggested JUnit 5 Test:
+- testGetProdotti
+
+6. setProdotti(ArrayList<Prodotto> prodotti)
+--------------------------------------------
+Sets the list of products. Enforces non-nullity.
+Parameters: prodotti (ArrayList<Prodotto>)
+
+Categories and Choices:
+- prodotti:
+  - Valid: Empty ArrayList.
+  - Valid: Populated ArrayList.
+  - Invalid: null.
+
+Test Frames:
+- F10: Set populated list.
+  - Setup: Create list with 1+ Prodotto.
+  - Act: wl.setProdotti(list).
+  - Expected: getProdotti() returns list.
+- F11: Set empty list.
+  - Setup: Create empty list.
+  - Act: wl.setProdotti(list).
+  - Expected: getProdotti() returns empty list.
+- F12: Set null list.
+  - Setup: None.
+  - Act: wl.setProdotti(null);
+  - Expected: IllegalArgumentException ("La lista dei prodotti non può essere null").
+
+Suggested JUnit 5 Test:
+- shouldSetProdottiWhenValid
+  - Arrange: List with products.
+  - Act: wl.setProdotti(list);
+  - Assert: assertEquals(list, wl.getProdotti());
+- shouldThrowExceptionWhenSetProdottiIsNull
+  - Arrange: None.
+  - Act: () -> wl.setProdotti(null);
+  - Assert: IllegalArgumentException.class.
