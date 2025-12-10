@@ -1,0 +1,419 @@
+Class Overview
+==============
+The AdminService class acts as a service layer facade for administrative operations within the e-commerce system. It orchestrates interactions between the presentation layer (or other services) and the persistence layer (DAOs). Its primary responsibilities include managing products (CRUD), categories, users, and orders. It also handles business logic such as file uploads for product images and parsing JSON specifications for products.
+
+Key state variables:
+- prodottoDAO: Data Access Object for products.
+- categoriaDAO: Data Access Object for categories.
+- utenteDAO: Data Access Object for users.
+- ordineDAO: Data Access Object for orders.
+
+These dependencies are critical; if they are null, the service cannot function. The class provides a constructor for dependency injection to ensure valid state, as well as a default constructor that instantiates them directly (less testable).
+
+Method: AdminService(ProdottoDAO, CategoriaDAO, UtenteDAO, OrdineDAO)
+=====================================================================
+Parameters:
+- prodottoDAO
+- categoriaDAO
+- utenteDAO
+- ordineDAO
+
+Object State:
+- None (constructor initializes state).
+
+Categories and Choices:
+-----------------------
+1. prodottoDAO:
+   - Null
+   - Non-null
+2. categoriaDAO:
+   - Null
+   - Non-null
+3. utenteDAO:
+   - Null
+   - Non-null
+4. ordineDAO:
+   - Null
+   - Non-null
+
+Test Frames:
+------------
+TF1: All DAOs are non-null.
+     Expected: Instance created successfully; internal fields set.
+TF2: prodottoDAO is null.
+     Expected: throw IllegalArgumentException("ProdottoDAO cannot be null").
+TF3: categoriaDAO is null.
+     Expected: throw IllegalArgumentException("CategoriaDAO cannot be null").
+TF4: utenteDAO is null.
+     Expected: throw IllegalArgumentException("UtenteDAO cannot be null").
+TF5: ordineDAO is null.
+     Expected: throw IllegalArgumentException("OrdineDAO cannot be null").
+
+Suggested JUnit 5 Test:
+-----------------------
+- shouldInstantiateServiceWhenAllDAOsAreNonNull
+  Arrange: Create mock DAOs.
+  Act: new AdminService(mockP, mockC, mockU, mockO).
+  Assert: assertNotNull(service).
+
+- shouldThrowExceptionWhenProdottoDAOIsNull
+  Arrange: Create mock C, U, O; P is null.
+  Act: new AdminService(null, mockC, mockU, mockO).
+  Assert: assertThrows(IllegalArgumentException.class).
+
+Method: aggiungiProdotto(Prodotto, Categoria, Part, String)
+===========================================================
+Parameters:
+- p (Prodotto)
+- categoria (Categoria)
+- immagine (Part)
+- specifiche (String JSON)
+
+Object State:
+- DAOs must be initialized.
+
+Categories and Choices:
+-----------------------
+1. p (Prodotto):
+   - Null
+   - Valid instance
+2. categoria (Categoria):
+   - Null
+   - Valid instance
+3. immagine (Part):
+   - Null
+   - Valid Part with filename
+   - Valid Part with null filename
+4. specifiche (String):
+   - Null
+   - Empty or Whitespace
+   - Invalid JSON format
+   - Valid JSON format
+5. DAO Behavior (prodottoDAO.getLastProduct):
+   - Returns valid ID (>0)
+   - Returns invalid ID (<=0)
+
+Test Frames:
+------------
+TF6: Valid inputs, JSON valid, valid filename, DAO returns valid ID.
+     Expected: product added, specifications added, file upload simulation attempted (or mocked).
+TF7: p is null.
+     Expected: throw IllegalArgumentException("Prodotto cannot be null").
+TF8: categoria is null.
+     Expected: throw IllegalArgumentException("Categoria cannot be null").
+TF9: immagine is null.
+     Expected: throw IllegalArgumentException("Immagine Part cannot be null").
+TF10: specifiche is null.
+      Expected: throw IllegalArgumentException("Specifiche string cannot be null or empty").
+TF11: specifiche is empty string.
+      Expected: throw IllegalArgumentException("Specifiche string cannot be null or empty").
+TF12: immagine submittedFileName is null.
+      Expected: throw IllegalArgumentException("Image file name cannot be null").
+TF13: specifiche is invalid JSON (e.g. "{ bad json }").
+      Expected: throw IllegalArgumentException("Invalid JSON format for specifiche").
+TF14: DAO getLastProduct returns 0 or negative.
+      Expected: throw IllegalStateException("Failed to retrieve the last added product ID.").
+
+Suggested JUnit 5 Tests:
+------------------------
+- shouldAddProdottoWhenInputsAreValid
+  Arrange: Mock all inputs and DAOs. Mock Part to return "image.jpg". Mock DAO to return ID 1.
+  Act: service.aggiungiProdotto(...)
+  Assert: verify(prodottoDAO).addProdotto(p); verify(prodottoDAO).aggiungiSpecifiche(...).
+
+- shouldThrowExceptionWhenProdottoIsNull
+  Arrange: p = null; other inputs valid.
+  Act: service.aggiungiProdotto(null, cat, part, spec)
+  Assert: assertThrows(IllegalArgumentException.class).
+
+- shouldThrowExceptionWhenSpecificheIsInvalidJson
+  Arrange: specifiche = "invalid json".
+  Act: service.aggiungiProdotto(..., specifiche)
+  Assert: assertThrows(IllegalArgumentException.class).
+
+Method: mostraProdotti()
+========================
+Parameters: None
+
+Object State:
+- prodottoDAO initialized.
+
+Categories and Choices:
+-----------------------
+1. DAO result (prodottoDAO.getProdotti()):
+   - Returns populated list
+   - Returns empty list
+   - Returns null
+   - Contains null elements within list
+
+Test Frames:
+------------
+TF15: DAO returns populated list of products.
+      Expected: Return JSON string with "prodotti" array.
+TF16: DAO returns null.
+      Expected: throw IllegalStateException("DAO returned null for prodotti list").
+TF17: DAO returns list containing some null elements.
+      Expected: Return JSON string, skipping null elements.
+
+Suggested JUnit 5 Test:
+-----------------------
+- shouldReturnJsonWhenProductsExist
+  Arrange: Mock DAO to return list of 2 products.
+  Act: String result = service.mostraProdotti();
+  Assert: Verify JSON contains 2 items.
+
+Method: eliminaProdotto(int)
+============================
+Parameters:
+- id (int)
+
+Categories and Choices:
+-----------------------
+1. id:
+   - Positive (> 0)
+   - Zero
+   - Negative
+
+Test Frames:
+------------
+TF18: id is positive.
+      Expected: call prodottoDAO.eliminaProdotto(id).
+TF19: id is zero.
+      Expected: throw IllegalArgumentException.
+TF20: id is negative.
+      Expected: throw IllegalArgumentException.
+
+Suggested JUnit 5 Tests:
+------------------------
+- shouldEliminaProdottoWhenIdIsPositive
+  Arrange: id = 5.
+  Act: service.eliminaProdotto(5).
+  Assert: verify(prodottoDAO).eliminaProdotto(5).
+
+- shouldThrowExceptionWhenEliminaProdottoIdIsInvalid
+  Parameterized Test CSV:
+  id
+  0
+  -1
+
+Method: mostraCategorie()
+=========================
+Parameters: None
+
+Categories and Choices:
+-----------------------
+1. DAO result (categoriaDAO.getCategorie()):
+   - Returns populated list
+   - Returns null
+
+Test Frames:
+------------
+TF21: DAO returns populated list.
+      Expected: Return JSON with "categorie" array.
+TF22: DAO returns null.
+      Expected: throw IllegalStateException.
+
+Suggested JUnit 5 Test:
+-----------------------
+- shouldReturnJsonWhenCategoriesExist
+
+Method: aggiungiCategoria(String)
+=================================
+Parameters:
+- nome (String)
+
+Categories and Choices:
+-----------------------
+1. nome:
+   - Valid non-empty string
+   - Null
+   - Empty or Whitespace
+
+Test Frames:
+------------
+TF23: nome is valid.
+      Expected: call categoriaDAO.addCategoria(...).
+TF24: nome is null.
+      Expected: throw IllegalArgumentException.
+TF25: nome is empty.
+      Expected: throw IllegalArgumentException.
+
+Suggested JUnit 5 Tests:
+------------------------
+- shouldAddCategoriaWhenNameIsValid
+- shouldThrowExceptionWhenCategoriaNameIsInvalid
+
+Method: eliminaCategoria(String)
+================================
+Parameters:
+- nome (String)
+
+Categories and Choices:
+-----------------------
+1. nome:
+   - Valid non-empty string
+   - Null
+   - Empty or Whitespace
+
+Test Frames:
+------------
+TF26: nome is valid.
+      Expected: call categoriaDAO.eliminaCategoria(nome).
+TF27: nome is null.
+      Expected: throw IllegalArgumentException.
+TF28: nome is empty.
+      Expected: throw IllegalArgumentException.
+
+Suggested JUnit 5 Tests:
+------------------------
+- shouldEliminaCategoriaWhenNameIsValid
+- shouldThrowExceptionWhenEliminaCategoriaNameIsInvalid
+
+Method: mostraUtenti()
+======================
+Parameters: None
+
+Categories and Choices:
+-----------------------
+1. DAO result (utenteDAO.getUtenti()):
+   - Returns populated list
+   - Returns null
+   - List contains nulls
+
+Test Frames:
+------------
+TF29: DAO returns list.
+      Expected: Return JSON with "utenti" array.
+TF30: DAO returns null.
+      Expected: throw IllegalStateException.
+
+Method: mostraOrdini()
+======================
+Parameters: None
+
+Categories and Choices:
+-----------------------
+1. DAO result (ordineDAO.getOrdini()):
+   - Returns populated list
+   - Returns null
+
+Test Frames:
+------------
+TF31: DAO returns list.
+      Expected: Return JSON with "ordini" array.
+TF32: DAO returns null.
+      Expected: throw IllegalStateException.
+
+Method: infoOrdine(Integer)
+===========================
+Parameters:
+- id (Integer)
+
+Categories and Choices:
+-----------------------
+1. id:
+   - Null
+   - Zero or Negative
+   - Positive
+2. Order existence (ordineDAO.getOrdineById):
+   - Exists
+   - Null (Not found)
+3. Cart existence (ordineDAO.getProdottoOrdine):
+   - Exists
+   - Null
+4. Cart contents (Carrello.getProdotti):
+   - Populated
+   - Null (handled defensively)
+
+Test Frames:
+------------
+TF33: Valid ID, Order exists, Cart exists.
+      Expected: Return JSON with "prodotti" detail.
+TF34: id is null.
+      Expected: throw IllegalArgumentException.
+TF35: id is negative.
+      Expected: throw IllegalArgumentException.
+TF36: Order does not exist (returns null).
+      Expected: throw IllegalArgumentException("Order not found...").
+TF37: Cart is null.
+      Expected: throw IllegalStateException("Cart associated with order is null").
+
+Suggested JUnit 5 Test:
+-----------------------
+- shouldReturnInfoOrdineWhenOrderExists
+- shouldThrowExceptionWhenInfoOrdineIdIsInvalid
+
+Method: getProdotto(Integer)
+============================
+Parameters:
+- id (Integer)
+
+Categories and Choices:
+-----------------------
+1. id:
+   - Null
+   - Zero or Negative
+   - Positive
+2. Product existence:
+   - Exists
+   - Null
+3. Specifiche existence:
+   - List exists
+   - Null (handled)
+
+Test Frames:
+------------
+TF38: Valid ID, Product exists.
+      Expected: Return JSON with product details.
+TF39: id is null.
+      Expected: throw IllegalArgumentException.
+TF40: id is negative.
+      Expected: throw IllegalArgumentException.
+TF41: Product does not exist.
+      Expected: throw IllegalArgumentException("Product not found...").
+
+Method: modificaProdotto(Prodotto, Categoria, Part, String)
+===========================================================
+Parameters:
+- p (Prodotto)
+- categoria (Categoria)
+- immagine (Part)
+- specifiche (String)
+
+Categories and Choices:
+-----------------------
+1. p:
+   - Null
+   - Valid
+2. categoria:
+   - Null
+   - Valid
+3. immagine:
+   - Null (allowed implication: keep old image)
+   - Valid with size > 0
+4. specifiche:
+   - Null
+   - Invalid JSON
+   - Valid JSON
+
+Test Frames:
+------------
+TF42: Valid inputs, image provided.
+      Expected: Update product, update image, update specs.
+TF43: Valid inputs, image is null.
+      Expected: Update product (image set to null implies no change in DAO logic), update specs.
+TF44: p is null.
+      Expected: throw IllegalArgumentException.
+TF45: categoria is null.
+      Expected: throw IllegalArgumentException.
+TF46: specifiche is null.
+      Expected: throw IllegalArgumentException.
+TF47: specifiche is invalid JSON.
+      Expected: throw IllegalArgumentException.
+
+Suggested JUnit 5 Test:
+-----------------------
+- shouldModificaProdottoWhenInputsAreValidWithTypeCheck
+  Arrange: Mock inputs, image is null.
+  Act: service.modificaProdotto(...)
+  Assert: verify(prodottoDAO).modificaProdotto(p).

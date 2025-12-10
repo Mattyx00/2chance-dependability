@@ -1,0 +1,226 @@
+Class Overview
+==============
+The WishlistService class is a service layer component responsible for managing users' wishlists. It interacts with WishListDAO and ProdottoDAO to add products, retrieve wishlists, and remove products. It validates inputs to ensure robustness before delegating to the DAOs.
+
+Key Responsibilities:
+- Validate arguments (Users, IDs).
+- Verify product existence before addition.
+- Delegate persistence operations to DAOs.
+
+Key State/Dependencies:
+- WishListDAO: Handles database operations for WishLists.
+- ProdottoDAO: Handles database operations for Products (used for existence checks).
+
+--------------------------------------------------------------------------------
+1. Constructor: WishlistService(WishListDAO wishListDAO, ProdottoDAO prodottoDAO)
+--------------------------------------------------------------------------------
+Parameters:
+- wishListDAO: The DAO for WishList operations.
+- prodottoDAO: The DAO for Product operations.
+
+Categories and Choices:
+- wishListDAO:
+    - Null (Invalid)
+    - Non-null (Valid)
+- prodottoDAO:
+    - Null (Invalid)
+    - Non-null (Valid)
+
+Test Frames:
+- F1: wishListDAO is null.
+    - Inputs: wishListDAO=null, prodottoDAO=mock(ProdottoDAO)
+    - Expected: IllegalArgumentException ("WishListDAO cannot be null")
+- F2: prodottoDAO is null.
+    - Inputs: wishListDAO=mock(WishListDAO), prodottoDAO=null
+    - Expected: IllegalArgumentException ("ProdottoDAO cannot be null")
+- F3: Both dependencies are valid.
+    - Inputs: wishListDAO=mock, prodottoDAO=mock
+    - Expected: Object created successfully.
+
+Suggested JUnit 5 Tests:
+- shouldThrowExceptionWhenWishListDaoIsNull
+    - Arrange: Prepare null wishListDAO.
+    - Act: new WishlistService(null, mockProdottoDAO).
+    - Assert: assertThrows(IllegalArgumentException.class).
+- shouldThrowExceptionWhenProdottoDaoIsNull
+    - Arrange: Prepare null prodottoDAO.
+    - Act: new WishlistService(mockWishListDAO, null).
+    - Assert: assertThrows(IllegalArgumentException.class).
+- shouldInitializeWhenDependenciesAreValid
+    - Arrange: Prepare valid mocks.
+    - Act: new WishlistService(mockWishListDAO, mockProdottoDAO).
+    - Assert: Service instance is not null.
+
+--------------------------------------------------------------------------------
+2. Method: void addToWishList(Utente utente, int idProdotto)
+--------------------------------------------------------------------------------
+Parameters:
+- utente: The user adding the product.
+- idProdotto: The ID of the product to add.
+
+State/Dependencies:
+- prodottoDAO.getProdottoById(int) outcome.
+- wishListDAO.addToWishList(Utente, Prodotto) outcome.
+
+Categories and Choices:
+- utente:
+    - Null (Invalid)
+    - Valid object (Valid)
+- idProdotto:
+    - Zero (Invalid)
+    - Negative (Invalid)
+    - Positive (Valid)
+- Product Existence (via ProdottoDAO):
+    - Does not exist (returns null) (Invalid for operation)
+    - Exists (returns Prodotto) (Valid)
+    - DB Error (throws SQLException) (Error)
+- DAO Add Operation (via WishListDAO):
+    - Success (Valid)
+    - DB Error (throws SQLException) (Error)
+
+Test Frames:
+- F1: utente is null.
+    - Inputs: utente=null, idProdotto=1
+    - Expected: IllegalArgumentException ("Utente cannot be null")
+- F2: idProdotto is zero.
+    - Inputs: utente=valid, idProdotto=0
+    - Expected: IllegalArgumentException ("Product ID must be positive")
+- F3: idProdotto is negative.
+    - Inputs: utente=valid, idProdotto=-10
+    - Expected: IllegalArgumentException ("Product ID must be positive")
+- F4: Product does not exist.
+    - Inputs: utente=valid, idProdotto=999
+    - State: prodottoDAO.getProdottoById(999) returns null
+    - Expected: IllegalArgumentException ("Product not found with ID: 999")
+- F5: Product lookup throws SQLException.
+    - Inputs: utente=valid, idProdotto=1
+    - State: prodottoDAO.getProdottoById(1) throws SQLException
+    - Expected: SQLException propagated
+- F6: Successful addition.
+    - Inputs: utente=valid, idProdotto=1
+    - State: productoDAO returns valid Product, wishListDAO.addToWishList succeeds
+    - Expected: wishListDAO.addToWishList is called. No exception.
+- F7: Add operation throws SQLException.
+    - Inputs: utente=valid, idProdotto=1
+    - State: productoDAO returns valid Product, wishListDAO.addToWishList throws SQLException
+    - Expected: SQLException propagated
+
+Suggested JUnit 5 Tests:
+- shouldThrowExceptionWhenUtenteIsNullInAddToWishList
+    - Arrange: null Utente.
+    - Act: service.addToWishList(null, 1).
+    - Assert: assertThrows(IllegalArgumentException.class).
+- shouldThrowExceptionWhenProductIdIsInvalid (Parameterized)
+    - CSV Schema: value (int)
+    - Rows: 0, -1, -50
+    - Act: service.addToWishList(validUtente, value).
+    - Assert: assertThrows(IllegalArgumentException.class).
+- shouldThrowExceptionWhenProductNotFound
+    - Arrange: mockProdottoDAO returns null for ID.
+    - Act: service.addToWishList(validUtente, id).
+    - Assert: assertThrows(IllegalArgumentException.class).
+- shouldCallDaoWhenAddingValidProduct
+    - Arrange: mockProdottoDAO returns product.
+    - Act: service.addToWishList(validUtente, id).
+    - Assert: verify(wishListDAO).addToWishList(validUtente, product).
+
+--------------------------------------------------------------------------------
+3. Method: WishList getWishListByUser(Utente utente)
+--------------------------------------------------------------------------------
+Parameters:
+- utente: The user whose wishlist is being retrieved.
+
+State/Dependencies:
+- wishListDAO.getWishListByUser(Utente) outcome.
+
+Categories and Choices:
+- utente:
+    - Null (Invalid)
+    - Valid object (Valid)
+- DAO Retrieval:
+    - Returns WishList (Success)
+    - Throws SQLException (Error)
+
+Test Frames:
+- F1: utente is null.
+    - Inputs: utente=null
+    - Expected: IllegalArgumentException ("Utente cannot be null")
+- F2: Successful retrieval.
+    - Inputs: utente=valid
+    - State: wishListDAO returns a WishList object
+    - Expected: Returns the WishList object provided by DAO.
+- F3: DB Error during retrieval.
+    - Inputs: utente=valid
+    - State: wishListDAO throws SQLException
+    - Expected: SQLException propagated.
+
+Suggested JUnit 5 Tests:
+- shouldThrowExceptionWhenUtenteIsNullInGetWishList
+    - Arrange: null Utente.
+    - Act: service.getWishListByUser(null).
+    - Assert: assertThrows(IllegalArgumentException.class).
+- shouldReturnWishListWhenUserIsValid
+    - Arrange: mockWishListDAO returns expectedWishList.
+    - Act: result = service.getWishListByUser(validUtente).
+    - Assert: assertEquals(expectedWishList, result).
+
+--------------------------------------------------------------------------------
+4. Method: void removeFromWishList(int idUtente, int idProdotto)
+--------------------------------------------------------------------------------
+Parameters:
+- idUtente: The ID of the user.
+- idProdotto: The ID of the product to remove.
+
+State/Dependencies:
+- wishListDAO.removeFromWishList(int, int) outcome.
+
+Categories and Choices:
+- idUtente:
+    - Zero (Invalid)
+    - Negative (Invalid)
+    - Positive (Valid)
+- idProdotto:
+    - Zero (Invalid)
+    - Negative (Invalid)
+    - Positive (Valid)
+- DAO Removal:
+    - Success (Valid)
+    - Throws SQLException (Error)
+
+Test Frames:
+- F1: idUtente is zero.
+    - Inputs: idUtente=0, idProdotto=1
+    - Expected: IllegalArgumentException ("User ID must be positive")
+- F2: idUtente is negative.
+    - Inputs: idUtente=-5, idProdotto=1
+    - Expected: IllegalArgumentException ("User ID must be positive")
+- F3: idProdotto is zero.
+    - Inputs: idUtente=1, idProdotto=0
+    - Expected: IllegalArgumentException ("Product ID must be positive")
+- F4: idProdotto is negative.
+    - Inputs: idUtente=1, idProdotto=-5
+    - Expected: IllegalArgumentException ("Product ID must be positive")
+- F5: Successful removal.
+    - Inputs: idUtente=1, idProdotto=1
+    - State: wishListDAO succeeds
+    - Expected: wishListDAO.removeFromWishList is called. No exception.
+- F6: DB Error during removal.
+    - Inputs: idUtente=1, idProdotto=1
+    - State: wishListDAO throws SQLException
+    - Expected: SQLException propagated.
+
+Suggested JUnit 5 Tests:
+- shouldThrowExceptionWhenUserIdIsInvalid (Parameterized)
+    - CSV Schema: value (int)
+    - Rows: 0, -1
+    - Act: service.removeFromWishList(value, 1).
+    - Assert: assertThrows(IllegalArgumentException.class).
+- shouldThrowExceptionWhenProductIdIsInvalidInRemove (Parameterized)
+    - CSV Schema: value (int)
+    - Rows: 0, -1
+    - Act: service.removeFromWishList(1, value).
+    - Assert: assertThrows(IllegalArgumentException.class).
+- shouldCallDaoWhenRemovingValidProduct
+    - Arrange: Valid inputs.
+    - Act: service.removeFromWishList(1, 1).
+    - Assert: verify(wishListDAO).removeFromWishList(1, 1).
