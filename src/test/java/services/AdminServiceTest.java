@@ -187,8 +187,10 @@ class AdminServiceTest {
     @Test
     @DisplayName("TF12: Should throw exception when Image file name is null")
     void shouldThrowExceptionWhenImageFileNameIsNull() {
-        // Act & Assert
+        // Arrange
         when(part.getSubmittedFileName()).thenReturn(null);
+
+        // Act & Assert
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
                 () -> adminService.aggiungiProdotto(new Prodotto(), new Categoria(), part, "{}"));
@@ -198,8 +200,11 @@ class AdminServiceTest {
     @Test
     @DisplayName("TF13: Should throw exception when Specifiche is invalid JSON")
     void shouldThrowExceptionWhenSpecificheIsInvalidJson() {
+        // Arrange
+        String fileName = "img.jpg";
+        when(part.getSubmittedFileName()).thenReturn(fileName);
+
         // Act & Assert
-        when(part.getSubmittedFileName()).thenReturn("img.jpg");
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
                 () -> adminService.aggiungiProdotto(new Prodotto(), new Categoria(), part, "{invalid_json}"));
@@ -209,18 +214,23 @@ class AdminServiceTest {
     @Test
     @DisplayName("TF14: Should throw exception when getLastProduct returns invalid ID")
     void shouldThrowExceptionWhenLastProductIdIsInvalid() throws Exception {
-        // Act & Assert
+        // Arrange
         Prodotto product = new Prodotto();
         Categoria category = new Categoria();
         String jsonSpecifiche = "{\"specifiche\":[]}";
+        String fileName = "image.jpg";
+        byte[] fakeImageRawStream = "test data".getBytes();
+        ByteArrayInputStream fakeImageStream = new ByteArrayInputStream(fakeImageRawStream);
 
-        when(part.getSubmittedFileName()).thenReturn("image.jpg");
-        when(part.getInputStream()).thenReturn(new ByteArrayInputStream("test".getBytes()));
-        when(prodottoDAO.getLastProduct()).thenReturn(0);
+        when(part.getSubmittedFileName()).thenReturn(fileName);
+        when(part.getInputStream()).thenReturn(fakeImageStream);
+        when(prodottoDAO.getLastProduct()).thenReturn(-1);
 
-        assertThrows(IllegalStateException.class,
-                () -> adminService.aggiungiProdotto(product, category, part, jsonSpecifiche),
-                "Failed to retrieve the last added product ID.");
+        // Act & Assert
+        IllegalStateException exception = assertThrows(
+                IllegalStateException.class,
+                () -> adminService.aggiungiProdotto(product, category, part, jsonSpecifiche));
+        assertTrue(exception.getMessage().contains("Failed to retrieve the last added product ID."));
     }
 
     // =================================================================================================
@@ -230,20 +240,26 @@ class AdminServiceTest {
     @Test
     @DisplayName("TF15: Should return JSON when products exist")
     void shouldReturnJsonWhenProductsExist() throws Exception {
-        ArrayList<Prodotto> list = new ArrayList<>();
+        // Arrange
+        Categoria category = new Categoria();
+        category.setNomeCategoria("Cat");
+
         Prodotto product = new Prodotto();
         product.setId(1);
         product.setMarca("Marca");
         product.setModello("Modello");
         product.setPrezzo(10.0f);
-        Categoria category = new Categoria();
-        category.setNomeCategoria("Cat");
         product.setCategoria(category);
-        list.add(product);
 
-        when(prodottoDAO.getProdotti()).thenReturn(list);
+        ArrayList<Prodotto> arrayProducts = new ArrayList<>();
+        arrayProducts.add(product);
 
+        when(prodottoDAO.getProdotti()).thenReturn(arrayProducts);
+
+        // Act
         String json = adminService.mostraProdotti();
+
+        // Assert
         assertTrue(json.contains("\"prodotti\":"));
         assertTrue(json.contains("\"marca\":\"Marca\""));
     }
@@ -251,24 +267,34 @@ class AdminServiceTest {
     @Test
     @DisplayName("TF16: Should throw exception when DAO returns null")
     void shouldThrowExceptionWhenDaoReturnsNullForProdotti() throws Exception {
+        // Arrange
         when(prodottoDAO.getProdotti()).thenReturn(null);
-        assertThrows(IllegalStateException.class, () -> adminService.mostraProdotti());
+
+        // Act & Assert
+        IllegalStateException exception = assertThrows(
+                IllegalStateException.class,
+                () -> adminService.mostraProdotti());
+        assertTrue(exception.getMessage().contains("Failed to retrieve the list of products."));
     }
 
     @Test
     @DisplayName("TF17: Should handle null elements in product list")
     void shouldHandleNullElementsInProductList() throws Exception {
-        ArrayList<Prodotto> list = new ArrayList<>();
-        list.add(null);
+        // Arrange
         Prodotto product = new Prodotto();
         product.setId(1);
-        // Minimal setup
-        list.add(product);
 
-        when(prodottoDAO.getProdotti()).thenReturn(list);
+        ArrayList<Prodotto> arrayProducts = new ArrayList<>();
+        arrayProducts.add(null);
+        arrayProducts.add(product);
+
+        when(prodottoDAO.getProdotti()).thenReturn(arrayProducts);
+
+        // Act
         String json = adminService.mostraProdotti();
+
+        // Assert
         assertTrue(json.contains("\"prodotti\":"));
-        // Expect only 1 product in the array (the non-null one)
     }
 
     // =================================================================================================
@@ -278,8 +304,14 @@ class AdminServiceTest {
     @Test
     @DisplayName("TF18: Should delete product when ID is positive")
     void shouldEliminaProdottoWhenIdIsPositive() throws Exception {
-        adminService.eliminaProdotto(10);
-        verify(prodottoDAO).eliminaProdotto(10);
+        // Arrange
+        int positiveId = 10;
+
+        // Act
+        adminService.eliminaProdotto(positiveId);
+
+        // Assert
+        verify(prodottoDAO).eliminaProdotto(positiveId);
     }
 
     @ParameterizedTest
@@ -300,22 +332,34 @@ class AdminServiceTest {
     @Test
     @DisplayName("TF21: Should return JSON when categories exist")
     void shouldReturnJsonWhenCategoriesExist() throws Exception {
-        ArrayList<Categoria> list = new ArrayList<>();
+        // Arrange
+        String categoryName = "TestCat";
         Categoria category = new Categoria();
-        category.setNomeCategoria("TestCat");
-        list.add(category);
+        category.setNomeCategoria(categoryName);
 
-        when(categoriaDAO.getCategorie()).thenReturn(list);
+        ArrayList<Categoria> arrayCategories = new ArrayList<>();
+        arrayCategories.add(category);
 
+        when(categoriaDAO.getCategorie()).thenReturn(arrayCategories);
+
+        // Act
         String json = adminService.mostraCategorie();
-        assertTrue(json.contains("TestCat"));
+
+        // Assert
+        assertTrue(json.contains(categoryName));
     }
 
     @Test
     @DisplayName("TF22: Should throw exception when DAO returns null for categories")
     void shouldThrowExceptionWhenCategoriaDaoReturnsNull() throws Exception {
+        // Arrange
         when(categoriaDAO.getCategorie()).thenReturn(null);
-        assertThrows(IllegalStateException.class, () -> adminService.mostraCategorie());
+
+        // Act & Assert
+        IllegalStateException exception = assertThrows(
+                IllegalStateException.class,
+                () -> adminService.mostraCategorie());
+        assertTrue(exception.getMessage().contains("DAO returned null for categorie list."));
     }
 
     // =================================================================================================
@@ -325,7 +369,13 @@ class AdminServiceTest {
     @Test
     @DisplayName("TF23: Should add category when name is valid")
     void shouldAddCategoriaWhenNameIsValid() throws Exception {
-        adminService.aggiungiCategoria("NewCat");
+        // Arrange
+        String validName = "NewCat";
+
+        // Act
+        adminService.aggiungiCategoria(validName);
+
+        // Assert
         verify(categoriaDAO).addCategoria(any(Categoria.class));
     }
 
@@ -347,8 +397,14 @@ class AdminServiceTest {
     @Test
     @DisplayName("TF26: Should delete category when name is valid")
     void shouldEliminaCategoriaWhenNameIsValid() throws Exception {
-        adminService.eliminaCategoria("OldCat");
-        verify(categoriaDAO).eliminaCategoria("OldCat");
+        // Arrange
+        String validName = "OldCat";
+
+        // Act
+        adminService.eliminaCategoria(validName);
+
+        // Assert
+        verify(categoriaDAO).eliminaCategoria(validName);
     }
 
     @ParameterizedTest
@@ -365,13 +421,14 @@ class AdminServiceTest {
     @Test
     @DisplayName("TF29: Should return JSON when users exist")
     void shouldReturnJsonWhenUtentiExist() throws Exception {
-        ArrayList<Utente> list = new ArrayList<>();
+        // Arrange
+        ArrayList<Utente> arrayUsers = new ArrayList<>();
         Utente user = new Utente();
         user.setNome("Mario");
         user.setCognome("Rossi");
-        list.add(user);
+        arrayUsers.add(user);
 
-        when(utenteDAO.getUtenti()).thenReturn(list);
+        when(utenteDAO.getUtenti()).thenReturn(arrayUsers);
 
         String json = adminService.mostraUtenti();
         assertTrue(json.contains("Mario"));
@@ -392,12 +449,13 @@ class AdminServiceTest {
     @Test
     @DisplayName("TF31: Should return JSON when orders exist")
     void shouldReturnJsonWhenOrdiniExist() throws Exception {
-        ArrayList<Ordine> list = new ArrayList<>();
+        // Arrange
+        ArrayList<Ordine> arrayOrders = new ArrayList<>();
         Ordine order = new Ordine();
         order.setId(1);
-        list.add(order);
+        arrayOrders.add(order);
 
-        when(ordineDAO.getOrdini()).thenReturn(list);
+        when(ordineDAO.getOrdini()).thenReturn(arrayOrders);
 
         String json = adminService.mostraOrdini();
         assertTrue(json.contains("\"ordini\":"));
