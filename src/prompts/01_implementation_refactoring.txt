@@ -7,4 +7,4 @@ You must also protect the object's internal state. Ensure that fields which shou
 Your output should consist of two parts. First, provide a brief textual summary of the robustness improvements you applied, such as specific validations added or edge cases handled. Second, provide the complete, refactored Java class code. Do not generate a separate test class; focus entirely on the source code of the class itself.
 
 Here is the file path of the Java class to refactor:
-/src/main/java/services/WishlistService.java
+/src/main/java/services/RicercaService.java

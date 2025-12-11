@@ -9,8 +9,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class InitService {
-    private CategoriaDAO categoriaDAO;
-    private ProdottoDAO prodottoDAO;
+    private final CategoriaDAO categoriaDAO;
+    private final ProdottoDAO prodottoDAO;
 
     public InitService() throws SQLException {
         this.categoriaDAO = new CategoriaDAO();
@@ -18,15 +18,23 @@ public class InitService {
     }
 
     public InitService(CategoriaDAO categoriaDAO, ProdottoDAO prodottoDAO) {
+        if (categoriaDAO == null) {
+            throw new IllegalArgumentException("CategoriaDAO cannot be null");
+        }
+        if (prodottoDAO == null) {
+            throw new IllegalArgumentException("ProdottoDAO cannot be null");
+        }
         this.categoriaDAO = categoriaDAO;
         this.prodottoDAO = prodottoDAO;
     }
 
     public ArrayList<Categoria> getCategorie() throws SQLException {
-        return categoriaDAO.getCategorie();
+        ArrayList<Categoria> categorie = categoriaDAO.getCategorie();
+        return categorie != null ? categorie : new ArrayList<>();
     }
 
     public ArrayList<Prodotto> getUltimiProdotti() throws SQLException {
-        return prodottoDAO.getUltimiProdotti();
+        ArrayList<Prodotto> prodotti = prodottoDAO.getUltimiProdotti();
+        return prodotti != null ? prodotti : new ArrayList<>();
     }
 }

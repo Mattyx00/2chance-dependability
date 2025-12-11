@@ -1,0 +1,120 @@
+Class Overview
+The InitService class acts as a service layer facade responsible for retrieving initial application data, specifically product categories and the latest products. It delegates data access to CategoriaDAO and ProdottoDAO. Key state variables are the two DAO instances, which must be non-null for the service to function correctly. The class handles null returns from the DAOs by converting them to empty lists to ensure null-safety for consumers.
+
+================================================================================
+
+Constructor: InitService()
+Parameters: None
+State: Implicit dependency on database connectivity via default DAO constructors.
+
+Categories and Choices:
+1. Database Connectivity (Implicit)
+   - Choice: Connectivity available (DAO instantiation succeeds) [Valid]
+   - Choice: Connectivity unavailable (DAO instantiation fails) [Error]
+
+Test Frames:
+- F1: Default constructor called, DB available.
+  - Expected: Object initialized successfully.
+- F2: Default constructor called, DB unavailable/DAO throws SQLException.
+  - Expected: Throws SQLException.
+
+Suggested JUnit 5 Test:
+- Test: shouldInitializeIdWhenDbAvailable
+  - Arrange: Ensure DB context is reachable (Integration Test context).
+  - Act: new InitService()
+  - Assert: assertNotNull(service)
+
+================================================================================
+
+Constructor: InitService(CategoriaDAO, ProdottoDAO)
+Parameters: CategoriaDAO categoriaDAO, ProdottoDAO prodottoDAO
+State: None
+
+Categories and Choices:
+1. categoriaDAO
+   - Choice: Null [Invalid]
+   - Choice: Non-null instance [Valid]
+
+2. prodottoDAO
+   - Choice: Null [Invalid]
+   - Choice: Non-null instance [Valid]
+
+Test Frames:
+- F3: categoriaDAO is null.
+  - Expected: Throw IllegalArgumentException("CategoriaDAO cannot be null").
+- F4: prodottoDAO is null (categoriaDAO is non-null).
+  - Expected: Throw IllegalArgumentException("ProdottoDAO cannot be null").
+- F5: Both DAOs are non-null.
+  - Expected: Object initialized successfully, internal fields set.
+
+Suggested JUnit 5 Test:
+- Test: shouldThrowExceptionWhenCategoriaDAOIsNull
+  - Arrange: mock(ProdottoDAO.class)
+  - Act: new InitService(null, productDao)
+  - Assert: assertThrows(IllegalArgumentException.class)
+- Test: shouldInitializeWhenBothDAOsAreValid
+  - Arrange: mock(CategoriaDAO.class), mock(ProdottoDAO.class)
+  - Act: new InitService(catDao, prodDao)
+  - Assert: assertDoesNotThrow()
+
+================================================================================
+
+Method: getCategorie()
+Parameters: None
+State: State of categoriaDAO (mock behavior)
+
+Categories and Choices:
+1. DAO Result (from categoriaDAO.getCategorie())
+   - Choice: Returns null [Significant]
+   - Choice: Returns empty list [Valid]
+   - Choice: Returns populated list [Valid]
+   - Choice: Throws SQLException [Error]
+
+Test Frames:
+- F6: DAO returns null.
+  - Expected: Returns empty ArrayList (not null).
+- F7: DAO returns empty list.
+  - Expected: Returns empty ArrayList.
+- F8: DAO returns populated list (e.g., 2 categories).
+  - Expected: Returns ArrayList containing the 2 categories.
+- F9: DAO throws SQLException.
+  - Expected: Propagates SQLException.
+
+Suggested JUnit 5 Test:
+- Test: shouldReturnEmptyListWhenDaoReturnsNull
+  - Arrange: when(categoriaDAO.getCategorie()).thenReturn(null)
+  - Act: service.getCategorie()
+  - Assert: assertTrue(result.isEmpty())
+- Test: shouldPropagateExceptionWhenDaoFails
+  - Arrange: when(categoriaDAO.getCategorie()).thenThrow(SQLException.class)
+  - Act: service.getCategorie()
+  - Assert: assertThrows(SQLException.class)
+
+================================================================================
+
+Method: getUltimiProdotti()
+Parameters: None
+State: State of prodottoDAO (mock behavior)
+
+Categories and Choices:
+1. DAO Result (from prodottoDAO.getUltimiProdotti())
+   - Choice: Returns null [Significant]
+   - Choice: Returns empty list [Valid]
+   - Choice: Returns populated list [Valid]
+   - Choice: Throws SQLException [Error]
+
+Test Frames:
+- F10: DAO returns null.
+  - Expected: Returns empty ArrayList (not null).
+- F11: DAO returns empty list.
+  - Expected: Returns empty ArrayList.
+- F12: DAO returns populated list (e.g., 5 products).
+  - Expected: Returns ArrayList containing the 5 products.
+- F13: DAO throws SQLException.
+  - Expected: Propagates SQLException.
+
+Suggested JUnit 5 Test:
+- Test: shouldReturnProductsWhenDaoReturnsPopulatedList
+  - Arrange: List<Prodotto> products = Arrays.asList(p1, p2); when(prodottoDAO.getUltimiProdotti()).thenReturn(products);
+  - Act: service.getUltimiProdotti()
+  - Assert: assertEquals(2, result.size())

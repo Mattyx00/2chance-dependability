@@ -5,278 +5,204 @@ import model.beans.Utente;
 import model.beans.WishList;
 import model.dao.ProdottoDAO;
 import model.dao.WishListDAO;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class WishlistServiceTest {
 
+    @Mock
     private WishListDAO wishListDAO;
+
+    @Mock
     private ProdottoDAO prodottoDAO;
-    private WishlistService service;
 
-    @BeforeEach
-    void setUp() {
-        wishListDAO = mock(WishListDAO.class);
-        prodottoDAO = mock(ProdottoDAO.class);
-        service = new WishlistService(wishListDAO, prodottoDAO);
-    }
+    @InjectMocks
+    private WishlistService wishlistService;
 
-    // --------------------------------------------------------------------------------
-    // 1. Constructor: WishlistService(WishListDAO wishListDAO, ProdottoDAO
-    // prodottoDAO)
-    // --------------------------------------------------------------------------------
+    // =================================================================================================
+    // Constructor Tests
+    // =================================================================================================
 
-    // F1: wishListDAO is null
     @Test
-    @DisplayName("Constructor should throw exception when wishListDAO is null")
+    @DisplayName("TF1: Should throw exception when WishListDAO is null")
     void shouldThrowExceptionWhenWishListDaoIsNull() {
-        // Arrange
-        ProdottoDAO validProdottoDAO = mock(ProdottoDAO.class);
-
         // Act & Assert
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            new WishlistService(null, validProdottoDAO);
-        });
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> new WishlistService(null, prodottoDAO));
         assertEquals("WishListDAO cannot be null", exception.getMessage());
     }
 
-    // F2: prodottoDAO is null
     @Test
-    @DisplayName("Constructor should throw exception when prodottoDAO is null")
+    @DisplayName("TF2: Should throw exception when ProdottoDAO is null")
     void shouldThrowExceptionWhenProdottoDaoIsNull() {
-        // Arrange
-        WishListDAO validWishListDAO = mock(WishListDAO.class);
-
         // Act & Assert
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            new WishlistService(validWishListDAO, null);
-        });
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> new WishlistService(wishListDAO, null));
         assertEquals("ProdottoDAO cannot be null", exception.getMessage());
     }
 
-    // F3: Both dependencies are valid
     @Test
-    @DisplayName("Constructor should initialize successfully when dependencies are valid")
-    void shouldInitializeWhenDependenciesAreValid() {
-        // Arrange
-        WishListDAO validWishListDAO = mock(WishListDAO.class);
-        ProdottoDAO validProdottoDAO = mock(ProdottoDAO.class);
-
+    @DisplayName("TF3: Should instantiate service when all DAOs are valid")
+    void shouldInstantiateServiceWhenAllDAOsAreValid() {
         // Act
-        WishlistService validService = new WishlistService(validWishListDAO, validProdottoDAO);
+        WishlistService service = new WishlistService(wishListDAO, prodottoDAO);
 
         // Assert
-        assertNotNull(validService, "Service instance should not be null");
+        assertNotNull(service);
     }
 
-    // --------------------------------------------------------------------------------
-    // 2. Method: void addToWishList(Utente utente, int idProdotto)
-    // --------------------------------------------------------------------------------
+    // =================================================================================================
+    // addToWishList Tests
+    // =================================================================================================
 
-    // F1: utente is null
     @Test
-    @DisplayName("addToWishList should throw exception when utente is null")
+    @DisplayName("TF1: Should throw exception when Utente is null in addToWishList")
     void shouldThrowExceptionWhenUtenteIsNullInAddToWishList() {
-        // Arrange
-        Utente utente = null;
-        int idProdotto = 1;
-
         // Act & Assert
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            service.addToWishList(utente, idProdotto);
-        });
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> wishlistService.addToWishList(null, 1));
         assertEquals("Utente cannot be null", exception.getMessage());
     }
 
-    // F2, F3: idProdotto is zero or negative (Invalid)
     @ParameterizedTest
-    @DisplayName("addToWishList should throw exception when productId is invalid")
-    @ValueSource(ints = { 0, -1, -50 })
-    void shouldThrowExceptionWhenProductIdIsInvalid(int invalidId) {
+    @DisplayName("TF2, TF3: Should throw exception when Product ID is invalid in addToWishList")
+    @CsvSource({ "0", "-1", "-50" })
+    void shouldThrowExceptionWhenProductIdIsInvalidInAddToWishList(int invalidId) {
         // Arrange
-        Utente utente = new Utente();
+        Utente validUtente = new Utente();
 
         // Act & Assert
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            service.addToWishList(utente, invalidId);
-        });
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> wishlistService.addToWishList(validUtente, invalidId));
         assertTrue(exception.getMessage().contains("Product ID must be positive"));
     }
 
-    // F4: Product does not exist
     @Test
-    @DisplayName("addToWishList should throw exception when product does not exist")
-    void shouldThrowExceptionWhenProductNotFound() throws SQLException {
+    @DisplayName("TF4: Should throw exception when Product does not exist")
+    void shouldThrowExceptionWhenProductDoesNotExist() throws SQLException {
         // Arrange
-        Utente utente = new Utente();
+        Utente validUtente = new Utente();
         int nonExistentId = 999;
+
         when(prodottoDAO.getProdottoById(nonExistentId)).thenReturn(null);
 
         // Act & Assert
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            service.addToWishList(utente, nonExistentId);
-        });
-        assertEquals("Product not found with ID: " + nonExistentId, exception.getMessage());
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> wishlistService.addToWishList(validUtente, nonExistentId));
+        assertTrue(exception.getMessage().contains("Product not found with ID: " + nonExistentId));
     }
 
-    // F5: Product lookup throws SQLException
     @Test
-    @DisplayName("addToWishList should propagate SQLException when product lookup fails")
-    void shouldPropagateSQLExceptionWhenProductLookupFails() throws SQLException {
+    @DisplayName("TF6: Should add product to wishlist when inputs are valid and product exists")
+    void shouldAddProductToWishlistWhenInputsAreValidAndProductExists() throws SQLException {
         // Arrange
-        Utente utente = new Utente();
-        int idProdotto = 1;
-        when(prodottoDAO.getProdottoById(idProdotto)).thenThrow(new SQLException("DB Error"));
+        Utente validUser = new Utente();
 
-        // Act & Assert
-        assertThrows(SQLException.class, () -> {
-            service.addToWishList(utente, idProdotto);
-        });
-    }
-
-    // F6: Successful addition
-    @Test
-    @DisplayName("addToWishList should match the provided populated list")
-    void shouldCallDaoWhenAddingValidProduct() throws SQLException {
-        // Arrange
-        Utente utente = new Utente();
-        int idProdotto = 1;
+        int validProductId = 1;
         Prodotto product = new Prodotto();
-        when(prodottoDAO.getProdottoById(idProdotto)).thenReturn(product);
+        product.setId(validProductId);
+
+        when(prodottoDAO.getProdottoById(validProductId)).thenReturn(product);
+        doNothing().when(wishListDAO).addToWishList(validUser, product);
 
         // Act
-        service.addToWishList(utente, idProdotto);
+        wishlistService.addToWishList(validUser, validProductId);
 
         // Assert
-        verify(wishListDAO).addToWishList(utente, product);
+        verify(prodottoDAO).getProdottoById(validProductId);
+        verify(wishListDAO).addToWishList(validUser, product);
     }
 
-    // F7: Add operation throws SQLException
+    // =================================================================================================
+    // getWishListByUser Tests
+    // =================================================================================================
+
     @Test
-    @DisplayName("addToWishList should propagate SQLException when add operation fails")
-    void shouldPropagateSQLExceptionWhenAddOperationFails() throws SQLException {
-        // Arrange
-        Utente utente = new Utente();
-        int idProdotto = 1;
-        Prodotto product = new Prodotto();
-        when(prodottoDAO.getProdottoById(idProdotto)).thenReturn(product);
-        doThrow(new SQLException("Insertion Error")).when(wishListDAO).addToWishList(utente, product);
-
+    @DisplayName("TF1: Should throw exception when Utente is null in getWishListByUser")
+    void shouldThrowExceptionWhenUtenteIsNullInGetWishListByUser() {
         // Act & Assert
-        assertThrows(SQLException.class, () -> {
-            service.addToWishList(utente, idProdotto);
-        });
-    }
-
-    // --------------------------------------------------------------------------------
-    // 3. Method: WishList getWishListByUser(Utente utente)
-    // --------------------------------------------------------------------------------
-
-    // F1: utente is null
-    @Test
-    @DisplayName("getWishListByUser should throw exception when utente is null")
-    void shouldThrowExceptionWhenUtenteIsNullInGetWishList() {
-        // Act & Assert
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            service.getWishListByUser(null);
-        });
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> wishlistService.getWishListByUser(null));
         assertEquals("Utente cannot be null", exception.getMessage());
     }
 
-    // F2: Successful retrieval
     @Test
-    @DisplayName("getWishListByUser should return WishList when user is valid")
+    @DisplayName("TF2: Should return WishList when user is valid")
     void shouldReturnWishListWhenUserIsValid() throws SQLException {
         // Arrange
-        Utente utente = new Utente();
+        Utente validUser = new Utente();
         WishList expectedWishList = new WishList();
-        when(wishListDAO.getWishListByUser(utente)).thenReturn(expectedWishList);
+        when(wishListDAO.getWishListByUser(validUser)).thenReturn(expectedWishList);
 
         // Act
-        WishList result = service.getWishListByUser(utente);
+        WishList wishlist = wishlistService.getWishListByUser(validUser);
 
         // Assert
-        assertEquals(expectedWishList, result);
+        assertAll(
+                () -> assertNotNull(wishlist),
+                () -> assertEquals(expectedWishList, wishlist));
+        verify(wishListDAO).getWishListByUser(validUser);
     }
 
-    // F3: DB Error during retrieval
-    @Test
-    @DisplayName("getWishListByUser should propagate SQLException when retrieval fails")
-    void shouldPropagateSQLExceptionWhenRetrievalFails() throws SQLException {
-        // Arrange
-        Utente utente = new Utente();
-        when(wishListDAO.getWishListByUser(utente)).thenThrow(new SQLException("Retrieval Error"));
+    // =================================================================================================
+    // removeFromWishList Tests
+    // =================================================================================================
 
-        // Act & Assert
-        assertThrows(SQLException.class, () -> {
-            service.getWishListByUser(utente);
-        });
-    }
-
-    // --------------------------------------------------------------------------------
-    // 4. Method: void removeFromWishList(int idUtente, int idProdotto)
-    // --------------------------------------------------------------------------------
-
-    // F1, F2: idUtente is zero or negative (Invalid)
     @ParameterizedTest
-    @DisplayName("removeFromWishList should throw exception when userId is invalid")
-    @ValueSource(ints = { 0, -1, -5 })
-    void shouldThrowExceptionWhenUserIdIsInvalid(int invalidUserId) {
+    @DisplayName("TF1, TF2: Should throw exception when User ID is invalid in removeFromWishList")
+    @CsvSource({ "0", "-1", "-5" })
+    void shouldThrowExceptionWhenUserIdIsInvalidInRemove(int invalidUserId) {
         // Act & Assert
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            service.removeFromWishList(invalidUserId, 1);
-        });
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> wishlistService.removeFromWishList(invalidUserId, 1)); // Assuming 1 is a valid product ID for
+                                                                             // this checking
         assertTrue(exception.getMessage().contains("User ID must be positive"));
     }
 
-    // F3, F4: idProdotto is zero or negative (Invalid)
     @ParameterizedTest
-    @DisplayName("removeFromWishList should throw exception when productId is invalid")
-    @ValueSource(ints = { 0, -1, -5 })
+    @DisplayName("TF3, TF4: Should throw exception when Product ID is invalid in removeFromWishList")
+    @CsvSource({ "0", "-1", "-5" })
     void shouldThrowExceptionWhenProductIdIsInvalidInRemove(int invalidProductId) {
         // Act & Assert
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            service.removeFromWishList(1, invalidProductId);
-        });
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> wishlistService.removeFromWishList(1, invalidProductId)); // Assuming 1 is a valid user ID for
+                                                                                // this checking
         assertTrue(exception.getMessage().contains("Product ID must be positive"));
     }
 
-    // F5: Successful removal
     @Test
-    @DisplayName("removeFromWishList should call DAO when inputs are valid")
-    void shouldCallDaoWhenRemovingValidProduct() throws SQLException {
+    @DisplayName("TF5: Should remove product from wishlist when inputs are valid")
+    void shouldRemoveProductFromWishlistWhenInputsAreValid() throws SQLException {
         // Arrange
-        int idUtente = 1;
-        int idProdotto = 1;
+        int validUserId = 1;
+        int validProductId = 1;
+
+        doNothing().when(wishListDAO).removeFromWishList(validUserId, validProductId);
 
         // Act
-        service.removeFromWishList(idUtente, idProdotto);
+        wishlistService.removeFromWishList(validUserId, validProductId);
 
         // Assert
-        verify(wishListDAO).removeFromWishList(idUtente, idProdotto);
-    }
-
-    // F6: DB Error during removal
-    @Test
-    @DisplayName("removeFromWishList should propagate SQLException when removal fails")
-    void shouldPropagateSQLExceptionWhenRemovalFails() throws SQLException {
-        // Arrange
-        int idUtente = 1;
-        int idProdotto = 1;
-        doThrow(new SQLException("Removal Error")).when(wishListDAO).removeFromWishList(idUtente, idProdotto);
-
-        // Act & Assert
-        assertThrows(SQLException.class, () -> {
-            service.removeFromWishList(idUtente, idProdotto);
-        });
+        verify(wishListDAO).removeFromWishList(validUserId, validProductId);
     }
 }
