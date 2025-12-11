@@ -1,8 +1,10 @@
 package services;
 
+import model.beans.Carrello;
 import model.beans.Categoria;
 import model.beans.Ordine;
 import model.beans.Prodotto;
+import model.beans.ProdottoCarrello;
 import model.beans.Utente;
 import model.dao.CategoriaDAO;
 import model.dao.OrdineDAO;
@@ -13,6 +15,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -380,13 +383,13 @@ class AdminServiceTest {
     }
 
     @ParameterizedTest
+    @NullAndEmptySource
     @DisplayName("TF24, TF25: Should throw exception when category name is invalid")
-    @CsvSource({ ",", "''", "'   '" })
-    void shouldThrowExceptionWhenCategoriaNameIsInvalid(String nome) {
+    void shouldThrowExceptionWhenCategoriaNameIsInvalid(String nameCategory) {
         // Act & Assert
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
-                () -> adminService.aggiungiCategoria(nome));
+                () -> adminService.aggiungiCategoria(nameCategory));
         assertTrue(exception.getMessage().contains("Invalid category name"));
     }
 
@@ -408,10 +411,14 @@ class AdminServiceTest {
     }
 
     @ParameterizedTest
+    @NullAndEmptySource
     @DisplayName("TF27, TF28: Should throw exception when category name is invalid for deletion")
-    @CsvSource({ ",", "''", "'   '" })
-    void shouldThrowExceptionWhenEliminaCategoriaNameIsInvalid(String nome) {
-        assertThrows(IllegalArgumentException.class, () -> adminService.eliminaCategoria(nome));
+    void shouldThrowExceptionWhenEliminaCategoriaNameIsInvalid(String nameCategory) {
+        // Act & Assert
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> adminService.eliminaCategoria(nameCategory));
+        assertTrue(exception.getMessage().contains("Invalid category name"));
     }
 
     // =================================================================================================
@@ -422,24 +429,35 @@ class AdminServiceTest {
     @DisplayName("TF29: Should return JSON when users exist")
     void shouldReturnJsonWhenUtentiExist() throws Exception {
         // Arrange
-        ArrayList<Utente> arrayUsers = new ArrayList<>();
         Utente user = new Utente();
         user.setNome("Mario");
         user.setCognome("Rossi");
+
+        ArrayList<Utente> arrayUsers = new ArrayList<>();
         arrayUsers.add(user);
 
         when(utenteDAO.getUtenti()).thenReturn(arrayUsers);
 
+        // Act
         String json = adminService.mostraUtenti();
-        assertTrue(json.contains("Mario"));
-        assertTrue(json.contains("Rossi"));
+
+        // Assert
+        assertAll(
+                () -> assertTrue(json.contains("Mario")),
+                () -> assertTrue(json.contains("Rossi")));
     }
 
     @Test
     @DisplayName("TF30: Should throw exception when DAO returns null for users")
     void shouldThrowExceptionWhenUtenteDaoReturnsNull() throws Exception {
+        // Arrange
         when(utenteDAO.getUtenti()).thenReturn(null);
-        assertThrows(IllegalStateException.class, () -> adminService.mostraUtenti());
+
+        // Act & Assert
+        IllegalStateException exception = assertThrows(
+                IllegalStateException.class,
+                () -> adminService.mostraUtenti());
+        assertTrue(exception.getMessage().contains("DAO returned null for users list."));
     }
 
     // =================================================================================================
@@ -450,22 +468,32 @@ class AdminServiceTest {
     @DisplayName("TF31: Should return JSON when orders exist")
     void shouldReturnJsonWhenOrdiniExist() throws Exception {
         // Arrange
-        ArrayList<Ordine> arrayOrders = new ArrayList<>();
         Ordine order = new Ordine();
         order.setId(1);
+
+        ArrayList<Ordine> arrayOrders = new ArrayList<>();
         arrayOrders.add(order);
 
         when(ordineDAO.getOrdini()).thenReturn(arrayOrders);
 
+        // Act
         String json = adminService.mostraOrdini();
+
+        // Assert
         assertTrue(json.contains("\"ordini\":"));
     }
 
     @Test
     @DisplayName("TF32: Should throw exception when DAO returns null for orders")
     void shouldThrowExceptionWhenOrdineDaoReturnsNull() throws Exception {
+        // Arrange
         when(ordineDAO.getOrdini()).thenReturn(null);
-        assertThrows(IllegalStateException.class, () -> adminService.mostraOrdini());
+
+        // Act & Assert
+        IllegalStateException exception = assertThrows(
+                IllegalStateException.class,
+                () -> adminService.mostraOrdini());
+        assertTrue(exception.getMessage().contains("DAO returned null for orders list."));
     }
 
     // =================================================================================================
@@ -475,28 +503,37 @@ class AdminServiceTest {
     @Test
     @DisplayName("TF33: Should return detailed JSON when order and cart exist")
     void shouldReturnInfoOrdineWhenOrderExists() throws Exception {
+        // Arrange
+        int idOrder = 1;
         Ordine order = new Ordine();
-        order.setId(1);
+        order.setId(idOrder);
 
-        model.beans.Carrello carrello = mock(model.beans.Carrello.class);
-        ArrayList<model.beans.ProdottoCarrello> prodotti = new ArrayList<>();
-        model.beans.ProdottoCarrello pc = new model.beans.ProdottoCarrello();
-        Prodotto p = new Prodotto();
-        p.setId(10);
-        p.setPrezzo(100f);
-        pc.setProdotto(p);
-        pc.setQuantita(2);
-        prodotti.add(pc);
+        Prodotto product = new Prodotto();
+        product.setId(10);
+        product.setPrezzo(100f);
 
-        when(carrello.getProdotti()).thenReturn(prodotti);
-        when(carrello.getTotaleCarrello()).thenReturn(200.0);
+        ProdottoCarrello productCart = new ProdottoCarrello();
+        productCart.setProdotto(product);
+        productCart.setQuantita(2);
 
-        when(ordineDAO.getOrdineById(1)).thenReturn(order);
-        when(ordineDAO.getProdottoOrdine(order)).thenReturn(carrello);
+        ArrayList<ProdottoCarrello> arrayProducts = new ArrayList<>();
+        arrayProducts.add(productCart);
 
-        String json = adminService.infoOrdine(1);
-        assertTrue(json.contains("\"prodotti\":"));
-        assertTrue(json.contains("100"));
+        Carrello cart = mock(Carrello.class);
+
+        when(cart.getProdotti()).thenReturn(arrayProducts);
+        when(cart.getTotaleCarrello()).thenReturn(200.0);
+
+        when(ordineDAO.getOrdineById(idOrder)).thenReturn(order);
+        when(ordineDAO.getProdottoOrdine(order)).thenReturn(cart);
+
+        // Act
+        String json = adminService.infoOrdine(idOrder);
+
+        // Assert
+        assertAll(
+                () -> assertTrue(json.contains("\"prodotti\":")),
+                () -> assertTrue(json.contains("100")));
     }
 
     @ParameterizedTest
@@ -507,30 +544,46 @@ class AdminServiceTest {
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
                 () -> adminService.infoOrdine(id));
-        assertTrue(exception.getMessage().contains("Invalid order ID"));
+        assertTrue(exception.getMessage().contains("Order ID must be non-null and positive"));
     }
 
     @Test
     @DisplayName("TF34 (Null): Should throw exception when order ID is null")
     void shouldThrowExceptionWhenInfoOrdineIdIsNull() {
-        assertThrows(IllegalArgumentException.class, () -> adminService.infoOrdine(null));
+        // Act & Assert
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> adminService.infoOrdine(null));
+        assertTrue(exception.getMessage().contains("Order ID must be non-null and positive"));
     }
 
     @Test
     @DisplayName("TF36: Should throw exception when order not found")
     void shouldThrowExceptionWhenOrderNotFound() throws Exception {
+        // Arrange
         when(ordineDAO.getOrdineById(999)).thenReturn(null);
-        assertThrows(IllegalArgumentException.class, () -> adminService.infoOrdine(999));
+
+        // Act & Assert
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> adminService.infoOrdine(999));
+        assertTrue(exception.getMessage().contains("Order not found"));
     }
 
     @Test
     @DisplayName("TF37: Should throw exception when cart is null")
     void shouldThrowExceptionWhenCartIsNull() throws Exception {
-        Ordine o = new Ordine();
-        when(ordineDAO.getOrdineById(1)).thenReturn(o);
-        when(ordineDAO.getProdottoOrdine(o)).thenReturn(null);
+        // Arrange
+        Ordine order = new Ordine();
 
-        assertThrows(IllegalStateException.class, () -> adminService.infoOrdine(1));
+        when(ordineDAO.getOrdineById(1)).thenReturn(order);
+        when(ordineDAO.getProdottoOrdine(order)).thenReturn(null);
+
+        // Act & Assert
+        IllegalStateException exception = assertThrows(
+                IllegalStateException.class,
+                () -> adminService.infoOrdine(1));
+        assertTrue(exception.getMessage().contains("Cart associated with order is null"));
     }
 
     // =================================================================================================
@@ -540,36 +593,59 @@ class AdminServiceTest {
     @Test
     @DisplayName("TF38: Should return JSON when product exists")
     void shouldReturnJsonWhenProductExists() throws Exception {
-        Prodotto p = new Prodotto();
-        p.setId(5);
-        p.setMarca("Sony");
-        p.setModello("PS5");
+        // Arrange
+        int idProduct = 1;
+        String brandProduct = "Sony";
+        String modelProduct = "PS5";
 
-        when(prodottoDAO.getProdottoById(5)).thenReturn(p);
+        Prodotto product = new Prodotto();
+        product.setId(idProduct);
+        product.setMarca(brandProduct);
+        product.setModello(modelProduct);
 
-        String json = adminService.getProdotto(5);
-        assertTrue(json.contains("Sony"));
-        assertTrue(json.contains("PS5"));
+        when(prodottoDAO.getProdottoById(idProduct)).thenReturn(product);
+
+        // Act
+        String json = adminService.getProdotto(idProduct);
+
+        // Assert
+        assertAll(
+                () -> assertTrue(json.contains(brandProduct)),
+                () -> assertTrue(json.contains(modelProduct)));
     }
 
     @ParameterizedTest
     @DisplayName("TF39, TF40: Should throw exception when product ID is invalid")
     @ValueSource(ints = { 0, -1 })
     void shouldThrowExceptionWhenGetProdottoIdIsInvalid(int id) {
-        assertThrows(IllegalArgumentException.class, () -> adminService.getProdotto(id));
+        // Act & Assert
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> adminService.getProdotto(id));
+        assertTrue(exception.getMessage().contains("Product ID must be non-null and positive"));
     }
 
     @Test
     @DisplayName("TF39 (Null): Should throw exception when product ID is null")
     void shouldThrowExceptionWhenGetProdottoIdIsNull() {
-        assertThrows(IllegalArgumentException.class, () -> adminService.getProdotto(null));
+        // Act & Assert
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> adminService.getProdotto(null));
+        assertTrue(exception.getMessage().contains("Product ID must be non-null and positive"));
     }
 
     @Test
     @DisplayName("TF41: Should throw exception when product not found")
     void shouldThrowExceptionWhenProductNotFound() throws Exception {
+        // Arrange
         when(prodottoDAO.getProdottoById(999)).thenReturn(null);
-        assertThrows(IllegalArgumentException.class, () -> adminService.getProdotto(999));
+
+        // Act & Assert
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> adminService.getProdotto(999));
+        assertTrue(exception.getMessage().contains("Product not found"));
     }
 
     // =================================================================================================
@@ -579,25 +655,32 @@ class AdminServiceTest {
     @Test
     @DisplayName("TF42: Should modify product when inputs are valid and image provided")
     void shouldModificaProdottoWhenInputsAreValid() throws Exception {
-        Prodotto p = new Prodotto();
-        p.setId(1);
-        Categoria c = new Categoria();
-        String jsonSpec = "{\"specifiche\":[{\"nome\":\"A\",\"valore\":\"B\"}]}";
+        // Arrange
+        Prodotto product = new Prodotto();
+        product.setId(1);
 
-        when(part.getSize()).thenReturn(100L);
-        when(part.getSubmittedFileName()).thenReturn("new.jpg");
-        // Mock file stream to avoid IO errors, though actual file write is hard to
-        // avoid without Powermock or abstraction.
-        // We rely on simple byte stream mocking.
-        when(part.getInputStream()).thenReturn(new ByteArrayInputStream("data".getBytes()));
+        Categoria category = new Categoria();
 
-        doNothing().when(prodottoDAO).modificaProdotto(p);
-        doNothing().when(prodottoDAO).eliminaSpecificheProdotto(1);
+        String jsonSpecifications = "{\"specifiche\":[{\"nome\":\"A\",\"valore\":\"B\"}]}";
+
+        long imageSize = 100L;
+        String imageFileName = "image.jpg";
+        byte[] imageRawStream = "data".getBytes();
+        ByteArrayInputStream imageStream = new ByteArrayInputStream(imageRawStream);
+
+        when(part.getSize()).thenReturn(imageSize);
+        when(part.getSubmittedFileName()).thenReturn(imageFileName);
+        when(part.getInputStream()).thenReturn(imageStream);
+
+        doNothing().when(prodottoDAO).modificaProdotto(product);
+        when(prodottoDAO.eliminaSpecificheProdotto(anyInt())).thenReturn(1);
         doNothing().when(prodottoDAO).aggiungiSpecifiche(any(), eq(1));
 
-        adminService.modificaProdotto(p, c, part, jsonSpec);
+        // Act
+        adminService.modificaProdotto(product, category, part, jsonSpecifications);
 
-        verify(prodottoDAO).modificaProdotto(p);
+        // Assert
+        verify(prodottoDAO).modificaProdotto(product);
         verify(prodottoDAO).eliminaSpecificheProdotto(1);
         verify(prodottoDAO).aggiungiSpecifiche(any(), eq(1));
     }
@@ -605,42 +688,60 @@ class AdminServiceTest {
     @Test
     @DisplayName("TF43: Should modify product when image is null (no image update)")
     void shouldModificaProdottoWhenImageIsNull() throws Exception {
-        Prodotto p = new Prodotto();
-        p.setId(1);
-        Categoria c = new Categoria();
-        String jsonSpec = "{\"specifiche\":[]}";
+        // Arrange
+        Prodotto product = new Prodotto();
+        product.setId(1);
 
-        adminService.modificaProdotto(p, c, null, jsonSpec);
+        Categoria category = new Categoria();
 
-        verify(prodottoDAO).modificaProdotto(p);
-        // p.setImmagine(null) should be called or implied
+        String jsonSpecifications = "{\"specifiche\":[]}";
+
+        // Act
+        adminService.modificaProdotto(product, category, null, jsonSpecifications);
+
+        // Assert
+        verify(prodottoDAO).modificaProdotto(product);
+        verify(prodottoDAO).eliminaSpecificheProdotto(1);
+        verify(prodottoDAO).aggiungiSpecifiche(any(), eq(1));
     }
 
     @Test
     @DisplayName("TF44: Should throw exception when Prodotto is null (modifica)")
     void shouldThrowExceptionWhenModificaProdottoIsNull() {
-        assertThrows(IllegalArgumentException.class,
+        // Act & Assert
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
                 () -> adminService.modificaProdotto(null, new Categoria(), part, "{}"));
+        assertTrue(exception.getMessage().contains("Prodotto cannot be null"));
     }
 
     @Test
     @DisplayName("TF45: Should throw exception when Categoria is null (modifica)")
     void shouldThrowExceptionWhenModificaCategoriaIsNull() {
-        assertThrows(IllegalArgumentException.class,
+        // Act & Assert
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
                 () -> adminService.modificaProdotto(new Prodotto(), null, part, "{}"));
+        assertTrue(exception.getMessage().contains("Categoria cannot be null"));
     }
 
     @Test
     @DisplayName("TF46: Should throw exception when Specifiche is null (modifica)")
     void shouldThrowExceptionWhenModificaSpecificheIsNull() {
-        assertThrows(IllegalArgumentException.class,
+        // Act & Assert
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
                 () -> adminService.modificaProdotto(new Prodotto(), new Categoria(), part, null));
+        assertTrue(exception.getMessage().contains("Specifiche string cannot be null"));
     }
 
     @Test
     @DisplayName("TF47: Should throw exception when Specifiche is invalid JSON (modifica)")
     void shouldThrowExceptionWhenModificaSpecificheIsInvalidJson() {
-        assertThrows(IllegalArgumentException.class,
+        // Act & Assert
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
                 () -> adminService.modificaProdotto(new Prodotto(), new Categoria(), part, "{invalid"));
+        assertTrue(exception.getMessage().contains("Invalid JSON"));
     }
 }
