@@ -18,15 +18,12 @@ public class RecensioniServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        try {
-            this.recensioniService = new RecensioniService();
-        } catch (SQLException e) {
-            throw new ServletException("Failed to initialize RecensioniService", e);
-        }
+        this.recensioniService = new RecensioniService();
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         String path = request.getPathInfo() == null ? "/" : request.getPathInfo();
 
         if (path.equals("/aggiungiRecensione")) {
@@ -56,7 +53,7 @@ public class RecensioniServlet extends HttpServlet {
             try {
                 Utente provv = (Utente) request.getSession().getAttribute("user");
                 int idRecensione = Integer.parseInt(request.getParameter("recensione"));
-                
+
                 Utente u = recensioniService.eliminaRecensione(idRecensione, provv.getId());
                 request.getSession().setAttribute("user", u);
                 response.sendRedirect(request.getServletContext().getContextPath() + "/paginaUtente.jsp");
@@ -70,8 +67,8 @@ public class RecensioniServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         doGet(request, response);
     }
 }
-

@@ -1,0 +1,101 @@
+Class Overview
+The LandingPageService class is responsible for retrieving the latest products to be displayed on the landing page of the application. It acts as an intermediary between the presentation layer and the data access layer (ProdottoDAO). The class relies on an injected or default ProdottoDAO instance to fetch data. The primary method "getUltimiProdotti" includes logic to handle potential null returns from the DAO by ensuring a non-null list is always returned.
+
+================================================================================
+
+Constructor: public LandingPageService()
+Parameters: None
+State: Implicitly creates a new ProdottoDAO instance.
+
+Categories and Choices:
+- Category: Initialization
+  - Choice: Default initialization [Valid]
+
+Test Frames:
+- Frame F1: Default initialization
+  - Inputs: None (calls default constructor)
+  - Expected Behavior: Object is instantiated successfully; internal prodottoDAO is initialized with a new ProdottoDAO instance.
+
+Suggested JUnit 5 Test:
+- Test: shouldInitializeWithDefaultConstructor
+  - Arrange: None.
+  - Act: new LandingPageService().
+  - Assert: Object is not null.
+
+================================================================================
+
+Constructor: public LandingPageService(ProdottoDAO prodottoDAO)
+Parameters: 
+- ProdottoDAO prodottoDAO (Dependency for accessing product data)
+State: 
+- Validates the input and assigns it to the internal field.
+
+Categories and Choices:
+- Category: prodottoDAO Input
+  - Choice: Valid DAO object (Non-null) [Valid]
+  - Choice: Null reference [Invalid]
+
+Test Frames:
+- Frame F2: prodottoDAO is a valid object
+  - Inputs: prodottoDAO = Mock/Instance of ProdottoDAO
+  - Expected Behavior: Object is instantiated successfully; internal prodottoDAO is set to the provided instance.
+- Frame F3: prodottoDAO is null
+  - Inputs: prodottoDAO = null
+  - Expected Behavior: Throws IllegalArgumentException with message "ProdottoDAO cannot be null".
+
+Suggested JUnit 5 Tests:
+- Test: shouldInitializeWhenDaoIsNotNull
+  - Arrange: Create a mock ProdottoDAO.
+  - Act: new LandingPageService(mockDao).
+  - Assert: Object is not null.
+- Test: shouldThrowExceptionWhenDaoIsNull
+  - Arrange: ProdottoDAO dao = null.
+  - Act: new LandingPageService(dao).
+  - Assert: assertThrows(IllegalArgumentException.class, () -> new LandingPageService(dao)); verify exception message.
+
+================================================================================
+
+Method: public ArrayList<Prodotto> getUltimiProdotti() throws SQLException
+Parameters: None
+State: 
+- Uses the internal prodottoDAO to fetch data.
+
+Categories and Choices:
+- Category: DAO Result (Value returned by prodototoDAO.getUltimiProdotti())
+  - Choice: Populated List (Contains Prodotto objects) [Valid]
+  - Choice: Empty List [Valid]
+  - Choice: Null (DAO returns null) [Valid - handled]
+- Category: DAO Exception
+  - Choice: Throws SQLException [Error]
+
+Test Frames:
+- Frame F4: DAO returns a populated list
+  - Inputs: Mock DAO configured to return a list containing [P1, P2].
+  - Expected Behavior: Returns the exact list [P1, P2].
+- Frame F5: DAO returns an empty list
+  - Inputs: Mock DAO configured to return an empty list [].
+  - Expected Behavior: Returns an empty ArrayList [].
+- Frame F6: DAO returns null
+  - Inputs: Mock DAO configured to return null.
+  - Expected Behavior: Returns an empty ArrayList (not null).
+- Frame F7: DAO throws SQLException
+  - Inputs: Mock DAO configured to throw new SQLException().
+  - Expected Behavior: The SQLException is propagated to the caller.
+
+Suggested JUnit 5 Tests:
+- Test: shouldReturnProductListWhenDaoReturnsProducts
+  - Arrange: Mock ProdottoDAO to return a list with known products.
+  - Act: service.getUltimiProdotti().
+  - Assert: Verify that the returned list matches the mocked list.
+- Test: shouldReturnEmptyListWhenDaoReturnsEmpty
+  - Arrange: Mock ProdottoDAO to return an empty ArrayList.
+  - Act: service.getUltimiProdotti().
+  - Assert: Verify that the returned list is empty.
+- Test: shouldReturnEmptyListWhenDaoReturnsNull
+  - Arrange: Mock ProdottoDAO to return null.
+  - Act: service.getUltimiProdotti().
+  - Assert: Verify that the returned list is not null and is empty.
+- Test: shouldPropagateSqlExceptionWhenDaoFails
+  - Arrange: Mock ProdottoDAO to throw SQLException.
+  - Act: service.getUltimiProdotti().
+  - Assert: assertThrows(SQLException.class, ...).

@@ -1,0 +1,112 @@
+Class Overview
+====================================================================================================
+The RicercaService class is responsible for handling product search operations. It acts as a service layer wrapper around the ProdottoDAO, delegating the actual database search to the DAO validation logic before calling the DAO.
+
+Key Responsibilities:
+1. Validating the search query string (checking for null or empty values).
+2. Delegating the search operation to ProdottoDAO.
+
+Key State variables:
+- prodottoDAO: The data access object used to interact with the database. It is final and initialized via constructor.
+
+====================================================================================================
+Constructor: RicercaService(ProdottoDAO prodottoDAO)
+====================================================================================================
+This constructor allows dependency injection of the ProdottoDAO, which is essential for unit testing (mocking).
+
+Parameters:
+- prodottoDAO: An instance of ProdottoDAO.
+
+Categories and Choices:
+----------------------------------------------------------------------------------------------------
+1. prodottoDAO (Input Validation)
+   - Null: The passed DAO reference is null.
+   - Valid: A non-null instance of ProdottoDAO.
+
+Test Frames:
+----------------------------------------------------------------------------------------------------
+ID   | Priority | Inputs                      | Expected Behavior
+-----|----------|-----------------------------|-------------------------------------------------------
+F1   | High     | prodottoDAO = null          | throw IllegalArgumentException ("ProdottoDAO cannot be null")
+F2   | Normal   | prodottoDAO = Valid Instance| Object initialized successfully
+
+Suggested JUnit 5 Test:
+----------------------------------------------------------------------------------------------------
+Test Method: shouldThrowExceptionWhenDaoIsNull
+Arrange: Prepare a null reference for ProdottoDAO.
+Act: Call new RicercaService(null).
+Assert: Verify that IllegalArgumentException is thrown with message "ProdottoDAO cannot be null".
+
+Test Method: shouldInitializeSuccessfullyWhenDaoIsValid
+Arrange: Create a mock or real instance of ProdottoDAO.
+Act: Call new RicercaService(dao).
+Assert: Verify that the service instance is not null.
+
+====================================================================================================
+Method: public ArrayList<Prodotto> cercaProdotti(String query)
+====================================================================================================
+Performs a search for products based on a query string.
+
+Parameters:
+- query: The search keyword(s).
+
+State:
+- prodottoDAO: Must be initialized.
+
+Categories and Choices:
+----------------------------------------------------------------------------------------------------
+1. Query String (Input)
+   - Null: The query is null.
+   - Empty: The query is an empty string "".
+   - Blank: The query contains only whitespace "   ".
+   - Valid: A non-empty string containing characters.
+
+2. DAO Behavior (Dependency State)
+   - Success (Found): DAO returns a list of matching products.
+   - Success (Not Found): DAO returns an empty list.
+   - Database Error: DAO throws SQLException.
+
+Test Frames:
+----------------------------------------------------------------------------------------------------
+ID   | Priority | Inputs                      | DAO Behavior      | Expected Behavior
+-----|----------|-----------------------------|-------------------|---------------------------------------
+F1   | High     | query = null                | N/A               | throw IllegalArgumentException ("Query string cannot be null or empty")
+F2   | High     | query = "" (Empty)          | N/A               | throw IllegalArgumentException ("Query string cannot be null or empty")
+F3   | High     | query = "   " (Blank)       | N/A               | throw IllegalArgumentException ("Query string cannot be null or empty")
+F4   | Normal   | query = "valid"             | Throws SQLException| throw SQLException
+F5   | Normal   | query = "valid"             | Returns Empty List| Return empty ArrayList
+F6   | Normal   | query = "valid"             | Returns List>0    | Return the list of products
+
+Suggested JUnit 5 Test:
+----------------------------------------------------------------------------------------------------
+Test Method: shouldThrowExceptionWhenQueryIsInvalid
+Note: This covers F1, F2, F3.
+Arrange: -
+Act: Call cercaProdotti with null, "", or "   ".
+Assert: Verify IllegalArgumentException is thrown.
+
+Parameterized Test Schema (for Invalid Inputs):
+@ParameterizedTest
+@NullSource
+@ValueSource(strings = {"", "   "})
+Column: query
+Row 1: null
+Row 2: ""
+Row 3: "   "
+
+Test Method: shouldPropagateExceptionWhenDaoFails
+Arrange: Mock ProdottoDAO.cercaProdotti("fail") to throw new SQLException().
+Act: Call cercaProdotti("fail").
+Assert: Assert that SQLException is thrown.
+
+Test Method: shouldReturnEmptyListWhenNoMatches
+Arrange: Mock ProdottoDAO.cercaProdotti("unknown") to return an empty ArrayList.
+Act: Call cercaProdotti("unknown").
+Assert: Verify the returned list is empty.
+
+Test Method: shouldReturnProductsWhenMatchesFound
+Arrange: 
+ - Create a list of Prodotto (e.g., p1, p2).
+ - Mock ProdottoDAO.cercaProdotti("apple") to return this list.
+Act: Call cercaProdotti("apple").
+Assert: Verify the returned list contains p1 and p2.

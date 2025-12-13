@@ -1,0 +1,98 @@
+Class Overview
+The UtenteService class acts as a service layer for managing Utente entities. Its primary responsibility is to retrieve user information via the UtenteDAO. The class maintains a single state variable, the UtenteDAO dependency, which is immutable after initialization. The class enforces robustness by checking for null dependencies during injection and validating operation arguments (e.g., user IDs).
+
+================================================================================
+
+Method: UtenteService()
+Parameters: None
+State: None (Implicitly initializes new UtenteDAO)
+
+Categories and Choices:
+  Category: DAO Initialization
+    Choice: Successful initialization [Valid]
+    Choice: Initialization failure (SQLException) [Invalid] (Note: Difficult to test in isolation without mocking constructor)
+
+Test Frames:
+  TF1: Default constructor is called -> Object is initialized successfully, internal DAO is instantiated.
+
+Suggested JUnit 5 Tests:
+  Test: shouldInitializeSuccessfullyWhenDefaultConstructorIsCalled
+    Arrange: None.
+    Act: new UtenteService().
+    Assert: Service instance is not null.
+
+================================================================================
+
+Method: UtenteService(UtenteDAO)
+Parameters: UtenteDAO utenteDAO
+State: None
+
+Categories and Choices:
+  Category: utenteDAO
+    Choice: null [Invalid]
+    Choice: non-null instance [Valid]
+
+Test Frames:
+  TF1: utenteDAO is non-null -> Service is initialized, internal DAO is set.
+  TF2: utenteDAO is null -> Throws IllegalArgumentException.
+
+Suggested JUnit 5 Tests:
+  Test: shouldInitializeSuccessfullyWhenDaoIsNotNull
+    Arrange: Create mock UtenteDAO.
+    Act: new UtenteService(mockDao).
+    Assert: Service instance is not null.
+
+  Test: shouldThrowIllegalArgumentExceptionWhenDaoIsNull
+    Arrange: null input.
+    Act: new UtenteService(null).
+    Assert: assertsThrows IllegalArgumentException.
+
+================================================================================
+
+Method: getUtenteById(int)
+Parameters: int id
+State: utenteDAO (Initialized)
+
+Categories and Choices:
+  Category: id value
+    Choice: Positive (> 0) [Valid]
+    Choice: Zero (0) [Invalid]
+    Choice: Negative (< 0) [Invalid]
+  
+  Category: DAO Result (Conditioning on Valid ID)
+    Choice: Returns Utente object [Valid]
+    Choice: Returns null (Not Found) [Valid]
+    Choice: Throws SQLException [Invalid]
+
+Test Frames:
+  TF1: id is positive, DAO finds user -> Returns Utente object.
+  TF2: id is positive, DAO returns null -> Returns null.
+  TF3: id is positive, DAO throws SQLException -> Throws SQLException.
+  TF4: id is zero -> Throws IllegalArgumentException.
+  TF5: id is negative -> Throws IllegalArgumentException.
+
+Suggested JUnit 5 Tests:
+  Test: shouldReturnUtenteWhenIdIsPositiveAndFound
+    Arrange: Mock DAO to return a specific Utente when getUtenteById(1) is called.
+    Act: service.getUtenteById(1).
+    Assert: Returned Utente matches the mock.
+
+  Test: shouldReturnNullWhenIdIsPositiveAndNotFound
+    Arrange: Mock DAO to return null when getUtenteById(99) is called.
+    Act: service.getUtenteById(99).
+    Assert: Result is null.
+
+  Test: shouldThrowSqlExceptionWhenDaoFails
+    Arrange: Mock DAO to throw SQLException when getUtenteById(1) is called.
+    Act: service.getUtenteById(1).
+    Assert: assertThrows SQLException.
+
+  Parameterized Test: shouldThrowIllegalArgumentExceptionWhenIdIsInvalid
+    Schema: ID (int)
+    Rows:
+      0
+      -1
+      -100
+    Arrange: None.
+    Act: service.getUtenteById(ID).
+    Assert: assertThrows IllegalArgumentException.

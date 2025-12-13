@@ -1,0 +1,209 @@
+Class Overview
+==============
+The RecensioniService class is responsible for managing user reviews (Recensione) for products. It acts as a service layer that interacts with the persistence layer through RecensioneDAO, ProdottoDAO, and UtenteDAO. It provides functionality to add new reviews and delete existing ones.
+
+Key State & Dependencies:
+- RecensioneDAO: Handles database operations for reviews.
+- ProdottoDAO: Handles database operations for products (used to verify product existence).
+- UtenteDAO: Handles database operations for users (used to retrieve user details after review deletion).
+
+Constructor: RecensioniService(RecensioneDAO, ProdottoDAO, UtenteDAO)
+======================================================================
+Parameters:
+- recensioneDAO (RecensioneDAO): DAO for review operations.
+- prodottoDAO (ProdottoDAO): DAO for product operations.
+- utenteDAO (UtenteDAO): DAO for user operations.
+
+Categories and Choices:
+-----------------------
+1. recensioneDAO:
+   - Null
+   - Non-null
+
+2. prodottoDAO:
+   - Null
+   - Non-null
+
+3. utenteDAO:
+   - Null
+   - Non-null
+
+Test Frames:
+------------
+ID  | Choices                                      | Expected Behavior
+--- | -------------------------------------------- | -----------------
+C1  | recensioneDAO=Null                           | Throw IllegalArgumentException("RecensioneDAO cannot be null")
+C2  | recensioneDAO=Non-null, prodottoDAO=Null     | Throw IllegalArgumentException("ProdottoDAO cannot be null")
+C3  | recensioneDAO=Non-null, prodottoDAO=Non-null, utenteDAO=Null | Throw IllegalArgumentException("UtenteDAO cannot be null")
+C4  | All Non-null                                 | Object instantiated successfully
+
+Suggested JUnit 5 Tests:
+------------------------
+1. shouldThrowExceptionWhenRecensioneDAOIsNull
+   - Arrange: Prepare null RecensioneDAO.
+   - Act: new RecensioniService(null, validProdottoDAO, validUtenteDAO).
+   - Assert: assertThrows(IllegalArgumentException.class).
+
+2. shouldThrowExceptionWhenProdottoDAOIsNull
+   - Arrange: Prepare valid RecensioneDAO, null ProdottoDAO.
+   - Act: new RecensioniService(validRecensioneDAO, null, validUtenteDAO).
+   - Assert: assertThrows(IllegalArgumentException.class).
+
+3. shouldThrowExceptionWhenUtenteDAOIsNull
+   - Arrange: Prepare valid RecensioneDAO, valid ProdottoDAO, null UtenteDAO.
+   - Act: new RecensioniService(validRecensioneDAO, validProdottoDAO, null).
+   - Assert: assertThrows(IllegalArgumentException.class).
+
+4. shouldInitializeSuccessfullyWhenAllDAOsAreValid
+   - Arrange: Prepare valid mocks for all DAOs.
+   - Act: new RecensioniService(rDAO, pDAO, uDAO).
+   - Assert: assertNotNull(service).
+
+Method: aggiungiRecensione(Utente utente, String testo, int valutazione, int idProdotto)
+=========================================================================================
+Parameters:
+- utente (Utente): The user adding the review.
+- testo (String): The text content of the review.
+- valutazione (int): The numerical rating (1-5).
+- idProdotto (int): The ID of the product being reviewed.
+
+State:
+- Product existence in DB (via prodottoDAO).
+- Review insertion result (via recensioneDAO).
+
+Categories and Choices:
+-----------------------
+1. utente:
+   - Null
+   - Non-null (Valid object)
+
+2. testo:
+   - Null
+   - Empty ("")
+   - Whitespace only ("   ")
+   - Valid text ("Great product")
+
+3. valutazione (Rating):
+   - < 1 (e.g., 0)
+   - 1 to 5 (Valid)
+   - > 5 (e.g., 6)
+
+4. idProdotto:
+   - <= 0 (Invalid)
+   - > 0 (Valid positive integer)
+
+5. Product Existence (prodottoDAO.getProdottoById):
+   - Returns null (Product not found)
+   - Returns Prodotto object (Product found)
+   - Throws SimpleSQLException
+
+6. DAO Connection (recensioneDAO, prodottoDAO):
+   - Normal operation
+   - Throws SQLException
+
+Test Frames:
+------------
+ID  | Choices                                              | Expected Behavior
+--- | ---------------------------------------------------- | -----------------
+AR1 | utente=Null                                          | Throw IllegalArgumentException("Utente cannot be null")
+AR2 | utente=Valid, testo=Null                             | Throw IllegalArgumentException("Review text cannot be null or empty")
+AR3 | utente=Valid, testo=Empty                            | Throw IllegalArgumentException("Review text cannot be null or empty")
+AR4 | utente=Valid, testo=Whitespace                       | Throw IllegalArgumentException("Review text cannot be null or empty")
+AR5 | utente=Valid, testo=Valid, valutazione=0             | Throw IllegalArgumentException("Rating must be between 1 and 5")
+AR6 | utente=Valid, testo=Valid, valutazione=6             | Throw IllegalArgumentException("Rating must be between 1 and 5")
+AR7 | utente=Valid, testo=Valid, valutazione=5, idProdotto=0 | Throw IllegalArgumentException("Product ID must be positive")
+AR8 | utente=Valid, testo=Valid, valutazione=5, idProdotto=1, Product=Null | Throw IllegalArgumentException("Product not found with ID: 1")
+AR9 | utente=Valid, testo=Valid, valutazione=5, idProdotto=1, Product=Found, DAO=Success | Review added, User updated with new reviews, Returns User object
+AR10| utente=Valid, testo=Valid, valutazione=5, idProdotto=1, Product=Found, DAO=SQLException | Throw SQLException
+
+Suggested JUnit 5 Tests:
+------------------------
+1. shouldThrowExceptionWhenUtenteIsNull
+   - Arrange: utente = null.
+   - Act: service.aggiungiRecensione(null, ...).
+   - Assert: assertThrows(IllegalArgumentException.class).
+
+2. shouldThrowExceptionWhenTextIsInvalid
+   - Parameterized Test (CsvSource):
+     - null
+     - ""
+     - "   "
+   - Arrange: valid other inputs.
+   - Act: service.aggiungiRecensione(validUtente, invalidText, ...).
+   - Assert: assertThrows(IllegalArgumentException.class).
+
+3. shouldThrowExceptionWhenRatingIsInvalid
+   - Parameterized Test (ValueSource): ints {0, 6, -1, 10}
+   - Arrange: valid other inputs.
+   - Act: service.aggiungiRecensione(..., invalidRating, ...).
+   - Assert: assertThrows(IllegalArgumentException.class).
+
+4. shouldThrowExceptionWhenProductNotFound
+   - Arrange: Mock prodottoDAO to return null for specific ID.
+   - Act: service.aggiungiRecensione(..., validId).
+   - Assert: assertThrows(IllegalArgumentException.class).
+
+5. shouldAddReviewWhenInputIsValid
+   - Arrange: Mock produitDAO to return Product; Mock recensioneDAO to add review and return updated list.
+   - Act: service.aggiungiRecensione(validUtente, "text", 5, 1).
+   - Assert: verify recensioneDAO.addRecensione called; assertNotNull returned user; check user reviews list.
+
+Method: eliminaRecensione(int idRecensione, int idUtente)
+=========================================================
+Parameters:
+- idRecensione (int): ID of the review to delete.
+- idUtente (int): ID of the user owning the review (used to fetch updated user state).
+
+State:
+- User existence in DB (via utenteDAO).
+
+Categories and Choices:
+-----------------------
+1. idRecensione:
+   - <= 0 (Invalid)
+   - > 0 (Valid)
+
+2. idUtente:
+   - <= 0 (Invalid)
+   - > 0 (Valid)
+
+3. Utente Existence (utenteDAO.getUtenteById):
+   - Returns null (User not found)
+   - Returns Utente object (User found)
+   - Throws SQLException
+
+4. DAO Connection (recensioneDAO, utenteDAO):
+   - Normal operation
+   - Throws SQLException
+
+Test Frames:
+------------
+ID  | Choices                                    | Expected Behavior
+--- | ------------------------------------------ | -----------------
+ER1 | idRecensione=0                             | Throw IllegalArgumentException("Review ID must be positive")
+ER2 | idRecensione=1, idUtente=0                 | Throw IllegalArgumentException("User ID must be positive")
+ER3 | idRecensione=1, idUtente=1, User=Null      | Throw IllegalArgumentException("Utente not found with ID: 1")
+ER4 | idRecensione=1, idUtente=1, User=Found     | Review deleted (DAO called), Returns found Utente
+ER5 | idRecensione=1, idUtente=1, DAO=Exception  | Throw SQLException
+
+Suggested JUnit 5 Tests:
+------------------------
+1. shouldThrowExceptionWhenReviewIdIsInvalid
+   - Arrange: idRecensione = -1.
+   - Act: service.eliminaRecensione(-1, 1).
+   - Assert: assertThrows(IllegalArgumentException.class).
+
+2. shouldThrowExceptionWhenUserIdIsInvalid
+   - Arrange: idUtente = 0.
+   - Act: service.eliminaRecensione(1, 0).
+   - Assert: assertThrows(IllegalArgumentException.class).
+
+3. shouldThrowExceptionWhenUserNotFound
+   - Arrange: Mock utenteDAO.getUtenteById(1) returns null.
+   - Act: service.eliminaRecensione(1, 1).
+   - Assert: assertThrows(IllegalArgumentException.class).
+
+4. shouldDeleteReviewAndReturnUserWhenSuccessful
+   - Arrange: Mock utenteDAO.getUtenteById(1) returns Utente; Mock recensioneDAO.deleteRecensione(1).
+   - Act: service.eliminaRecensione(1, 1).
+   - Assert: verify recensioneDAO.deleteRecensione called; assertNotNull returned user.

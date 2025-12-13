@@ -9,7 +9,7 @@ Based on these choices, define "Test Frames." A test frame is a specific combina
 For every significant test frame, provide a "Suggested JUnit 5 Test." Propose a test method name following the pattern "should\<ExpectedBehavior\>When\<Condition\>". Briefly describe the "Arrange" step (how to set up the object and inputs), the "Act" step (the method call), and the "Assert" step (what to verify). If a method logic is suitable for data-driven testing, suggest a CSV schema for a Parameterized Test, including column names and a few example rows.
 
 Here is the path of the Java class to analyze:
-src\main\java\services\InitService.java
+src\main\java\services\ProdottiPerCategoriaService.java
 
 Here is the destination folder where you must save the report:
 src\test\java\services\

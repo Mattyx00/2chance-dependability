@@ -1,0 +1,183 @@
+Class Overview:
+The EditProfiloService class is responsible for updating user profile information. It provides functionality to update a specific text field (like name, email, etc.) or the user's profile image. The class handles interactions with the UtenteDAO to persist changes and manages file system operations for uploading images.
+Key dependencies:
+- UtenteDAO: For database updates and retrieving the updated user object.
+- javax.servlet.http.Part: For handling file uploads (images).
+- java.io/java.nio: For file system operations (saving images).
+
+Public Constructors:
+1. EditProfiloService() throws SQLException
+2. EditProfiloService(UtenteDAO utenteDAO)
+
+Public Methods:
+1. Utente editImmagine(Utente u, Part part, String path) throws SQLException, IOException
+2. Utente editProfilo(Utente u, String modifica, String path) throws SQLException
+
+================================================================================
+Method: EditProfiloService(UtenteDAO utenteDAO)
+================================================================================
+Parameters:
+- UtenteDAO utenteDAO
+
+Categories and Choices:
+1. utenteDAO
+   - Valid instance (Non-null)
+   - Null
+
+Test Frames:
+F1: Initialize with valid DAO.
+   - Input: utenteDAO = new UtenteDAO() (or mock)
+   - Expected: Object initialized correctly.
+
+F2: Initialize with null DAO.
+   - Input: utenteDAO = null
+   - Expected: Object initialized, but subsequent calls utilizing the DAO will likely throw NullPointerException. (Ideally, the constructor should validate this, but current implementation allows it).
+
+================================================================================
+Method: editImmagine(Utente u, Part part, String path)
+================================================================================
+Parameters:
+- Utente u: The user object identifying the profile to update.
+- Part part: The uploaded file part containing the image.
+- String path: The database field identifier (column name) usually.
+
+Relevant State:
+- File System: Existence of 'upload' directory, permissions.
+- Database: Integrity of user ID.
+
+Categories and Choices:
+1. Utente u
+   - Null
+   - Valid User (with valid ID)
+   - Valid User (with ID not existing in DB - Logic relies on getters, DB might fail)
+
+2. Part part
+   - Null
+   - Valid Part (returns valid filename via getSubmittedFileName)
+   - Invalid Part (getSubmittedFileName returns null or empty)
+   - Part throwing IOException on getInputStream()
+
+3. String path (Field Identifier)
+   - Null
+   - Valid String (e.g., "immagine")
+   - Empty String
+
+4. File System State (Implicit for "upload" folder handling)
+   - Directory exists
+   - Directory does not exist (needs creation)
+   - Target file already exists
+   - Target file does not exist
+
+Test Frames:
+F3: Successful image update, file does not exist, upload dir exists.
+   - Inputs: u = User(ID=1), part = [valid file "pic.jpg"], path = "immagine"
+   - Environment: "upload" dir exists, file "pic.jpg" does not exist.
+   - Expected: DAO updated, file saved to disk, returns updated User object.
+
+F4: Successful image update, file does not exist, upload dir missing.
+   - Inputs: u = User(ID=1), part = [valid file "pic.jpg"], path = "immagine"
+   - Environment: "upload" dir missing.
+   - Expected: Directory created, file saved, DAO updated, returns updated User object.
+
+F5: Successful image update, file already exists.
+   - Inputs: u = User(ID=1), part = [valid file "pic.jpg"], path = "immagine"
+   - Environment: File "pic.jpg" exists.
+   - Expected: DAO updated, File copy skipped (logic: if (!file.exists()) copy...), returns updated User object.
+
+F6: Null Utente.
+   - Inputs: u = null, part = [valid], path = "immagine"
+   - Expected: NullPointerException (accessing u.getId()).
+
+F7: Null Part.
+   - Inputs: u = User(ID=1), part = null, path = "immagine"
+   - Expected: NullPointerException (accessing part.getSubmittedFileName()).
+
+F8: Null Path (Field Identifier).
+   - Inputs: u = User(ID=1), part = [valid], path = null
+   - Expected: DAO likely throws Exception or handles it (Standard behavior: pass null to DAO).
+
+F9: Part throws IOException.
+   - Inputs: u = User(ID=1), part = [Mock throwing IOException on getInputStream], path = "immagine"
+   - Expected: IOException thrown, execution aborted.
+
+Suggested JUnit 5 Tests:
+1. Test Method: shouldUpdateImageAndSaveFileWhenAllInputsAreValid()
+   - Arrange: Mock UtenteDAO, create User(ID=1), Mock Part returning "test.jpg" and valid InputStream. Mock Files/Paths (or use temporary folder/integration test approach). Ensure target file absent.
+   - Act: service.editImmagine(user, part, "immagine")
+   - Assert: Verify DAO.editProfilo called. Verify file existence (if not mocking static Files). Verify return value is not null.
+
+2. Test Method: shouldCreateDirectoryWhenUploadFolderMissing()
+   - Arrange: Same as above, but ensure upload structure needs creation.
+   - Act: service.editImmagine(...)
+   - Assert: Verify Files.createDirectories (or check directory existence).
+
+3. Test Method: shouldThrowNPEWhenUserIsNull()
+   - Arrange: valid part, valid path.
+   - Act: service.editImmagine(null, part, "col")
+   - Assert: assertThrows(NullPointerException.class)
+
+4. Test Method: shouldThrowIOExceptionWhenPartStreamFails()
+   - Arrange: Mock Part to throw IOException.
+   - Act: service.editImmagine(...)
+   - Assert: assertThrows(IOException.class)
+
+================================================================================
+Method: editProfilo(Utente u, String modifica, String path)
+================================================================================
+Parameters:
+- Utente u: User object.
+- String modifica: The new value for the field.
+- String path: The database field identifier.
+
+Categories and Choices:
+1. Utente u
+   - Null
+   - Valid User
+
+2. String modifica (New Value)
+   - Null
+   - Valid String (e.g., "Mario")
+   - Empty String
+
+3. String path (Field Identifier)
+   - Null
+   - Valid String (e.g., "nome")
+   - Empty String
+
+Test Frames:
+F10: Successful profile text update.
+   - Inputs: u = User(ID=1), modifica = "Mario", path = "nome"
+   - Expected: DAO update called, returns updated user.
+
+F11: Update with empty value.
+   - Inputs: u = User(ID=1), modifica = "", path = "nome"
+   - Expected: DAO update called with empty string.
+
+F12: Null Utente.
+   - Inputs: u = null, modifica = "val", path = "col"
+   - Expected: NullPointerException (u.getId()).
+
+F13: Null Modifica/Path.
+   - Inputs: u = [valid], modifica = null, path = null
+   - Expected: DAO execution (depends on DAO robustness, likely SQLException or DB constraint violation).
+
+Suggested JUnit 5 Tests:
+1. Test Method: shouldUpdateProfileFieldWhenInputsAreValid()
+   - Arrange: Mock DAO, User instance.
+   - Act: service.editProfilo(user, "NewName", "nome")
+   - Assert: Verify dao.editProfilo("nome", "NewName", id) called. Verify returned user.
+
+2. Test Method: shouldThrowNPEWhenUserIsNullForEditProfilo()
+   - Arrange: Valid other inputs.
+   - Act: service.editProfilo(null, "val", "col")
+   - Assert: assertThrows(NullPointerException.class)
+
+3. Parameterized Test: shouldPassArgumentsToDaoForVariousInputs
+   - CSV Source:
+     "nome", "Mario"
+     "email", "test@test.com"
+     "telefono", "123456"
+   - Method: testUpdate(String path, String val)
+   - Arrange: User id 1.
+   - Act: service.editProfilo(user, val, path)
+   - Assert: Verify DAO called with (path, val, 1).

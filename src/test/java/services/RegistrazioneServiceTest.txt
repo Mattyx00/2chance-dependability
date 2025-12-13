@@ -1,0 +1,178 @@
+Class Overview
+==============
+The `RegistrazioneService` class is responsible for handling user registration logic. It validates user inputs (name, surname, password, email, phone number) against specific formats (regex) and business rules (e.g., email uniqueness). If validation passes, it delegates the persistence of the new `Utente` to the `UtenteDAO`. It also provides a utility method for user retrieval (login-like functionality).
+
+Key State Variables:
+- `utenteDAO`: An instance of `UtenteDAO` used to interact with the database. It is a critical dependency that should be mocked during testing to isolate the service logic.
+
+Method Analysis
+===============
+
+1. Constructor: RegistrazioneService(UtenteDAO utenteDAO)
+-----------------------------------------------------------
+**Parameters:**
+- `utenteDAO`: The Data Access Object for user operations.
+
+**Categories and Choices:**
+- `utenteDAO`:
+    - Null (Invalid)
+    - Not Null (Valid)
+
+**Test Frames:**
+- **F1**: `utenteDAO` is null.
+    - Expected Behavior: Throw `IllegalArgumentException` with message "UtenteDAO cannot be null".
+- **F2**: `utenteDAO` is a valid instance.
+    - Expected Behavior: Object is initialized successfully; internal `utenteDAO` is set.
+
+**Suggested JUnit 5 Tests:**
+- `shouldThrowExceptionWhenDaoIsNull`
+    - Arrange: Prepare null `utenteDAO`.
+    - Act: Call `new RegistrazioneService(null)`.
+    - Assert: `assertThrows(IllegalArgumentException.class, ...)`
+- `shouldInitializeWhenDaoIsNotNull`
+    - Arrange: Mock `UtenteDAO`.
+    - Act: Call `new RegistrazioneService(mockDao)`.
+    - Assert: Object is not null.
+
+2. Method: validateAndRegister(String nome, String cognome, String password, String email, String telefono, String fileName)
+----------------------------------------------------------------------------------------------------------------------------
+**Parameters:**
+- `nome`: User's first name.
+- `cognome`: User's last name.
+- `password`: User's password.
+- `email`: User's email address.
+- `telefono`: User's phone number.
+- `fileName`: Name of the user's profile image file.
+
+**State Check:**
+- `UtenteDAO.isEmailPresent(email)`: Returns true if email exists, false otherwise.
+
+**Categories and Choices:**
+- **Val1**: `nome` (Precondition Check)
+    - Null (Invalid)
+- **Val2**: `nome` Value (Business Logic)
+    - Empty (Invalid)
+    - Contains non-alphabetic characters (Invalid)
+    - Valid alphabetic string (Valid)
+- **Val3**: `cognome` (Precondition Check)
+    - Null (Invalid)
+- **Val4**: `cognome` Value (Business Logic)
+    - Empty (Invalid)
+    - Contains non-alphabetic characters (Invalid)
+    - Valid alphabetic string (Valid)
+- **Val5**: `password` (Precondition Check)
+    - Null (Invalid)
+- **Val6**: `password` Value (Business Logic)
+    - Empty (Invalid)
+    - Length < 8 characters (Invalid)
+    - No uppercase letter (Invalid)
+    - Valid (>= 8 chars, at least 1 uppercase) (Valid)
+- **Val7**: `email` (Precondition Check)
+    - Null (Invalid)
+- **Val8**: `email` Value (Business Logic)
+    - Empty (Invalid)
+    - Invalid format (regex mismatch) (Invalid)
+    - Valid format (Valid)
+- **Val9**: `email` Uniqueness (Database State)
+    - Already Present (Invalid)
+    - Not Present (Valid)
+- **Val10**: `telefono` (Precondition Check)
+    - Null (Invalid)
+- **Val11**: `telefono` Value (Business Logic)
+    - Empty (Invalid)
+    - Invalid format (not 10 digits) (Invalid)
+    - Valid (10 digits) (Valid)
+- **Val12**: `fileName` (Precondition Check)
+    - Null (Invalid)
+    - Any String (Valid - typically not empy, but strictly checked for null only)
+
+**Test Frames:**
+
+*Null Preconditions (Priority High - Blocking)*
+- **F3**: `nome` is null.
+    - Expected: `IllegalArgumentException` "Nome cannot be null".
+- **F4**: `cognome` is null.
+    - Expected: `IllegalArgumentException` "Cognome cannot be null".
+- **F5**: `password` is null.
+    - Expected: `IllegalArgumentException` "Password cannot be null".
+- **F6**: `email` is null.
+    - Expected: `IllegalArgumentException` "Email cannot be null".
+- **F7**: `telefono` is null.
+    - Expected: `IllegalArgumentException` "Telefono cannot be null".
+- **F8**: `fileName` is null.
+    - Expected: `IllegalArgumentException` "FileName cannot be null".
+
+*Validation Logic (Accumulates Errors)*
+- **F9**: `nome` is empty.
+    - Expected: Return list containing "Errore nome, riprovare".
+- **F10**: `nome` contains numbers/symbols (e.g., "Mario1").
+    - Expected: Return list containing "Errore nome, riprovare".
+- **F11**: `cognome` is empty.
+    - Expected: Return list containing "Errore cognome, riprovare".
+- **F12**: `cognome` contains numbers/symbols.
+    - Expected: Return list containing "Errore cognome, riprovare".
+- **F13**: `password` is empty.
+    - Expected: Return list containing "Errore password, riprovare".
+- **F14**: `password` is too short (< 8 chars).
+    - Expected: Return list containing "Errore password, riprovare".
+- **F15**: `password` has no uppercase (e.g., "password123").
+    - Expected: Return list containing "Errore password, riprovare".
+- **F16**: `email` is empty.
+    - Expected: Return list containing "Errore email, riprovare".
+- **F17**: `email` has invalid format (e.g., "mario@").
+    - Expected: Return list containing "Errore email, riprovare".
+- **F18**: `email` is valid but already exists in DB.
+    - Expected: Return list containing "Email già in utilizzo". Mock `isEmailPresent` to return true.
+- **F19**: `telefono` is empty.
+    - Expected: Return list containing "Errore telefono, riprovare".
+- **F20**: `telefono` has invalid format (e.g., "123").
+    - Expected: Return list containing "Errore telefono, riprovare".
+- **F21**: Multiple errors (e.g., invalid nome + invalid email).
+    - Expected: Return list containing multiple error messages.
+- **F22**: Success (All inputs valid, email unique).
+    - Expected: Return empty list. Call `utenteDAO.addUtente(capturedUtente)`. Verify captured user has correct fields.
+
+**Suggested JUnit 5 Tests:**
+- `shouldThrowExceptionWhenNomeIsNull` (Covers F3)
+- `shouldThrowExceptionWhenFileNameIsNull` (Covers F8)
+- `shouldReturnErrorWhenNomeIsInvalid` (Covers F9, F10)
+    - Parameterized test with values: ["", "Mario1", "M@rio"]
+- `shouldReturnErrorWhenPasswordIsInvalid` (Covers F13-F15)
+    - Parameterized test with values: ["", "short", "alllowercase123"]
+- `shouldReturnErrorWhenEmailExisting` (Covers F18)
+    - Arrange: Mock `UtenteDAO.isEmailPresent` -> true.
+    - Act: Call `validateAndRegister` with valid inputs.
+    - Assert: List contains "Email già in utilizzo".
+- `shouldRegisterUserWhenAllInputsValid` (Covers F22)
+    - Arrange: Mock `UtenteDAO.isEmailPresent` -> false.
+    - Act: Call `validateAndRegister` with valid inputs.
+    - Assert: List is empty. Verify `utenteDAO.addUtente` was called once with correct properites.
+
+3. Method: getUserByEmailPassword(String email, String password)
+----------------------------------------------------------------
+**Parameters:**
+- `email`: Login email.
+- `password`: Login password.
+
+**Categories and Choices:**
+- `email`:
+    - Null (Invalid)
+    - Valid String (Valid)
+- `password`:
+    - Null (Invalid)
+    - Valid String (Valid)
+
+**Test Frames:**
+- **F23**: `email` is null.
+    - Expected: `IllegalArgumentException` "Email cannot be null".
+- **F24**: `password` is null.
+    - Expected: `IllegalArgumentException` "Password cannot be null".
+- **F25**: Inputs are valid.
+    - Expected: Delegate to `utenteDAO.getUserByEmailPassword`. Return the result (null or Utente).
+
+**Suggested JUnit 5 Tests:**
+- `shouldThrowExceptionWhenLoginEmailIsNull` (Covers F23)
+- `shouldDelegateToDaoWhenLoginInputsValid` (Covers F25)
+    - Arrange: Mock `utenteDAO`.
+    - Act: Call `getUserByEmailPassword("e@mail.com", "Pass123")`.
+    - Assert: Verify `utenteDAO.getUserByEmailPassword` called.

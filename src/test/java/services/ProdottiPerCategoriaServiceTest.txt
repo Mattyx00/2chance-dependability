@@ -1,0 +1,97 @@
+Class Overview
+==============
+The ProdottiPerCategoriaService class provides a service layer for retrieving a list of products that belong to a specific category. It acts as an intermediary between the controller/view and the persistent storage (ProdottoDAO).
+
+Key State & Dependencies:
+- ProdottoDAO: Handles the database operations for querying products by category.
+
+Constructor: ProdottiPerCategoriaService(ProdottoDAO)
+=====================================================
+Parameters:
+- prodottoDAO (ProdottoDAO): The data access object, must not be null.
+
+Categories and Choices:
+-----------------------
+1. prodottoDAO:
+   - Null
+   - Non-null (Valid object)
+
+Test Frames:
+------------
+ID  | Choices                   | Expected Behavior
+--- | ------------------------- | -----------------
+C1  | prodottoDAO=Null          | Throw IllegalArgumentException("ProdottoDAO cannot be null")
+C2  | prodottoDAO=Non-null      | Instance created successfully
+
+Suggested JUnit 5 Tests:
+------------------------
+1. shouldThrowExceptionWhenProdottoDAOIsNull
+   - Arrange: null input.
+   - Act: new ProdottiPerCategoriaService(null).
+   - Assert: assertThrows(IllegalArgumentException.class).
+
+2. shouldInitializeSuccessfullyWhenProdottoDAOIsValid
+   - Arrange: Mock ProdottoDAO.
+   - Act: new ProdottiPerCategoriaService(mockDao).
+   - Assert: assertNotNull(service).
+
+Method: getProdottiByCategoria(String categoria)
+================================================
+Parameters:
+- categoria (String): The name of the category to filter products by.
+
+State:
+- Internal ProdottoDAO state (Null/Non-null).
+- Database result (List of products or Exception).
+
+Categories and Choices:
+-----------------------
+1. categoria:
+   - Null
+   - Empty ("")
+   - Whitespace only ("   ")
+   - Valid String ("Elettronica")
+
+2. Internal State (prodottoDAO):
+   - Null (Theoretically unreachable if constructed properly, but handled)
+   - Non-null (Standard state)
+
+3. DAO Interaction (prodottoDAO.getProdottiByCategoria):
+   - Returns List<Prodotto> (Success)
+   - Returns Null (Possible DAO behavior)
+   - Throws SQLException
+
+Test Frames:
+------------
+ID  | Choices                                          | Expected Behavior
+--- | ------------------------------------------------ | -----------------
+G1  | categoria=Null                                   | Throw IllegalArgumentException("Category name cannot be null or empty")
+G2  | categoria=Empty                                  | Throw IllegalArgumentException("Category name cannot be null or empty")
+G3  | categoria=Whitespace                             | Throw IllegalArgumentException("Category name cannot be null or empty")
+G4  | categoria=Valid, State=Null                      | Throw IllegalStateException("Service is not properly initialized: ProdottoDAO is null")
+G5  | categoria=Valid, State=Non-null, DAO=List        | Return ArrayList<Prodotto>
+G6  | categoria=Valid, State=Non-null, DAO=Null        | Return null (Pass-through from DAO)
+G7  | categoria=Valid, State=Non-null, DAO=Exception   | Throw SQLException
+
+Suggested JUnit 5 Tests:
+------------------------
+1. shouldThrowExceptionWhenCategoryIsInvalid
+   - Parameterized Test (CsvSource): {null, "", "   "}
+   - Arrange: Valid service.
+   - Act: service.getProdottiByCategoria(invalidCategory).
+   - Assert: assertThrows(IllegalArgumentException.class).
+
+2. shouldThrowExceptionWhenStateIsInvalid
+   - Arrange: Create service. Use reflection to set prodottoDAO field to null (since field is final/private). Note: If reflection is too complex for simple unit tests, this might be skipped or require a specific constructor if one existed for testing empty state, but currently constructor guards against it. *Self-correction*: The code has a check `if (prodottoDAO == null)` inside the method. To test this reachable code, we can use reflection to nullify the final field.
+   - Act: service.getProdottiByCategoria("valid").
+   - Assert: assertThrows(IllegalStateException.class).
+
+3. shouldReturnProductsWhenCategoryIsValid
+   - Arrange: Mock DAO to return a list of products.
+   - Act: service.getProdottiByCategoria("Elettronica").
+   - Assert: assertEquals(list, result); verify(dao).getProdottiByCategoria("Elettronica").
+
+4. shouldPropagateSQLException
+   - Arrange: Mock DAO to throw SQLException.
+   - Act: service.getProdottiByCategoria("ErrorCategory").
+   - Assert: assertThrows(SQLException.class).

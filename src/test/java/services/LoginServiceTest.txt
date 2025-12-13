@@ -1,0 +1,190 @@
+Class Overview
+==============
+The LoginService class is responsible for handling user authentication logic. It acts as an intermediary between the web layer (or other clients) and the data access layer (UtenteDAO).
+Its primary responsibility is to validate user credentials (email and password) and retrieve the corresponding user via the DAO.
+Key state variables:
+- utenteDAO: A dependency used to query the database for user information.
+
+Method: LoginService()
+======================
+Parameters: None.
+State: None.
+Behavior: Initializes the internal UtenteDAO using its default constructor.
+Note: This constructor implicitly depends on the database configuration being correct.
+
+Categories and Choices:
+-----------------------
+- Database Configuration:
+  - Valid configuration (implicit expectation) -> Object created successfully.
+  - Invalid configuration -> SQLException (thrown by UtenteDAO constructor).
+
+Test Frames:
+------------
+TF1: Default construction
+   - Input: None
+   - Expected: LogicService object is created, utenteDAO is initialized.
+
+TF2: DB Error during construction
+   - Input: None, but DB is unreachable (simulated if possible)
+   - Expected: SQLException thrown.
+
+Suggested JUnit 5 Test:
+-----------------------
+@Test
+void shouldInitializeSuccessfullyWhenDefaultConstructorCalled() {
+    // Arrange & Act
+    // Note: Requires DB environment or ignored if integration test not feasible alone
+    // Assert
+    assertDoesNotThrow(() -> new LoginService());
+}
+
+Method: LoginService(UtenteDAO utenteDAO)
+=========================================
+Parameters:
+- utenteDAO: The Data Access Object for user operations.
+
+Categories and Choices:
+-----------------------
+- utenteDAO State:
+  - Null
+  - Non-null instance
+
+Test Frames:
+------------
+TF3: Constructor with null DAO
+   - Input: utenteDAO = null
+   - Expected: IllegalArgumentException ("UtenteDAO cannot be null")
+
+TF4: Constructor with valid DAO
+   - Input: utenteDAO = [Valid Mock/Stub]
+   - Expected: LoginService object created, internal DAO set.
+
+Suggested JUnit 5 Test:
+-----------------------
+@Test
+void shouldThrowExceptionWhenDaoIsNull() {
+    // Arrange
+    UtenteDAO nullDao = null;
+    // Act & Assert
+    IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> new LoginService(nullDao));
+    assertEquals("UtenteDAO cannot be null", exception.getMessage());
+}
+
+Method: login(String email, String password)
+============================================
+Parameters:
+- email: User's email address.
+- password: User's password.
+State:
+- utenteDAO: Must be initialized.
+
+Categories and Choices:
+-----------------------
+- Email:
+  - Null
+  - Empty string ("")
+  - Blank string ("   ")
+  - Valid populated string ("user@example.com")
+
+- Password:
+  - Null
+  - Empty string ("")
+  - Blank string ("   ")
+  - Valid populated string ("password123")
+
+- DAO Behavior (utenteDAO.getUserByEmailPassword):
+  - Returns Utente object (User found)
+  - Returns Null (User not found)
+  - Throws SQLException (DB Error)
+
+Test Frames:
+------------
+TF5: Email is null
+   - Input: email=null, password="validPass"
+   - Expected: IllegalArgumentException ("Email cannot be null or empty")
+
+TF6: Email is empty
+   - Input: email="", password="validPass"
+   - Expected: IllegalArgumentException ("Email cannot be null or empty")
+
+TF7: Email is blank
+   - Input: email="   ", password="validPass"
+   - Expected: IllegalArgumentException ("Email cannot be null or empty")
+
+TF8: Password is null
+   - Input: email="valid@email.com", password=null
+   - Expected: IllegalArgumentException ("Password cannot be null or empty")
+
+TF9: Password is empty
+   - Input: email="valid@email.com", password=""
+   - Expected: IllegalArgumentException ("Password cannot be null or empty")
+
+TF10: Password is blank
+   - Input: email="valid@email.com", password="   "
+   - Expected: IllegalArgumentException ("Password cannot be null or empty")
+
+TF11: Valid credentials, User found
+   - Input: email="user@test.com", password="password", DAO returns Utente(id=1, email="user@test.com")
+   - Expected: Returns Utente object.
+
+TF12: Valid credentials, User not found
+   - Input: email="unknown@test.com", password="wrong", DAO returns null
+   - Expected: LoginErratoException
+
+TF13: DB Error during login
+   - Input: email="user@test.com", password="password", DAO throws SQLException
+   - Expected: SQLException
+
+Suggested JUnit 5 Tests:
+------------------------
+@Test
+void shouldThrowExceptionWhenEmailIsNull() {
+    // Arrange
+    LoginService service = new LoginService(mockDao);
+    // Act & Assert
+    assertThrows(IllegalArgumentException.class, () -> service.login(null, "password"));
+}
+
+@Test
+void shouldThrowExceptionWhenPasswordIsEmpty() {
+    // Arrange
+    LoginService service = new LoginService(mockDao);
+    // Act & Assert
+    assertThrows(IllegalArgumentException.class, () -> service.login("email@test.com", ""));
+}
+
+@Test
+void shouldReturnUserWhenCredentialsAreCorrect() throws SQLException, LoginErratoException {
+    // Arrange
+    Utente mockUser = new Utente();
+    when(mockDao.getUserByEmailPassword("user@test.com", "pass")).thenReturn(mockUser);
+    LoginService service = new LoginService(mockDao);
+    
+    // Act
+    Utente result = service.login("user@test.com", "pass");
+    
+    // Assert
+    assertNotNull(result);
+    assertEquals(mockUser, result);
+}
+
+@Test
+void shouldThrowLoginErratoExceptionWhenUserNotFound() throws SQLException {
+    // Arrange
+    when(mockDao.getUserByEmailPassword(anyString(), anyString())).thenReturn(null);
+    LoginService service = new LoginService(mockDao);
+    
+    // Act & Assert
+    assertThrows(LoginErratoException.class, () -> service.login("user@test.com", "pass"));
+}
+
+Parameterized Test Suggestion:
+------------------------------
+Schema: email | password | expectedExceptionType
+Rows:
+null            | "pass"      | IllegalArgumentException
+""              | "pass"      | IllegalArgumentException
+"   "           | "pass"      | IllegalArgumentException
+"user@test.com" | null        | IllegalArgumentException
+"user@test.com" | ""          | IllegalArgumentException
+"user@test.com" | "   "       | IllegalArgumentException
