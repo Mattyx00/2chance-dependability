@@ -1,4 +1,4 @@
-﻿package model.beans;
+package model.beans;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -376,14 +376,16 @@ class CarrelloTest {
         ProdottoCarrello productCart = new ProdottoCarrello(product, 5);
         cart.aggiungiProdotto(productCart);
 
+        Prodotto productNotAdded = createProduct(2, "Product2", 20.0);
+
         // Act & Assert
         IllegalStateException exception = assertThrows(
                 IllegalStateException.class,
-                () -> cart.cambiaQuantita(product, 10),
+                () -> cart.cambiaQuantita(productNotAdded, 10),
                 "Should throw IllegalStateException when product not in cart");
         assertTrue(exception.getMessage().contains("non è presente nel carrello"),
                 "Exception message should mention product not in cart");
-        assertTrue(exception.getMessage().contains("" + product.getId()),
+        assertTrue(exception.getMessage().contains("" + productNotAdded.getId()),
                 "Exception message should mention product ID");
     }
 

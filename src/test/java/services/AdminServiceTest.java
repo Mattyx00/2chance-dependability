@@ -202,10 +202,14 @@ class AdminServiceTest {
 
     @Test
     @DisplayName("TF13: Should throw exception when Specifiche is invalid JSON")
-    void shouldThrowExceptionWhenSpecificheIsInvalidJson() {
+    void shouldThrowExceptionWhenSpecificheIsInvalidJson() throws IOException {
         // Arrange
         String fileName = "img.jpg";
+        byte[] imageRawStream = new byte[0];
+        ByteArrayInputStream imageStream = new ByteArrayInputStream(imageRawStream);
+
         when(part.getSubmittedFileName()).thenReturn(fileName);
+        when(part.getInputStream()).thenReturn(imageStream);
 
         // Act & Assert
         IllegalArgumentException exception = assertThrows(
@@ -277,7 +281,7 @@ class AdminServiceTest {
         IllegalStateException exception = assertThrows(
                 IllegalStateException.class,
                 () -> adminService.mostraProdotti());
-        assertTrue(exception.getMessage().contains("Failed to retrieve the list of products."));
+        assertTrue(exception.getMessage().contains("DAO returned null for prodotti list"));
     }
 
     @Test
@@ -325,7 +329,7 @@ class AdminServiceTest {
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
                 () -> adminService.eliminaProdotto(id));
-        assertTrue(exception.getMessage().contains("Invalid product ID"));
+        assertTrue(exception.getMessage().contains("Product ID must be greater than 0"));
     }
 
     // =================================================================================================
@@ -362,7 +366,7 @@ class AdminServiceTest {
         IllegalStateException exception = assertThrows(
                 IllegalStateException.class,
                 () -> adminService.mostraCategorie());
-        assertTrue(exception.getMessage().contains("DAO returned null for categorie list."));
+        assertTrue(exception.getMessage().contains("DAO returned null for categorie list"));
     }
 
     // =================================================================================================
@@ -390,7 +394,7 @@ class AdminServiceTest {
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
                 () -> adminService.aggiungiCategoria(nameCategory));
-        assertTrue(exception.getMessage().contains("Invalid category name"));
+        assertTrue(exception.getMessage().contains("Categoria name cannot be null or empty"));
     }
 
     // =================================================================================================
@@ -418,7 +422,7 @@ class AdminServiceTest {
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
                 () -> adminService.eliminaCategoria(nameCategory));
-        assertTrue(exception.getMessage().contains("Invalid category name"));
+        assertTrue(exception.getMessage().contains("Categoria name cannot be null or empty"));
     }
 
     // =================================================================================================
@@ -457,7 +461,7 @@ class AdminServiceTest {
         IllegalStateException exception = assertThrows(
                 IllegalStateException.class,
                 () -> adminService.mostraUtenti());
-        assertTrue(exception.getMessage().contains("DAO returned null for users list."));
+        assertTrue(exception.getMessage().contains("DAO returned null for utenti list"));
     }
 
     // =================================================================================================
@@ -493,7 +497,7 @@ class AdminServiceTest {
         IllegalStateException exception = assertThrows(
                 IllegalStateException.class,
                 () -> adminService.mostraOrdini());
-        assertTrue(exception.getMessage().contains("DAO returned null for orders list."));
+        assertTrue(exception.getMessage().contains("DAO returned null for ordini list"));
     }
 
     // =================================================================================================

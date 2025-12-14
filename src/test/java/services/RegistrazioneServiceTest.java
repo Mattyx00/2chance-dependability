@@ -309,7 +309,7 @@ class RegistrazioneServiceTest {
         try (MockedStatic<UtenteDAO> mockedStatic = mockStatic(UtenteDAO.class)) {
             mockedStatic.when(() -> UtenteDAO.isEmailPresent(validEmail)).thenReturn(false);
 
-            doNothing().when(utenteDAO).addUtente(any(Utente.class));
+            when(utenteDAO.addUtente(any(Utente.class))).thenReturn(1);
 
             // Act
             ArrayList<String> arrayErrors = registrazioneService.validateAndRegister(

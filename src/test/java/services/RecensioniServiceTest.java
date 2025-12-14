@@ -132,7 +132,7 @@ class RecensioniServiceTest {
         Utente user = new Utente();
         String reviewText = "Recensione valida";
         int ratingProduct = 5;
-        int productId = 1;
+        int productId = -1;
 
         // Act & Assert
         IllegalArgumentException exception = assertThrows(
