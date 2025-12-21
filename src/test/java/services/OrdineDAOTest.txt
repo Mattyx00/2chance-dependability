@@ -1,0 +1,301 @@
+Class Overview
+==============
+The `OrdineDAO` class handles data persistence for `Ordine` (Order) entities and their associated components (cart items). It interacts with the database to retrieve, create, and manage orders.
+Key responsibilities:
+1. Fetching orders by ID, user, or all orders.
+2. Retrieving products (cart) associated with an order.
+3. Creating new orders with strict validation and transaction management.
+
+Key State & Fields:
+- **Database Connection**: Managed via `ConPool`.
+- **Database Tables**:
+    - `ordine`: Stores order headers (id, user, date, address, total).
+    - `composto`: Stores order lines (order_id, product_id, quantity, price).
+    - `prodotto`: Referenced for product details.
+
+---
+
+Method: getOrdineById(int id)
+=============================
+Retrieves a single order by its primary key.
+
+Parameters & Logic
+------------------
+- **Parameters**: `id` (int).
+- **Logic**: 
+    - Validates `id > 0`. Throws `IllegalArgumentException` otherwise.
+    - Queries `ordine` table.
+    - If found, populates `Ordine` object (including partial nested objects like `Utente`).
+    - If not found, returns empty `Ordine` object (legacy behavior preserved).
+
+Categories and Choices
+----------------------
+**Category A: Input ID**
+- Choice A1: Positive integer (> 0).
+- Choice A2: Zero (0).
+- Choice A3: Negative integer (< 0).
+
+**Category B: Database State (for valid ID)**
+- Choice B1: ID exists in `ordine` table.
+- Choice B2: ID does not exist in `ordine` table.
+- Choice B3: DB Connection failure.
+
+Test Frames
+-----------
+**Frame F1**
+- **Combination**: A1, B1.
+- **Expected Behavior**: Returns populated `Ordine` object with matching ID.
+
+**Frame F2**
+- **Combination**: A1, B2.
+- **Expected Behavior**: Returns empty `Ordine` object (id=0).
+
+**Frame F3**
+- **Combination**: A2.
+- **Expected Behavior**: Throws `IllegalArgumentException` ("...maggiore di zero").
+
+**Frame F4**
+- **Combination**: A3.
+- **Expected Behavior**: Throws `IllegalArgumentException`.
+
+**Frame F5**
+- **Combination**: A1, B3.
+- **Expected Behavior**: Throws `SQLException`.
+
+Suggested JUnit 5 Test
+----------------------
+**Test: `shouldReturnOrderWhenIdExists`**
+- **Arrange**: Mock DB contains order with ID 10.
+- **Act**: `dao.getOrdineById(10)`.
+- **Assert**: Verify returned object ID is 10.
+
+**Test: `shouldReturnEmptyOrderWhenIdDoesNotExist`**
+- **Arrange**: DB empty or ID 999 missing.
+- **Act**: `dao.getOrdineById(999)`.
+- **Assert**: Verify returned object ID is 0.
+
+**Parameterized Test: `shouldThrowExceptionWhenIdIsInvalid`**
+- **Schema**: `id`
+- **Rows**: `0`, `-1`, `-100`
+- **Act**: `dao.getOrdineById(id)`.
+- **Assert**: `IllegalArgumentException`.
+
+---
+
+Method: getProdottoOrdine(Ordine o)
+===================================
+Retrieves the list of products (cart) for a given order.
+
+Parameters & Logic
+------------------
+- **Parameters**: `Ordine o`.
+- **Logic**:
+    - Validates `o != null`.
+    - Validates `o.getId() > 0`.
+    - Joins `composto`, `ordine`, `prodotto`.
+    - Returns `Carrello` containing `ProdottoCarrello` items.
+
+Categories and Choices
+----------------------
+**Category A: Input Object (`o`)**
+- Choice A1: Null.
+- Choice A2: Valid object (non-null).
+
+**Category B: Order ID (`o.getId()`) [If A2]**
+- Choice B1: Positive (> 0).
+- Choice B2: Zero or Negative.
+
+**Category C: Database State [If A2, B1]**
+- Choice C1: Order has associated products.
+- Choice C2: Order exists but has no products (empty cart - theoretically unlikely but possible DB state).
+- Choice C3: DB Connection failure.
+
+Test Frames
+-----------
+**Frame F6**
+- **Combination**: A1.
+- **Expected Behavior**: Throws `IllegalArgumentException` ("...non può essere null").
+
+**Frame F7**
+- **Combination**: A2, B2.
+- **Expected Behavior**: Throws `IllegalArgumentException` ("...deve essere valido").
+
+**Frame F8**
+- **Combination**: A2, B1, C1.
+- **Expected Behavior**: Returns `Carrello` with list of `ProdottoCarrello` items.
+
+**Frame F9**
+- **Combination**: A2, B1, C2.
+- **Expected Behavior**: Returns empty `Carrello`.
+
+Suggested JUnit 5 Test
+----------------------
+**Test: `shouldThrowExceptionWhenOrdineIsNull`**
+- **Act**: `dao.getProdottoOrdine(null)`.
+- **Assert**: `IllegalArgumentException`.
+
+**Test: `shouldReturnCartWhenOrderHasProducts`**
+- **Arrange**: Mock DB join returning 2 rows.
+- **Act**: `dao.getProdottoOrdine(validOrder)`.
+- **Assert**: Verify carrello has 2 products.
+
+---
+
+Method: getOrdiniByUtente(Utente utente)
+========================================
+Retrieves all orders for a specific user.
+
+Parameters & Logic
+------------------
+- **Parameters**: `Utente utente`.
+- **Logic**:
+    - Validates `utente != null`.
+    - Validates `utente.getId() > 0`.
+    - Selects from `ordine`.
+    - **Crucial**: Calls `getProdottoOrdine` internally for each order.
+
+Categories and Choices
+----------------------
+**Category A: Input User (`utente`)**
+- Choice A1: Null.
+- Choice A2: Valid (ID > 0).
+- Choice A3: Invalid ID (<= 0).
+
+**Category B: Database State**
+- Choice B1: User has orders.
+- Choice B2: User has no orders.
+
+Test Frames
+-----------
+**Frame F10**
+- **Combination**: A1.
+- **Expected Behavior**: Throws `IllegalArgumentException`.
+
+**Frame F11**
+- **Combination**: A3.
+- **Expected Behavior**: Throws `IllegalArgumentException`.
+
+**Frame F12**
+- **Combination**: A2, B1.
+- **Expected Behavior**: Returns list of `Ordine`.
+
+**Frame F13**
+- **Combination**: A2, B2.
+- **Expected Behavior**: Returns empty list.
+
+Suggested JUnit 5 Test
+----------------------
+**Test: `shouldReturnOrdersWhenUserHasHistory`**
+- **Arrange**: User 1 has 2 orders.
+- **Act**: `dao.getOrdiniByUtente(user1)`.
+- **Assert**: Returns list size 2.
+
+---
+
+Method: addOrdine(Ordine ordine)
+================================
+Adds a new order and its items transactionally.
+
+Parameters & Logic
+------------------
+- **Parameters**: `Ordine ordine`.
+- **Logic**:
+    - Validates `ordine != null`.
+    - Validates `ordine.getUtente()` is valid.
+    - Validates `ordine.getCarrello()` is populated.
+    - Validates `ordine.getIndirizzo()` is present.
+    - Transaction: Insert `ordine` -> Get ID -> Insert `composto` items -> Commit.
+
+Categories and Choices
+----------------------
+**Category A: Input Order**
+- Choice A1: Null.
+- Choice A2: Valid structure.
+
+**Category B: Nested User (If A2)**
+- Choice B1: Valid (`id > 0`).
+- Choice B2: Null or Invalid ID.
+
+**Category C: Nested Carrello (If A2)**
+- Choice C1: Valid (contains items).
+- Choice C2: Null or empty list of products.
+- Choice C3: Product within cart is invalid (null or id<=0).
+- Choice C4: Quantity within cart is invalid (<=0).
+
+**Category D: Address (If A2)**
+- Choice D1: Valid string.
+- Choice D2: Null or empty.
+
+**Category E: Transaction State**
+- Choice E1: Success.
+- Choice E2: Insert Ordine fails.
+- Choice E3: Insert Composto fails (rollback).
+
+Test Frames
+-----------
+**Frame F14**
+- **Combination**: A1.
+- **Expected Behavior**: Throws `IllegalArgumentException`.
+
+**Frame F15**
+- **Combination**: A2, B2 (Invalid User).
+- **Expected Behavior**: Throws `IllegalArgumentException`.
+
+**Frame F16**
+- **Combination**: A2, C2 (Empty Cart).
+- **Expected Behavior**: Throws `IllegalArgumentException`.
+
+**Frame F17**
+- **Combination**: A2, D2 (Invalid Address).
+- **Expected Behavior**: Throws `IllegalArgumentException`.
+
+**Frame F18**
+- **Combination**: A2, C3 (Invalid Product in Cart).
+- **Expected Behavior**: Throws `IllegalArgumentException` (during iteration, transaction not committed).
+
+**Frame F19**
+- **Combination**: A2, Full Valid, E1 (Success).
+- **Expected Behavior**: Order created, items created, transaction committed.
+
+**Frame F20**
+- **Combination**: A2, Full Valid, E3 (Item fail).
+- **Expected Behavior**: Throws `SQLException`, transaction rolled back (no order in DB).
+
+Suggested JUnit 5 Test
+----------------------
+**Test: `shouldRollbackWhenItemInsertionFails`**
+- **Arrange**: Mock DB to succeed on order insert but fail on item insert.
+- **Act**: `dao.addOrdine(validOrder)`.
+- **Assert**: Verify `rollback()` called on connection.
+
+**Test: `shouldCreateOrderSuccessfully`**
+- **Arrange**: Fully valid order.
+- **Act**: `dao.addOrdine(o)`.
+- **Assert**: Verify `commit()` called.
+
+---
+
+Method: getOrdini()
+===================
+Retrieves all orders in the system.
+
+Parameters & Logic
+------------------
+- **Parameters**: None.
+- **Logic**: Select all from `ordine`.
+
+Categories and Choices
+----------------------
+**Category A: Database Content**
+- Choice A1: Empty.
+- Choice A2: Populated.
+
+Test Frames
+-----------
+**Frame F21**
+- **Combination**: A1.
+- **Expected Behavior**: Returns empty list.
+
+**Frame F22**
+- **Combination**: A2.
+- **Expected Behavior**: Returns list of all orders.
