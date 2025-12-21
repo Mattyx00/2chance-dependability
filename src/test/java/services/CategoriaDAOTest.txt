@@ -1,0 +1,189 @@
+Class Overview
+==============
+The `CategoriaDAO` class is responsible for managing persistence for `Categoria` entities. It interacts with the database to retrieve, add, and delete categories.
+Key responsibilities include:
+1. Fetching all available categories from the `categoria` table.
+2. Inserting new valid categories.
+3. Deleting existing categories by name.
+
+Key State & Fields:
+- **Database Connection**: Implicitly managed via `ConPool`.
+- **Database Table (`categoria`)**: The state of the table affects the behavior of `getCategorie()`.
+- **Input Parameters**: `Categoria` objects and `String` names are strictly validated (defensive programming).
+
+---
+
+Method: getCategorie()
+======================
+Retrieves all categories from the database. It includes a defensive check to skip invalid entries retrieved from the DB.
+
+Parameters & Logic
+------------------
+- **Parameters**: None.
+- **Relevant State**: Content of the `categoria` table.
+- **Logic**: Executes `SELECT * FROM categoria`, iterates through the ResultSet, validates each name using `isValidCategoriaName`, creates `Categoria` objects for valid names, and returns an `ArrayList`.
+
+Categories and Choices
+----------------------
+**Category A: Database State (Table Content)**
+- Choice A1: Table is empty.
+- Choice A2: Table contains only valid rows.
+- Choice A3: Table contains a mix of valid rows and invalid rows (e.g., null or empty names).
+
+Test Frames
+-----------
+**Frame F1**
+- **Scenario**: Database is empty.
+- **Expected Behavior**: Returns an empty `ArrayList` (size 0). No exception.
+
+**Frame F2**
+- **Scenario**: Database contains valid categories.
+- **Expected Behavior**: Returns an `ArrayList` containing all `Categoria` objects corresponding to the DB rows.
+
+**Frame F3**
+- **Scenario**: Database contains invalid categories (malformed names).
+- **Expected Behavior**: Returns an `ArrayList` containing only the *valid* `Categoria` objects. Invalid rows are skipped silently (as per implementation).
+
+**Frame F4**
+- **Scenario**: Database connection fails (e.g., server down).
+- **Expected Behavior**: Throws `SQLException`.
+
+Suggested JUnit 5 Test
+----------------------
+**Test: `shouldReturnEmptyListWhenDbIsEmpty`**
+- **Arrange**: Mock the database or ensure the `categoria` table is truncated.
+- **Act**: Call `dao.getCategorie()`.
+- **Assert**: Verify `result.isEmpty()` is true.
+
+**Test: `shouldReturnAllCategoriesWhenDbIsPopulated`**
+- **Arrange**: Insert known valid records (e.g., "Electronics", "Books") into the DB.
+- **Act**: Call `dao.getCategorie()`.
+- **Assert**: Verify returns list of size 2, containing "Electronics" and "Books".
+
+---
+
+Method: addCategoria(Categoria c)
+=================================
+Adds a new category to the database after validating the input object.
+
+Parameters & Logic
+------------------
+- **Parameters**: `Categoria c`.
+- **Logic**: Validates `c` is not null. Validates `c.getNomeCategoria()` is not null/empty. Executes `INSERT`.
+
+Categories and Choices
+----------------------
+**Category A: Input Object (`c`)**
+- Choice A1: `c` is null.
+- Choice A2: `c` is not null.
+
+**Category B: Input Object Name (`c.getNomeCategoria()`) [If A2]**
+- Choice B1: Name is null.
+- Choice B2: Name is empty string ("").
+- Choice B3: Name is blank/whitespace ("   ").
+- Choice B4: Name is valid non-empty string.
+
+Test Frames
+-----------
+**Frame F5**
+- **Combination**: A1 (c is null).
+- **Expected Behavior**: Throws `IllegalArgumentException` with message "Il parametro 'categoria' non può essere null."
+
+**Frame F6**
+- **Combination**: A2, B1 (Name is null).
+- **Expected Behavior**: Throws `IllegalArgumentException` with message "Il nome della categoria non può essere null o vuoto."
+
+**Frame F7**
+- **Combination**: A2, B2 (Name is empty).
+- **Expected Behavior**: Throws `IllegalArgumentException` ("...null o vuoto.").
+
+**Frame F8**
+- **Combination**: A2, B3 (Name is whitespace).
+- **Expected Behavior**: Throws `IllegalArgumentException` ("...null o vuoto.").
+
+**Frame F9**
+- **Combination**: A2, B4 (Valid name).
+- **Expected Behavior**: Inserts record into database. Returns `1` (row count).
+
+**Frame F10**
+- **Combination**: A2, B4 (Valid), but DB error occurs.
+- **Expected Behavior**: Throws `SQLException`.
+
+Suggested JUnit 5 Test
+----------------------
+**Test: `shouldThrowExceptionWhenCategoriaIsNull`**
+- **Arrange**: `Categoria c = null;`
+- **Act**: `dao.addCategoria(c)` within `assertThrows`.
+- **Assert**: Verify `IllegalArgumentException` is thrown.
+
+**Parameterized Test: `shouldThrowExceptionWhenCategoriaNameIsInvalid`**
+- **Schema**: `invalidName`
+- **Rows**: `[null]`, `[""]`, `["   "]`
+- **Arrange**: Create `Categoria` with `invalidName`.
+- **Act**: Call `dao.addCategoria(c)`.
+- **Assert**: Verify `IllegalArgumentException`.
+
+**Test: `shouldAddCategoriaWhenInputIsValid`**
+- **Arrange**: Create `Categoria` with name "NewCat".
+- **Act**: `int result = dao.addCategoria(c);`
+- **Assert**: Verify `result == 1`. Verify "NewCat" exists in DB.
+
+---
+
+Method: eliminaCategoria(String nome)
+=====================================
+Deletes a category based on its name.
+
+Parameters & Logic
+------------------
+- **Parameters**: `String nome`.
+- **Logic**: Validates `nome` is not null/empty. Executes `DELETE`.
+
+Categories and Choices
+----------------------
+**Category A: Input String (`nome`)**
+- Choice A1: Null.
+- Choice A2: Empty string ("").
+- Choice A3: Blank/whitespace ("   ").
+- Choice A4: Valid string, exists in DB.
+- Choice A5: Valid string, does not exist in DB.
+
+Test Frames
+-----------
+**Frame F11**
+- **Combination**: A1 (Null).
+- **Expected Behavior**: Throws `IllegalArgumentException` ("Il parametro 'nome' non può essere null o vuoto.").
+
+**Frame F12**
+- **Combination**: A2 (Empty).
+- **Expected Behavior**: Throws `IllegalArgumentException`.
+
+**Frame F13**
+- **Combination**: A3 (Whitespace).
+- **Expected Behavior**: Throws `IllegalArgumentException`.
+
+**Frame F14**
+- **Combination**: A4 (Exists).
+- **Expected Behavior**: Deletes record. DB state changes (record removed).
+
+**Frame F15**
+- **Combination**: A5 (Not Exists).
+- **Expected Behavior**: Method completes normally (no exception). Returns implicitly (void). DB state unchanged.
+
+Suggested JUnit 5 Test
+----------------------
+**Parameterized Test: `shouldThrowExceptionWhenDeleteNameIsInvalid`**
+- **Schema**: `name`
+- **Rows**: `[null]`, `[""]`, `["   "]`
+- **Act**: `dao.eliminaCategoria(name)`.
+- **Assert**: Verify `IllegalArgumentException`.
+
+**Test: `shouldDeleteCategoriaWhenNameExists`**
+- **Arrange**: Insert "ToDelete" into DB.
+- **Act**: `dao.eliminaCategoria("ToDelete")`.
+- **Assert**: Verify "ToDelete" is no longer in DB.
+
+**Test: `shouldDoNothingWhenDeleteNameDoesNotExist`**
+- **Arrange**: Ensure "Ghost" is not in DB.
+- **Act**: `dao.eliminaCategoria("Ghost")`.
+- **Assert**: No exception thrown. DB remains unchanged.
