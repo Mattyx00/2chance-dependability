@@ -1,0 +1,72 @@
+Class Overview
+==============
+The `SpecificheDAO` class is a Data Access Object responsible for retrieving product specifications (`Specifiche`) from the database.
+It interacts with the `specifiche` table and depends on `utils.ConPool` for database connections.
+Its primary function is `getSpecificheByProd`, which converts database rows into `Specifiche` bean objects.
+
+Key State & Fields:
+- **Database Table**: `specifiche`.
+- **Dependencies**: `ConPool`.
+- **Logger**: Used for tracking retrieval operations.
+
+---
+
+Method: getSpecificheByProd(int id)
+===================================
+Retrieves a list of specifications associated with a given product ID.
+
+Parameters & Logic
+------------------
+- **Parameters**: `int id` (Product ID).
+- **Logic**:
+    - Validates that `id` is greater than 0. Throws `IllegalArgumentException` otherwise.
+    - Executes SQL: `SELECT nome, valore FROM specifiche WHERE id_prodotto = ?`.
+    - Maps each `ResultSet` row to a `Specifiche` object.
+    - Returns an `ArrayList<Specifiche>`.
+
+Categories and Choices
+----------------------
+**Category A: Input Product ID**
+- Choice A1: Valid Positive Integer (> 0).
+- Choice A2: Boundary Zero (0).
+- Choice A3: Negative Integer (< 0).
+
+**Category B: Database State (If A1)**
+- Choice B1: Specifications exist for the product ID.
+- Choice B2: No specifications exist for the product ID (or product ID does not exist).
+
+Test Frames
+-----------
+**Frame F1**
+- **Combination**: A1, B1.
+- **Expected Behavior**: Returns a non-empty `ArrayList` of `Specifiche` objects. The objects should contain the expected `nome` and `valore`.
+
+**Frame F2**
+- **Combination**: A1, B2.
+- **Expected Behavior**: Returns an empty `ArrayList` (not null).
+
+**Frame F3**
+- **Combination**: A2.
+- **Expected Behavior**: Throws `IllegalArgumentException` with message "L'ID del prodotto deve essere maggiore di zero.".
+
+**Frame F4**
+- **Combination**: A3.
+- **Expected Behavior**: Throws `IllegalArgumentException` with message "L'ID del prodotto deve essere maggiore di zero.".
+
+Suggested JUnit 5 Test
+----------------------
+**Test: `shouldReturnSpecificationsListWhenProductIdIsValidAndSpecsExist`**
+- **Arrange**: Mock `ConPool` and `PreparedStatement` to return a `ResultSet` with rows (e.g., nome="Color", valore="Red").
+- **Act**: Call `dao.getSpecificheByProd(1)`.
+- **Assert**: Verify returned list size is > 0 and the first element matches the mocked data.
+
+**Test: `shouldReturnEmptyListWhenProductIdIsValidButNoSpecsExist`**
+- **Arrange**: Mock `ResultSet` to return empty (next() returns false).
+- **Act**: Call `dao.getSpecificheByProd(100)`.
+- **Assert**: Verify returned list is empty.
+
+**Parameterized Test: `shouldThrowExceptionWhenProductIdIsInvalid`**
+- **Schema**: `id`
+- **Rows**: `0`, `-1`, `-100`
+- **Act**: Call `dao.getSpecificheByProd(id)`.
+- **Assert**: Expect `IllegalArgumentException`.
