@@ -1,0 +1,281 @@
+Class Overview
+==============
+The `WishListDAO` class is a Data Access Object responsible for managing wishlist operations in the e-commerce system.
+It interacts with the `wishlist` database table and depends on `ProdottoDAO` to retrieve product details.
+The class relies on `utils.ConPool` for database connections and uses `java.util.logging.Logger` for operational logging.
+
+Key State & Fields:
+- **Database Table**: `wishlist` (junction table with id_cliente, id_prodotto).
+- **Dependencies**: `ProdottoDAO` for loading product details.
+- **Logger**: Used for logging successful operations, warnings, and error conditions.
+
+---
+
+Method: Constructor WishListDAO()
+==================================
+Default no-argument constructor.
+
+Parameters & Logic
+------------------
+- **Parameters**: None.
+- **Logic**: Simply initializes the object with no state.
+
+Categories and Choices
+----------------------
+**Category A: Constructor Invocation**
+- Choice A1: Standard instantiation.
+
+Test Frames
+-----------
+**Frame F1**
+- **Combination**: A1.
+- **Expected Behavior**: Returns a non-null `WishListDAO` instance.
+
+Suggested JUnit 5 Test
+----------------------
+**Test: `shouldInstantiateSuccessfully`**
+- **Arrange**: None.
+- **Act**: `new WishListDAO()`
+- **Assert**: `assertNotNull`.
+
+---
+
+Method: addToWishList(Utente u, Prodotto p)
+============================================
+Adds a product to a user's wishlist.
+
+Parameters & Logic
+------------------
+- **Parameters**: `Utente u`, `Prodotto p`.
+- **Logic**:
+    - Validates `u` is not null and has valid ID (> 0).
+    - Validates `p` is not null and has valid ID (> 0).
+    - Executes INSERT into wishlist table.
+    - Logs success or failure.
+
+Categories and Choices
+----------------------
+**Category A: Utente Parameter**
+- Choice A1: Valid Utente with ID > 0.
+- Choice A2: Null Utente.
+- Choice A3: Utente with ID = 0.
+- Choice A4: Utente with ID < 0.
+
+**Category B: Prodotto Parameter**
+- Choice B1: Valid Prodotto with ID > 0.
+- Choice B2: Null Prodotto.
+- Choice B3: Prodotto with ID = 0.
+- Choice B4: Prodotto with ID < 0.
+
+**Category C: Database State (If A1 and B1)**
+- Choice C1: Entry does not exist (successful insert).
+- Choice C2: Entry already exists (duplicate key constraint).
+
+Test Frames
+-----------
+**Frame F2**
+- **Combination**: A1, B1, C1.
+- **Expected Behavior**: Executes successfully without throwing exception. Row inserted into database.
+
+**Frame F3**
+- **Combination**: A2, B1.
+- **Expected Behavior**: Throws `IllegalArgumentException` with message "L'utente non può essere null."
+
+**Frame F4**
+- **Combination**: A1, B2.
+- **Expected Behavior**: Throws `IllegalArgumentException` with message "Il prodotto non può essere null."
+
+**Frame F5**
+- **Combination**: A3, B1.
+- **Expected Behavior**: Throws `IllegalArgumentException` with message "L'ID dell'utente deve essere maggiore di zero."
+
+**Frame F6**
+- **Combination**: A1, B3.
+- **Expected Behavior**: Throws `IllegalArgumentException` with message "L'ID del prodotto deve essere maggiore di zero."
+
+**Frame F7**
+- **Combination**: A4, B1.
+- **Expected Behavior**: Throws `IllegalArgumentException` (ID validation fails for negative user ID).
+
+**Frame F8**
+- **Combination**: A1, B4.
+- **Expected Behavior**: Throws `IllegalArgumentException` (ID validation fails for negative product ID).
+
+**Frame F9**
+- **Combination**: A1, B1, C2.
+- **Expected Behavior**: Throws `SQLException` (duplicate key constraint violation).
+
+Suggested JUnit 5 Test
+----------------------
+**Test: `shouldAddToWishListWhenInputsValid`**
+- **Arrange**: Mock valid `Utente` with ID=1, mock valid `Prodotto` with ID=2, mock JDBC components.
+- **Act**: `dao.addToWishList(utente, prodotto)`
+- **Assert**: Verify `executeUpdate()` called, no exception thrown.
+
+**Parameterized Test: `shouldThrowExceptionWhenInputsInvalid`**
+- **CSV Schema**: `utenteId, prodottoId, expectedMessage`
+- **Example Rows**:
+  - `0, 5, "L'ID dell'utente deve essere maggiore di zero."`
+  - `5, 0, "L'ID del prodotto deve essere maggiore di zero."`
+  - `-1, 5, "L'ID dell'utente deve essere maggiore di zero."`
+  - `5, -1, "L'ID del prodotto deve essere maggiore di zero."`
+
+---
+
+Method: getWishListByUser(Utente u)
+====================================
+Retrieves a user's wishlist including all products.
+
+Parameters & Logic
+------------------
+- **Parameters**: `Utente u`.
+- **Logic**:
+    - Validates `u` is not null and has valid ID (> 0).
+    - Executes SELECT query for wishlist entries.
+    - For each entry, loads product via `ProdottoDAO`.
+    - Handles errors gracefully (logs and skips invalid products).
+    - Returns `WishList` object (never null, but product list may be empty).
+
+Categories and Choices
+----------------------
+**Category A: Utente Parameter**
+- Choice A1: Valid Utente with ID > 0.
+- Choice A2: Null Utente.
+- Choice A3: Utente with ID = 0.
+- Choice A4: Utente with ID < 0.
+
+**Category B: Database State (If A1)**
+- Choice B1: User has wishlist entries with valid products.
+- Choice B2: User has no wishlist entries (empty list).
+- Choice B3: User has wishlist entries but products cannot be loaded (ProdottoDAO fails).
+- Choice B4: User has wishlist entries with invalid product IDs (e.g., ID <= 0).
+
+Test Frames
+-----------
+**Frame F10**
+- **Combination**: A1, B1.
+- **Expected Behavior**: Returns `WishList` with non-empty product list, all products loaded successfully.
+
+**Frame F11**
+- **Combination**: A1, B2.
+- **Expected Behavior**: Returns `WishList` with empty product list.
+
+**Frame F12**
+- **Combination**: A2.
+- **Expected Behavior**: Throws `IllegalArgumentException` with message "L'utente non può essere null."
+
+**Frame F13**
+- **Combination**: A3.
+- **Expected Behavior**: Throws `IllegalArgumentException` with message "L'ID dell'utente deve essere maggiore di zero."
+
+**Frame F14**
+- **Combination**: A4.
+- **Expected Behavior**: Throws `IllegalArgumentException` (negative user ID).
+
+**Frame F15**
+- **Combination**: A1, B3.
+- **Expected Behavior**: Returns `WishList` with empty or partial product list. Logs warnings but does not throw exception.
+
+**Frame F16**
+- **Combination**: A1, B4.
+- **Expected Behavior**: Returns `WishList`. Invalid product IDs are logged and skipped. Product list may be empty or partial.
+
+Suggested JUnit 5 Test
+----------------------
+**Test: `shouldReturnWishListWithProductsWhenUserValid`**
+- **Arrange**: Mock `Utente` with ID=1, mock `ResultSet` with multiple rows, mock `ProdottoDAO` to return valid products.
+- **Act**: `dao.getWishListByUser(utente)`
+- **Assert**: Verify `WishList` returned, product list size > 0, utente is set correctly.
+
+**Test: `shouldReturnEmptyWishListWhenNoEntries`**
+- **Arrange**: Mock `Utente`, mock empty `ResultSet`.
+- **Act**: `dao.getWishListByUser(utente)`
+- **Assert**: Verify `WishList` returned, product list is empty.
+
+**Test: `shouldHandleProductLoadFailureGracefully`**
+- **Arrange**: Mock `Utente`, mock `ResultSet` with entries, mock `ProdottoDAO` to throw `SQLException`.
+- **Act**: `dao.getWishListByUser(utente)`
+- **Assert**: Verify `WishList` returned (not null), products list may be empty or partial.
+
+**Parameterized Test: `shouldThrowExceptionWhenUtenteInvalid`**
+- **CSV Schema**: `utenteId, expectedMessage`
+- **Example Rows**:
+  - `0, "L'ID dell'utente deve essere maggiore di zero."`
+  - `-5, "L'ID dell'utente deve essere maggiore di zero."`
+
+---
+
+Method: removeFromWishList(int id_utente, int id_prodotto)
+===========================================================
+Removes a product from a user's wishlist.
+
+Parameters & Logic
+------------------
+- **Parameters**: `int id_utente`, `int id_prodotto`.
+- **Logic**:
+    - Validates `id_utente` > 0.
+    - Validates `id_prodotto` > 0.
+    - Executes DELETE query.
+    - Logs number of rows affected (0 if entry didn't exist).
+
+Categories and Choices
+----------------------
+**Category A: User ID**
+- Choice A1: Valid positive ID (> 0).
+- Choice A2: Zero (0).
+- Choice A3: Negative ID (< 0).
+
+**Category B: Product ID**
+- Choice B1: Valid positive ID (> 0).
+- Choice B2: Zero (0).
+- Choice B3: Negative ID (< 0).
+
+**Category C: Database State (If A1 and B1)**
+- Choice C1: Entry exists (row deleted).
+- Choice C2: Entry does not exist (no rows affected).
+
+Test Frames
+-----------
+**Frame F17**
+- **Combination**: A1, B1, C1.
+- **Expected Behavior**: Executes successfully. One row deleted. Logs success message.
+
+**Frame F18**
+- **Combination**: A1, B1, C2.
+- **Expected Behavior**: Executes successfully. Zero rows affected. Logs "No wishlist entry found" message.
+
+**Frame F19**
+- **Combination**: A2, B1.
+- **Expected Behavior**: Throws `IllegalArgumentException` with message "L'ID dell'utente deve essere maggiore di zero."
+
+**Frame F20**
+- **Combination**: A1, B2.
+- **Expected Behavior**: Throws `IllegalArgumentException` with message "L'ID del prodotto deve essere maggiore di zero."
+
+**Frame F21**
+- **Combination**: A3, B1.
+- **Expected Behavior**: Throws `IllegalArgumentException` (negative user ID).
+
+**Frame F22**
+- **Combination**: A1, B3.
+- **Expected Behavior**: Throws `IllegalArgumentException` (negative product ID).
+
+Suggested JUnit 5 Test
+----------------------
+**Test: `shouldRemoveFromWishListWhenEntryExists`**
+- **Arrange**: Valid IDs, mock `PreparedStatement` to return 1 row affected.
+- **Act**: `dao.removeFromWishList(1, 2)`
+- **Assert**: Verify `executeUpdate()` called, no exception thrown.
+
+**Test: `shouldHandleNonExistentEntryGracefully`**
+- **Arrange**: Valid IDs, mock `PreparedStatement` to return 0 rows affected.
+- **Act**: `dao.removeFromWishList(1, 999)`
+- **Assert**: Verify `executeUpdate()` called, no exception thrown.
+
+**Parameterized Test: `shouldThrowExceptionWhenIdsInvalid`**
+- **CSV Schema**: `userId, productId, expectedMessage`
+- **Example Rows**:
+  - `0, 5, "L'ID dell'utente deve essere maggiore di zero."`
+  - `5, 0, "L'ID del prodotto deve essere maggiore di zero."`
+  - `-1, 5, "L'ID dell'utente deve essere maggiore di zero."`
+  - `5, -1, "L'ID del prodotto deve essere maggiore di zero."`
