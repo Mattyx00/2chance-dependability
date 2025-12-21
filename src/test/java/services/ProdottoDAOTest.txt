@@ -1,0 +1,239 @@
+Class Overview
+==============
+The `ProdottoDAO` class manages `Prodotto` (Product) entities in the database. It handles improved robustness checks, ensuring that invalid products or IDs do not compromise database integrity. It relies on `ConPool` for connections and interacts with `SpecificheDAO` and `RecensioneDAO` for nested data.
+
+Key State & Fields:
+- **Database Tables**: `prodotto`, `specifiche` (via external DAO), `recensione` (via external DAO).
+- **Dependencies**: `ConPool`, `SpecificheDAO`, `RecensioneDAO`.
+
+---
+
+Method: getProdottoById(int idProdotto)
+=======================================
+Retrieves a product by its ID, including its specifications and reviews.
+
+Parameters & Logic
+------------------
+- **Parameters**: `idProdotto` (int).
+- **Logic**:
+    - Validates `idProdotto > 0`. Throws `IllegalArgumentException`.
+    - Queries `prodotto` table.
+    - If found, fetches `Specifiche` and `Recensione` data (swallowing exceptions from them).
+    - Returns `Prodotto` or `null` if not found.
+
+Categories and Choices
+----------------------
+**Category A: Input ID**
+- Choice A1: Positive > 0.
+- Choice A2: Zero or Negative.
+
+**Category B: Database State (If A1)**
+- Choice B1: ID exists.
+- Choice B2: ID does not exist.
+- Choice B3: Connection failure or SQL error.
+
+**Category C: Dependency State (If A1, B1)**
+- Choice C1: Dependencies (Specs/Reviews) load successfully.
+- Choice C2: Dependencies fail (e.g., SQL error in sub-DAOs).
+
+Test Frames
+-----------
+**Frame F1**
+- **Combination**: A1, B1, C1.
+- **Expected Behavior**: Returns fully populated `Prodotto`.
+
+**Frame F2**
+- **Combination**: A1, B2.
+- **Expected Behavior**: Returns `null`.
+
+**Frame F3**
+- **Combination**: A2.
+- **Expected Behavior**: Throws `IllegalArgumentException`.
+
+**Frame F4**
+- **Combination**: A1, B1, C2.
+- **Expected Behavior**: Returns `Prodotto` with empty lists for specs/reviews (robustness check).
+
+Suggested JUnit 5 Test
+----------------------
+**Test: `shouldReturnProductWithEmptyListsWhenDependenciesFail`**
+- **Arrange**: Mock DB to return product. Mock dependencies to throw SQLException.
+- **Act**: `dao.getProdottoById(validId)`.
+- **Assert**: Verify product returned, specs/reviews are not null but empty.
+
+---
+
+Method: addProdotto(Prodotto p)
+===============================
+Inserts a new product into the database.
+
+Parameters & Logic
+------------------
+- **Parameters**: `Prodotto p`.
+- **Logic**:
+    - Validates `p` is not null.
+    - Validates nested fields (Categoria, Marca, Modello, Prezzo).
+    - Inserts into `prodotto`.
+
+Categories and Choices
+----------------------
+**Category A: Input Object**
+- Choice A1: Valid `Prodotto` (all mandatory fields set).
+- Choice A2: Null.
+- Choice A3: Validation failure (e.g., null category, negative price).
+
+**Category B: Database Interaction**
+- Choice B1: Successful insert.
+- Choice B2: SQL Exception (e.g., constraint violation).
+
+Test Frames
+-----------
+**Frame F5**
+- **Combination**: A1, B1.
+- **Expected Behavior**: Returns number of rows affected (1).
+
+**Frame F6**
+- **Combination**: A2.
+- **Expected Behavior**: Throws `IllegalArgumentException`.
+
+**Frame F7**
+- **Combination**: A3.
+- **Expected Behavior**: Throws `IllegalArgumentException`.
+
+Suggested JUnit 5 Test
+----------------------
+**Parameterized Test: `shouldThrowExceptionWhenProductIsInvalid`**
+- **Schema**: `fieldToInvalidate`
+- **Rows**: `null_category`, `negative_price`, `empty_brand`
+- **Act**: Construct invalid product, call `addProdotto`.
+- **Assert**: `IllegalArgumentException`.
+
+---
+
+Method: modificaProdotto(Prodotto p)
+====================================
+Updates an existing product.
+
+Parameters & Logic
+------------------
+- **Parameters**: `Prodotto p`.
+- **Logic**:
+    - Validates `p` contents and `p.getId() > 0`.
+    - Checks if image needs updating.
+    - Updates `prodotto` table.
+
+Categories and Choices
+----------------------
+**Category A: Input Object**
+- Choice A1: Valid `Prodotto` (ID > 0, mandatory fields set).
+- Choice A2: Invalid ID (<= 0).
+- Choice A3: Missing mandatory fields (Validation failure).
+
+**Category B: Image Update**
+- Choice B1: Image field set (Update includes image column).
+- Choice B2: Image field null/empty (Update excludes image column).
+
+Test Frames
+-----------
+**Frame F8**
+- **Combination**: A1, B1.
+- **Expected Behavior**: Updates product including image.
+
+**Frame F9**
+- **Combination**: A1, B2.
+- **Expected Behavior**: Updates product excluding image.
+
+**Frame F10**
+- **Combination**: A2.
+- **Expected Behavior**: Throws `IllegalArgumentException`.
+
+---
+
+Method: getProdottiByCategoria(String categoria)
+================================================
+Retrieves products filtered by category.
+
+Parameters & Logic
+------------------
+- **Parameters**: `categoria` (string).
+- **Logic**:
+    - Validates input not null/empty.
+    - Queries by category.
+
+Categories and Choices
+----------------------
+**Category A: Input Category**
+- Choice A1: Valid string.
+- Choice A2: Null or empty string.
+
+**Category B: Database Content**
+- Choice B1: Products found.
+- Choice B2: No products found.
+
+Test Frames
+-----------
+**Frame F11**
+- **Combination**: A1, B1.
+- **Expected Behavior**: Returns list of products.
+
+**Frame F12**
+- **Combination**: A2.
+- **Expected Behavior**: Throws `IllegalArgumentException`.
+
+---
+
+Method: eliminaProdotto(int idProdotto)
+=======================================
+Soft-deletes a product.
+
+Parameters & Logic
+------------------
+- **Parameters**: `idProdotto` (int).
+- **Logic**:
+    - Validates ID > 0.
+    - Updates `disabilitato = 1`.
+
+Categories and Choices
+----------------------
+**Category A: Input ID**
+- Choice A1: Positive > 0.
+- Choice A2: Zero or Negative.
+
+Test Frames
+-----------
+**Frame F13**
+- **Combination**: A1.
+- **Expected Behavior**: DB update execution.
+
+**Frame F14**
+- **Combination**: A2.
+- **Expected Behavior**: Throws `IllegalArgumentException`.
+
+---
+
+Method: cercaProdotti(String nome)
+==================================
+Searches products by keyword.
+
+Parameters & Logic
+------------------
+- **Parameters**: `nome` (string).
+- **Logic**:
+    - Validates `nome` not null/empty.
+    - Queries with `LIKE`.
+
+Categories and Choices
+----------------------
+**Category A: Input Name**
+- Choice A1: Valid string.
+- Choice A2: Null or empty string.
+
+Test Frames
+-----------
+**Frame F15**
+- **Combination**: A1.
+- **Expected Behavior**: Returns matching products.
+
+**Frame F16**
+- **Combination**: A2.
+- **Expected Behavior**: Throws `IllegalArgumentException`.
