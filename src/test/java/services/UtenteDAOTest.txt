@@ -1,0 +1,234 @@
+Class Overview
+==============
+The `UtenteDAO` class is a Data Access Object responsible for managing user data involved in the e-commerce system.
+It interacts with the `utente` table and dependencies like `OrdineDAO` and `RecensioneDAO` to populate complex user objects.
+It relies on `utils.ConPool` for database connections and uses `java.util.logging.Logger` for error logging.
+
+Key State & Fields:
+- **Database Table**: `utente`.
+- **Dependencies**: `OrdineDAO`, `RecensioneDAO`.
+- **Logger**: Used for logging failures during dependent object loading.
+
+---
+
+Method: getUtenteById(int id)
+=============================
+Retrieves a user by their unique ID, including their orders and reviews.
+
+Parameters & Logic
+------------------
+- **Parameters**: `int id` (User ID).
+- **Logic**:
+    - Validates `id` > 0. Throws `IllegalArgumentException` otherwise.
+    - Executes SELECT query.
+    - If found, populates `Utente` bean.
+    - Attempts to load `Ordini` and `Recensioni`. failures in these sub-loads are logged and do not fail the main method (lists are set to empty).
+    - Returns `Utente` or null.
+
+Categories and Choices
+----------------------
+**Category A: Input User ID**
+- Choice A1: Valid Positive Integer (> 0).
+- Choice A2: Boundary Zero (0).
+- Choice A3: Negative Integer (< 0).
+
+**Category B: Database State (If A1)**
+- Choice B1: User exists in DB.
+- Choice B2: User does not exist in DB.
+
+**Category C: Dependent Data (If B1)**
+- Choice C1: User has orders and reviews.
+- Choice C2: User has no orders or reviews.
+- Choice C3: Dependent DAO throws exception (Simulated check for robustness).
+
+Test Frames
+-----------
+**Frame F1**
+- **Combination**: A1, B1, C1.
+- **Expected Behavior**: Returns `Utente` object with populated fields, non-empty orders list, non-empty reviews list.
+
+**Frame F2**
+- **Combination**: A1, B1, C2.
+- **Expected Behavior**: Returns `Utente` object with populated fields, empty orders list, empty reviews list.
+
+**Frame F3**
+- **Combination**: A1, B2.
+- **Expected Behavior**: Returns `null`.
+
+**Frame F4**
+- **Combination**: A2.
+- **Expected Behavior**: Throws `IllegalArgumentException` ("L'ID dell'utente deve essere maggiore di zero.").
+
+**Frame F5**
+- **Combination**: A3.
+- **Expected Behavior**: Throws `IllegalArgumentException` ("L'ID dell'utente deve essere maggiore di zero.").
+
+**Frame F6**
+- **Combination**: A1, B1, C3.
+- **Expected Behavior**: Returns `Utente` object. Orders/Reviews lists are empty (fallback), warning is logged.
+
+Suggested JUnit 5 Test
+----------------------
+**Test: `shouldReturnUserWithDependenciesWhenFound`**
+- **Arrange**: Mock `ResultSet` for user, orders, reviews.
+- **Act**: `dao.getUtenteById(1)`
+- **Assert**: Verify user ID, name, list sizes > 0.
+
+**Test: `shouldReturnNullWhenUserNotFound`**
+- **Arrange**: Mock `ResultSet` empty.
+- **Act**: `dao.getUtenteById(999)`
+- **Assert**: `assertNull`.
+
+---
+
+Method: addUtente(Utente utente)
+================================
+Inserts a new user into the database.
+
+Parameters & Logic
+------------------
+- **Parameters**: `Utente utente`.
+- **Logic**:
+    - Validates `utente` and its mandatory fields (nome, cognome, email, password) are not null/empty.
+    - Executes INSERT.
+    - Returns rows affected (int).
+
+Categories and Choices
+----------------------
+**Category A: Input Object**
+- Choice A1: Valid Utente with all fields (including image).
+- Choice A2: Valid Utente without image (defaults used).
+- Choice A3: Null Utente.
+- Choice A4: Utente with missing mandatory field (e.g. name null).
+
+**Category B: Database State**
+- Choice B1: Email is unique.
+- Choice B2: Email already exists (Constraint violation).
+
+Test Frames
+-----------
+**Frame F7**
+- **Combination**: A1, B1.
+- **Expected Behavior**: Returns 1 (success).
+
+**Frame F8**
+- **Combination**: A2, B1.
+- **Expected Behavior**: Returns 1 (success).
+
+**Frame F9**
+- **Combination**: A3.
+- **Expected Behavior**: Throws `IllegalArgumentException` ("L'utente non può essere null.").
+
+**Frame F10**
+- **Combination**: A4.
+- **Expected Behavior**: Throws `IllegalArgumentException` (Specific message for missing field).
+
+**Frame F11**
+- **Combination**: A1, B2.
+- **Expected Behavior**: Throws `SQLException` (Duplicate entry).
+
+Suggested JUnit 5 Test
+----------------------
+**Test: `shouldAddUserSuccessfully`**
+- **Arrange**: Valid `Utente`.
+- **Act**: `dao.addUtente(user)`
+- **Assert**: Returns 1.
+
+**Test: `shouldThrowExceptionWaitMapWhenUserIsNull`**
+- **Arrange**: null.
+- **Act**: `dao.addUtente(null)`
+- **Assert**: `IllegalArgumentException`.
+
+---
+
+Method: getUserByEmailPassword(String email, String password)
+=============================================================
+Retrieves a user by credentials.
+
+Parameters & Logic
+------------------
+- **Parameters**: `email`, `password`.
+- **Logic**:
+    - Validates strings not null/empty.
+    - SHA1 hash used in query.
+    - Returns `Utente` or null.
+
+Categories and Choices
+----------------------
+**Category A: Credentials**
+- Choice A1: Valid Email, Valid Password (Correct match).
+- Choice A2: Valid Email, Wrong Password.
+- Choice A3: Invalid Email (format or non-existent).
+- Choice A4: Null/Empty Email.
+- Choice A5: Null/Empty Password.
+
+Test Frames
+-----------
+**Frame F12**
+- **Combination**: A1.
+- **Expected Behavior**: Returns `Utente` object.
+
+**Frame F13**
+- **Combination**: A2.
+- **Expected Behavior**: Returns `null`.
+
+**Frame F14**
+- **Combination**: A4/A5.
+- **Expected Behavior**: Throws `IllegalArgumentException`.
+
+Suggested JUnit 5 Test
+----------------------
+**Test: `shouldReturnUserWhenCredentialsAreCorrect`**
+- **Arrange**: Mock successful ResultSet.
+- **Act**: `dao.getUserByEmailPassword("e@mail.com", "pass")`
+- **Assert**: `assertNotNull`.
+
+---
+
+Method: editProfilo(String operation, String modifica, int idProfilo)
+=====================================================================
+Updates a specific field of the user profile.
+
+Parameters & Logic
+------------------
+- **Parameters**: `operation` (switch key), `modifica` (new value), `idProfilo`.
+- **Logic**:
+    - Validates inputs.
+    - Switch case selects column.
+    - Updates DB.
+
+Categories and Choices
+----------------------
+**Category A: Operation**
+- Choice A1: Valid Operation ("/editNome", "/editCognome", etc.).
+- Choice A2: Invalid Operation.
+- Choice A3: Null/Empty Operation.
+
+**Category B: Modifica**
+- Choice B1: Valid String.
+- Choice B2: Null/Empty String.
+
+**Category C: ID**
+- Choice C1: Positive.
+- Choice C2: Zero/Negative.
+
+Test Frames
+-----------
+**Frame F15**
+- **Combination**: A1, B1, C1.
+- **Expected Behavior**: Success (no exception). Assert `executeUpdate` called.
+
+**Frame F16**
+- **Combination**: A2, B1, C1.
+- **Expected Behavior**: Throws `IllegalArgumentException` ("Operazione non supportata").
+
+**Frame F17**
+- **Combination**: A3 or B2 or C2.
+- **Expected Behavior**: Throws `IllegalArgumentException` (Validation error).
+
+Suggested JUnit 5 Test
+----------------------
+**Parameterized Test: `shouldSupportAllValidOperations`**
+- **Source**: CSV with operations.
+- **Act**: `dao.editProfilo(op, "value", 1)`
+- **Assert**: Verify DB update.
