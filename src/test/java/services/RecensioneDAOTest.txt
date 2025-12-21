@@ -1,0 +1,201 @@
+Class Overview
+==============
+The `RecensioneDAO` class manages `Recensione` entities, handling retrieval by User or Product, creation, and deletion.
+It enforces strict validation on input consistency (valid IDs, non-null objects) and data integrity (rating range 1-5, non-empty text).
+It uses `ConPool` for database connections and maps result sets to fully populated bean hierarchies (`Recensione` -> `Utente`, `Prodotto`).
+
+Key State & Fields:
+- **Database Tables**: `recensione`, `utente`, `prodotto`.
+- **Dependencies**: `ConPool`.
+
+---
+
+Method: getRecensioniByUtente(Utente utente)
+============================================
+Retrieves all reviews written by a specific user.
+
+Parameters & Logic
+------------------
+- **Parameters**: `Utente utente`.
+- **Logic**:
+    - Validates `utente` is not null and has `id > 0`.
+    - Joins `recensione`, `utente`, and `prodotto` tables.
+    - Returns list of `Recensione`.
+
+Categories and Choices
+----------------------
+**Category A: Input User**
+- Choice A1: Valid `Utente` with ID > 0.
+- Choice A2: Null `Utente`.
+- Choice A3: `Utente` with ID <= 0.
+
+**Category B: Database State (If A1)**
+- Choice B1: Reviews exist for user.
+- Choice B2: No reviews exist.
+
+Test Frames
+-----------
+**Frame F1**
+- **Combination**: A1, B1.
+- **Expected Behavior**: Returns list of populated `Recensione` objects.
+
+**Frame F2**
+- **Combination**: A1, B2.
+- **Expected Behavior**: Returns empty `ArrayList`.
+
+**Frame F3**
+- **Combination**: A2.
+- **Expected Behavior**: Throws `IllegalArgumentException`.
+
+**Frame F4**
+- **Combination**: A3.
+- **Expected Behavior**: Throws `IllegalArgumentException`.
+
+Suggested JUnit 5 Test
+----------------------
+**Test: `shouldReturnReviewsWhenUserIsValid`**
+- **Arrange**: Mock DB to return rows.
+- **Act**: `dao.getRecensioniByUtente(validUser)`.
+- **Assert**: Verify list size and content.
+
+---
+
+Method: getRecensioniByProdotto(Prodotto prodotto)
+==================================================
+Retrieves all reviews for a specific product.
+
+Parameters & Logic
+------------------
+- **Parameters**: `Prodotto prodotto`.
+- **Logic**:
+    - Validates `prodotto` is not null and has `id > 0`.
+    - Returns list of `Recensione`.
+
+Categories and Choices
+----------------------
+**Category A: Input Product**
+- Choice A1: Valid `Prodotto` with ID > 0.
+- Choice A2: Null `Prodotto`.
+- Choice A3: `Prodotto` with ID <= 0.
+
+**Category B: Database State (If A1)**
+- Choice B1: Reviews exist for product.
+- Choice B2: No reviews exist.
+
+Test Frames
+-----------
+**Frame F5**
+- **Combination**: A1, B1.
+- **Expected Behavior**: Returns list of populated `Recensione` objects.
+
+**Frame F6**
+- **Combination**: A1, B2.
+- **Expected Behavior**: Returns empty `ArrayList`.
+
+**Frame F7**
+- **Combination**: A2.
+- **Expected Behavior**: Throws `IllegalArgumentException`.
+
+**Frame F8**
+- **Combination**: A3.
+- **Expected Behavior**: Throws `IllegalArgumentException`.
+
+---
+
+Method: addRecensione(Recensione recensione)
+============================================
+Adds a new review to the database.
+
+Parameters & Logic
+------------------
+- **Parameters**: `Recensione recensione`.
+- **Logic**:
+    - Validates object not null.
+    - Validates nested `Utente` (ID > 0) and `Prodotto` (ID > 0).
+    - Validates `testo` not empty.
+    - Validates `valutazione` between 1 and 5.
+    - Inserts record.
+
+Categories and Choices
+----------------------
+**Category A: Input Recensione Object**
+- Choice A1: Valid (all fields correct).
+- Choice A2: Null.
+
+**Category B: Nested Objects (If A1)**
+- Choice B1: Valid User and Product.
+- Choice B2: Invalid User (Null/ID<=0).
+- Choice B3: Invalid Product (Null/ID<=0).
+
+**Category C: Content Validation (If A1, B1)**
+- Choice C1: Valid Text and Rating.
+- Choice C2: Null/Empty Text.
+- Choice C3: Invalid Rating (< 1).
+- Choice C4: Invalid Rating (> 5).
+
+Test Frames
+-----------
+**Frame F9**
+- **Combination**: A1, B1, C1.
+- **Expected Behavior**: Returns rows affected (1).
+
+**Frame F10**
+- **Combination**: A2.
+- **Expected Behavior**: Throws `IllegalArgumentException`.
+
+**Frame F11**
+- **Combination**: A1, B2.
+- **Expected Behavior**: Throws `IllegalArgumentException`.
+
+**Frame F12**
+- **Combination**: A1, B3.
+- **Expected Behavior**: Throws `IllegalArgumentException`.
+
+**Frame F13**
+- **Combination**: A1, B1, C2.
+- **Expected Behavior**: Throws `IllegalArgumentException`.
+
+**Frame F14**
+- **Combination**: A1, B1, C3.
+- **Expected Behavior**: Throws `IllegalArgumentException`.
+
+**Frame F15**
+- **Combination**: A1, B1, C4.
+- **Expected Behavior**: Throws `IllegalArgumentException`.
+
+Suggested JUnit 5 Test
+----------------------
+**Parameterized Test: `shouldThrowExceptionForInvalidRating`**
+- **Schema**: `rating`
+- **Rows**: `0`, `6`, `-1`
+- **Act**: Call `addRecensione` with invalid rating.
+- **Assert**: `IllegalArgumentException`.
+
+---
+
+Method: deleteRecensione(int idRecensione)
+==========================================
+Deletes a review by ID.
+
+Parameters & Logic
+------------------
+- **Parameters**: `int idRecensione`.
+- **Logic**:
+    - Validates ID > 0.
+    - Deletes record.
+
+Categories and Choices
+----------------------
+**Category A: Input ID**
+- Choice A1: Positive > 0.
+- Choice A2: Zero or Negative.
+
+Test Frames
+-----------
+**Frame F16**
+- **Combination**: A1.
+- **Expected Behavior**: Executes delete.
+
+**Frame F17**
+- **Combination**: A2.
+- **Expected Behavior**: Throws `IllegalArgumentException`.
