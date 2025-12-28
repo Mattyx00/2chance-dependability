@@ -3,29 +3,24 @@ package model.beans;
 import java.util.ArrayList;
 
 public class Carrello {
-    /* @ spec_public @ */
+    /*@ spec_public @*/
     private ArrayList<ProdottoCarrello> prodotti;
 
-    /* @ public invariant prodotti != null; @ */
+    /*@ public invariant prodotti != null; @*/
+    /*@ public invariant (\forall int i; 0 <= i && i < prodotti.size(); prodotti.get(i) != null); @*/
 
-    /*
-     * @
-     * 
-     * @ ensures prodotti != null && prodotti.isEmpty();
-     * 
-     * @
-     */
+    /*@
+      @ assignable prodotti;
+      @ ensures prodotti != null && prodotti.isEmpty();
+      @*/
     public Carrello() {
         prodotti = new ArrayList<>();
     }
 
-    /*
-     * @
-     * 
-     * @ ensures \result >= 0.0;
-     * 
-     * @
-     */
+    /*@
+      @ ensures \result >= 0.0;
+      @ pure
+      @*/
     public double getTotaleCarrello() {
         double totale = 0.0;
         for (ProdottoCarrello e : prodotti) {
@@ -34,26 +29,29 @@ public class Carrello {
         return totale;
     }
 
-    /*
-     * @
-     * 
-     * @ ensures \result == prodotti;
-     * 
-     * @
-     */
+    /*@
+      @ ensures \result == prodotti;
+      @ pure
+      @*/
     public ArrayList<ProdottoCarrello> getProdotti() {
         return prodotti;
     }
 
-    /*
-     * @
-     * 
-     * @ requires p != null;
-     * 
-     * @ ensures prodotti.contains(p);
-     * 
-     * @
-     */
+    /*@
+      @ public normal_behavior
+      @   requires p != null;
+      @   assignable prodotti;
+      @   ensures prodotti.contains(p);
+      @   ensures prodotti.size() == \old(prodotti.size()) + 1;
+      @   ensures \result == true;
+      @
+      @ also
+      @
+      @ public exceptional_behavior
+      @   requires p == null;
+      @   assignable \nothing;
+      @   signals (IllegalArgumentException e) true;
+      @*/
     public boolean aggiungiProdotto(ProdottoCarrello p) {
         if (p == null) {
             throw new IllegalArgumentException("Il prodotto da aggiungere non può essere null");
@@ -61,13 +59,19 @@ public class Carrello {
         return prodotti.add(p);
     }
 
-    /*
-     * @
-     * 
-     * @ requires p != null;
-     * 
-     * @
-     */
+    /*@
+      @ public normal_behavior
+      @   requires p != null;
+      @   assignable prodotti;
+      @   ensures (\forall ProdottoCarrello pc; prodotti.contains(pc); pc.getProdotto().getId() != p.getId());
+      @
+      @ also
+      @
+      @ public exceptional_behavior
+      @   requires p == null;
+      @   assignable \nothing;
+      @   signals (IllegalArgumentException e) true;
+      @*/
     public void eliminaProdotto(Prodotto p) {
         if (p == null) {
             throw new IllegalArgumentException("Il prodotto da eliminare non può essere null");
@@ -75,15 +79,34 @@ public class Carrello {
         prodotti.removeIf(e -> e.getProdotto().getId() == p.getId());
     }
 
-    /*
-     * @
-     * 
-     * @ requires p != null;
-     * 
-     * @ requires qnt > 0;
-     * 
-     * @
-     */
+    /*@
+      @ public normal_behavior
+      @   requires p != null && qnt > 0;
+      @   requires (\exists ProdottoCarrello pc; prodotti.contains(pc); pc.getProdotto().getId() == p.getId());
+      @   assignable prodotti.get(*).quantita; 
+      @   ensures (\exists ProdottoCarrello pc; prodotti.contains(pc); pc.getProdotto().getId() == p.getId() && pc.getQuantita() == qnt);
+      @
+      @ also
+      @
+      @ public exceptional_behavior
+      @   requires p == null;
+      @   assignable \nothing;
+      @   signals (IllegalArgumentException e) true;
+      @
+      @ also
+      @
+      @ public exceptional_behavior
+      @   requires qnt <= 0;
+      @   assignable \nothing;
+      @   signals (IllegalArgumentException e) true;
+      @
+      @ also
+      @
+      @ public exceptional_behavior
+      @   requires p != null && qnt > 0 && !(\exists ProdottoCarrello pc; prodotti.contains(pc); pc.getProdotto().getId() == p.getId());
+      @   assignable \nothing;
+      @   signals (IllegalStateException e) true;
+      @*/
     public void cambiaQuantita(Prodotto p, int qnt) {
         if (p == null) {
             throw new IllegalArgumentException("Il prodotto non può essere null");
@@ -97,7 +120,7 @@ public class Carrello {
                 return;
             }
         }
-        // Product not found - throw exception for consistency
+        // Product not found
         throw new IllegalStateException("Il prodotto con id " + p.getId() + " non è presente nel carrello");
     }
 }

@@ -1,23 +1,29 @@
 package model.beans;
 
 public class Categoria {
-    /* @ spec_public @ */
+
+    /*@ spec_public @*/
     private String nomeCategoria;
 
-    /* @ public invariant nomeCategoria != null && !nomeCategoria.isEmpty(); @ */
-
+    /*@
+      @ ensures nomeCategoria == null;
+      @*/
     public Categoria() {
     }
 
-    /*
-     * @
-     * 
-     * @ requires nomeCategoria != null && !nomeCategoria.trim().isEmpty();
-     * 
-     * @ ensures this.nomeCategoria == nomeCategoria;
-     * 
-     * @
-     */
+    /*@
+      @ public normal_behavior
+      @   requires nomeCategoria != null && !nomeCategoria.trim().isEmpty();
+      @   assignable this.nomeCategoria;
+      @   ensures this.nomeCategoria == nomeCategoria;
+      @
+      @ also
+      @
+      @ public exceptional_behavior
+      @   requires nomeCategoria == null || nomeCategoria.trim().isEmpty();
+      @   assignable \nothing;
+      @   signals (IllegalArgumentException e) true;
+      @*/
     public Categoria(String nomeCategoria) {
         if (nomeCategoria == null || nomeCategoria.trim().isEmpty()) {
             throw new IllegalArgumentException("Il nome della categoria non può essere null o vuoto");
@@ -25,20 +31,27 @@ public class Categoria {
         this.nomeCategoria = nomeCategoria;
     }
 
-    /* @ ensures \result == nomeCategoria; @ */
+    /*@
+      @ ensures \result == nomeCategoria;
+      @ pure
+      @*/
     public String getNomeCategoria() {
         return nomeCategoria;
     }
 
-    /*
-     * @
-     * 
-     * @ requires nomeCategoria != null && !nomeCategoria.trim().isEmpty();
-     * 
-     * @ ensures this.nomeCategoria == nomeCategoria;
-     * 
-     * @
-     */
+    /*@
+      @ public normal_behavior
+      @   requires nomeCategoria != null && !nomeCategoria.trim().isEmpty();
+      @   assignable this.nomeCategoria;
+      @   ensures this.nomeCategoria == nomeCategoria;
+      @
+      @ also
+      @
+      @ public exceptional_behavior
+      @   requires nomeCategoria == null || nomeCategoria.trim().isEmpty();
+      @   assignable \nothing;
+      @   signals (IllegalArgumentException e) true;
+      @*/
     public void setNomeCategoria(String nomeCategoria) {
         if (nomeCategoria == null || nomeCategoria.trim().isEmpty()) {
             throw new IllegalArgumentException("Il nome della categoria non può essere null o vuoto");

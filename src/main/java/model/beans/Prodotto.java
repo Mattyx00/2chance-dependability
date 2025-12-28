@@ -3,41 +3,48 @@ package model.beans;
 import java.util.ArrayList;
 
 public class Prodotto {
-    /* @ spec_public @ */
+    /*@ spec_public @*/
     private int id, quantitaProdotto;
-    /* @ spec_public @ */
+    /*@ spec_public @*/
     private double prezzo, peso;
-    /* @ spec_public @ */
+    /*@ spec_public nullable @*/
     private String dimensioni, marca, modello, immagine, descrizione;
-    /* @ spec_public @ */
+    /*@ spec_public nullable @*/
     private Categoria categoria;
-    /* @ spec_public @ */
+    /*@ spec_public nullable @*/
     private ArrayList<Recensione> recensioni;
-    /* @ spec_public @ */
+    /*@ spec_public nullable @*/
     private ArrayList<Specifiche> specifiche;
 
-    /* @ public invariant prezzo >= 0; @ */
-    /* @ public invariant peso >= 0; @ */
-    /* @ public invariant quantitaProdotto >= 0; @ */
+    /*@ public invariant prezzo >= 0; @*/
+    /*@ public invariant peso >= 0; @*/
+    /*@ public invariant quantitaProdotto >= 0; @*/
 
     public Prodotto() {
         super();
     }
 
-    /* @ ensures \result == specifiche; @ */
+    /*@ 
+      @ ensures \result == specifiche; 
+      @ pure
+      @*/
     public ArrayList<Specifiche> getSpecifiche() {
         return specifiche;
     }
 
-    /*
-     * @
-     * 
-     * @ requires specifiche != null;
-     * 
-     * @ ensures this.specifiche == specifiche;
-     * 
-     * @
-     */
+    /*@
+      @ public normal_behavior
+      @   requires specifiche != null;
+      @   assignable this.specifiche;
+      @   ensures this.specifiche == specifiche;
+      @
+      @ also
+      @
+      @ public exceptional_behavior
+      @   requires specifiche == null;
+      @   assignable \nothing;
+      @   signals (IllegalArgumentException e) true;
+      @*/
     public void setSpecifiche(ArrayList<Specifiche> specifiche) {
         if (specifiche == null) {
             throw new IllegalArgumentException("La lista delle specifiche non può essere null");
@@ -45,20 +52,27 @@ public class Prodotto {
         this.specifiche = specifiche;
     }
 
-    /* @ ensures \result == recensioni; @ */
+    /*@ 
+      @ ensures \result == recensioni; 
+      @ pure
+      @*/
     public ArrayList<Recensione> getRecensioni() {
         return recensioni;
     }
 
-    /*
-     * @
-     * 
-     * @ requires recensioni != null;
-     * 
-     * @ ensures this.recensioni == recensioni;
-     * 
-     * @
-     */
+    /*@
+      @ public normal_behavior
+      @   requires recensioni != null;
+      @   assignable this.recensioni;
+      @   ensures this.recensioni == recensioni;
+      @
+      @ also
+      @
+      @ public exceptional_behavior
+      @   requires recensioni == null;
+      @   assignable \nothing;
+      @   signals (IllegalArgumentException e) true;
+      @*/
     public void setRecensioni(ArrayList<Recensione> recensioni) {
         if (recensioni == null) {
             throw new IllegalArgumentException("La lista delle recensioni non può essere null");
@@ -66,30 +80,44 @@ public class Prodotto {
         this.recensioni = recensioni;
     }
 
-    /* @ ensures \result == id; @ */
+    /*@ 
+      @ ensures \result == id; 
+      @ pure
+      @*/
     public int getId() {
         return id;
     }
 
-    /* @ ensures this.id == id; @ */
+    /*@
+      @ requires true;
+      @ assignable this.id;
+      @ ensures this.id == id;
+      @*/
     public void setId(int id) {
         this.id = id;
     }
 
-    /* @ ensures \result == quantitaProdotto; @ */
+    /*@ 
+      @ ensures \result == quantitaProdotto; 
+      @ pure
+      @*/
     public int getQuantitaProdotto() {
         return quantitaProdotto;
     }
 
-    /*
-     * @
-     * 
-     * @ requires quantitaProdotto >= 0;
-     * 
-     * @ ensures this.quantitaProdotto == quantitaProdotto;
-     * 
-     * @
-     */
+    /*@
+      @ public normal_behavior
+      @   requires quantitaProdotto >= 0;
+      @   assignable this.quantitaProdotto;
+      @   ensures this.quantitaProdotto == quantitaProdotto;
+      @
+      @ also
+      @
+      @ public exceptional_behavior
+      @   requires quantitaProdotto < 0;
+      @   assignable \nothing;
+      @   signals (IllegalArgumentException e) true;
+      @*/
     public void setQuantitaProdotto(int quantitaProdotto) {
         if (quantitaProdotto < 0) {
             throw new IllegalArgumentException("La quantità del prodotto non può essere negativa");
@@ -97,20 +125,27 @@ public class Prodotto {
         this.quantitaProdotto = quantitaProdotto;
     }
 
-    /* @ ensures \result == prezzo; @ */
+    /*@ 
+      @ ensures \result == prezzo; 
+      @ pure
+      @*/
     public double getPrezzo() {
         return prezzo;
     }
 
-    /*
-     * @
-     * 
-     * @ requires prezzo >= 0;
-     * 
-     * @ ensures this.prezzo == prezzo;
-     * 
-     * @
-     */
+    /*@
+      @ public normal_behavior
+      @   requires prezzo >= 0;
+      @   assignable this.prezzo;
+      @   ensures this.prezzo == prezzo;
+      @
+      @ also
+      @
+      @ public exceptional_behavior
+      @   requires prezzo < 0;
+      @   assignable \nothing;
+      @   signals (IllegalArgumentException e) true;
+      @*/
     public void setPrezzo(double prezzo) {
         if (prezzo < 0) {
             throw new IllegalArgumentException("Il prezzo non può essere negativo");
@@ -118,20 +153,27 @@ public class Prodotto {
         this.prezzo = prezzo;
     }
 
-    /* @ ensures \result == peso; @ */
+    /*@ 
+      @ ensures \result == peso; 
+      @ pure
+      @*/
     public double getPeso() {
         return peso;
     }
 
-    /*
-     * @
-     * 
-     * @ requires peso >= 0;
-     * 
-     * @ ensures this.peso == peso;
-     * 
-     * @
-     */
+    /*@
+      @ public normal_behavior
+      @   requires peso >= 0;
+      @   assignable this.peso;
+      @   ensures this.peso == peso;
+      @
+      @ also
+      @
+      @ public exceptional_behavior
+      @   requires peso < 0;
+      @   assignable \nothing;
+      @   signals (IllegalArgumentException e) true;
+      @*/
     public void setPeso(double peso) {
         if (peso < 0) {
             throw new IllegalArgumentException("Il peso non può essere negativo");
@@ -139,30 +181,44 @@ public class Prodotto {
         this.peso = peso;
     }
 
-    /* @ ensures \result == dimensioni; @ */
+    /*@ 
+      @ ensures \result == dimensioni; 
+      @ pure
+      @*/
     public String getDimensioni() {
         return dimensioni;
     }
 
-    /* @ ensures this.dimensioni == dimensioni; @ */
+    /*@
+      @ requires true;
+      @ assignable this.dimensioni;
+      @ ensures this.dimensioni == dimensioni;
+      @*/
     public void setDimensioni(String dimensioni) {
         this.dimensioni = dimensioni;
     }
 
-    /* @ ensures \result == marca; @ */
+    /*@ 
+      @ ensures \result == marca; 
+      @ pure
+      @*/
     public String getMarca() {
         return marca;
     }
 
-    /*
-     * @
-     * 
-     * @ requires marca != null && !marca.trim().isEmpty();
-     * 
-     * @ ensures this.marca == marca;
-     * 
-     * @
-     */
+    /*@
+      @ public normal_behavior
+      @   requires marca != null && !marca.trim().isEmpty();
+      @   assignable this.marca;
+      @   ensures this.marca == marca;
+      @
+      @ also
+      @
+      @ public exceptional_behavior
+      @   requires marca == null || marca.trim().isEmpty();
+      @   assignable \nothing;
+      @   signals (IllegalArgumentException e) true;
+      @*/
     public void setMarca(String marca) {
         if (marca == null || marca.trim().isEmpty()) {
             throw new IllegalArgumentException("La marca non può essere null o vuota");
@@ -170,20 +226,27 @@ public class Prodotto {
         this.marca = marca;
     }
 
-    /* @ ensures \result == modello; @ */
+    /*@ 
+      @ ensures \result == modello; 
+      @ pure
+      @*/
     public String getModello() {
         return modello;
     }
 
-    /*
-     * @
-     * 
-     * @ requires modello != null && !modello.trim().isEmpty();
-     * 
-     * @ ensures this.modello == modello;
-     * 
-     * @
-     */
+    /*@
+      @ public normal_behavior
+      @   requires modello != null && !modello.trim().isEmpty();
+      @   assignable this.modello;
+      @   ensures this.modello == modello;
+      @
+      @ also
+      @
+      @ public exceptional_behavior
+      @   requires modello == null || modello.trim().isEmpty();
+      @   assignable \nothing;
+      @   signals (IllegalArgumentException e) true;
+      @*/
     public void setModello(String modello) {
         if (modello == null || modello.trim().isEmpty()) {
             throw new IllegalArgumentException("Il modello non può essere null o vuoto");
@@ -191,30 +254,44 @@ public class Prodotto {
         this.modello = modello;
     }
 
-    /* @ ensures \result == immagine; @ */
+    /*@ 
+      @ ensures \result == immagine; 
+      @ pure
+      @*/
     public String getImmagine() {
         return immagine;
     }
 
-    /* @ ensures this.immagine == immagine; @ */
+    /*@
+      @ requires true;
+      @ assignable this.immagine;
+      @ ensures this.immagine == immagine;
+      @*/
     public void setImmagine(String immagine) {
         this.immagine = immagine;
     }
 
-    /* @ ensures \result == descrizione; @ */
+    /*@ 
+      @ ensures \result == descrizione; 
+      @ pure
+      @*/
     public String getDescrizione() {
         return descrizione;
     }
 
-    /*
-     * @
-     * 
-     * @ requires descrizione != null && !descrizione.trim().isEmpty();
-     * 
-     * @ ensures this.descrizione == descrizione;
-     * 
-     * @
-     */
+    /*@
+      @ public normal_behavior
+      @   requires descrizione != null && !descrizione.trim().isEmpty();
+      @   assignable this.descrizione;
+      @   ensures this.descrizione == descrizione;
+      @
+      @ also
+      @
+      @ public exceptional_behavior
+      @   requires descrizione == null || descrizione.trim().isEmpty();
+      @   assignable \nothing;
+      @   signals (IllegalArgumentException e) true;
+      @*/
     public void setDescrizione(String descrizione) {
         if (descrizione == null || descrizione.trim().isEmpty()) {
             throw new IllegalArgumentException("La descrizione non può essere null o vuota");
@@ -222,20 +299,27 @@ public class Prodotto {
         this.descrizione = descrizione;
     }
 
-    /* @ ensures \result == categoria; @ */
+    /*@ 
+      @ ensures \result == categoria; 
+      @ pure
+      @*/
     public Categoria getCategoria() {
         return categoria;
     }
 
-    /*
-     * @
-     * 
-     * @ requires categoria != null;
-     * 
-     * @ ensures this.categoria == categoria;
-     * 
-     * @
-     */
+    /*@
+      @ public normal_behavior
+      @   requires categoria != null;
+      @   assignable this.categoria;
+      @   ensures this.categoria == categoria;
+      @
+      @ also
+      @
+      @ public exceptional_behavior
+      @   requires categoria == null;
+      @   assignable \nothing;
+      @   signals (IllegalArgumentException e) true;
+      @*/
     public void setCategoria(Categoria categoria) {
         if (categoria == null) {
             throw new IllegalArgumentException("La categoria non può essere null");
