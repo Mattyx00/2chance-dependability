@@ -26,6 +26,7 @@ public class Ordine {
     /*@ public invariant indirizzo == null || !indirizzo.trim().isEmpty(); @*/
 
     /*@
+      @ assignable \nothing;
       @ ensures id == 0;
       @ ensures prezzoTotale == 0.0;
       @ ensures dataOrdine == null;

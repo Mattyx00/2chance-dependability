@@ -20,6 +20,21 @@ public class Prodotto {
     /*@ public invariant peso >= 0; @*/
     /*@ public invariant quantitaProdotto >= 0; @*/
 
+    /*@
+      @ assignable \nothing;
+      @ ensures id == 0;
+      @ ensures quantitaProdotto == 0;
+      @ ensures prezzo == 0.0;
+      @ ensures peso == 0.0;
+      @ ensures dimensioni == null;
+      @ ensures marca == null;
+      @ ensures modello == null;
+      @ ensures immagine == null;
+      @ ensures descrizione == null;
+      @ ensures categoria == null;
+      @ ensures recensioni == null;
+      @ ensures specifiche == null;
+      @*/
     public Prodotto() {
         super();
     }

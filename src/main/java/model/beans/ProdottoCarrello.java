@@ -9,10 +9,9 @@ public class ProdottoCarrello {
     /*@ public invariant quantita >= 0; @*/
 
     /*@
-      @ public normal_behavior
-      @   assignable this.prodotto, this.quantita;
-      @   ensures this.prodotto == null;
-      @   ensures this.quantita == 0;
+      @ assignable \nothing;
+      @ ensures this.prodotto == null;
+      @ ensures this.quantita == 0;
       @*/
     public ProdottoCarrello() {
 

@@ -6,6 +6,7 @@ public class Categoria {
     private String nomeCategoria;
 
     /*@
+      @ assignable \nothing;
       @ ensures nomeCategoria == null;
       @*/
     public Categoria() {
