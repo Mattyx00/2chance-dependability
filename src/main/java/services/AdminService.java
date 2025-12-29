@@ -20,28 +20,30 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class AdminService {
+    /*@ spec_public non_null @*/
     private final ProdottoDAO prodottoDAO;
+    /*@ spec_public non_null @*/
     private final CategoriaDAO categoriaDAO;
+    /*@ spec_public non_null @*/
     private final UtenteDAO utenteDAO;
+    /*@ spec_public non_null @*/
     private final OrdineDAO ordineDAO;
 
-    /*
-     * @
-     * 
-     * @ public normal_behavior
-     * 
-     * @ ensures prodottoDAO != null;
-     * 
-     * @ ensures categoriaDAO != null;
-     * 
-     * @ ensures utenteDAO != null;
-     * 
-     * @ ensures ordineDAO != null;
-     * 
-     * @ signals (SQLException e) true;
-     * 
-     * @
-     */
+    /*@
+      @ public invariant prodottoDAO != null;
+      @ public invariant categoriaDAO != null;
+      @ public invariant utenteDAO != null;
+      @ public invariant ordineDAO != null;
+      @*/
+
+    /*@
+      @ assignable prodottoDAO, categoriaDAO, utenteDAO, ordineDAO;
+      @ ensures prodottoDAO != null;
+      @ ensures categoriaDAO != null;
+      @ ensures utenteDAO != null;
+      @ ensures ordineDAO != null;
+      @   signals (SQLException e) true;
+      @*/
     public AdminService() throws SQLException {
         this.prodottoDAO = new ProdottoDAO();
         this.categoriaDAO = new CategoriaDAO();
@@ -49,29 +51,25 @@ public class AdminService {
         this.ordineDAO = new OrdineDAO();
     }
 
-    /*
-     * @
-     * 
-     * @ public normal_behavior
-     * 
-     * @ requires prodottoDAO != null;
-     * 
-     * @ requires categoriaDAO != null;
-     * 
-     * @ requires utenteDAO != null;
-     * 
-     * @ requires ordineDAO != null;
-     * 
-     * @ ensures this.prodottoDAO == prodottoDAO;
-     * 
-     * @ ensures this.categoriaDAO == categoriaDAO;
-     * 
-     * @ ensures this.utenteDAO == utenteDAO;
-     * 
-     * @ ensures this.ordineDAO == ordineDAO;
-     * 
-     * @
-     */
+    /*@
+      @ public normal_behavior
+      @   requires prodottoDAO != null;
+      @   requires categoriaDAO != null;
+      @   requires utenteDAO != null;
+      @   requires ordineDAO != null;
+      @   assignable this.prodottoDAO, this.categoriaDAO, this.utenteDAO, this.ordineDAO;
+      @   ensures this.prodottoDAO == prodottoDAO;
+      @   ensures this.categoriaDAO == categoriaDAO;
+      @   ensures this.utenteDAO == utenteDAO;
+      @   ensures this.ordineDAO == ordineDAO;
+      @
+      @ also
+      @
+      @ public exceptional_behavior
+      @   requires prodottoDAO == null || categoriaDAO == null || utenteDAO == null || ordineDAO == null;
+      @   assignable \nothing;
+      @   signals (IllegalArgumentException e) true;
+      @*/
     public AdminService(ProdottoDAO prodottoDAO, CategoriaDAO categoriaDAO, UtenteDAO utenteDAO, OrdineDAO ordineDAO) {
         if (prodottoDAO == null)
             throw new IllegalArgumentException("ProdottoDAO cannot be null");
@@ -88,25 +86,28 @@ public class AdminService {
         this.ordineDAO = ordineDAO;
     }
 
-    /*
-     * @
-     * 
-     * @ public normal_behavior
-     * 
-     * @ requires p != null;
-     * 
-     * @ requires categoria != null;
-     * 
-     * @ requires immagine != null;
-     * 
-     * @ requires specifiche != null;
-     * 
-     * @ signals (IOException e) true;
-     * 
-     * @ signals (SQLException e) true;
-     * 
-     * @
-     */
+    /*@
+      @ public behavior
+      @   requires p != null;
+      @   requires categoria != null;
+      @   requires immagine != null;
+      @   requires immagine.getSubmittedFileName() != null; 
+      @   requires specifiche != null && !specifiche.trim().isEmpty();
+      @   assignable p.categoria, p.immagine, prodottoDAO;
+      @   signals (IOException e) true;
+      @   signals (SQLException e) true;
+      @
+      @ also
+      @
+      @ public exceptional_behavior
+      @   requires p == null || 
+      @            categoria == null || 
+      @            immagine == null || 
+      @            (immagine != null && immagine.getSubmittedFileName() == null) ||
+      @            specifiche == null || specifiche.trim().isEmpty();
+      @   assignable \nothing;
+      @   signals (IllegalArgumentException e) true;
+      @*/
     public void aggiungiProdotto(Prodotto p, Categoria categoria, Part immagine, String specifiche)
             throws IOException, SQLException {
         if (p == null)
@@ -159,19 +160,14 @@ public class AdminService {
         }
     }
 
-    /*
-     * @
-     * 
-     * @ public normal_behavior
-     * 
-     * @ ensures \result != null;
-     * 
-     * @ signals (IOException e) true;
-     * 
-     * @ signals (SQLException e) true;
-     * 
-     * @
-     */
+    /*@
+      @ requires prodottoDAO != null;
+      @ assignable \nothing;
+      @ ensures \result != null;
+      @ signals (IllegalStateException e) true;
+      @ signals (IOException e) true;
+      @ signals (SQLException e) true;
+      @*/
     public String mostraProdotti() throws IOException, SQLException {
         ArrayList<Prodotto> prodotti = prodottoDAO.getProdotti();
         if (prodotti == null)
@@ -202,38 +198,33 @@ public class AdminService {
         return jsonObject.toString();
     }
 
-    /*
-     * @
-     * 
-     * @ public normal_behavior
-     * 
-     * @ requires id > 0;
-     * 
-     * @ signals (IOException e) true;
-     * 
-     * @ signals (SQLException e) true;
-     * 
-     * @
-     */
+    /*@
+      @ public behavior
+      @   requires id > 0;
+      @   assignable prodottoDAO;
+      @   signals (IOException e) true;
+      @   signals (SQLException e) true;
+      @
+      @ also
+      @
+      @ public exceptional_behavior
+      @   requires id <= 0;
+      @   assignable \nothing;
+      @   signals (IllegalArgumentException e) true;
+      @*/
     public void eliminaProdotto(int id) throws IOException, SQLException {
         if (id <= 0)
             throw new IllegalArgumentException("Product ID must be greater than 0");
         prodottoDAO.eliminaProdotto(id);
     }
 
-    /*
-     * @
-     * 
-     * @ public normal_behavior
-     * 
-     * @ ensures \result != null;
-     * 
-     * @ signals (IOException e) true;
-     * 
-     * @ signals (SQLException e) true;
-     * 
-     * @
-     */
+    /*@
+      @ assignable \nothing;
+      @ ensures \result != null;
+      @ signals (IllegalStateException e) true;
+      @ signals (IOException e) true;
+      @ signals (SQLException e) true;
+      @*/
     public String mostraCategorie() throws IOException, SQLException {
         ArrayList<Categoria> categorie = categoriaDAO.getCategorie();
         if (categorie == null)
@@ -252,35 +243,20 @@ public class AdminService {
         return jsonObject.toString();
     }
 
-    /*
-     * @
-     * 
-     * @ public invariant utenteDAO != null;
-     * 
-     * @ public invariant categoriaDAO != null;
-     * 
-     * @ public invariant prodottoDAO != null;
-     * 
-     * @ public invariant ordineDAO != null;
-     * 
-     * @
-     */
-
-    /*
-     * @
-     * 
-     * @ public normal_behavior
-     * 
-     * @ requires nome != null && nome.length() > 0;
-     * 
-     * @ ensures \result == null; // Void method
-     * 
-     * @ signals (IOException e) true;
-     * 
-     * @ signals (SQLException e) true;
-     * 
-     * @
-     */
+    /*@
+      @ public behavior
+      @   requires nome != null && !nome.trim().isEmpty();
+      @   assignable categoriaDAO;
+      @   signals (IOException e) true;
+      @   signals (SQLException e) true;
+      @
+      @ also
+      @
+      @ public exceptional_behavior
+      @   requires nome == null || nome.trim().isEmpty();
+      @   assignable \nothing;
+      @   signals (IllegalArgumentException e) true;
+      @*/
     public void aggiungiCategoria(String nome) throws IOException, SQLException {
         if (nome == null || nome.trim().isEmpty()) {
             throw new IllegalArgumentException("Categoria name cannot be null or empty");
@@ -290,19 +266,20 @@ public class AdminService {
         categoriaDAO.addCategoria(c);
     }
 
-    /*
-     * @
-     * 
-     * @ public normal_behavior
-     * 
-     * @ requires nome != null && nome.length() > 0;
-     * 
-     * @ signals (IOException e) true;
-     * 
-     * @ signals (SQLException e) true;
-     * 
-     * @
-     */
+    /*@
+      @ public behavior
+      @   requires nome != null && !nome.trim().isEmpty();
+      @   assignable categoriaDAO;
+      @   signals (IOException e) true;
+      @   signals (SQLException e) true;
+      @
+      @ also
+      @
+      @ public exceptional_behavior
+      @   requires nome == null || nome.trim().isEmpty();
+      @   assignable \nothing;
+      @   signals (IllegalArgumentException e) true;
+      @*/
     public void eliminaCategoria(String nome) throws IOException, SQLException {
         if (nome == null || nome.trim().isEmpty()) {
             throw new IllegalArgumentException("Categoria name cannot be null or empty");
@@ -310,19 +287,13 @@ public class AdminService {
         categoriaDAO.eliminaCategoria(nome);
     }
 
-    /*
-     * @
-     * 
-     * @ public normal_behavior
-     * 
-     * @ ensures \result != null;
-     * 
-     * @ signals (IOException e) true;
-     * 
-     * @ signals (SQLException e) true;
-     * 
-     * @
-     */
+    /*@
+      @ assignable \nothing;
+      @ ensures \result != null;
+      @ signals (IllegalStateException e) true;
+      @ signals (IOException e) true;
+      @ signals (SQLException e) true;
+      @*/
     public String mostraUtenti() throws IOException, SQLException {
         ArrayList<Utente> utenti = utenteDAO.getUtenti();
         if (utenti == null)
@@ -348,19 +319,13 @@ public class AdminService {
         return jsonObject.toString();
     }
 
-    /*
-     * @
-     * 
-     * @ public normal_behavior
-     * 
-     * @ ensures \result != null;
-     * 
-     * @ signals (IOException e) true;
-     * 
-     * @ signals (SQLException e) true;
-     * 
-     * @
-     */
+    /*@
+      @ assignable \nothing;
+      @ ensures \result != null;
+      @ signals (IllegalStateException e) true;
+      @ signals (IOException e) true;
+      @ signals (SQLException e) true;
+      @*/
     public String mostraOrdini() throws IOException, SQLException {
         ArrayList<Ordine> ordini = ordineDAO.getOrdini();
         if (ordini == null)
@@ -390,21 +355,21 @@ public class AdminService {
         return jsonObject.toString();
     }
 
-    /*
-     * @
-     * 
-     * @ public normal_behavior
-     * 
-     * @ requires id != null;
-     * 
-     * @ ensures \result != null;
-     * 
-     * @ signals (IOException e) true;
-     * 
-     * @ signals (SQLException e) true;
-     * 
-     * @
-     */
+    /*@
+      @ public behavior
+      @   requires id != null && id > 0;
+      @   assignable \nothing;
+      @   ensures \result != null;
+      @   signals (IOException e) true;
+      @   signals (SQLException e) true;
+      @
+      @ also
+      @
+      @ public exceptional_behavior
+      @   requires id == null || id <= 0;
+      @   assignable \nothing;
+      @   signals (IllegalArgumentException e) true;
+      @*/
     public String infoOrdine(Integer id) throws IOException, SQLException {
         if (id == null || id <= 0)
             throw new IllegalArgumentException("Order ID must be non-null and positive");
@@ -444,21 +409,21 @@ public class AdminService {
         return jsonObject.toString();
     }
 
-    /*
-     * @
-     * 
-     * @ public normal_behavior
-     * 
-     * @ requires id != null;
-     * 
-     * @ ensures \result != null;
-     * 
-     * @ signals (IOException e) true;
-     * 
-     * @ signals (SQLException e) true;
-     * 
-     * @
-     */
+    /*@
+      @ public behavior
+      @   requires id != null && id > 0;
+      @   assignable \nothing;
+      @   ensures \result != null;
+      @   signals (IOException e) true;
+      @   signals (SQLException e) true;
+      @
+      @ also
+      @
+      @ public exceptional_behavior
+      @   requires id == null || id <= 0;
+      @   assignable \nothing;
+      @   signals (IllegalArgumentException e) true;
+      @*/
     public String getProdotto(Integer id) throws IOException, SQLException {
         if (id == null || id <= 0)
             throw new IllegalArgumentException("Product ID must be non-null and positive");
@@ -499,23 +464,23 @@ public class AdminService {
         return jsonObject.toString();
     }
 
-    /*
-     * @
-     * 
-     * @ public normal_behavior
-     * 
-     * @ requires p != null;
-     * 
-     * @ requires categoria != null;
-     * 
-     * @ requires specifiche != null;
-     * 
-     * @ signals (IOException e) true;
-     * 
-     * @ signals (SQLException e) true;
-     * 
-     * @
-     */
+    /*@
+      @ public behavior
+      @   requires p != null;
+      @   requires categoria != null;
+      @   requires specifiche != null;
+      @   assignable p.categoria, p.immagine, prodottoDAO;
+      @   signals (IOException e) true;
+      @   signals (SQLException e) true;
+      @   signals (IllegalArgumentException e) true;
+      @
+      @ also
+      @
+      @ public exceptional_behavior
+      @   requires p == null || categoria == null || specifiche == null;
+      @   assignable \nothing;
+      @   signals (IllegalArgumentException e) true;
+      @*/
     public void modificaProdotto(Prodotto p, Categoria categoria, Part immagine, String specifiche)
             throws IOException, SQLException {
 
