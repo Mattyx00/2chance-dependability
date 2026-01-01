@@ -15,3 +15,7 @@ I risultati della code coverage li troviamo in target/site/jacoco/index.html
 Per runnare il docker
 docker-compose up --build
 lo trovate online su http://localhost:8080
+
+Per runnare i mutation testing
+mvn org.pitest:pitest-maven:mutationCoverage
+i risultati li troviamo in target/pit-reports index.html
