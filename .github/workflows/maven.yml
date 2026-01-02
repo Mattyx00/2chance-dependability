@@ -62,3 +62,4 @@ jobs:
         token: ${{ secrets.CODECOV_TOKEN }}
         report_type: test_results
         directory: target/surefire-reports/
+        fail_ci_if_error: true
