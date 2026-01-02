@@ -142,6 +142,9 @@
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
+                        <configuration>
+                            <propertyName>argLine</propertyName>
+                        </configuration>
                     </execution>
                     <execution>
                         <id>report</id>
