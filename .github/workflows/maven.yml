@@ -1,17 +1,33 @@
-name: Java CI with Codecov
+name: Java CI with Codecov and MySQL
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "master" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main", "master" ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          # Qui impostiamo la password del database nel container
+          MYSQL_ROOT_PASSWORD: admin 
+          MYSQL_DATABASE: second_chance
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -u root -padmin"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout repository
+      uses: actions/checkout@v4
 
     - name: Set up JDK 19
       uses: actions/setup-java@v4
@@ -20,11 +36,21 @@ jobs:
         distribution: 'temurin'
         cache: maven
 
+    # Inizializza il DB usando le tue credenziali (root/admin)
+    - name: Initialize Database
+      run: |
+        mysql -h 127.0.0.1 -P 3306 -u root -padmin second_chance < db_import.sql
+
     - name: Build and Test with Maven
       run: mvn clean test
+      env:
+        # Queste sono le variabili che la tua classe ConPool leggerà
+        DB_HOST: 127.0.0.1
+        DB_USER: root
+        DB_PASSWORD: admin
 
     - name: Upload coverage reports to Codecov
-      uses: codecov/codecov-action@v5
+      uses: codecov/codecov-action@v4
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         file: target/site/jacoco/jacoco.xml
