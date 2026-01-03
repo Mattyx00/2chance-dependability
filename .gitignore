@@ -2,3 +2,6 @@ target
 out
 .idea
 .smarttomcat
+.vscode/settings.json
+reports/authors.tex
+reports/report_software_dependability_project.pdf
