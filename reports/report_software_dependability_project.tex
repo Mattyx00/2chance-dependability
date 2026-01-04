@@ -1,0 +1,53 @@
+\documentclass[12pt, a4paper]{report}
+
+% Essential Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lipsum}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{geometry}
+
+% Geometry Settings
+\geometry{
+    a4paper,
+    total={170mm,257mm},
+    left=20mm,
+    top=20mm,
+}
+
+% Hyperref Setup
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    filecolor=magenta,      
+    urlcolor=blue,
+    pdftitle={2chance Dependability Report},
+    pdfpagemode=FullScreen,
+}
+
+% Document Metadata
+\title{\textbf{2Chance Web Application} \\ \large Software Dependability Project Report}
+\input{authors}
+\date{5 January 2026}
+
+\begin{document}
+
+% Cover Page
+\maketitle
+
+% Table of Contents
+\tableofcontents
+
+% Chapters
+\include{chapters/01_formal_specification_and_verification}
+\include{chapters/02_containerization_and_orchestration_artifacts}
+\include{chapters/03_comprehensive_test_suite_overview}
+\include{chapters/04_structural_analysis_and_code_coverage}
+\include{chapters/05_mutation_testing_and_fault_injection}
+\include{chapters/06_performance_microbenchmarking}
+\include{chapters/07_devsecops_and_pipeline_integration}
+\include{chapters/08_static_application_security_testing_and_sca}
+\include{chapters/09_vulnerability_assessment_report}
+
+\end{document}
