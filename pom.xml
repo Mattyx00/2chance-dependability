@@ -15,7 +15,7 @@
         <maven.compiler.release>8</maven.compiler.release>
         <junit.version>5.9.1</junit.version>
         <jmh.version>1.37</jmh.version>
-
+        <argLine />
     </properties>
 
     <repositories>
@@ -178,7 +178,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.2.5</version>
                 <configuration>
-                    <argLine>-Dnet.bytebuddy.experimental=true @{argLine}</argLine>
+                    <argLine>-Dnet.bytebuddy.experimental=true ${argLine}</argLine>
                 </configuration>
             </plugin>
             
@@ -238,4 +238,48 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>pitest</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.pitest</groupId>
+                        <artifactId>pitest-maven</artifactId>
+                        <version>1.15.0</version>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.pitest</groupId>
+                                <artifactId>pitest-junit5-plugin</artifactId>
+                                <version>1.2.1</version>
+                            </dependency>
+                        </dependencies>
+                        <executions>
+                            <execution>
+                                <id>pitest-mutation-coverage</id>
+                                <phase>test</phase>
+                                <goals>
+                                    <goal>mutationCoverage</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <argLine>-Dnet.bytebuddy.experimental=true ${argLine}</argLine>
+                            <targetClasses>
+                                <param>model.beans.*</param>
+                                <param>services.*</param>
+                                <param>utils.*</param>
+                            </targetClasses>
+                            <targetTests>
+                                <param>model.beans.*</param>
+                                <param>services.*</param>
+                                <param>utils.*</param>
+                            </targetTests>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
