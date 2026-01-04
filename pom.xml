@@ -216,6 +216,7 @@
                 <configuration>
                     <excludes>
                         <exclude>controller/**/*</exclude>
+                        <exclude>**/*Benchmark*</exclude>
                     </excludes>
                 </configuration>
                 <executions>

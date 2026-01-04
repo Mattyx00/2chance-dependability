@@ -12,8 +12,12 @@ il report lo troviamo in target/site/surefire-report.html
 
 I risultati della code coverage li troviamo in target/site/jacoco/index.html
 
-Per runnare il docker
+Per runnare il docker (build da locale)
 docker-compose up --build
+
+Per runnare il docker (scaricando l'immagine da Docker Hub)
+docker-compose -f docker-compose-hub.yml up
+
 lo trovate online su http://localhost:8080
 
 Per runnare i mutation testing
