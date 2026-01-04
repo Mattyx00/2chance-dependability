@@ -1,0 +1,79 @@
+\chapter{Software Architectural Overview: The 2Chance Platform}
+
+\section{Introduction to the Layered Architecture}
+
+The 2Chance platform relies on a modular Layered Architecture that extends the traditional Model-View-Controller (MVC) paradigm. While the standard MVC pattern partitions an application into three core components, this architecture introduces a dedicated Service Layer as an extension to the Model, effectively isolating complex business logic from data access.
+
+Consequently, the system’s responsibilities are rigorously mapped: data presentation is managed by the View (JavaServer Pages and JavaScript); input coordination is handled by the Controller; and the Model is subdivided into Services (logic), Data Access Objects (persistence), and Beans (data carriers). This strict decoupling serves as the pre-existing, stable foundation upon which the project’s dependability enhancements are applied.
+
+\section{Architectural Components Breakdown}
+
+The system is structured into four distinct, interacting layers:
+
+\subsection{The View Layer (Presentation \& Interaction)}
+\textbf{Component:} Web Artifacts (e.g., \texttt{webapp} resources, JSP files, Static Assets).
+
+\noindent \textbf{Role:} The View Layer constitutes the user-facing interface of the application. It is responsible for rendering the User Interface (UI) and capturing user inputs. This layer is implemented using standard web standards, including HyperText Markup Language (HTML), Cascading Style Sheets (CSS) for styling, and JavaScript for client-side interactivity.
+
+\noindent \textbf{Responsibility:} Adhering strictly to the Separation of Concerns principle, the View contains exclusively presentational logic. It dynamically displays data provided by the Controller—typically passed via Request or Session attributes—by utilizing JavaServer Pages (JSP) technology and the JavaServer Pages Standard Tag Library (JSTL). Although the View acts as the initiator of the data flow by transmitting user parameters via HTTP requests, it is architecturally prohibited from executing business logic or accessing the persistence layer directly.
+
+\subsection{The Controller Layer (Input Coordination \& Routing)}
+\textbf{Component:} \texttt{controller} package (e.g., \texttt{LoginServlet}, \texttt{RegistrazioneServlet}).
+
+\noindent \textbf{Role:} The Controller functions as the centralized entry point for all server-side processing. Implemented via Java Servlets (extending \texttt{HttpServlet}), this layer intercepts and manages incoming HTTP requests (specifically GET and POST methods) transmitted by the client. It acts as the traffic director of the application, ensuring that user actions are routed to the appropriate logic handlers.
+
+\noindent \textbf{Responsibility:} The Controller acts strictly as an intermediary and contains zero business logic. Its operational workflow consists of three distinct phases:
+\begin{itemize}
+    \item \textbf{Parsing:} It extracts input parameters from the request object and manages the HTTP Session (\texttt{HttpSession}) to preserve user state across stateless interactions.
+    \item \textbf{Delegation:} It invokes the specific methods within the Service Layer to process the data, passing only the necessary arguments.
+    \item \textbf{Routing:} Upon completion of the service execution, the Controller determines the appropriate response strategy—either forwarding the request context to a JSP view for rendering or redirecting the user to a new resource to prevent form resubmission.
+\end{itemize}
+
+\subsection{The Service Layer (Business Logic Orchestration)}
+\textbf{Component:} \texttt{services} package (e.g., \texttt{LoginService}, \texttt{AdminService}).
+
+\noindent \textbf{Role:} The Service Layer constitutes the operational core of the application, encapsulating the system's business intelligence. It serves as a necessary abstraction layer that decouples the input handling (Controller) from the data storage (DAO). By isolating these concerns, the architecture ensures that business rules are centralized and independent of the user interface or database technology.
+
+\noindent \textbf{Responsibility:} Implemented as standard Java classes, the components in this layer are responsible for orchestrating complex workflows and enforcing domain invariants. Specifically, a Service validates inputs against application-specific rules (e.g., ensuring a password meets complexity criteria or checking stock availability) before any action is taken. Critically, to maintain architectural purity, the Service Layer is prohibited from executing SQL queries directly. Instead, it acts as a coordinator, invoking methods from the Data Access Layer to retrieve or persist data, thereby ensuring that logical processing is distinct from physical data manipulation.
+
+\subsection{The Data Access Layer (Persistence \& DAO)}
+\textbf{Component:} \texttt{model.dao} package (e.g., \texttt{UtenteDAO}, \texttt{ProdottoDAO}).
+
+\noindent \textbf{Role:} The Data Access Layer serves as the Persistence Facade of the architecture. It implements the Data Access Object (DAO) pattern, which abstracts and encapsulates all access to the data source. By doing so, it ensures that the rest of the application remains agnostic to the specific database implementation, allowing for potential changes in the storage mechanism without affecting higher-level logic.
+
+\noindent \textbf{Responsibility:} This layer is the sole authority permitted to execute SQL commands. Utilizing JDBC (Java Database Connectivity) and a Tomcat Connection Pool for efficient resource management, the DAOs manage the low-level communication with the database. Their primary duties include:
+\begin{itemize}
+    \item \textbf{CRUD Operations:} Executing Create, Read, Update, and Delete transactions.
+    \item \textbf{Object-Relational Mapping (ORM):} Manually transforming the raw relational data (e.g., \texttt{ResultSet} rows) into high-level Java objects (Model Beans) and vice versa. This translation allows the Service Layer to manipulate Java objects rather than dealing with database-specific data types.
+\end{itemize}
+
+\subsection{The Model Beans (Data Representation)}
+\textbf{Component:} \texttt{model.beans} package (e.g., \texttt{Utente}, \texttt{Prodotto}).
+
+\noindent \textbf{Role:} The Model Beans represent the fundamental functional entities of the system. Structurally, they are implemented as Plain Old Java Objects (POJOs). These lightweight components serve as the common currency of the architecture, enabling the seamless transport of data across the boundaries of the View, Controller, Service, and Data Access layers.
+
+\noindent \textbf{Responsibility:} The primary responsibility of a Bean is Data Encapsulation. Each bean mirrors a specific entity in the domain model (typically corresponding to a table in the relational database). They maintain the state of the information through private attributes, which are accessed and modified exclusively through public accessor (getter) and mutator (setter) methods. By adhering to this standard JavaBean convention, these objects ensure that data remains consistent and easily serializable as it moves through the application's lifecycle.
+
+\section{Dynamic Behavior: The Authentication Workflow}
+
+\textbf{Architectural Data Flow: The Authentication Example}
+
+To rigorously illustrate the dynamic interaction between the five architectural components, we examine the control flow during a standard User Authentication (Login) procedure. This sequence demonstrates how data propagates from the user interface down to the database and back, adhering to the strict separation of concerns defined previously.
+
+\begin{enumerate}
+    \item \textbf{Interaction and Request (View Layer)} The process executes initially within the View Layer. The user inputs their credentials into the \texttt{login.jsp} interface. Upon submission, the browser generates an HTTP POST request, encapsulating the parameters (email and password), and transmits it to the server.
+    
+    \item \textbf{Interception and Delegation (Controller Layer)} The \texttt{LoginServlet} (Controller) intercepts the incoming request. It parses the request body to extract the input parameters. Adhering to its role as a coordinator, the Controller performs no verification of the data; instead, it delegates the operation by invoking the \texttt{login()} method of the \texttt{LoginService}.
+    
+    \item \textbf{Orchestration and Validation (Service Layer)} The \texttt{LoginService} receives the raw data. It first performs a logical check (e.g., ensuring fields are not empty). Once the preliminary validation passes, the Service orchestrates the data retrieval by calling the \texttt{getUserByEmailPassword()} method in the \texttt{UtenteDAO}.
+    
+    \item \textbf{Query Execution (Data Access Layer)} The \texttt{UtenteDAO} establishes a connection to the database. It constructs and executes a secure SQL SELECT query. This is the only point in the flow where the application communicates directly with the persistence storage.
+    
+    \item \textbf{Object Mapping (Data Access Layer)} Upon receiving the \texttt{ResultSet} (the raw rows from the database), the DAO performs Object-Relational Mapping. It instantiates a new \texttt{Utente} Bean, populates its fields with the database values, and returns this object to the Service Layer.
+    
+    \item \textbf{State Management and Response (Controller Layer)} The Service returns the populated \texttt{Utente} Bean to the Controller. The Controller now performs two critical final actions:
+    \begin{itemize}
+        \item \textbf{State Persistence:} It saves the \texttt{Utente} Bean into the HTTP Session, effectively logging the user in.
+        \item \textbf{Navigation:} It sends a Redirect response to the client browser, instructing it to navigate to the \texttt{dashboard.jsp} (View Layer), where the user's name is rendered.
+    \end{itemize}
+\end{enumerate}

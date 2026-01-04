@@ -1,0 +1,52 @@
+\chapter{Testing and Coverage Analysis}
+
+\section{The AI Paradigm Shift in Software Verification}
+The advent of Generative Artificial Intelligence has fundamentally transformed the landscape of software engineering. AI assistants are no longer simple auto-completion tools but act as proactive pair programmers capable of reasoning about code structure, logic, and edge cases. In this project, we embraced this paradigm shift to maximize valid code coverage (measured via \textbf{Jacoco}) and ensure dependability.
+
+We utilized \textbf{Google Antigravity}, an advanced agentic coding editor, to drive the development and testing process using a "Prompt Engineering" approach. Rather than writing every test case manually, we architected a robust pipeline of prompts to guide the AI in generating high-quality artifacts.
+
+\section{AI-Driven Unit Testing Pipeline}
+To achieve rigorous unit testing in isolation (using \textbf{JUnit 5} and \textbf{Mockito}), we rejected the "sing-shot" prompting approach. Complex tasks, when presented to an LLM all at once, tend to result in diluted attention, missed constraints, and shallow reasoning ("hallucinations").
+
+Instead, we implemented a \textbf{Multi-Stage Prompting Pipeline}, breaking the testing process into three distinct, verifiable phases.
+
+\subsection{Phase 1: Implementation Refactoring for Robustness}
+\textbf{Ref. Prompt:} \texttt{01\_implementation\_refactoring.txt}
+
+Before generating tests, the code under test must be robust. AI models often generate test cases based on the \textit{existing} logic of the code, regardless of whether that logic is sound. If the source code allows invalid states (e.g., negative prices, null strings, inconsistent object states), the AI will generate tests that legitimize these bugs.
+
+\textbf{Objective:}
+This step asks the agent to analyze the business logic and enforce \textbf{Defensive Programming}:
+\begin{itemize}
+    \item \textbf{Exception Handling:} Ensure that invalid inputs (e.g., `price < 0`) throw appropriate unchecked exceptions (e.g., `IllegalArgumentException`) immediately, rather than failing silently or causing data corruption later.
+    \item \textbf{State Validation:} Enforce invariants on constructors and setters.
+\end{itemize}
+
+This ensures that the subsequent test generation phase works on "correct" code, preventing the generation of False Negatives (tests that pass but shouldn't).
+
+\subsection{Phase 2: Systematic Test Design (Category-Partition Method)}
+\textbf{Ref. Prompt:} \texttt{02\_category\_partition\_testing.txt}
+
+Directly asking an AI to "write tests" often leads to "Happy Path" bias—testing only the obvious success scenarios. To counter this, we decoupled the \textit{design} of the tests from their \textit{implementation}.
+
+\textbf{Objective:}
+We instructed the agent to perform a \textbf{Category-Partition Analysis (CPA)}. 
+\begin{itemize}
+    \item \textbf{Concept:} CPA is a specification-based testing technique. It involves decomposing a function into its functional units, identifying parameters and environmental conditions, and finding "Categories" (properties of interest) and "Choices" (sets of values).
+    \item \textbf{Output:} A text report detailing the \textit{Test Frames}. A test frame is a specific combination of choices (e.g., "User is Admin" AND "Cart is Empty" AND "Input is Null") that dictates a specific expected behavior.
+\end{itemize}
+This divides the complexity and forces the AI to think about \textit{what} needs to be tested before writing code.
+
+\subsection{Phase 3: Automated Implementation}
+\textbf{Ref. Prompt:} \texttt{03\_unit\_testing\_implementation.txt}
+
+\textbf{Objective:}
+With a robust codebase (Phase 1) and a detailed testing plan (Phase 2), the final step acts as a "translator." The agent is tasked with converting the natural language Test Frames from the CPA report into executable Java code.
+
+\textbf{Implementation Strategy:}
+\begin{itemize}
+    \item \textbf{Tooling:} Use \textbf{JUnit 5} for assertions and lifecycles.
+    \item \textbf{Isolation:} Use \textbf{Mockito} (`@ExtendWith(MockitoExtension.class)`) to mock all external dependencies (DAOs, Database connections), ensuring that we are testing the Unit in total isolation.
+\end{itemize}
+
+This structured pipeline ensures that the resulting test suite is not only comprehensive (high coverage) but also logically sound and aligned with rigorous software engineering principles.
