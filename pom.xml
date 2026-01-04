@@ -178,7 +178,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.2.5</version>
                 <configuration>
-                    <argLine>-Dnet.bytebuddy.experimental=true ${argLine}</argLine>
+                    <argLine>-Dnet.bytebuddy.experimental=true @{argLine}</argLine>
                 </configuration>
             </plugin>
             
@@ -265,6 +265,7 @@
                             </execution>
                         </executions>
                         <configuration>
+                            <parseSurefireConfig>false</parseSurefireConfig>
                             <argLine>-Dnet.bytebuddy.experimental=true ${argLine}</argLine>
                             <targetClasses>
                                 <param>model.beans.*</param>
