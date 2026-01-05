@@ -1,7 +1,52 @@
-\chapter{Mutation Testing}
+\documentclass[12pt, a4paper]{report}
 
-\section*{Context: PiTest}
+% Essential Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lipsum}
+\usepackage{csquotes}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{geometry}
 
-\lipsum[13-14]
+% Geometry Settings
+\geometry{
+    a4paper,
+    total={170mm,257mm},
+    left=20mm,
+    top=20mm,
+}
 
-\lipsum[15]
+% Hyperref Setup
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    filecolor=magenta,      
+    urlcolor=blue,
+    pdftitle={2chance Dependability Report},
+    pdfpagemode=FullScreen,
+}
+
+% Document Metadata
+\title{\textbf{2Chance Web Application} \\ \large Software Dependability Project Report}
+\date{5 January 2026}
+
+\begin{document}
+
+% Cover Page
+\maketitle
+
+% Table of Contents
+\tableofcontents
+
+% Chapters
+\include{chapters/software_architectural_overview}
+\include{chapters/testing_and_coverage_analysis}
+\include{chapters/formal_specification_and_verification}
+\include{chapters/mutation_testing}
+\include{chapters/performance_evaluation}
+\include{chapters/containerization_and_orchestration_readiness}
+\include{chapters/security_assurance_and_vulnerability_assessment}
+\include{chapters/build_and_deployment_pipeline}
+
+\end{document}
