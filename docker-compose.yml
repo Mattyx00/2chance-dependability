@@ -14,14 +14,6 @@ services:
     networks:
       - app-network
     volumes:
-      # Mount the upload directory to persist uploads if needed, 
-      # though the Dockerfile copies it initially. 
-      # If we want persistence, we should map it to a host directory or volume.
-      # For now, following the user's request to "copy" it, 
-      # but usually we want persistence for uploads.
-      # Let's keep it simple as per request, but if we want to see changes 
-      # reflected in the host, we'd mount it.
-      # For now, just the build context copy is enough for "copying".
       - ./upload:/usr/local/tomcat/upload
 
   mysql-db:

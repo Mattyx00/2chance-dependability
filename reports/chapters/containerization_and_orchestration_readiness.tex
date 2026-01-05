@@ -2,6 +2,40 @@
 
 \section*{Context: Docker \& DockerHub}
 
-\lipsum[4-5]
+E’ stato predisposta una strategia di containerizzazione per il nostro progetto per poter distribuire il progetto più facilmente garantendo portabilità, isolamento delle dipendenze e coerenza tra gli ambienti di sviluppo.
 
-\lipsum[6]
+\section*{Strategia di containerizzazione}
+
+E’ stato creato un dockerfile che costruisce il nostro applicativo in più step:
+
+\begin{itemize}
+    \item \textbf{Build del war file}: attraverso il comando \texttt{mvn clean package -Dmaven.test.skip=true} viene creato il war file su un immagine \texttt{maven:3.9-eclipse-temurin-19}
+    \item \textbf{Applicazione}: Copia del war file all’interno dell’immagine \texttt{tomcat:9.0}
+    \item \textbf{Network}: viene esposta la porta 8080 per accedere all’applicazione
+\end{itemize}
+
+\section*{Docker compose}
+
+Dato che la nostra architettura prevede un database che attualmente non è hostato online è stato necessario creare un docker compose che inizializzasse sia l’immagine dell’applicazione creata precedentemente sia il database.
+
+Avremo quindi due services:
+\begin{itemize}
+    \item \textbf{webapp}: l’applicazione creata precedentemente
+    \item \textbf{mysql-db}: il database mysql che viene inizializzato su un'immagine \texttt{mysql:8.0}. Inoltre il db viene inizializzato con i dati del dump \texttt{db\_import.sql}
+\end{itemize}
+
+\section*{CI/CD}
+
+La containerizzazione è principale nella nostra pipeline di automazione gestita con le GitHub Actions.  
+Infatti ad ogni push verrà eseguita una github action che ricostruirà l’immagine ed eseguirà tutti i test e le operazione necessarie sull’immagine docker runnata.
+
+Infatti l’ultima operazione della nostra action è il push della nostra immagine su docker hub tramite il seguente step:
+
+\begin{verbatim}
+- name: Build and push Docker image
+     uses: docker/build-push-action@v5
+     with:
+       context: .
+       push: true
+       tags: ${{ secrets.DOCKER_USERNAME }}/2chance-dependability:latest
+\end{verbatim}
