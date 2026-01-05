@@ -1,0 +1,113 @@
+
+commit 56ade80f22e3f82b5976dbe44e325e9a5a1b45d9
+Author: Aldo Manco <53258029+aldo-manco@users.noreply.github.com>
+Date: Sun Dec 28 22:04:48 2025 +0100
+
+> commit://56ade80f22e3f82b5976dbe44e325e9a5a1b45d9/src/prompts/03_unit_testing_implementation.txt: 2 secrets detected
+
+>> Secret detected: Generic Password
+   Validity: No Checker
+   Occurrences: 5
+   Known by GitGuardian dashboard: YES
+   Incident URL: https://dashboard.gitguardian.com/workspace/818260/incidents/24146713
+   Secret SHA: 920b1730b078976dd8c9567709f756ac0ed23dab376308483dc47f0eeb130ada
+   Secret found in vault: No
+   Detector documentation: https://docs.gitguardian.com/secrets-detection/secrets-detection-engine/detectors/generics/generic_password
+
+   62 | +
+   63 | +This is an example of a good implementation of a unit test class:
+   64 | +…      String validPassword = "Pa****3!";         String validEmail = …
+                                        |_password_|
+   64 | +…      String validPassword = "Pa****3!";         String validEmail = …
+                                        |_password_|
+   64 | +…      String validPassword = "Pa****3!";         String validPhone = …
+                                        |_password_|
+   64 | +…      String validPassword = "Pa****3!";         String validPhone = …
+                                        |_password_|
+   64 | +…      String validPassword = "Pa****3!";         String validEmail = …
+                                        |_password_|
+   65 | +
+   66 | +=====================================================================…
+
+>> Secret detected: Generic Password
+   Validity: No Checker
+   Occurrences: 1
+   Known by GitGuardian dashboard: YES
+   Incident URL: https://dashboard.gitguardian.com/workspace/818260/incidents/24146714
+   Secret SHA: 2f5ba4f911be1ea9b32176585a92da2bffb522c137f0ed44df8c465542464b6f
+   Secret found in vault: No
+   Detector documentation: https://docs.gitguardian.com/secrets-detection/secrets-detection-engine/detectors/generics/generic_password
+
+   62 | +
+   63 | +This is an example of a good implementation of a unit test class:
+   64 | +…      String validPassword = "Pa***23";          Utente expectedUser…
+                                        |_password_|
+   65 | +
+   66 | +=====================================================================…
+
+commit 9614e98fdc62b7613f189ff49262da583a6bc2d6
+Author: Aldo Manco <53258029+aldo-manco@users.noreply.github.com>
+Date: Sat Dec 13 12:27:26 2025 +0100
+
+> commit://9614e98fdc62b7613f189ff49262da583a6bc2d6/src/test/java/services/RegistrazioneServiceTest.java: 2 secrets detected
+
+>> Secret detected: Generic Password
+   Validity: No Checker
+   Occurrences: 5
+   Known by GitGuardian dashboard: YES
+   Incident URL: https://dashboard.gitguardian.com/workspace/818260/incidents/24146713
+   Secret SHA: 920b1730b078976dd8c9567709f756ac0ed23dab376308483dc47f0eeb130ada
+   Secret found in vault: No
+   Detector documentation: https://docs.gitguardian.com/secrets-detection/secrets-detection-engine/detectors/generics/generic_password
+
+    128 | +        // Arrange
+    129 | +        String validSurname = "Rossi";
+    130 | +        String validPassword = "Pa****3!";
+                                           |_password_|
+    131 | +        String validEmail = "test@example.com";
+    132 | +        String validPhone = "1234567890";
+...
+    152 | +        // Arrange
+    153 | +        String validName = "Mario";
+    154 | +        String validPassword = "Pa****3!";
+                                           |_password_|
+    155 | +        String validEmail = "test@example.com";
+    156 | +        String validPhone = "1234567890";
+...
+    201 | +        String validName = "Mario";
+    202 | +        String validSurname = "Rossi";
+    203 | +        String validPassword = "Pa****3!";
+                                           |_password_|
+    204 | +        String validPhone = "1234567890";
+    205 | +        String validFileName = "img.jpg";
+...
+    225 | +        String validName = "Mario";
+    226 | +        String validSurname = "Rossi";
+    227 | +        String validPassword = "Pa****3!";
+                                           |_password_|
+    228 | +        String validPhone = "1234567890";
+    229 | +        String validFileName = "img.jpg";
+...
+    253 | +        String validName = "Mario";
+    254 | +        String validSurname = "Rossi";
+    255 | +        String validPassword = "Pa****3!";
+                                           |_password_|
+    256 | +        String validEmail = "test@example.com";
+    257 | +        String validFileName = "img.jpg";
+
+>> Secret detected: Generic Password
+   Validity: No Checker
+   Occurrences: 1
+   Known by GitGuardian dashboard: YES
+   Incident URL: https://dashboard.gitguardian.com/workspace/818260/incidents/24146714
+   Secret SHA: 2f5ba4f911be1ea9b32176585a92da2bffb522c137f0ed44df8c465542464b6f
+   Secret found in vault: No
+   Detector documentation: https://docs.gitguardian.com/secrets-detection/secrets-detection-engine/detectors/generics/generic_password
+
+    357 | +        // Arrange
+    358 | +        String validEmail = "email@test.com";
+    359 | +        String validPassword = "Pa***23";
+                                           |_password_|
+    360 | +
+    361 | +        Utente expectedUser = new Utente();
+

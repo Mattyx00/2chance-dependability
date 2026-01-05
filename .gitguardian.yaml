@@ -1,0 +1,18 @@
+version: 2
+
+# Configurazione GitGuardian per escludere false positivi
+# Documentazione: https://docs.gitguardian.com/
+
+secret:
+  # Escludi path specifici dalla scansione
+  ignored_paths:
+    - "src/prompts/**"
+    - "src/test/**/*.java"
+    - "**/*Test.java"
+    - "**/test/**"
+  
+  # Ignora match specifici (pattern di segreti)
+  ignored_matches:
+    # Test passwords - ignora questi pattern ovunque vengano trovati
+    - name: "Test Passwords"
+      match: "Pass123!|Pass23|validPassword|TEST_PASSWORD"

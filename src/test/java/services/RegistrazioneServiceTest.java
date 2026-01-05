@@ -31,6 +31,25 @@ class RegistrazioneServiceTest {
     private RegistrazioneService registrazioneService;
 
     // =================================================================================================
+    // Test Data Constants
+    // =================================================================================================
+
+    // Valid test credentials
+    private static final String TEST_PASSWORD_VALID_COMPLEX = "Pass123!";
+    private static final String TEST_PASSWORD_VALID_SIMPLE = "Password123";
+    private static final String TEST_PASSWORD_SHORT = "Pass23";
+
+    // Valid test user data
+    private static final String TEST_NAME = "Mario";
+    private static final String TEST_SURNAME = "Rossi";
+    private static final String TEST_EMAIL_PRIMARY = "test@example.com";
+    private static final String TEST_EMAIL_SECONDARY = "email@test.com";
+    private static final String TEST_EMAIL_NEW = "new@example.com";
+    private static final String TEST_EMAIL_DUPLICATE = "duplicate@example.com";
+    private static final String TEST_PHONE = "1234567890";
+    private static final String TEST_IMAGE_FILENAME = "img.jpg";
+
+    // =================================================================================================
     // Constructor Tests
     // =================================================================================================
 
@@ -61,8 +80,9 @@ class RegistrazioneServiceTest {
         // Act & Assert
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
-                () -> registrazioneService.validateAndRegister(null, "Rossi", "Pass123!", "test@example.com",
-                        "1234567890", "img.jpg"));
+                () -> registrazioneService.validateAndRegister(null, TEST_SURNAME, TEST_PASSWORD_VALID_COMPLEX,
+                        TEST_EMAIL_PRIMARY,
+                        TEST_PHONE, TEST_IMAGE_FILENAME));
         assertTrue(exception.getMessage().contains("Nome cannot be null"));
     }
 
@@ -72,8 +92,9 @@ class RegistrazioneServiceTest {
         // Act & Assert
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
-                () -> registrazioneService.validateAndRegister("Mario", null, "Pass123!", "test@example.com",
-                        "1234567890", "img.jpg"));
+                () -> registrazioneService.validateAndRegister(TEST_NAME, null, TEST_PASSWORD_VALID_COMPLEX,
+                        TEST_EMAIL_PRIMARY,
+                        TEST_PHONE, TEST_IMAGE_FILENAME));
         assertTrue(exception.getMessage().contains("Cognome cannot be null"));
     }
 
@@ -83,8 +104,9 @@ class RegistrazioneServiceTest {
         // Act & Assert
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
-                () -> registrazioneService.validateAndRegister("Mario", "Rossi", null, "test@example.com", "1234567890",
-                        "img.jpg"));
+                () -> registrazioneService.validateAndRegister(TEST_NAME, TEST_SURNAME, null, TEST_EMAIL_PRIMARY,
+                        TEST_PHONE,
+                        TEST_IMAGE_FILENAME));
         assertTrue(exception.getMessage().contains("Password cannot be null"));
     }
 
@@ -94,8 +116,9 @@ class RegistrazioneServiceTest {
         // Act & Assert
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
-                () -> registrazioneService.validateAndRegister("Mario", "Rossi", "Pass123!", null, "1234567890",
-                        "img.jpg"));
+                () -> registrazioneService.validateAndRegister(TEST_NAME, TEST_SURNAME, TEST_PASSWORD_VALID_COMPLEX,
+                        null, TEST_PHONE,
+                        TEST_IMAGE_FILENAME));
         assertTrue(exception.getMessage().contains("Email cannot be null"));
     }
 
@@ -105,8 +128,9 @@ class RegistrazioneServiceTest {
         // Act & Assert
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
-                () -> registrazioneService.validateAndRegister("Mario", "Rossi", "Pass123!", "test@example.com", null,
-                        "img.jpg"));
+                () -> registrazioneService.validateAndRegister(TEST_NAME, TEST_SURNAME, TEST_PASSWORD_VALID_COMPLEX,
+                        TEST_EMAIL_PRIMARY, null,
+                        TEST_IMAGE_FILENAME));
         assertTrue(exception.getMessage().contains("Telefono cannot be null"));
     }
 
@@ -116,8 +140,9 @@ class RegistrazioneServiceTest {
         // Act & Assert
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
-                () -> registrazioneService.validateAndRegister("Mario", "Rossi", "Pass123!", "test@example.com",
-                        "1234567890", null));
+                () -> registrazioneService.validateAndRegister(TEST_NAME, TEST_SURNAME, TEST_PASSWORD_VALID_COMPLEX,
+                        TEST_EMAIL_PRIMARY,
+                        TEST_PHONE, null));
         assertTrue(exception.getMessage().contains("FileName cannot be null"));
     }
 
@@ -126,11 +151,11 @@ class RegistrazioneServiceTest {
     @ValueSource(strings = { "", "Mario1", "M@rio" })
     void shouldReturnErrorWhenNameIsInvalid(String invalidName) throws SQLException {
         // Arrange
-        String validSurname = "Rossi";
-        String validPassword = "Pass123!";
-        String validEmail = "test@example.com";
-        String validPhone = "1234567890";
-        String validFileName = "img.jpg";
+        String validSurname = TEST_SURNAME;
+        String validPassword = TEST_PASSWORD_VALID_COMPLEX;
+        String validEmail = TEST_EMAIL_PRIMARY;
+        String validPhone = TEST_PHONE;
+        String validFileName = TEST_IMAGE_FILENAME;
 
         // Act
         ArrayList<String> errors = registrazioneService.validateAndRegister(
@@ -150,11 +175,11 @@ class RegistrazioneServiceTest {
     @ValueSource(strings = { "", "Rossi1", "R0ssi" })
     void shouldReturnErrorWhenSurnameIsInvalid(String invalidSurname) throws SQLException {
         // Arrange
-        String validName = "Mario";
-        String validPassword = "Pass123!";
-        String validEmail = "test@example.com";
-        String validPhone = "1234567890";
-        String validFileName = "img.jpg";
+        String validName = TEST_NAME;
+        String validPassword = TEST_PASSWORD_VALID_COMPLEX;
+        String validEmail = TEST_EMAIL_PRIMARY;
+        String validPhone = TEST_PHONE;
+        String validFileName = TEST_IMAGE_FILENAME;
 
         // Act
         ArrayList<String> arrayErrors = registrazioneService.validateAndRegister(
@@ -174,11 +199,11 @@ class RegistrazioneServiceTest {
     @ValueSource(strings = { "", "Pass", "password", "short", "alllowercase123" })
     void shouldReturnErrorWhenPasswordIsInvalid(String invalidPassword) throws SQLException {
         // Arrange
-        String validName = "Mario";
-        String validSurname = "Rossi";
-        String validEmail = "test@example.com";
-        String validPhone = "1234567890";
-        String validFileName = "img.jpg";
+        String validName = TEST_NAME;
+        String validSurname = TEST_SURNAME;
+        String validEmail = TEST_EMAIL_PRIMARY;
+        String validPhone = TEST_PHONE;
+        String validFileName = TEST_IMAGE_FILENAME;
 
         // Act
         ArrayList<String> arrayErrors = registrazioneService.validateAndRegister(
@@ -198,11 +223,11 @@ class RegistrazioneServiceTest {
     @ValueSource(strings = { "", "mario@", "mario.com", "@domain.com" })
     void shouldReturnErrorWhenEmailIsInvalid(String invalidEmail) throws SQLException {
         // Arrange
-        String validName = "Mario";
-        String validSurname = "Rossi";
-        String validPassword = "Pass123!";
-        String validPhone = "1234567890";
-        String validFileName = "img.jpg";
+        String validName = TEST_NAME;
+        String validSurname = TEST_SURNAME;
+        String validPassword = TEST_PASSWORD_VALID_COMPLEX;
+        String validPhone = TEST_PHONE;
+        String validFileName = TEST_IMAGE_FILENAME;
 
         // Act
         ArrayList<String> arrayErrors = registrazioneService.validateAndRegister(
@@ -221,12 +246,12 @@ class RegistrazioneServiceTest {
     @DisplayName("TF18: Should return error when Email already exists")
     void shouldReturnErrorWhenEmailExisting() throws SQLException {
         // Arrange
-        String existingEmail = "duplicate@example.com";
-        String validName = "Mario";
-        String validSurname = "Rossi";
-        String validPassword = "Pass123!";
-        String validPhone = "1234567890";
-        String validFileName = "img.jpg";
+        String existingEmail = TEST_EMAIL_DUPLICATE;
+        String validName = TEST_NAME;
+        String validSurname = TEST_SURNAME;
+        String validPassword = TEST_PASSWORD_VALID_COMPLEX;
+        String validPhone = TEST_PHONE;
+        String validFileName = TEST_IMAGE_FILENAME;
 
         try (MockedStatic<UtenteDAO> mockedStatic = mockStatic(UtenteDAO.class)) {
             mockedStatic.when(() -> UtenteDAO.isEmailPresent(existingEmail)).thenReturn(true);
@@ -250,11 +275,11 @@ class RegistrazioneServiceTest {
     @ValueSource(strings = { "", "123", "12345678901", "abcdefghij" })
     void shouldReturnErrorWhenTelefonoIsInvalid(String invalidPhone) throws SQLException {
         // Arrange
-        String validName = "Mario";
-        String validSurname = "Rossi";
-        String validPassword = "Pass123!";
-        String validEmail = "test@example.com";
-        String validFileName = "img.jpg";
+        String validName = TEST_NAME;
+        String validSurname = TEST_SURNAME;
+        String validPassword = TEST_PASSWORD_VALID_COMPLEX;
+        String validEmail = TEST_EMAIL_PRIMARY;
+        String validFileName = TEST_IMAGE_FILENAME;
 
         // Act
         ArrayList<String> arrayErrors = registrazioneService.validateAndRegister(
@@ -275,10 +300,10 @@ class RegistrazioneServiceTest {
         // Arrange: Invalid Nome and Invalid Password
         String invalidName = "Mario1";
         String invalidPassword = "short";
-        String validSurname = "Rossi";
-        String validEmail = "test@example.com";
-        String validPhone = "1234567890";
-        String validFileName = "img.jpg";
+        String validSurname = TEST_SURNAME;
+        String validEmail = TEST_EMAIL_PRIMARY;
+        String validPhone = TEST_PHONE;
+        String validFileName = TEST_IMAGE_FILENAME;
 
         // Act
         ArrayList<String> arrayErrors = registrazioneService.validateAndRegister(
@@ -299,12 +324,12 @@ class RegistrazioneServiceTest {
     @DisplayName("TF22: Should register user when all inputs are valid and email is unique")
     void shouldRegisterUserWhenAllInputsValid() throws SQLException {
         // Arrange
-        String validEmail = "new@example.com";
-        String validPassword = "Password123"; // >8 chars, has Upper
-        String validName = "Mario";
-        String validSurname = "Rossi";
-        String validPhone = "1234567890";
-        String validFileName = "img.jpg";
+        String validEmail = TEST_EMAIL_NEW;
+        String validPassword = TEST_PASSWORD_VALID_SIMPLE; // >8 chars, has Upper
+        String validName = TEST_NAME;
+        String validSurname = TEST_SURNAME;
+        String validPhone = TEST_PHONE;
+        String validFileName = TEST_IMAGE_FILENAME;
 
         try (MockedStatic<UtenteDAO> mockedStatic = mockStatic(UtenteDAO.class)) {
             mockedStatic.when(() -> UtenteDAO.isEmailPresent(validEmail)).thenReturn(false);
@@ -337,7 +362,7 @@ class RegistrazioneServiceTest {
         // Act & Assert
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
-                () -> registrazioneService.getUserByEmailPassword(null, "Pass123"));
+                () -> registrazioneService.getUserByEmailPassword(null, TEST_PASSWORD_SHORT));
         assertTrue(exception.getMessage().contains("Email cannot be null"));
     }
 
@@ -347,7 +372,7 @@ class RegistrazioneServiceTest {
         // Act & Assert
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
-                () -> registrazioneService.getUserByEmailPassword("email@test.com", null));
+                () -> registrazioneService.getUserByEmailPassword(TEST_EMAIL_SECONDARY, null));
         assertTrue(exception.getMessage().contains("Password cannot be null"));
     }
 
@@ -355,8 +380,8 @@ class RegistrazioneServiceTest {
     @DisplayName("TF25: Should delegate to DAO when Login inputs are valid")
     void shouldDelegateToDaoWhenLoginInputsValid() throws SQLException {
         // Arrange
-        String validEmail = "email@test.com";
-        String validPassword = "Pass123";
+        String validEmail = TEST_EMAIL_SECONDARY;
+        String validPassword = TEST_PASSWORD_SHORT;
 
         Utente expectedUser = new Utente();
 
