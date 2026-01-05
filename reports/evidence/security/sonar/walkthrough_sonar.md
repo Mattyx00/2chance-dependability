@@ -57,6 +57,29 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response) t
 }
 ```
 
+        }
+    }
+}
+```
+
+### Phase 2: Centralized ResponseUtils
+To further clean up the code and resolve remaining S1989 issues regarding `IOException` from `sendError`:
+1.  Created `src/main/java/utils/ResponseUtils.java`.
+2.  Refactored 11 Servlets to use `ResponseUtils.sendError(response, ...)` instead of local `try-catch` blocks.
+
+**ResponseUtils Pattern:**
+```java
+public static void sendError(HttpServletResponse response, int statusCode, String message) {
+    if (!response.isCommitted()) {
+        try {
+            response.sendError(statusCode, message);
+        } catch (IOException e) {
+            e.printStackTrace(); // Log internally
+        }
+    }
+}
+```
+
 ## 3. Verification
 
 ### Build Verification

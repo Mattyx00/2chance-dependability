@@ -3,6 +3,8 @@ package controller;
 import model.beans.Utente;
 import services.RegistrazioneService;
 
+import utils.ResponseUtils;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -93,9 +95,7 @@ public class RegistrazioneServlet extends HttpServlet {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            if (!response.isCommitted()) {
-                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            }
+            ResponseUtils.sendError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 

@@ -54,3 +54,12 @@ public void init() throws ServletException {
     }
 }
 ```
+
+**ResponseUtils Pattern (Phase 2):**
+```java
+// Used in catch blocks to safely send errors without risking new exceptions
+} catch (Exception e) {
+    e.printStackTrace();
+    ResponseUtils.sendError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+}
+```

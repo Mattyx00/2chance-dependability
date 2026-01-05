@@ -1,6 +1,7 @@
 package controller;
 
 import services.LogoutService;
+import utils.ResponseUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -23,9 +24,7 @@ public class logoutServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/landingpage");
         } catch (Exception e) {
             e.printStackTrace();
-            if (!response.isCommitted()) {
-                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            }
+            ResponseUtils.sendError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 

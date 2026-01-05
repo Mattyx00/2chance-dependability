@@ -3,7 +3,8 @@ package controller;
 import model.beans.Utente;
 import services.RecensioniService;
 
-import javax.servlet.RequestDispatcher;
+import utils.ResponseUtils;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -67,9 +68,7 @@ public class RecensioniServlet extends HttpServlet {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            if (!response.isCommitted()) {
-                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            }
+            ResponseUtils.sendError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 

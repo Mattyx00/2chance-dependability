@@ -3,6 +3,8 @@ package controller;
 import model.beans.Utente;
 import services.EditProfiloService;
 
+import utils.ResponseUtils;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
@@ -58,11 +60,8 @@ public class EditProfiloServlet extends HttpServlet {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            // Ensure we don't try to send error if response is already committed, but basic
-            // safety here
-            if (!response.isCommitted()) {
-                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An internal error occurred");
-            }
+            ResponseUtils.sendError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+                    "An internal error occurred");
         }
     }
 
@@ -72,9 +71,8 @@ public class EditProfiloServlet extends HttpServlet {
             doGet(req, resp);
         } catch (Exception e) {
             e.printStackTrace();
-            if (!resp.isCommitted()) {
-                resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An internal error occurred");
-            }
+            ResponseUtils.sendError(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+                    "An internal error occurred");
         }
     }
 }

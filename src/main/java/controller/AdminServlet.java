@@ -5,6 +5,8 @@ import model.beans.Prodotto;
 import model.beans.Utente;
 import services.AdminService;
 
+import utils.ResponseUtils;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -233,9 +235,8 @@ public class AdminServlet extends HttpServlet {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            if (!response.isCommitted()) {
-                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An internal error occurred");
-            }
+            ResponseUtils.sendError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+                    "An internal error occurred");
         }
     }
 
@@ -246,9 +247,8 @@ public class AdminServlet extends HttpServlet {
             doGet(request, response);
         } catch (Exception e) {
             e.printStackTrace();
-            if (!response.isCommitted()) {
-                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An internal error occurred");
-            }
+            ResponseUtils.sendError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+                    "An internal error occurred");
         }
     }
 }

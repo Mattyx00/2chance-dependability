@@ -3,6 +3,8 @@ package controller;
 import model.beans.Prodotto;
 import services.ProdottoService;
 
+import utils.ResponseUtils;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -43,9 +45,7 @@ public class ProdottoServlet extends HttpServlet {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            if (!response.isCommitted()) {
-                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            }
+            ResponseUtils.sendError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 
