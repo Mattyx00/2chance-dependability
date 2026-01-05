@@ -26,23 +26,35 @@ public class UtenteServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         try {
-            Utente utente = utenteService.getUtenteById(Integer.parseInt(request.getParameter("utente")));
-            request.setAttribute("utente", utente);
+            try {
+                Utente utente = utenteService.getUtenteById(Integer.parseInt(request.getParameter("utente")));
+                request.setAttribute("utente", utente);
 
-            String address = "/paginaUtente.jsp";
-            RequestDispatcher dispatcher = request.getRequestDispatcher(address);
-            dispatcher.forward(request, response);
-        } catch (SQLException e) {
+                String address = "/paginaUtente.jsp";
+                RequestDispatcher dispatcher = request.getRequestDispatcher(address);
+                dispatcher.forward(request, response);
+            } catch (SQLException e) {
+                e.printStackTrace();
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            }
+        } catch (Exception e) {
             e.printStackTrace();
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            if (!response.isCommitted()) {
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            }
         }
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doGet(request, response);
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            doGet(request, response);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
-

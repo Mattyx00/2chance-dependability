@@ -6,7 +6,6 @@ import services.CheckOutService;
 
 import java.sql.SQLException;
 
-
 import javax.servlet.ServletException;
 
 import javax.servlet.annotation.WebServlet;
@@ -30,51 +29,56 @@ public class CheckOutServlet extends HttpServlet {
         }
     }
 
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        HttpSession session = request.getSession();
-
-        // Devi essere loggato
-        Utente utente = (Utente) session.getAttribute("user");
-        if (utente == null) {
-            response.sendRedirect(request.getContextPath() + "/login.jsp");
-            return;
-        }
-
-        Carrello carrello = (Carrello) session.getAttribute("carrello");
-        if (carrello == null || carrello.getProdotti().isEmpty()) {
-            response.sendRedirect(request.getContextPath() + "/carrello.jsp");
-            return;
-        }
-
-        String indirizzo = request.getParameter("indirizzo");
-
         try {
-            // Checkout effettivo
-            checkOutService.effettuaCheckout(utente, carrello, indirizzo);
+            HttpSession session = request.getSession();
 
-            // Aggiorna ordini dell’utente in sessione
-            Utente utenteAggiornato = checkOutService.aggiornaOrdiniUtente(utente);
-            session.setAttribute("user", utenteAggiornato);
+            // Devi essere loggato
+            Utente utente = (Utente) session.getAttribute("user");
+            if (utente == null) {
+                response.sendRedirect(request.getContextPath() + "/login.jsp");
+                return;
+            }
 
-            // Svuota il carrello
-            session.removeAttribute("carrello");
+            Carrello carrello = (Carrello) session.getAttribute("carrello");
+            if (carrello == null || carrello.getProdotti().isEmpty()) {
+                response.sendRedirect(request.getContextPath() + "/carrello.jsp");
+                return;
+            }
 
-            response.sendRedirect(request.getContextPath() + "/landingpage");
+            String indirizzo = request.getParameter("indirizzo");
 
+            try {
+                // Checkout effettivo
+                checkOutService.effettuaCheckout(utente, carrello, indirizzo);
+
+                // Aggiorna ordini dell’utente in sessione
+                Utente utenteAggiornato = checkOutService.aggiornaOrdiniUtente(utente);
+                session.setAttribute("user", utenteAggiornato);
+
+                // Svuota il carrello
+                session.removeAttribute("carrello");
+
+                response.sendRedirect(request.getContextPath() + "/landingpage");
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            }
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        doGet(request, response);
+        try {
+            doGet(request, response);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
-

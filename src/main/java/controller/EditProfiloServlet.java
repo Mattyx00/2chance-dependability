@@ -28,36 +28,53 @@ public class EditProfiloServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String path = request.getPathInfo() == null ? "/" : request.getPathInfo();
-        Utente u = (Utente) request.getSession().getAttribute("user");
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            String path = request.getPathInfo() == null ? "/" : request.getPathInfo();
+            Utente u = (Utente) request.getSession().getAttribute("user");
 
-        if (path.equals("/editImmagine")) {
-            try {
-                Part part = request.getPart("modifica");
-                u = editProfiloService.editImmagine(u, part, path);
-                request.getSession().setAttribute("user", u);
-                response.sendRedirect(request.getServletContext().getContextPath() + "/paginaUtente.jsp");
+            if (path.equals("/editImmagine")) {
+                try {
+                    Part part = request.getPart("modifica");
+                    u = editProfiloService.editImmagine(u, part, path);
+                    request.getSession().setAttribute("user", u);
+                    response.sendRedirect(request.getServletContext().getContextPath() + "/paginaUtente.jsp");
 
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                    response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                }
+            } else {
+                try {
+                    String modifica = request.getParameter("modifica"); // modifica sul db
+                    u = editProfiloService.editProfilo(u, modifica, path);
+                    request.getSession().setAttribute("user", u);
+                    response.sendRedirect(request.getServletContext().getContextPath() + "/paginaUtente.jsp");
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                    response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                }
             }
-        } else {
-            try {
-                String modifica = request.getParameter("modifica"); //modifica sul db
-                u = editProfiloService.editProfilo(u, modifica, path);
-                request.getSession().setAttribute("user", u);
-                response.sendRedirect(request.getServletContext().getContextPath() + "/paginaUtente.jsp");
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Ensure we don't try to send error if response is already committed, but basic
+            // safety here
+            if (!response.isCommitted()) {
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An internal error occurred");
             }
         }
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        doGet(req, resp);
+        try {
+            doGet(req, resp);
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (!resp.isCommitted()) {
+                resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An internal error occurred");
+            }
+        }
     }
 }

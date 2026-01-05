@@ -27,25 +27,34 @@ public class landingpage extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         try {
-            ArrayList<Prodotto> prodotti = landingPageService.getUltimiProdotti();
-            request.setAttribute("prodotti", prodotti);
+            try {
+                ArrayList<Prodotto> prodotti = landingPageService.getUltimiProdotti();
+                request.setAttribute("prodotti", prodotti);
 
-        } catch (SQLException e) {
+            } catch (SQLException e) {
+                e.printStackTrace();
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                return;
+            }
+
+            String address = "/index.jsp";
+            RequestDispatcher dispatcher = request.getRequestDispatcher(address);
+            dispatcher.forward(request, response);
+        } catch (Exception e) {
             e.printStackTrace();
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            return;
         }
-
-        String address = "/index.jsp";
-        RequestDispatcher dispatcher = request.getRequestDispatcher(address);
-        dispatcher.forward(request, response);
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doGet(request, response);
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            doGet(request, response);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
-

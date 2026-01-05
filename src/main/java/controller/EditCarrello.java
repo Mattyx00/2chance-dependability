@@ -5,7 +5,6 @@ import services.EditCarrelloService;
 
 import java.sql.SQLException;
 
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -28,42 +27,48 @@ public class EditCarrello extends HttpServlet {
         }
     }
 
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        HttpSession session = request.getSession();
-        Carrello carrello = (Carrello) session.getAttribute("carrello");
-        if (carrello == null) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Carrello vuoto o non trovato.");
-            return;
-        }
-
         try {
-            int idProdotto = Integer.parseInt(request.getParameter("prodotto"));
-            String tipo = request.getParameter("tipo");
-            int quantita = tipo.equals("cambiaquantita") ? Integer.parseInt(request.getParameter("quantita")) : 0;
-
-            // Chiamata al service
-            if(tipo.equals("cambiaquantita")){
-                carrello = editCarrelloService.modificaQuantitaProdotto(carrello, idProdotto, quantita);
-            }else if(tipo.equals("elimina")){
-                carrello = editCarrelloService.eliminaProdotto(carrello, idProdotto);
+            HttpSession session = request.getSession();
+            Carrello carrello = (Carrello) session.getAttribute("carrello");
+            if (carrello == null) {
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Carrello vuoto o non trovato.");
+                return;
             }
 
-            // Aggiorna il carrello in sessione
-            session.setAttribute("carrello", carrello);
+            try {
+                int idProdotto = Integer.parseInt(request.getParameter("prodotto"));
+                String tipo = request.getParameter("tipo");
+                int quantita = tipo.equals("cambiaquantita") ? Integer.parseInt(request.getParameter("quantita")) : 0;
 
+                // Chiamata al service
+                if (tipo.equals("cambiaquantita")) {
+                    carrello = editCarrelloService.modificaQuantitaProdotto(carrello, idProdotto, quantita);
+                } else if (tipo.equals("elimina")) {
+                    carrello = editCarrelloService.eliminaProdotto(carrello, idProdotto);
+                }
+
+                // Aggiorna il carrello in sessione
+                session.setAttribute("carrello", carrello);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            }
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        doGet(request, response);
+        try {
+            doGet(request, response);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

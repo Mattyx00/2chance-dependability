@@ -27,48 +27,60 @@ public class WishlistServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         try {
-            int cod = Integer.parseInt(request.getParameter("cod"));
+            try {
+                int cod = Integer.parseInt(request.getParameter("cod"));
 
-            //aggiungo alla wishlist
-            if (cod == 1) {
-                if (request.getSession().getAttribute("user") == null) {
-                    response.sendRedirect(request.getServletContext().getContextPath() + "/login.jsp");
-                    return;
+                // aggiungo alla wishlist
+                if (cod == 1) {
+                    if (request.getSession().getAttribute("user") == null) {
+                        response.sendRedirect(request.getServletContext().getContextPath() + "/login.jsp");
+                        return;
+                    }
+
+                    int p = Integer.parseInt(request.getParameter("prodotto"));
+                    Utente u = (Utente) request.getSession().getAttribute("user");
+                    wishlistService.addToWishList(u, p);
+                    response.sendRedirect(request.getServletContext().getContextPath() + "/landingpage");
+                }
+                // ottengo la wishlist
+                else if (cod == 2) {
+                    Utente u = (Utente) request.getSession().getAttribute("user");
+                    WishList w = wishlistService.getWishListByUser(u);
+                    request.setAttribute("wishlist", w);
+
+                    String address = "/wishlist.jsp";
+                    RequestDispatcher dispatcher = request.getRequestDispatcher(address);
+                    dispatcher.forward(request, response);
+                }
+                // elimino dalla wishlist
+                else if (cod == 3) {
+                    int id_utente = Integer.parseInt(request.getParameter("id_utente"));
+                    int id_prodotto = Integer.parseInt(request.getParameter("id_prodotto"));
+                    wishlistService.removeFromWishList(id_utente, id_prodotto);
                 }
 
-                int p = Integer.parseInt(request.getParameter("prodotto"));
-                Utente u = (Utente) request.getSession().getAttribute("user");
-                wishlistService.addToWishList(u, p);
-                response.sendRedirect(request.getServletContext().getContextPath() + "/landingpage");
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             }
-            //ottengo la wishlist
-            else if (cod == 2) {
-                Utente u = (Utente) request.getSession().getAttribute("user");
-                WishList w = wishlistService.getWishListByUser(u);
-                request.setAttribute("wishlist", w);
-
-                String address = "/wishlist.jsp";
-                RequestDispatcher dispatcher = request.getRequestDispatcher(address);
-                dispatcher.forward(request, response);
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (!response.isCommitted()) {
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             }
-            //elimino dalla wishlist
-            else if (cod == 3) {
-                int id_utente = Integer.parseInt(request.getParameter("id_utente"));
-                int id_prodotto = Integer.parseInt(request.getParameter("id_prodotto"));
-                wishlistService.removeFromWishList(id_utente, id_prodotto);
-            }
-
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doGet(request, response);
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            doGet(request, response);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
-

@@ -27,22 +27,34 @@ public class RicercaServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         try {
-            ArrayList<Prodotto> prodotti = ricercaService.cercaProdotti("%" + request.getParameter("val") + "%");
-            request.setAttribute("prodotti", prodotti);
-            String address = "/showProdotti.jsp";
-            RequestDispatcher dispatcher = request.getRequestDispatcher(address);
-            dispatcher.forward(request, response);
-        } catch (SQLException e) {
+            try {
+                ArrayList<Prodotto> prodotti = ricercaService.cercaProdotti("%" + request.getParameter("val") + "%");
+                request.setAttribute("prodotti", prodotti);
+                String address = "/showProdotti.jsp";
+                RequestDispatcher dispatcher = request.getRequestDispatcher(address);
+                dispatcher.forward(request, response);
+            } catch (SQLException e) {
+                e.printStackTrace();
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            }
+        } catch (Exception e) {
             e.printStackTrace();
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            if (!response.isCommitted()) {
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            }
         }
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doGet(request, response);
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            doGet(request, response);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
-

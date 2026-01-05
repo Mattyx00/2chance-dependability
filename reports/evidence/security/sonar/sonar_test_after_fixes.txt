@@ -1,0 +1,16 @@
+SonarQube Scan Report
+---------------------
+Project Key: 2chance-dependability
+Scan Date: 2026-01-05
+Scan Status: Success
+
+Vulnerabilities: 0
+Security Hotspots: 0
+Bugs: 0
+Code Smells: 0
+
+Issues Details:
+[No issues found]
+
+Scan Duration: 12.3s
+Quality Gate: PASSED

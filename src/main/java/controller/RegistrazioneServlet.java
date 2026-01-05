@@ -3,7 +3,6 @@ package controller;
 import model.beans.Utente;
 import services.RegistrazioneService;
 
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -36,63 +35,77 @@ public class RegistrazioneServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         try {
-            String nome = request.getParameter("nome");
-            String cognome = request.getParameter("cognome");
-            String password = request.getParameter("password");
-            String email = request.getParameter("email");
-            String telefono = request.getParameter("telefono");
+            try {
+                String nome = request.getParameter("nome");
+                String cognome = request.getParameter("cognome");
+                String password = request.getParameter("password");
+                String email = request.getParameter("email");
+                String telefono = request.getParameter("telefono");
 
-            //prendo file dalla richiesta
-            Part part = request.getPart("file");
-            String fileName = Paths.get(part.getSubmittedFileName()).getFileName().toString();
+                // prendo file dalla richiesta
+                Part part = request.getPart("file");
+                String fileName = Paths.get(part.getSubmittedFileName()).getFileName().toString();
 
-            File file;
-            try (InputStream fileStream = part.getInputStream()) {
-                String currentDirectory = System.getProperty("user.dir");
-                Path currentPath = Paths.get(currentDirectory);
-                Path parentPath = currentPath.getParent(); // Ottiene il percorso del genitore
-                Path uploadPath = parentPath.resolve("upload"); // Risolve "upload" nel percorso del genitore
+                File file;
+                try (InputStream fileStream = part.getInputStream()) {
+                    String currentDirectory = System.getProperty("user.dir");
+                    Path currentPath = Paths.get(currentDirectory);
+                    Path parentPath = currentPath.getParent(); // Ottiene il percorso del genitore
+                    Path uploadPath = parentPath.resolve("upload"); // Risolve "upload" nel percorso del genitore
 
-                String uploadRoot = uploadPath.toString() + File.separator;
-                file = new File(uploadRoot + fileName);
-                if (!file.exists())         //salvo il file all'interno della cartella upload
-                    Files.copy(fileStream, file.toPath());
+                    String uploadRoot = uploadPath.toString() + File.separator;
+                    file = new File(uploadRoot + fileName);
+                    if (!file.exists()) // salvo il file all'interno della cartella upload
+                        Files.copy(fileStream, file.toPath());
+                }
+
+                ArrayList<String> errori = registrazioneService.validateAndRegister(nome, cognome, password, email,
+                        telefono, fileName);
+
+                if (!errori.isEmpty()) {
+                    Utente u = new Utente();
+                    u.setNome(nome);
+                    u.setCognome(cognome);
+                    u.setPassword(password);
+                    u.setEmail(email);
+                    u.setTelefono(telefono);
+                    u.setImmagine(fileName);
+
+                    request.setAttribute("utente", u);
+                    request.setAttribute("errori", errori);
+                    String address = "/registrazione.jsp";
+                    RequestDispatcher dispatcher = request.getRequestDispatcher(address);
+                    dispatcher.forward(request, response);
+                } else {
+                    Utente u = registrazioneService.getUserByEmailPassword(email, password);
+                    request.setAttribute("utente", u);
+                    request.setAttribute("errori", errori);
+                    request.getSession().setAttribute("user", u);
+                    response.sendRedirect(request.getServletContext().getContextPath() + "/landingpage");
+                }
+
+            } catch (SQLException throwable) {
+                throwable.printStackTrace();
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             }
-
-            ArrayList<String> errori = registrazioneService.validateAndRegister(nome, cognome, password, email, telefono, fileName);
-
-            if (!errori.isEmpty()) {
-                Utente u = new Utente();
-                u.setNome(nome);
-                u.setCognome(cognome);
-                u.setPassword(password);
-                u.setEmail(email);
-                u.setTelefono(telefono);
-                u.setImmagine(fileName);
-                
-                request.setAttribute("utente", u);
-                request.setAttribute("errori", errori);
-                String address = "/registrazione.jsp";
-                RequestDispatcher dispatcher = request.getRequestDispatcher(address);
-                dispatcher.forward(request, response);
-            } else {
-                Utente u = registrazioneService.getUserByEmailPassword(email, password);
-                request.setAttribute("utente", u);
-                request.setAttribute("errori", errori);
-                request.getSession().setAttribute("user", u);
-                response.sendRedirect(request.getServletContext().getContextPath() + "/landingpage");
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (!response.isCommitted()) {
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             }
-
-        } catch (SQLException throwable) {
-            throwable.printStackTrace();
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doGet(request, response);
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            doGet(request, response);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

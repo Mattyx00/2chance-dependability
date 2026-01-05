@@ -26,24 +26,36 @@ public class ProdottoServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         try {
-            Prodotto prod = prodottoService.getProdottoById(Integer.parseInt(request.getParameter("prodotto")));
-            request.setAttribute("prodotto", prod);
+            try {
+                Prodotto prod = prodottoService.getProdottoById(Integer.parseInt(request.getParameter("prodotto")));
+                request.setAttribute("prodotto", prod);
 
-            String address = "/paginaProdotto.jsp";
-            RequestDispatcher dispatcher = request.getRequestDispatcher(address);
-            dispatcher.forward(request, response);
+                String address = "/paginaProdotto.jsp";
+                RequestDispatcher dispatcher = request.getRequestDispatcher(address);
+                dispatcher.forward(request, response);
 
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (!response.isCommitted()) {
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            }
         }
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doGet(request, response);
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            doGet(request, response);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
-
