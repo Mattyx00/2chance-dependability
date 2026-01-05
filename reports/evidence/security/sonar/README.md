@@ -21,8 +21,8 @@ This directory contains evidence and documentation regarding the resolution of s
 - **[Fixes Reference](sonar_fixes.md)**
   A quick reference list of all files modified and the specific patterns applied.
 
-- **[Scan Report (Simulated)](sonar_test_after_fixes.txt)**
-  Evidence of the clean scan state after applying the fixes.
+- **[Final Scan Report (CSV)](sonar_security_issues_final.csv)** / **[JSON](sonar_security_all_raw_final.json)**
+  Final evidence of the clean scan state (0 issues) after applying all fixes.
 
 ## Quick Verification
 Run the following commands to verify the fixes:
