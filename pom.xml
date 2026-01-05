@@ -276,14 +276,17 @@
                             <argLine>-Dnet.bytebuddy.experimental=true ${argLine}</argLine>
                             <targetClasses>
                                 <param>model.beans.*</param>
+                                <param>model.dao.*</param>
                                 <param>services.*</param>
-                                <param>utils.*</param>
                             </targetClasses>
                             <targetTests>
                                 <param>model.beans.*</param>
+                                <param>model.dao.*</param>
                                 <param>services.*</param>
-                                <param>utils.*</param>
                             </targetTests>
+                            <excludedClasses>
+                                <param>.*\.jmh_generated\..*</param>
+                            </excludedClasses>
                         </configuration>
                     </plugin>
                 </plugins>
