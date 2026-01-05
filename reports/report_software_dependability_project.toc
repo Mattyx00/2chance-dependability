@@ -1,21 +1,27 @@
-\contentsline {chapter}{\numberline {1}Software Architectural Overview: The 2Chance Platform}{2}{chapter.1}%
-\contentsline {section}{\numberline {1.1}Introduction to the Layered Architecture}{2}{section.1.1}%
-\contentsline {section}{\numberline {1.2}Architectural Components Breakdown}{2}{section.1.2}%
-\contentsline {subsection}{\numberline {1.2.1}The View Layer (Presentation \& Interaction)}{2}{subsection.1.2.1}%
-\contentsline {subsection}{\numberline {1.2.2}The Controller Layer (Input Coordination \& Routing)}{2}{subsection.1.2.2}%
-\contentsline {subsection}{\numberline {1.2.3}The Service Layer (Business Logic Orchestration)}{3}{subsection.1.2.3}%
-\contentsline {subsection}{\numberline {1.2.4}The Data Access Layer (Persistence \& DAO)}{3}{subsection.1.2.4}%
-\contentsline {subsection}{\numberline {1.2.5}The Model Beans (Data Representation)}{4}{subsection.1.2.5}%
-\contentsline {section}{\numberline {1.3}Dynamic Behavior: The Authentication Workflow}{4}{section.1.3}%
-\contentsline {chapter}{\numberline {2}Testing and Coverage Analysis}{6}{chapter.2}%
-\contentsline {section}{\numberline {2.1}The AI Paradigm Shift in Software Verification}{6}{section.2.1}%
-\contentsline {section}{\numberline {2.2}AI-Driven Unit Testing Pipeline}{6}{section.2.2}%
-\contentsline {subsection}{\numberline {2.2.1}Phase 1: Implementation Refactoring for Robustness}{6}{subsection.2.2.1}%
-\contentsline {subsection}{\numberline {2.2.2}Phase 2: Systematic Test Design (Category-Partition Method)}{7}{subsection.2.2.2}%
-\contentsline {subsection}{\numberline {2.2.3}Phase 3: Automated Implementation}{7}{subsection.2.2.3}%
-\contentsline {chapter}{\numberline {3}Formal Specification and Verification}{8}{chapter.3}%
-\contentsline {chapter}{\numberline {4}Mutation Testing}{9}{chapter.4}%
-\contentsline {chapter}{\numberline {5}Performance Evaluation}{10}{chapter.5}%
-\contentsline {chapter}{\numberline {6}Containerization and Orchestration Readiness}{11}{chapter.6}%
-\contentsline {chapter}{\numberline {7}Security Assurance and Vulnerability Assessment}{12}{chapter.7}%
-\contentsline {chapter}{\numberline {8}Build and Deployment Pipeline}{13}{chapter.8}%
+\contentsline {chapter}{\numberline {1}Software Architectural Overview}{2}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Layered Architecture Components Breakdown}{2}{section.1.1}%
+\contentsline {subsection}{\numberline {1.1.1}The View Layer (Presentation and Interaction)}{2}{subsection.1.1.1}%
+\contentsline {subsection}{\numberline {1.1.2}The Controller Layer (Input Coordination and Routing)}{2}{subsection.1.1.2}%
+\contentsline {subsection}{\numberline {1.1.3}The Service Layer (Business Logic Orchestration)}{3}{subsection.1.1.3}%
+\contentsline {subsection}{\numberline {1.1.4}The Data Access Layer (Persistence and DAO)}{3}{subsection.1.1.4}%
+\contentsline {subsection}{\numberline {1.1.5}The Model Beans (Data Representation)}{3}{subsection.1.1.5}%
+\contentsline {section}{\numberline {1.2}Dynamic Behavior: The Authentication Workflow}{4}{section.1.2}%
+\contentsline {chapter}{\numberline {2}Testing and Coverage Analysis}{5}{chapter.2}%
+\contentsline {section}{\numberline {2.1}The Initial State: Technical Debt and Fragility}{5}{section.2.1}%
+\contentsline {section}{\numberline {2.2}Strategic Implementation of the Bottom-Up Testing Methodology}{5}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}Model Beans (The Foundation)}{6}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.2}Model DAOs (The Persistence Layer)}{6}{subsection.2.2.2}%
+\contentsline {subsection}{\numberline {2.2.3}Services (The Core Logic)}{6}{subsection.2.2.3}%
+\contentsline {subsection}{\numberline {2.2.4}Controllers (The Interface)}{6}{subsection.2.2.4}%
+\contentsline {section}{\numberline {2.3}The Methodological Approach: AI-Driven Unit Testing Pipeline}{7}{section.2.3}%
+\contentsline {subsection}{\numberline {2.3.1}Automated Code Refactoring (Defensive Programming)}{7}{subsection.2.3.1}%
+\contentsline {subsection}{\numberline {2.3.2}Automated Tests Design (Category-Partition Method)}{8}{subsection.2.3.2}%
+\contentsline {subsection}{\numberline {2.3.3}Automated Tests Implementation}{8}{subsection.2.3.3}%
+\contentsline {subsection}{\numberline {2.3.4}The Necessity of Human Oversight (Manual Code Review)}{8}{subsection.2.3.4}%
+\contentsline {section}{\numberline {2.4}Empirical Validation and Coverage Results}{9}{section.2.4}%
+\contentsline {chapter}{\numberline {3}Formal Specification and Verification}{11}{chapter.3}%
+\contentsline {chapter}{\numberline {4}Mutation Testing}{12}{chapter.4}%
+\contentsline {chapter}{\numberline {5}Performance Evaluation}{13}{chapter.5}%
+\contentsline {chapter}{\numberline {6}Containerization and Orchestration Readiness}{14}{chapter.6}%
+\contentsline {chapter}{\numberline {7}Security Assurance and Vulnerability Assessment}{15}{chapter.7}%
+\contentsline {chapter}{\numberline {8}Build and Deployment Pipeline}{16}{chapter.8}%

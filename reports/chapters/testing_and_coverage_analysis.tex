@@ -1,52 +1,156 @@
 \chapter{Testing and Coverage Analysis}
 
-\section{The AI Paradigm Shift in Software Verification}
-The advent of Generative Artificial Intelligence has fundamentally transformed the landscape of software engineering. AI assistants are no longer simple auto-completion tools but act as proactive pair programmers capable of reasoning about code structure, logic, and edge cases. In this project, we embraced this paradigm shift to maximize valid code coverage (measured via \textbf{Jacoco}) and ensure dependability.
+In this chapter, we document the rigorous verification and validation process undertaken to enhance the dependability of the \textit{2Chance} software platform. This project addresses the critical challenge of transforming a legacy web application into a robust, fault-tolerant system under strict resource constraints.
 
-We utilized \textbf{Google Antigravity}, an advanced agentic coding editor, to drive the development and testing process using a "Prompt Engineering" approach. Rather than writing every test case manually, we architected a robust pipeline of prompts to guide the AI in generating high-quality artifacts.
+\section{The Initial State: Technical Debt and Fragility}
+At the inception of this project, the \textit{2Chance} platform existed as a functional but fragile legacy system. A preliminary code review revealed that the codebase lacked a defensive programming strategy: critical business-logic invariants were not validated, and runtime exceptions were frequently unhandled, leading to silent failures or undefined system states.\\
 
-\section{AI-Driven Unit Testing Pipeline}
-To achieve rigorous unit testing in isolation (using \textbf{JUnit 5} and \textbf{Mockito}), we rejected the "sing-shot" prompting approach. Complex tasks, when presented to an LLM all at once, tend to result in diluted attention, missed constraints, and shallow reasoning ("hallucinations").
+Furthermore, the application had zero automated test coverage. No unit or integration tests had been implemented, rendering any attempt at refactoring highly risky. This complete absence of a safety net meant that the initial reliability of the system was unquantified and presumed to be low.\\
 
-Instead, we implemented a \textbf{Multi-Stage Prompting Pipeline}, breaking the testing process into three distinct, verifiable phases.
+The following sections detail the testing strategies selected on the basis of the system’s architectural analysis. The goal is to ensure that the software is not only functional but also rigorously dependable. We employ JUnit for test execution, Mockito for component isolation, and JaCoCo for coverage analysis, using coverage results as quality-assurance metrics to assess the completeness of the intervention and to demonstrate a verified increase in system dependability.
 
-\subsection{Phase 1: Implementation Refactoring for Robustness}
-\textbf{Ref. Prompt:} \texttt{01\_implementation\_refactoring.txt}
+\section{Strategic Implementation of the Bottom-Up Testing Methodology}
+We adopted a bottom-up testing strategy that aligns with the dependency structure described in the \textit{Software Architecture Overview} chapter. This methodology imposes a strict chronological constraint: any layer that depends on another must be verified only after its supporting layer has been fully validated. If testing begins at a higher layer before the underlying layers have been exercised, the effort may conclude without ever executing the supporting code. In such a case, the higher layer is typically tested against mocks, which implicitly assume that the supporting layer is correct. Consequently, a defect originating in an untested supporting layer may manifest as a failure in the higher layer, even though the higher-layer code is not at fault.\\
 
-Before generating tests, the code under test must be robust. AI models often generate test cases based on the \textit{existing} logic of the code, regardless of whether that logic is sound. If the source code allows invalid states (e.g., negative prices, null strings, inconsistent object states), the AI will generate tests that legitimize these bugs.
+This situation confounds diagnosis, because the observed failure does not clearly indicate whether the fault lies in the layer under test or in an assumed-correct dependency. For these reasons, the testing plan follows the sequence:
+\[
+\textit{Model Beans} \rightarrow \textit{Model DAOs} \rightarrow \textit{Services} \rightarrow \textit{Controllers}.
+\]
+This approach ensures that we establish a foundation of reliability before introducing additional complexity.
 
-\textbf{Objective:}
-This step asks the agent to analyze the business logic and enforce \textbf{Defensive Programming}:
-\begin{itemize}
-    \item \textbf{Exception Handling:} Ensure that invalid inputs (e.g., `price < 0`) throw appropriate unchecked exceptions (e.g., `IllegalArgumentException`) immediately, rather than failing silently or causing data corruption later.
-    \item \textbf{State Validation:} Enforce invariants on constructors and setters.
-\end{itemize}
+\subsection{Model Beans (The Foundation)}
+\noindent\textbf{Dependency:} None (independent).
 
-This ensures that the subsequent test generation phase works on "correct" code, preventing the generation of False Negatives (tests that pass but shouldn't).
+\noindent Model Beans define the application data structures and their invariant constraints. The validation process must start from this layer (e.g. \texttt{Utente}, \texttt{Prodotto}) because it eliminates the most fundamental sources of error. Since every subsequent layer relies on these Beans to transport state, any defect here would propagate instability throughout the entire application.\\
 
-\subsection{Phase 2: Systematic Test Design (Category-Partition Method)}
-\textbf{Ref. Prompt:} \texttt{02\_category\_partition\_testing.txt}
+We employ JUnit to verify that constructors and setters strictly enforce their preconditions. For example, if the \texttt{Utente} entity forbids \texttt{null} values, the corresponding unit tests must confirm that invalid inputs are correctly rejected.
 
-Directly asking an AI to "write tests" often leads to "Happy Path" bias—testing only the obvious success scenarios. To counter this, we decoupled the \textit{design} of the tests from their \textit{implementation}.
+\subsection{Model DAOs (The Persistence Layer)}
+\noindent\textbf{Dependency:} Model Beans.
 
-\textbf{Objective:}
-We instructed the agent to perform a \textbf{Category-Partition Analysis (CPA)}. 
-\begin{itemize}
-    \item \textbf{Concept:} CPA is a specification-based testing technique. It involves decomposing a function into its functional units, identifying parameters and environmental conditions, and finding "Categories" (properties of interest) and "Choices" (sets of values).
-    \item \textbf{Output:} A text report detailing the \textit{Test Frames}. A test frame is a specific combination of choices (e.g., "User is Admin" AND "Cart is Empty" AND "Input is Null") that dictates a specific expected behavior.
-\end{itemize}
-This divides the complexity and forces the AI to think about \textit{what} needs to be tested before writing code.
+\noindent Once the integrity of the data structures is established, the second phase targets the Data Access Objects (DAOs). These components define the interface between the application and the persistence storage. It is imperative to verify the persistence mechanism before assessing the business logic: if the DAO layer is defective, it becomes difficult to distinguish between a logical error in the Service layer and a data retrieval failure in the DAO layer.\\
 
-\subsection{Phase 3: Automated Implementation}
-\textbf{Ref. Prompt:} \texttt{03\_unit\_testing\_implementation.txt}
+We use JUnit to execute Create, Read, Update, and Delete (CRUD) operations against a test database, simulated using Mockito, and we assert that the returned data matches the expected state.
 
-\textbf{Objective:}
-With a robust codebase (Phase 1) and a detailed testing plan (Phase 2), the final step acts as a "translator." The agent is tasked with converting the natural language Test Frames from the CPA report into executable Java code.
+\subsection{Services (The Core Logic)}
+\noindent\textbf{Dependency:} Model DAOs and Model Beans.
 
-\textbf{Implementation Strategy:}
-\begin{itemize}
-    \item \textbf{Tooling:} Use \textbf{JUnit 5} for assertions and lifecycles.
-    \item \textbf{Isolation:} Use \textbf{Mockito} (`@ExtendWith(MockitoExtension.class)`) to mock all external dependencies (DAOs, Database connections), ensuring that we are testing the Unit in total isolation.
-\end{itemize}
+\noindent The third phase verifies the Service layer (e.g. \texttt{LoginService}), which encapsulates the business logic of the application. This layer orchestrates data flow by using DAOs to retrieve information and Beans to manipulate it. This separation allows tests to focus on algorithmic correctness.\\
 
-This structured pipeline ensures that the resulting test suite is not only comprehensive (high coverage) but also logically sound and aligned with rigorous software engineering principles.
+Although the DAOs have been verified in the previous phase, we strictly isolate the business logic by using Mockito to configure mock objects that simulate DAO behavior under deterministic data scenarios. Service unit tests must not interact with a live database, as doing so introduces latency and non-determinism. Since the DAOs and Beans were validated earlier, we can treat mocked interactions as reliable. Therefore, any failure detected at this stage can be attributed to the Service-layer logic.
+
+\subsection{Controllers (The Interface)}
+\noindent\textbf{Dependency:} Services, Model DAOs, and Model Beans.
+
+\noindent The final phase verifies the Controllers (Servlets), which parse HTTP requests and delegate tasks to the Services. Controllers have the highest number of dependencies. If tested prematurely, a failure could originate from the Servlet itself, the Service, the DAO, or the Bean. By adhering to the bottom-up order, we ensure that the interface is built on a trusted stack, so any detected errors are attributable to HTTP handling or parameter parsing.\\
+
+We again employ Mockito to mock the underlying Service layer.
+
+\section{The Methodological Approach: AI-Driven Unit Testing Pipeline}
+The integration of generative artificial intelligence has fundamentally transformed software engineering practice. AI assistants have evolved from simple auto-completion tools into proactive \enquote{pair programmers} capable of analyzing code structure, logic, and boundary conditions. In this project, we embraced this paradigm shift to maximize valid code coverage and to ensure rigorous system dependability.\\
+
+To address the limitations of a small team of three developers, two of whom were new to both the system and its codebase, and a constrained timeframe (approximately 75 hours per developer), we did not manually author every test case. Instead, we used Google Antigravity, an advanced agentic coding environment in which agents have access to the entire codebase as a knowledge base and can operate directly on project files. This enabled us to develop a structured refactoring-and-testing pipeline to be executed systematically.\\
+
+To achieve rigorous unit testing in isolation using JUnit~5 and Mockito, we explicitly rejected a \enquote{single-shot} prompting approach. When complex verification tasks are presented to a Large Language Model (LLM) in a single monolithic request, the resulting outputs are often characterized by diluted attention, overlooked constraints, and superficial reasoning, which can lead to \enquote{hallucinations}.\\
+
+Instead, we implemented a \emph{Multi-Stage Prompting Pipeline} designed to guide the AI in generating high-quality test classes, with the objective of achieving high accuracy and the most complete unit test coverage possible. By decomposing the testing process into distinct, verifiable phases, we reduced the cognitive load on the model and enforce a disciplined reasoning workflow that supports both architectural refactoring and the construction of a comprehensive test suite. This structural decomposition ensures that the AI focuses on one verification concern at a time, resulting in deeper logical analysis and more reliable test generation.\\
+
+Our Multi-Stage Prompting Pipeline is both \emph{data-parallel} and \emph{task-parallel}. It is data-parallel because we decompose the overall goal of testing many Java classes into independent units and generate tests for one class at a time. It is task-parallel because, for each class, we further divide test generation into three automated stages, as described below, to produce a test class that is exhaustive, robust, readable, and maintainable.
+
+\subsection{Automated Code Refactoring (Defensive Programming)}
+\noindent\textbf{Reference:} \texttt{src\textbackslash prompts\textbackslash unit\_testing\textbackslash 01\_implementation\_refactoring.txt}\\
+\textbf{Input:} Path of the class to refactor.
+
+\noindent Prior to test-case generation, the codebase undergoes a rigorous refactoring step to ensure structural robustness. If business logic permits invalid states (e.g. \texttt{null} references or negative numerical values), an AI agent may generate tests that validate, rather than expose, these flaws. Consequently, our primary objective is to enforce \emph{Design by Contract} principles. We instruct the agent to analyze the source code and implement defensive checks, ensuring that appropriate unchecked exceptions (e.g. \texttt{IllegalArgumentException}) are thrown immediately upon detecting invalid inputs. This prevents the propagation of invalid states and guarantees that the subsequent test suite is constructed on a foundation of logically sound code.
+
+\subsection{Automated Tests Design (Category-Partition Method)}
+\noindent\textbf{Reference:} \texttt{src\textbackslash prompts\textbackslash unit\_testing\textbackslash 02\_category\_partition\_testing.txt}\\
+\textbf{Input:} Path of the class to analyze; path of the folder where Category-Partition reports will be stored.
+
+\noindent To mitigate the bias frequently exhibited by Large Language Models where only optimal success scenarios are verified we decouple test-case design from test implementation. We employ the \emph{Category-Partition Method} (CPM), a specification-based technique. In this phase, the agent decomposes the code into functional units, identifying \emph{categories} (input characteristics) and \emph{choices} (representative values). The output is a formal report of \emph{test frames}: specific combinations of inputs that determine expected behaviors. This forces the AI to account for edge cases and boundary values before any test code is written.
+
+\subsection{Automated Tests Implementation}
+\noindent\textbf{Reference:} \texttt{src\textbackslash prompts\textbackslash unit\_testing\textbackslash 03\_unit\_testing\_implementation.txt}\\
+\textbf{Input:} Path of the class to test; path of the Category-Partition report for the class.
+
+\noindent The final phase translates abstract test frames into executable artifacts. The agent converts the Category-Partition report produced in Phase~2 into Java code using JUnit~5 and Mockito. Mockito is used exclusively to create fake objects for external dependencies (e.g. database connections or Data Access Objects), thereby ensuring strict unit isolation. This approach verifies each unit in a controlled environment, independent of external system stability, and produces a test suite that is well-structured and high in coverage.\\
+
+Our experiments showed that providing an exhaustive chain-of-thought alone is not sufficient to ensure full test-suite correctness, nor to achieve strong readability and maintainability. Therefore, we adopted a one-shot prompting strategy augmented with a single reference example: a semi-automatically generated test class for the most complex component, \texttt{AdminService}, which includes many distinct scenarios. This example demonstrates a clear separation of test logic according to the Arrange--Act--Assert pattern, a consistent strategy for asserting expected exceptions, and a restrained use of Mockito to mock only external dependencies. In particular, mocks are used to simulate external-layer objects and to define controlled return values or behaviors, while keeping the unit under test as realistic as possible.
+
+\subsection{The Necessity of Human Oversight (Manual Code Review)}
+It is imperative to recognize that code generated by agentic AI is not always correct. Large Language Models may misinterpret requirements, make unsafe assumptions, or prioritize syntactic correctness over semantic accuracy. Consequently, a manual code-review phase is essential after each automated step to validate the integrity of the software:
+\begin{enumerate}
+	\item \textbf{Post-Refactoring Review:} We verify that the AI correctly identifies invariants and that exception handling is implemented without altering the intended business logic.
+	\item \textbf{Post-Design Review:} We ensure that the test-frame report does not omit critical edge cases.
+	\item \textbf{Post-Implementation Review:} We verify that the resulting test suite is readable, maintainable, and free from hallucinations, such as tests that contradict the refactored logic (e.g. asserting that an empty password is valid when the refactoring phase explicitly forbids it).
+\end{enumerate}
+
+Ultimately, the developer remains responsible for the security, compliance, and correctness of the application. The AI acts as a force multiplier, but the developer orchestrates the process and ensures that efficiency does not come at the cost of reliability.
+
+\section{Empirical Validation and Coverage Results}
+The team followed a sequential testing process in strict adherence to the bottom-up testing strategy, investing effort into each layer in the prescribed order until the time cap was reached. The \texttt{model} and \texttt{services} layers constitute the trusted architectural backbone of the application. Consequently, we performed an exhaustive verification of the foundational and logical layers: \texttt{model.beans}, \texttt{model.dao}, and \texttt{services}. The \texttt{controllers} layer currently remains untested because, from a methodological perspective, it is preferable to have a fully verified core with untested Controllers (which function as thin adaptation layers) than to maintain a verified interface that relies on unstable logic. This choice minimizes the risk of regressions where they are most costly to fix. It ensures that components with the highest reusability and dependency burden receive the highest priority, thereby maximizing system reliability within the budgeted timeframe.\\
+
+The code coverage computed via JaCoCo shows that, through the adoption of Google Antigravity and our AI-driven unit testing pipeline, the project achieved an instruction coverage of 86\% across the Model and Service layers. The \texttt{model.beans} layer functions as a stable data-structure foundation and achieved near-perfect instruction coverage (99\%). Moreover, both the \texttt{model.dao} and \texttt{services} layers maintained a consistent instruction coverage of 85\%, supporting the integrity of data persistence and business-logic rules. These results indicate that decomposing a complex verification task into granular subtasks thereby managing the context window and reducing cognitive load increased the accuracy of the AI agent.\\
+
+Despite the constraints of a three-member team, with two developers new to the legacy codebase, and a limited budget of approximately 75 hours per team member, we refactored and verified a web application comprising 17 services and 16 models. This level of dependability and efficiency would have been difficult to attain using traditional manual methods. Furthermore, the pipeline exhibits potential for full automation: the sequential execution of these prompts could be orchestrated through the OpenAI API (or comparable LLM interfaces), with the additional possibility of parallelizing test generation across multiple devices, processors, and cores to further reduce time expenditure.
+
+\newpage
+
+Table~\ref{tab:coverage-metrics-a}, Table~\ref{tab:coverage-metrics-b1} and Table~\ref{tab:coverage-metrics-b2} report the coverage metrics for each verified element.
+
+\begin{table}[htbp]
+	\centering
+	\caption{JaCoCo coverage metrics for the verified layers (coverage percentages).}
+	\label{tab:coverage-metrics-a}
+	\begin{tabular}{lrr}
+		\hline
+		\textbf{Element} & \textbf{Instruction} & \textbf{Branch} \\
+		\hline
+		\texttt{model.dao}   & 85\% & 74\%  \\
+		\texttt{services}    & 85\% & 91\%  \\
+		\texttt{model.beans} & 99\% & 100\% \\
+		\hline
+		\textbf{Total}       & 88\% & 86\%  \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+	\centering
+	\caption{JaCoCo coverage metrics for the verified layers (missed complexity and lines).}
+	\label{tab:coverage-metrics-b1}
+	\begin{tabular}{lrr}
+		\hline
+		\textbf{Element} &
+		\textbf{Missed Complexity / Total} &
+		\textbf{Missed Lines / Total} \\
+		\hline
+		\texttt{model.dao}   & 71 / 206   & 88 / 664      \\
+		\texttt{services}    & 33 / 197   & 82 / 537      \\
+		\texttt{model.beans} & 0 / 180    & 2 / 294       \\
+		\hline
+		\textbf{Total}       & 104 / 583  & 172 / 1{,}495  \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+	\centering
+	\caption{JaCoCo coverage metrics for the verified layers (missed methods and classes).}
+	\label{tab:coverage-metrics-b2}
+	\begin{tabular}{lrr}
+		\hline
+		\textbf{Element} &
+		\textbf{Missed Methods / Total} &
+		\textbf{Missed Classes / Total} \\
+		\hline
+		\texttt{model.dao}   & 8 / 57    & 0 / 7   \\
+		\texttt{services}    & 15 / 69   & 0 / 17  \\
+		\texttt{model.beans} & 0 / 104   & 0 / 9   \\
+		\hline
+		\textbf{Total}       & 23 / 230  & 0 / 33  \\
+		\hline
+	\end{tabular}
+\end{table}
+
+
