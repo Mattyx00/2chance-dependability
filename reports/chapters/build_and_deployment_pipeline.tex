@@ -2,6 +2,59 @@
 
 \section*{Context: Security in CI/CD}
 
-\lipsum[19-20]
+\textbf{Build and deployment pipeline}
 
-\lipsum[21]
+Per automatizzare tutte le operazioni di testing, deployment e build è stata predisposta una github action che viene eseguita ad ogni push.
+
+\section*{Overview}
+
+La nostra pipeline ‘maven.yml’ garantisce che ogni modifica sia pronta e sicura per la produzione.
+
+\begin{itemize}
+    \item \textbf{trigger}: Il workflow si attiva ad ogni push sul branch principale (main)
+    \item \textbf{ambiente}: L’intero workflow gira su una macchina virtuale basata su ‘ubuntu-latest’
+\end{itemize}
+
+\textbf{flusso:}
+
+Nella nostra pipeline vengono eseguiti più step, in ordine:
+\begin{itemize}
+    \item Checkout del codice e setup Java 19
+    \item Inizializzazione del database con import dei dati di test
+    \item Build, test e mutation coverage’
+    \item Upload dei risultati su codecov
+    \item Setup delle credenziali per dockerhub
+    \item Upload dell’immagine su dockerhub
+\end{itemize}
+
+\section*{Steps nel dettaglio}
+
+In questo paragrafo analizziamo alcuni passi fondamentali della nostra github action.
+
+\textbf{Mysql:}
+
+all’interno della github action viene istanziato un database di test con dati di test. Questo è necessario perchè altrimenti la maggior parte dei test fallirebbero per mancata connessione al db.  
+Questa soluzione permette di eseguire i test su un ambiente totalmente isolato, riproducibile e modificabile.
+
+\vspace{0.3cm}
+
+\textbf{Build, Unit Testing e Mutation Testing:}
+
+Tramite il comando ‘mvn clean test -P pitest’ riusciamo a buildare, lanciare gli unit test e mutation test sulla nostra applicazione.  
+Tramite il profilo maven ‘pitest’ vengono introdotti dei mutanti nei package model.beans, model.dao e services.
+
+I risultati dei test vengono successivamente caricati sulla piattaforma ‘Codecov’ che ci permetterà di visualizzare i risultati e gestirà il fallimento o successo della push grazie alla key ‘\verb|fail_ci_if_error|: true’
+
+\vspace{0.3cm}
+
+\textbf{Sicurezza:}
+
+All’interno della nostra github action non troveremo credenziali ma richiami a secrets salvate nella repo github, come ad esempio
+
+\begin{verbatim}
+- name: Log in to Docker Hub
+     uses: docker/login-action@v3
+     with:
+       username: ${{ secrets.DOCKER_USERNAME }}
+       password: ${{ secrets.DOCKER_PASSWORD }}
+\end{verbatim}
