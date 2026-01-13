@@ -1,14 +1,25 @@
 package model.beans;
 
 public class ProdottoCarrello {
-    private Prodotto prodotto;
-    private int quantita;
+    /*@ spec_public nullable @*/ private Prodotto prodotto;
+    /*@ spec_public @*/ private int quantita;
 
+    //@ public invariant quantita >= 0;
 
+    /*@
+      @ ensures prodotto == null;
+      @ ensures quantita == 0;
+      @*/
     public ProdottoCarrello() {
 
     }
 
+    /*@
+      @ requires prodotto != null;
+      @ requires quantita >= 0;
+      @ ensures this.prodotto == prodotto;
+      @ ensures this.quantita == quantita;
+      @*/
     public ProdottoCarrello(Prodotto prodotto, int quantita) {
         if (prodotto == null) {
             throw new IllegalArgumentException("Il prodotto non può essere null");
@@ -20,21 +31,36 @@ public class ProdottoCarrello {
         this.quantita = quantita;
     }
 
-    public Prodotto getProdotto() {
+    /*@
+      @ ensures \result == prodotto;
+      @*/
+    public /*@ pure @*/ Prodotto getProdotto() {
         return prodotto;
     }
 
-    public int getQuantita() {
+    /*@
+      @ ensures \result == quantita;
+      @*/
+    public /*@ pure @*/ int getQuantita() {
         return quantita;
     }
 
-    public double getPrezzoTotale() {
+    /*@
+      @ requires prodotto != null;
+      @ ensures \result == prodotto.getPrezzo() * quantita;
+
+      @*/
+    public /*@ pure @*/ double getPrezzoTotale() {
         if (prodotto == null) {
             throw new IllegalStateException("Impossibile calcolare il prezzo totale: prodotto non impostato");
         }
         return prodotto.getPrezzo() * quantita;
     }
 
+    /*@
+      @ requires prodotto != null;
+      @ ensures this.prodotto == prodotto;
+      @*/
     public void setProdotto(Prodotto prodotto) {
         if (prodotto == null) {
             throw new IllegalArgumentException("Il prodotto non può essere null");
@@ -42,6 +68,10 @@ public class ProdottoCarrello {
         this.prodotto = prodotto;
     }
 
+    /*@
+      @ requires quantita >= 0;
+      @ ensures this.quantita == quantita;
+      @*/
     public void setQuantita(int quantita) {
         if (quantita < 0) {
             throw new IllegalArgumentException("La quantità non può essere negativa");
