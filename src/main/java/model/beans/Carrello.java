@@ -5,14 +5,14 @@ import java.util.ArrayList;
 public class Carrello {
 
     /*@ public invariant prodotti != null; @*/
-    /*@ spec_public @*/
+    /*@ spec_public non_null @*/
     private ArrayList<ProdottoCarrello> prodotti;
 
     /*@
       @ ensures prodotti != null && prodotti.isEmpty();
       @*/
     public Carrello() {
-        prodotti = new ArrayList<>();
+        this.prodotti = new ArrayList<>();
     }
 
     /*@

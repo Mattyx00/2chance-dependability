@@ -7,7 +7,7 @@ public class Ordine {
     /*@ spec_public @*/
     private int id;
     
-    /*@ spec_public @*/
+    /*@ spec_public non_null @*/
     private Date dataOrdine;
     
     /*@ spec_public @*/
@@ -25,6 +25,7 @@ public class Ordine {
 
     public Ordine() {
         super();
+        this.dataOrdine = new Date();
     }
 
     /*@ ensures \result == this.id; @*/

@@ -5,7 +5,7 @@ import java.util.Date;
 public class Recensione {
     private /*@ spec_public @*/ int id;
     private /*@ spec_public @*/ int valutazione;
-    private /*@ spec_public @*/ Date dataRecensione;
+    private /*@ spec_public non_null @*/ Date dataRecensione;
     private /*@ spec_public @*/ String testo;
     private /*@ spec_public @*/ Utente utente;
     private /*@ spec_public @*/ Prodotto prodotto;
@@ -14,6 +14,7 @@ public class Recensione {
 
     public Recensione() {
         super();
+        this.dataRecensione = new Date();
     }
 
     /*@

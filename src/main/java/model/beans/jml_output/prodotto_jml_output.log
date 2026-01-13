@@ -1,20 +1,20 @@
 Proving methods in model.beans.Carrello
 Starting proof of model.beans.Carrello.Carrello() with prover z3_4_3
-Method assertions are validated [1.74 secs]
-Completed proof of model.beans.Carrello.Carrello() with prover z3_4_3 - no warnings [2.06 secs]
+Method assertions are validated [1.77 secs]
+Completed proof of model.beans.Carrello.Carrello() with prover z3_4_3 - no warnings [2.14 secs]
 Starting proof of model.beans.Carrello.aggiungiProdotto(model.beans.ProdottoCarrello) with prover z3_4_3
-Method assertions are validated [2.60 secs]
-Completed proof of model.beans.Carrello.aggiungiProdotto(model.beans.ProdottoCarrello) with prover z3_4_3 - no warnings [2.74 secs]
+Method assertions are validated [2.71 secs]
+Completed proof of model.beans.Carrello.aggiungiProdotto(model.beans.ProdottoCarrello) with prover z3_4_3 - no warnings [2.83 secs]
 Starting proof of model.beans.Carrello.cambiaQuantita(model.beans.Prodotto,int) with prover z3_4_3
 model.beans.Carrello.cambiaQuantita Method assertions are INVALID
 /mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/Carrello.java:89: verify: The prover cannot establish an assertion (LoopInvariantBeforeLoop) in method cambiaQuantita
           @ loop_invariant i >= 0 && i <= prodotti.size();
             ^
-/mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/Carrello.java:81: verify: The prover cannot establish an assertion (InvariantExit: /mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/Prodotto.java:21:) in method cambiaQuantita: model.beans.Carrello.cambiaQuantita(model.beans.Prodotto,int) (parameter p)
+/mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/Carrello.java:81: verify: The prover cannot establish an assertion (InvariantExit: /mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/Prodotto.java:20:) in method cambiaQuantita: model.beans.Carrello.cambiaQuantita(model.beans.Prodotto,int) (parameter p)
     public void cambiaQuantita(Prodotto p, int qnt) {
                                         ^
-/mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/Prodotto.java:21: verify: Associated declaration: /mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/Carrello.java:81:
-    /*@ public invariant peso >= 0; @*/
+/mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/Prodotto.java:20: verify: Associated declaration: /mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/Carrello.java:81:
+    /*@ public invariant prezzo >= 0; @*/
                ^
 /mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/Carrello.java:81: verify: The prover cannot establish an assertion (InvariantExit: /mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/Prodotto.java:19:) in method cambiaQuantita: model.beans.Carrello.cambiaQuantita(model.beans.Prodotto,int) (parameter p)
     public void cambiaQuantita(Prodotto p, int qnt) {
@@ -22,271 +22,271 @@ model.beans.Carrello.cambiaQuantita Method assertions are INVALID
 /mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/Prodotto.java:19: verify: Associated declaration: /mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/Carrello.java:81:
     /*@ public invariant quantitaProdotto >= 0; @*/
                ^
-/mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/Carrello.java:81: verify: The prover cannot establish an assertion (InvariantExit: /mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/Prodotto.java:20:) in method cambiaQuantita: model.beans.Carrello.cambiaQuantita(model.beans.Prodotto,int) (parameter p)
+/mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/Carrello.java:81: verify: The prover cannot establish an assertion (InvariantExit: /mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/Prodotto.java:21:) in method cambiaQuantita: model.beans.Carrello.cambiaQuantita(model.beans.Prodotto,int) (parameter p)
     public void cambiaQuantita(Prodotto p, int qnt) {
                                         ^
-/mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/Prodotto.java:20: verify: Associated declaration: /mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/Carrello.java:81:
-    /*@ public invariant prezzo >= 0; @*/
+/mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/Prodotto.java:21: verify: Associated declaration: /mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/Carrello.java:81:
+    /*@ public invariant peso >= 0; @*/
                ^
 /mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/Carrello.java:9: verify: The prover cannot establish an assertion (NullField) in method cambiaQuantita
     private ArrayList<ProdottoCarrello> prodotti;
                                         ^
-Completed proof of model.beans.Carrello.cambiaQuantita(model.beans.Prodotto,int) with prover z3_4_3 - with warnings [28.98 secs]
+Completed proof of model.beans.Carrello.cambiaQuantita(model.beans.Prodotto,int) with prover z3_4_3 - with warnings [22.68 secs]
 Starting proof of model.beans.Carrello.eliminaProdotto(model.beans.Prodotto) with prover z3_4_3
 model.beans.Carrello.eliminaProdotto Method assertions are INVALID
 /mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/Carrello.java:64: verify: The prover cannot establish an assertion (LoopInvariantBeforeLoop) in method eliminaProdotto
           @ loop_invariant i >= 0 && i <= prodotti.size();
             ^
-Completed proof of model.beans.Carrello.eliminaProdotto(model.beans.Prodotto) with prover z3_4_3 - with warnings [4.48 secs]
+Completed proof of model.beans.Carrello.eliminaProdotto(model.beans.Prodotto) with prover z3_4_3 - with warnings [4.08 secs]
 Starting proof of model.beans.Carrello.getProdotti() with prover z3_4_3
-Method assertions are validated [1.51 secs]
-Completed proof of model.beans.Carrello.getProdotti() with prover z3_4_3 - no warnings [1.53 secs]
+Method assertions are validated [1.44 secs]
+Completed proof of model.beans.Carrello.getProdotti() with prover z3_4_3 - no warnings [1.45 secs]
 Starting proof of model.beans.Carrello.getTotaleCarrello() with prover z3_4_3
 model.beans.Carrello.getTotaleCarrello Method assertions are INVALID
-/mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/Carrello.java:29: verify: The prover cannot establish an assertion (Precondition: /mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/ProdottoCarrello.java:53:) in method getTotaleCarrello
-            totale += e.getPrezzoTotale();
-                                       ^
-/mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/ProdottoCarrello.java:53: verify: Associated declaration: /mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/Carrello.java:29:
-    public /*@ pure @*/ double getPrezzoTotale() {
-                               ^
-/mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/ProdottoCarrello.java:49: verify: Precondition conjunct is false: prodotto != null
-      @ requires prodotto != null;
-                          ^
 /mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/Carrello.java:24: verify: The prover cannot establish an assertion (LoopInvariantBeforeLoop) in method getTotaleCarrello
           @ loop_invariant i >= 0 && i <= prodotti.size();
             ^
-/mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/ProdottoCarrello.java:50: verify: The prover cannot establish an assertion (InvariantEntrance: /mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/Prodotto.java:19:) in method getTotaleCarrello: (Caller: model.beans.Carrello.getTotaleCarrello(), Callee: model.beans.Prodotto.getPrezzo())
+/mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/Carrello.java:29: verify: The prover cannot establish an assertion (Precondition: /mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/ProdottoCarrello.java:52:) in method getTotaleCarrello
+            totale += e.getPrezzoTotale();
+                                       ^
+/mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/ProdottoCarrello.java:52: verify: Associated declaration: /mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/Carrello.java:29:
+    public /*@ pure @*/ double getPrezzoTotale() {
+                               ^
+/mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/ProdottoCarrello.java:48: verify: Precondition conjunct is false: prodotto != null
+      @ requires prodotto != null;
+                          ^
+/mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/ProdottoCarrello.java:49: verify: The prover cannot establish an assertion (InvariantEntrance: /mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/Prodotto.java:20:) in method getTotaleCarrello: (Caller: model.beans.Carrello.getTotaleCarrello(), Callee: model.beans.Prodotto.getPrezzo())
       @ ensures \result == prodotto.getPrezzo() * quantita;
                                              ^
-/mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/Prodotto.java:19: verify: Associated declaration: /mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/ProdottoCarrello.java:50:
-    /*@ public invariant quantitaProdotto >= 0; @*/
-               ^
-/mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/ProdottoCarrello.java:50: verify: The prover cannot establish an assertion (InvariantEntrance: /mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/Prodotto.java:20:) in method getTotaleCarrello: (Caller: model.beans.Carrello.getTotaleCarrello(), Callee: model.beans.Prodotto.getPrezzo())
-      @ ensures \result == prodotto.getPrezzo() * quantita;
-                                             ^
-/mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/Prodotto.java:20: verify: Associated declaration: /mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/ProdottoCarrello.java:50:
+/mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/Prodotto.java:20: verify: Associated declaration: /mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/ProdottoCarrello.java:49:
     /*@ public invariant prezzo >= 0; @*/
                ^
-/mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/ProdottoCarrello.java:50: verify: The prover cannot establish an assertion (InvariantEntrance: /mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/Prodotto.java:21:) in method getTotaleCarrello: (Caller: model.beans.Carrello.getTotaleCarrello(), Callee: model.beans.Prodotto.getPrezzo())
+/mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/ProdottoCarrello.java:49: verify: The prover cannot establish an assertion (InvariantEntrance: /mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/Prodotto.java:21:) in method getTotaleCarrello: (Caller: model.beans.Carrello.getTotaleCarrello(), Callee: model.beans.Prodotto.getPrezzo())
       @ ensures \result == prodotto.getPrezzo() * quantita;
                                              ^
-/mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/Prodotto.java:21: verify: Associated declaration: /mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/ProdottoCarrello.java:50:
+/mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/Prodotto.java:21: verify: Associated declaration: /mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/ProdottoCarrello.java:49:
     /*@ public invariant peso >= 0; @*/
                ^
-Completed proof of model.beans.Carrello.getTotaleCarrello() with prover z3_4_3 - with warnings [3.65 secs]
-Completed proving methods in model.beans.Carrello [43.48 secs]
+/mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/ProdottoCarrello.java:49: verify: The prover cannot establish an assertion (InvariantEntrance: /mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/Prodotto.java:19:) in method getTotaleCarrello: (Caller: model.beans.Carrello.getTotaleCarrello(), Callee: model.beans.Prodotto.getPrezzo())
+      @ ensures \result == prodotto.getPrezzo() * quantita;
+                                             ^
+/mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/Prodotto.java:19: verify: Associated declaration: /mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/ProdottoCarrello.java:49:
+    /*@ public invariant quantitaProdotto >= 0; @*/
+               ^
+Completed proof of model.beans.Carrello.getTotaleCarrello() with prover z3_4_3 - with warnings [3.61 secs]
+Completed proving methods in model.beans.Carrello [36.82 secs]
 Proving methods in model.beans.ProdottoCarrello
 Starting proof of model.beans.ProdottoCarrello.ProdottoCarrello() with prover z3_4_3
-Method assertions are validated [1.17 secs]
-Completed proof of model.beans.ProdottoCarrello.ProdottoCarrello() with prover z3_4_3 - no warnings [1.17 secs]
-Starting proof of model.beans.ProdottoCarrello.ProdottoCarrello(model.beans.Prodotto,int) with prover z3_4_3
-Method assertions are validated [1.95 secs]
-Completed proof of model.beans.ProdottoCarrello.ProdottoCarrello(model.beans.Prodotto,int) with prover z3_4_3 - no warnings [1.98 secs]
-Starting proof of model.beans.ProdottoCarrello.getPrezzoTotale() with prover z3_4_3
-Method assertions are validated [4.60 secs]
-Completed proof of model.beans.ProdottoCarrello.getPrezzoTotale() with prover z3_4_3 - no warnings [4.63 secs]
-Starting proof of model.beans.ProdottoCarrello.getProdotto() with prover z3_4_3
-model.beans.ProdottoCarrello.getProdotto Method assertions are INVALID
-/mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/ProdottoCarrello.java:37: verify: The prover cannot establish an assertion (PossiblyNullReturn: /mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/ProdottoCarrello.java:37:) in method getProdotto: getProdotto
-    public /*@ pure @*/ Prodotto getProdotto() {
-                        ^
-/mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/ProdottoCarrello.java:37: verify: Associated declaration: /mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/ProdottoCarrello.java:37:
-    public /*@ pure @*/ Prodotto getProdotto() {
-                                 ^
-/mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/ProdottoCarrello.java:38: verify: Associated method exit
-        return prodotto;
+model.beans.ProdottoCarrello.ProdottoCarrello Method assertions are INVALID
+/mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/ProdottoCarrello.java:12: verify: The prover cannot establish an assertion (Postcondition: /mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/ProdottoCarrello.java:10:) in method ProdottoCarrello
+    public ProdottoCarrello() {
+           ^
+/mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/ProdottoCarrello.java:10: verify: Associated declaration: /mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/ProdottoCarrello.java:12:
+      @ ensures quantita == 0;
         ^
-Completed proof of model.beans.ProdottoCarrello.getProdotto() with prover z3_4_3 - with warnings [1.47 secs]
+/mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/ProdottoCarrello.java:12: verify: The prover cannot establish an assertion (InvariantExit: /mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/ProdottoCarrello.java:7:) in method ProdottoCarrello
+    public ProdottoCarrello() {
+           ^
+/mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/ProdottoCarrello.java:7: verify: Associated declaration: /mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/ProdottoCarrello.java:12:
+    //@ public invariant quantita >= 0;
+               ^
+Completed proof of model.beans.ProdottoCarrello.ProdottoCarrello() with prover z3_4_3 - with warnings [1.46 secs]
+Starting proof of model.beans.ProdottoCarrello.ProdottoCarrello(model.beans.Prodotto,int) with prover z3_4_3
+Method assertions are validated [1.87 secs]
+Completed proof of model.beans.ProdottoCarrello.ProdottoCarrello(model.beans.Prodotto,int) with prover z3_4_3 - no warnings [1.90 secs]
+Starting proof of model.beans.ProdottoCarrello.getPrezzoTotale() with prover z3_4_3
+Method assertions are validated [3.03 secs]
+Completed proof of model.beans.ProdottoCarrello.getPrezzoTotale() with prover z3_4_3 - no warnings [3.07 secs]
+Starting proof of model.beans.ProdottoCarrello.getProdotto() with prover z3_4_3
+Method assertions are validated [1.55 secs]
+Completed proof of model.beans.ProdottoCarrello.getProdotto() with prover z3_4_3 - no warnings [1.56 secs]
 Starting proof of model.beans.ProdottoCarrello.getQuantita() with prover z3_4_3
-Method assertions are validated [1.57 secs]
-Completed proof of model.beans.ProdottoCarrello.getQuantita() with prover z3_4_3 - no warnings [1.58 secs]
+Method assertions are validated [1.44 secs]
+Completed proof of model.beans.ProdottoCarrello.getQuantita() with prover z3_4_3 - no warnings [1.45 secs]
 Starting proof of model.beans.ProdottoCarrello.setProdotto(model.beans.Prodotto) with prover z3_4_3
-Method assertions are validated [2.08 secs]
-Completed proof of model.beans.ProdottoCarrello.setProdotto(model.beans.Prodotto) with prover z3_4_3 - no warnings [2.13 secs]
+Method assertions are validated [2.02 secs]
+Completed proof of model.beans.ProdottoCarrello.setProdotto(model.beans.Prodotto) with prover z3_4_3 - no warnings [2.04 secs]
 Starting proof of model.beans.ProdottoCarrello.setQuantita(int) with prover z3_4_3
-Method assertions are validated [2.05 secs]
-Completed proof of model.beans.ProdottoCarrello.setQuantita(int) with prover z3_4_3 - no warnings [2.07 secs]
-Completed proving methods in model.beans.ProdottoCarrello [15.06 secs]
+Method assertions are validated [1.90 secs]
+Completed proof of model.beans.ProdottoCarrello.setQuantita(int) with prover z3_4_3 - no warnings [1.93 secs]
+Completed proving methods in model.beans.ProdottoCarrello [13.44 secs]
 Proving methods in model.beans.Prodotto
 Starting proof of model.beans.Prodotto.Prodotto() with prover z3_4_3
-Method assertions are validated [1.23 secs]
-Completed proof of model.beans.Prodotto.Prodotto() with prover z3_4_3 - no warnings [1.24 secs]
+Method assertions are validated [1.24 secs]
+Completed proof of model.beans.Prodotto.Prodotto() with prover z3_4_3 - no warnings [1.25 secs]
 Starting proof of model.beans.Prodotto.getCategoria() with prover z3_4_3
-Method assertions are validated [2.24 secs]
-Completed proof of model.beans.Prodotto.getCategoria() with prover z3_4_3 - no warnings [2.28 secs]
-Starting proof of model.beans.Prodotto.getDescrizione() with prover z3_4_3
-Method assertions are validated [2.20 secs]
-Completed proof of model.beans.Prodotto.getDescrizione() with prover z3_4_3 - no warnings [2.23 secs]
-Starting proof of model.beans.Prodotto.getDimensioni() with prover z3_4_3
-Method assertions are validated [2.11 secs]
-Completed proof of model.beans.Prodotto.getDimensioni() with prover z3_4_3 - no warnings [2.15 secs]
-Starting proof of model.beans.Prodotto.getId() with prover z3_4_3
-Method assertions are validated [2.22 secs]
-Completed proof of model.beans.Prodotto.getId() with prover z3_4_3 - no warnings [2.25 secs]
-Starting proof of model.beans.Prodotto.getImmagine() with prover z3_4_3
 Method assertions are validated [2.19 secs]
-Completed proof of model.beans.Prodotto.getImmagine() with prover z3_4_3 - no warnings [2.22 secs]
-Starting proof of model.beans.Prodotto.getMarca() with prover z3_4_3
-Method assertions are validated [2.15 secs]
-Completed proof of model.beans.Prodotto.getMarca() with prover z3_4_3 - no warnings [2.17 secs]
-Starting proof of model.beans.Prodotto.getModello() with prover z3_4_3
-Method assertions are validated [2.20 secs]
-Completed proof of model.beans.Prodotto.getModello() with prover z3_4_3 - no warnings [2.23 secs]
-Starting proof of model.beans.Prodotto.getPeso() with prover z3_4_3
+Completed proof of model.beans.Prodotto.getCategoria() with prover z3_4_3 - no warnings [2.23 secs]
+Starting proof of model.beans.Prodotto.getDescrizione() with prover z3_4_3
+Method assertions are validated [2.28 secs]
+Completed proof of model.beans.Prodotto.getDescrizione() with prover z3_4_3 - no warnings [2.31 secs]
+Starting proof of model.beans.Prodotto.getDimensioni() with prover z3_4_3
 Method assertions are validated [2.25 secs]
-Completed proof of model.beans.Prodotto.getPeso() with prover z3_4_3 - no warnings [2.27 secs]
+Completed proof of model.beans.Prodotto.getDimensioni() with prover z3_4_3 - no warnings [2.28 secs]
+Starting proof of model.beans.Prodotto.getId() with prover z3_4_3
+Method assertions are validated [2.21 secs]
+Completed proof of model.beans.Prodotto.getId() with prover z3_4_3 - no warnings [2.24 secs]
+Starting proof of model.beans.Prodotto.getImmagine() with prover z3_4_3
+Method assertions are validated [2.30 secs]
+Completed proof of model.beans.Prodotto.getImmagine() with prover z3_4_3 - no warnings [2.33 secs]
+Starting proof of model.beans.Prodotto.getMarca() with prover z3_4_3
+Method assertions are validated [2.27 secs]
+Completed proof of model.beans.Prodotto.getMarca() with prover z3_4_3 - no warnings [2.30 secs]
+Starting proof of model.beans.Prodotto.getModello() with prover z3_4_3
+Method assertions are validated [2.29 secs]
+Completed proof of model.beans.Prodotto.getModello() with prover z3_4_3 - no warnings [2.31 secs]
+Starting proof of model.beans.Prodotto.getPeso() with prover z3_4_3
+Method assertions are validated [2.27 secs]
+Completed proof of model.beans.Prodotto.getPeso() with prover z3_4_3 - no warnings [2.33 secs]
 Starting proof of model.beans.Prodotto.getPrezzo() with prover z3_4_3
 Method assertions are validated [2.17 secs]
-Completed proof of model.beans.Prodotto.getPrezzo() with prover z3_4_3 - no warnings [2.20 secs]
+Completed proof of model.beans.Prodotto.getPrezzo() with prover z3_4_3 - no warnings [2.19 secs]
 Starting proof of model.beans.Prodotto.getQuantitaProdotto() with prover z3_4_3
-Method assertions are validated [2.24 secs]
-Completed proof of model.beans.Prodotto.getQuantitaProdotto() with prover z3_4_3 - no warnings [2.26 secs]
-Starting proof of model.beans.Prodotto.getRecensioni() with prover z3_4_3
 Method assertions are validated [2.28 secs]
-Completed proof of model.beans.Prodotto.getRecensioni() with prover z3_4_3 - no warnings [2.30 secs]
+Completed proof of model.beans.Prodotto.getQuantitaProdotto() with prover z3_4_3 - no warnings [2.31 secs]
+Starting proof of model.beans.Prodotto.getRecensioni() with prover z3_4_3
+Method assertions are validated [2.16 secs]
+Completed proof of model.beans.Prodotto.getRecensioni() with prover z3_4_3 - no warnings [2.19 secs]
 Starting proof of model.beans.Prodotto.getSpecifiche() with prover z3_4_3
-Method assertions are validated [2.17 secs]
-Completed proof of model.beans.Prodotto.getSpecifiche() with prover z3_4_3 - no warnings [2.19 secs]
+Method assertions are validated [2.24 secs]
+Completed proof of model.beans.Prodotto.getSpecifiche() with prover z3_4_3 - no warnings [2.26 secs]
 Starting proof of model.beans.Prodotto.setCategoria(model.beans.Categoria) with prover z3_4_3
-Method assertions are validated [2.81 secs]
-Completed proof of model.beans.Prodotto.setCategoria(model.beans.Categoria) with prover z3_4_3 - no warnings [2.85 secs]
-Starting proof of model.beans.Prodotto.setDescrizione(String) with prover z3_4_3
-Method assertions are validated [9.96 secs]
-Completed proof of model.beans.Prodotto.setDescrizione(String) with prover z3_4_3 - no warnings [10.01 secs]
-Starting proof of model.beans.Prodotto.setDimensioni(String) with prover z3_4_3
-Method assertions are validated [2.20 secs]
-Completed proof of model.beans.Prodotto.setDimensioni(String) with prover z3_4_3 - no warnings [2.23 secs]
-Starting proof of model.beans.Prodotto.setId(int) with prover z3_4_3
-Method assertions are validated [2.15 secs]
-Completed proof of model.beans.Prodotto.setId(int) with prover z3_4_3 - no warnings [2.17 secs]
-Starting proof of model.beans.Prodotto.setImmagine(String) with prover z3_4_3
-Method assertions are validated [2.20 secs]
-Completed proof of model.beans.Prodotto.setImmagine(String) with prover z3_4_3 - no warnings [2.22 secs]
-Starting proof of model.beans.Prodotto.setMarca(String) with prover z3_4_3
-Method assertions are validated [8.74 secs]
-Completed proof of model.beans.Prodotto.setMarca(String) with prover z3_4_3 - no warnings [8.81 secs]
-Starting proof of model.beans.Prodotto.setModello(String) with prover z3_4_3
-Method assertions are validated [8.90 secs]
-Completed proof of model.beans.Prodotto.setModello(String) with prover z3_4_3 - no warnings [8.95 secs]
-Starting proof of model.beans.Prodotto.setPeso(double) with prover z3_4_3
-Method assertions are validated [2.80 secs]
-Completed proof of model.beans.Prodotto.setPeso(double) with prover z3_4_3 - no warnings [2.83 secs]
-Starting proof of model.beans.Prodotto.setPrezzo(double) with prover z3_4_3
 Method assertions are validated [2.73 secs]
+Completed proof of model.beans.Prodotto.setCategoria(model.beans.Categoria) with prover z3_4_3 - no warnings [2.76 secs]
+Starting proof of model.beans.Prodotto.setDescrizione(String) with prover z3_4_3
+Method assertions are validated [12.72 secs]
+Completed proof of model.beans.Prodotto.setDescrizione(String) with prover z3_4_3 - no warnings [12.77 secs]
+Starting proof of model.beans.Prodotto.setDimensioni(String) with prover z3_4_3
+Method assertions are validated [2.23 secs]
+Completed proof of model.beans.Prodotto.setDimensioni(String) with prover z3_4_3 - no warnings [2.28 secs]
+Starting proof of model.beans.Prodotto.setId(int) with prover z3_4_3
+Method assertions are validated [2.20 secs]
+Completed proof of model.beans.Prodotto.setId(int) with prover z3_4_3 - no warnings [2.23 secs]
+Starting proof of model.beans.Prodotto.setImmagine(String) with prover z3_4_3
+Method assertions are validated [2.25 secs]
+Completed proof of model.beans.Prodotto.setImmagine(String) with prover z3_4_3 - no warnings [2.27 secs]
+Starting proof of model.beans.Prodotto.setMarca(String) with prover z3_4_3
+Method assertions are validated [8.45 secs]
+Completed proof of model.beans.Prodotto.setMarca(String) with prover z3_4_3 - no warnings [8.52 secs]
+Starting proof of model.beans.Prodotto.setModello(String) with prover z3_4_3
+Method assertions are validated [9.92 secs]
+Completed proof of model.beans.Prodotto.setModello(String) with prover z3_4_3 - no warnings [9.98 secs]
+Starting proof of model.beans.Prodotto.setPeso(double) with prover z3_4_3
+Method assertions are validated [2.67 secs]
+Completed proof of model.beans.Prodotto.setPeso(double) with prover z3_4_3 - no warnings [2.70 secs]
+Starting proof of model.beans.Prodotto.setPrezzo(double) with prover z3_4_3
+Method assertions are validated [2.74 secs]
 Completed proof of model.beans.Prodotto.setPrezzo(double) with prover z3_4_3 - no warnings [2.77 secs]
 Starting proof of model.beans.Prodotto.setQuantitaProdotto(int) with prover z3_4_3
-Method assertions are validated [2.85 secs]
-Completed proof of model.beans.Prodotto.setQuantitaProdotto(int) with prover z3_4_3 - no warnings [2.90 secs]
-Starting proof of model.beans.Prodotto.setRecensioni(java.util.ArrayList<model.beans.Recensione>) with prover z3_4_3
 Method assertions are validated [2.83 secs]
-Completed proof of model.beans.Prodotto.setRecensioni(java.util.ArrayList<model.beans.Recensione>) with prover z3_4_3 - no warnings [2.86 secs]
+Completed proof of model.beans.Prodotto.setQuantitaProdotto(int) with prover z3_4_3 - no warnings [2.88 secs]
+Starting proof of model.beans.Prodotto.setRecensioni(java.util.ArrayList<model.beans.Recensione>) with prover z3_4_3
+Method assertions are validated [2.89 secs]
+Completed proof of model.beans.Prodotto.setRecensioni(java.util.ArrayList<model.beans.Recensione>) with prover z3_4_3 - no warnings [2.92 secs]
 Starting proof of model.beans.Prodotto.setSpecifiche(java.util.ArrayList<model.beans.Specifiche>) with prover z3_4_3
-Method assertions are validated [2.92 secs]
-Completed proof of model.beans.Prodotto.setSpecifiche(java.util.ArrayList<model.beans.Specifiche>) with prover z3_4_3 - no warnings [2.95 secs]
-Completed proving methods in model.beans.Prodotto [79.66 secs]
+Method assertions are validated [2.87 secs]
+Completed proof of model.beans.Prodotto.setSpecifiche(java.util.ArrayList<model.beans.Specifiche>) with prover z3_4_3 - no warnings [2.90 secs]
+Completed proving methods in model.beans.Prodotto [83.62 secs]
 Proving methods in model.beans.Categoria
 Starting proof of model.beans.Categoria.Categoria() with prover z3_4_3
-Method assertions are validated [1.21 secs]
-Completed proof of model.beans.Categoria.Categoria() with prover z3_4_3 - no warnings [1.22 secs]
+Method assertions are validated [1.22 secs]
+Completed proof of model.beans.Categoria.Categoria() with prover z3_4_3 - no warnings [1.23 secs]
 Starting proof of model.beans.Categoria.Categoria(String) with prover z3_4_3
-Method assertions are validated [2.15 secs]
-Completed proof of model.beans.Categoria.Categoria(String) with prover z3_4_3 - no warnings [2.18 secs]
+Method assertions are validated [2.28 secs]
+Completed proof of model.beans.Categoria.Categoria(String) with prover z3_4_3 - no warnings [2.30 secs]
 Starting proof of model.beans.Categoria.getNomeCategoria() with prover z3_4_3
-Method assertions are validated [1.34 secs]
-Completed proof of model.beans.Categoria.getNomeCategoria() with prover z3_4_3 - no warnings [1.35 secs]
+Method assertions are validated [1.42 secs]
+Completed proof of model.beans.Categoria.getNomeCategoria() with prover z3_4_3 - no warnings [1.43 secs]
 Starting proof of model.beans.Categoria.setNomeCategoria(String) with prover z3_4_3
-Method assertions are validated [2.39 secs]
-Completed proof of model.beans.Categoria.setNomeCategoria(String) with prover z3_4_3 - no warnings [2.48 secs]
-Completed proving methods in model.beans.Categoria [7.24 secs]
+Method assertions are validated [2.44 secs]
+Completed proof of model.beans.Categoria.setNomeCategoria(String) with prover z3_4_3 - no warnings [2.49 secs]
+Completed proving methods in model.beans.Categoria [7.47 secs]
 Proving methods in model.beans.Recensione
 Starting proof of model.beans.Recensione.Recensione() with prover z3_4_3
 model.beans.Recensione.Recensione Method assertions are INVALID
-/mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/Recensione.java:8: verify: The prover cannot establish an assertion (NullField) in method Recensione
-    private /*@ spec_public @*/ Date dataRecensione;
-                                     ^
-Completed proof of model.beans.Recensione.Recensione() with prover z3_4_3 - with warnings [1.29 secs]
+/mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/Recensione.java:9: verify: The prover cannot establish an assertion (NullField) in method Recensione
+    private /*@ spec_public @*/ String testo;
+                                       ^
+Completed proof of model.beans.Recensione.Recensione() with prover z3_4_3 - with warnings [1.49 secs]
 Starting proof of model.beans.Recensione.Recensione(model.beans.Utente,model.beans.Prodotto,int,String,java.util.Date) with prover z3_4_3
-Method assertions are validated [3.63 secs]
-Completed proof of model.beans.Recensione.Recensione(model.beans.Utente,model.beans.Prodotto,int,String,java.util.Date) with prover z3_4_3 - no warnings [3.70 secs]
+Method assertions are validated [3.72 secs]
+Completed proof of model.beans.Recensione.Recensione(model.beans.Utente,model.beans.Prodotto,int,String,java.util.Date) with prover z3_4_3 - no warnings [3.79 secs]
 Starting proof of model.beans.Recensione.getDataRecensione() with prover z3_4_3
-Method assertions are validated [3.48 secs]
-Completed proof of model.beans.Recensione.getDataRecensione() with prover z3_4_3 - no warnings [3.53 secs]
+Method assertions are validated [3.01 secs]
+Completed proof of model.beans.Recensione.getDataRecensione() with prover z3_4_3 - no warnings [3.08 secs]
 Starting proof of model.beans.Recensione.getId() with prover z3_4_3
-Method assertions are validated [3.32 secs]
-Completed proof of model.beans.Recensione.getId() with prover z3_4_3 - no warnings [3.35 secs]
+Method assertions are validated [3.35 secs]
+Completed proof of model.beans.Recensione.getId() with prover z3_4_3 - no warnings [3.39 secs]
 Starting proof of model.beans.Recensione.getProdotto() with prover z3_4_3
-Method assertions are validated [3.28 secs]
-Completed proof of model.beans.Recensione.getProdotto() with prover z3_4_3 - no warnings [3.31 secs]
+Method assertions are validated [3.26 secs]
+Completed proof of model.beans.Recensione.getProdotto() with prover z3_4_3 - no warnings [3.29 secs]
 Starting proof of model.beans.Recensione.getTesto() with prover z3_4_3
-Method assertions are validated [3.33 secs]
-Completed proof of model.beans.Recensione.getTesto() with prover z3_4_3 - no warnings [3.35 secs]
+Method assertions are validated [3.30 secs]
+Completed proof of model.beans.Recensione.getTesto() with prover z3_4_3 - no warnings [3.32 secs]
 Starting proof of model.beans.Recensione.getUtente() with prover z3_4_3
-Method assertions are validated [3.10 secs]
-Completed proof of model.beans.Recensione.getUtente() with prover z3_4_3 - no warnings [3.13 secs]
+Method assertions are validated [3.34 secs]
+Completed proof of model.beans.Recensione.getUtente() with prover z3_4_3 - no warnings [3.37 secs]
 Starting proof of model.beans.Recensione.getValutazione() with prover z3_4_3
-Method assertions are validated [2.74 secs]
-Completed proof of model.beans.Recensione.getValutazione() with prover z3_4_3 - no warnings [2.78 secs]
+Method assertions are validated [3.36 secs]
+Completed proof of model.beans.Recensione.getValutazione() with prover z3_4_3 - no warnings [3.38 secs]
 Starting proof of model.beans.Recensione.setDataRecensione(java.util.Date) with prover z3_4_3
-Method assertions are validated [4.24 secs]
-Completed proof of model.beans.Recensione.setDataRecensione(java.util.Date) with prover z3_4_3 - no warnings [4.28 secs]
+Method assertions are validated [4.04 secs]
+Completed proof of model.beans.Recensione.setDataRecensione(java.util.Date) with prover z3_4_3 - no warnings [4.08 secs]
 Starting proof of model.beans.Recensione.setId(int) with prover z3_4_3
-Method assertions are validated [3.90 secs]
-Completed proof of model.beans.Recensione.setId(int) with prover z3_4_3 - no warnings [3.93 secs]
+Method assertions are validated [3.91 secs]
+Completed proof of model.beans.Recensione.setId(int) with prover z3_4_3 - no warnings [3.94 secs]
 Starting proof of model.beans.Recensione.setProdotto(model.beans.Prodotto) with prover z3_4_3
-Method assertions are validated [3.88 secs]
-Completed proof of model.beans.Recensione.setProdotto(model.beans.Prodotto) with prover z3_4_3 - no warnings [3.91 secs]
+Method assertions are validated [4.15 secs]
+Completed proof of model.beans.Recensione.setProdotto(model.beans.Prodotto) with prover z3_4_3 - no warnings [4.18 secs]
 Starting proof of model.beans.Recensione.setTesto(String) with prover z3_4_3
-Method assertions are validated [4.81 secs]
-Completed proof of model.beans.Recensione.setTesto(String) with prover z3_4_3 - no warnings [4.86 secs]
+Method assertions are validated [4.87 secs]
+Completed proof of model.beans.Recensione.setTesto(String) with prover z3_4_3 - no warnings [4.92 secs]
 Starting proof of model.beans.Recensione.setUtente(model.beans.Utente) with prover z3_4_3
-Method assertions are validated [3.88 secs]
-Completed proof of model.beans.Recensione.setUtente(model.beans.Utente) with prover z3_4_3 - no warnings [3.92 secs]
+Method assertions are validated [3.85 secs]
+Completed proof of model.beans.Recensione.setUtente(model.beans.Utente) with prover z3_4_3 - no warnings [3.88 secs]
 Starting proof of model.beans.Recensione.setValutazione(int) with prover z3_4_3
-Method assertions are validated [3.97 secs]
-Completed proof of model.beans.Recensione.setValutazione(int) with prover z3_4_3 - no warnings [4.03 secs]
-Completed proving methods in model.beans.Recensione [49.41 secs]
+Method assertions are validated [4.37 secs]
+Completed proof of model.beans.Recensione.setValutazione(int) with prover z3_4_3 - no warnings [4.41 secs]
+Completed proving methods in model.beans.Recensione [50.59 secs]
 Proving methods in model.beans.Specifiche
 Starting proof of model.beans.Specifiche.Specifiche() with prover z3_4_3
-Method assertions are validated [1.18 secs]
-Completed proof of model.beans.Specifiche.Specifiche() with prover z3_4_3 - no warnings [1.19 secs]
+Method assertions are validated [1.21 secs]
+Completed proof of model.beans.Specifiche.Specifiche() with prover z3_4_3 - no warnings [1.21 secs]
 Starting proof of model.beans.Specifiche.Specifiche(String,String) with prover z3_4_3
-Method assertions are validated [2.57 secs]
-Completed proof of model.beans.Specifiche.Specifiche(String,String) with prover z3_4_3 - no warnings [2.61 secs]
+Method assertions are validated [2.50 secs]
+Completed proof of model.beans.Specifiche.Specifiche(String,String) with prover z3_4_3 - no warnings [2.53 secs]
 Starting proof of model.beans.Specifiche.getNome() with prover z3_4_3
-Method assertions are validated [1.37 secs]
-Completed proof of model.beans.Specifiche.getNome() with prover z3_4_3 - no warnings [1.38 secs]
+Method assertions are validated [1.45 secs]
+Completed proof of model.beans.Specifiche.getNome() with prover z3_4_3 - no warnings [1.46 secs]
 Starting proof of model.beans.Specifiche.getValore() with prover z3_4_3
-Method assertions are validated [1.40 secs]
-Completed proof of model.beans.Specifiche.getValore() with prover z3_4_3 - no warnings [1.41 secs]
+Method assertions are validated [1.47 secs]
+Completed proof of model.beans.Specifiche.getValore() with prover z3_4_3 - no warnings [1.48 secs]
 Starting proof of model.beans.Specifiche.setNome(String) with prover z3_4_3
-Method assertions are validated [2.30 secs]
-Completed proof of model.beans.Specifiche.setNome(String) with prover z3_4_3 - no warnings [2.33 secs]
+Method assertions are validated [2.13 secs]
+Completed proof of model.beans.Specifiche.setNome(String) with prover z3_4_3 - no warnings [2.16 secs]
 Starting proof of model.beans.Specifiche.setValore(String) with prover z3_4_3
-Method assertions are validated [2.32 secs]
-Completed proof of model.beans.Specifiche.setValore(String) with prover z3_4_3 - no warnings [2.35 secs]
-Completed proving methods in model.beans.Specifiche [11.28 secs]
+Method assertions are validated [2.28 secs]
+Completed proof of model.beans.Specifiche.setValore(String) with prover z3_4_3 - no warnings [2.30 secs]
+Completed proving methods in model.beans.Specifiche [11.16 secs]
 Proving methods in model.beans.Utente
 Starting proof of model.beans.Utente.Utente() with prover z3_4_3
-model.beans.Utente.Utente Method assertions are INVALID
-/mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/Utente.java:14: verify: The prover cannot establish an assertion (NullField) in method Utente
-    private String nome, cognome, email, telefono, password, immagine;
-                   ^
-Completed proof of model.beans.Utente.Utente() with prover z3_4_3 - with warnings [1.31 secs]
+Method assertions are validated [1.96 secs]
+Completed proof of model.beans.Utente.Utente() with prover z3_4_3 - no warnings [1.98 secs]
 Starting proof of model.beans.Utente.getCognome() with prover z3_4_3
-Method assertions are validated [2.22 secs]
+Method assertions are validated [2.21 secs]
 Completed proof of model.beans.Utente.getCognome() with prover z3_4_3 - no warnings [2.25 secs]
 Starting proof of model.beans.Utente.getEmail() with prover z3_4_3
-Method assertions are validated [2.17 secs]
-Completed proof of model.beans.Utente.getEmail() with prover z3_4_3 - no warnings [2.20 secs]
+Method assertions are validated [2.21 secs]
+Completed proof of model.beans.Utente.getEmail() with prover z3_4_3 - no warnings [2.24 secs]
 Starting proof of model.beans.Utente.getId() with prover z3_4_3
-Method assertions are validated [2.10 secs]
-Completed proof of model.beans.Utente.getId() with prover z3_4_3 - no warnings [2.13 secs]
+Method assertions are validated [2.13 secs]
+Completed proof of model.beans.Utente.getId() with prover z3_4_3 - no warnings [2.20 secs]
 Starting proof of model.beans.Utente.getImmagine() with prover z3_4_3
-Method assertions are validated [2.18 secs]
-Completed proof of model.beans.Utente.getImmagine() with prover z3_4_3 - no warnings [2.20 secs]
+Method assertions are validated [2.03 secs]
+Completed proof of model.beans.Utente.getImmagine() with prover z3_4_3 - no warnings [2.06 secs]
 Starting proof of model.beans.Utente.getNome() with prover z3_4_3
-Method assertions are validated [2.10 secs]
-Completed proof of model.beans.Utente.getNome() with prover z3_4_3 - no warnings [2.13 secs]
+Method assertions are validated [2.18 secs]
+Completed proof of model.beans.Utente.getNome() with prover z3_4_3 - no warnings [2.21 secs]
 Starting proof of model.beans.Utente.getOrdineIndex(model.beans.Ordine) with prover z3_4_3
 model.beans.Utente.getOrdineIndex Method assertions are INVALID
 /mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/Utente.java:14: verify: The prover cannot establish an assertion (NullField) in method getOrdineIndex
@@ -294,153 +294,150 @@ model.beans.Utente.getOrdineIndex Method assertions are INVALID
                    ^
 /mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/Utente.java:14: verify: The prover cannot establish an assertion (NullField) in method getOrdineIndex
     private String nome, cognome, email, telefono, password, immagine;
+                                  ^
+/mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/Utente.java:14: verify: The prover cannot establish an assertion (NullField) in method getOrdineIndex
+    private String nome, cognome, email, telefono, password, immagine;
                          ^
 /mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/Utente.java:14: verify: The prover cannot establish an assertion (NullField) in method getOrdineIndex
     private String nome, cognome, email, telefono, password, immagine;
-                                  ^
+                                         ^
 /mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/Utente.java:14: verify: The prover cannot establish an assertion (NullField) in method getOrdineIndex
     private String nome, cognome, email, telefono, password, immagine;
                                                    ^
 /mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/Utente.java:14: verify: The prover cannot establish an assertion (NullField) in method getOrdineIndex
     private String nome, cognome, email, telefono, password, immagine;
                                                              ^
-/mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/Utente.java:14: verify: The prover cannot establish an assertion (NullField) in method getOrdineIndex
-    private String nome, cognome, email, telefono, password, immagine;
-                                         ^
-/mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/Utente.java:23: verify: The prover cannot establish an assertion (NullField) in method getOrdineIndex
-    private ArrayList<Recensione> recensioni;
-                                  ^
 /mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/Utente.java:20: verify: The prover cannot establish an assertion (NullField) in method getOrdineIndex
     private ArrayList<Ordine> ordini;
                               ^
-Completed proof of model.beans.Utente.getOrdineIndex(model.beans.Ordine) with prover z3_4_3 - with warnings [19.86 secs]
+/mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/Utente.java:23: verify: The prover cannot establish an assertion (NullField) in method getOrdineIndex
+    private ArrayList<Recensione> recensioni;
+                                  ^
+Completed proof of model.beans.Utente.getOrdineIndex(model.beans.Ordine) with prover z3_4_3 - with warnings [19.37 secs]
 Starting proof of model.beans.Utente.getOrdini() with prover z3_4_3
-Method assertions are validated [2.12 secs]
-Completed proof of model.beans.Utente.getOrdini() with prover z3_4_3 - no warnings [2.14 secs]
+Method assertions are validated [1.80 secs]
+Completed proof of model.beans.Utente.getOrdini() with prover z3_4_3 - no warnings [1.83 secs]
 Starting proof of model.beans.Utente.getPassword() with prover z3_4_3
-Method assertions are validated [2.05 secs]
-Completed proof of model.beans.Utente.getPassword() with prover z3_4_3 - no warnings [2.07 secs]
+Method assertions are validated [1.79 secs]
+Completed proof of model.beans.Utente.getPassword() with prover z3_4_3 - no warnings [1.82 secs]
 Starting proof of model.beans.Utente.getRecensioni() with prover z3_4_3
-Method assertions are validated [2.21 secs]
-Completed proof of model.beans.Utente.getRecensioni() with prover z3_4_3 - no warnings [2.24 secs]
+Method assertions are validated [1.77 secs]
+Completed proof of model.beans.Utente.getRecensioni() with prover z3_4_3 - no warnings [1.81 secs]
 Starting proof of model.beans.Utente.getTelefono() with prover z3_4_3
-Method assertions are validated [2.20 secs]
-Completed proof of model.beans.Utente.getTelefono() with prover z3_4_3 - no warnings [2.22 secs]
+Method assertions are validated [1.99 secs]
+Completed proof of model.beans.Utente.getTelefono() with prover z3_4_3 - no warnings [2.01 secs]
 Starting proof of model.beans.Utente.hashPassword(String) with prover z3_4_3
-Method assertions are validated [8.95 secs]
-Completed proof of model.beans.Utente.hashPassword(String) with prover z3_4_3 - no warnings [9.07 secs]
+Method assertions are validated [5.98 secs]
+Completed proof of model.beans.Utente.hashPassword(String) with prover z3_4_3 - no warnings [6.08 secs]
 Starting proof of model.beans.Utente.isAdmin() with prover z3_4_3
-Method assertions are validated [2.29 secs]
-Completed proof of model.beans.Utente.isAdmin() with prover z3_4_3 - no warnings [2.31 secs]
+Method assertions are validated [2.31 secs]
+Completed proof of model.beans.Utente.isAdmin() with prover z3_4_3 - no warnings [2.33 secs]
 Starting proof of model.beans.Utente.setAdmin(boolean) with prover z3_4_3
-Method assertions are validated [2.26 secs]
-Completed proof of model.beans.Utente.setAdmin(boolean) with prover z3_4_3 - no warnings [2.30 secs]
+Method assertions are validated [2.27 secs]
+Completed proof of model.beans.Utente.setAdmin(boolean) with prover z3_4_3 - no warnings [2.29 secs]
 Starting proof of model.beans.Utente.setCognome(String) with prover z3_4_3
-Method assertions are validated [3.18 secs]
-Completed proof of model.beans.Utente.setCognome(String) with prover z3_4_3 - no warnings [3.22 secs]
+Method assertions are validated [2.90 secs]
+Completed proof of model.beans.Utente.setCognome(String) with prover z3_4_3 - no warnings [2.93 secs]
 Starting proof of model.beans.Utente.setEmail(String) with prover z3_4_3
-Method assertions are validated [3.24 secs]
-Completed proof of model.beans.Utente.setEmail(String) with prover z3_4_3 - no warnings [3.27 secs]
+Method assertions are validated [3.27 secs]
+Completed proof of model.beans.Utente.setEmail(String) with prover z3_4_3 - no warnings [3.33 secs]
 Starting proof of model.beans.Utente.setId(int) with prover z3_4_3
-Method assertions are validated [2.13 secs]
-Completed proof of model.beans.Utente.setId(int) with prover z3_4_3 - no warnings [2.16 secs]
+Method assertions are validated [2.15 secs]
+Completed proof of model.beans.Utente.setId(int) with prover z3_4_3 - no warnings [2.17 secs]
 Starting proof of model.beans.Utente.setImmagine(String) with prover z3_4_3
-Method assertions are validated [2.20 secs]
-Completed proof of model.beans.Utente.setImmagine(String) with prover z3_4_3 - no warnings [2.22 secs]
+Method assertions are validated [2.12 secs]
+Completed proof of model.beans.Utente.setImmagine(String) with prover z3_4_3 - no warnings [2.14 secs]
 Starting proof of model.beans.Utente.setNome(String) with prover z3_4_3
-Method assertions are validated [3.11 secs]
-Completed proof of model.beans.Utente.setNome(String) with prover z3_4_3 - no warnings [3.17 secs]
+Method assertions are validated [3.27 secs]
+Completed proof of model.beans.Utente.setNome(String) with prover z3_4_3 - no warnings [3.30 secs]
 Starting proof of model.beans.Utente.setOrdini(java.util.ArrayList<model.beans.Ordine>) with prover z3_4_3
-Method assertions are validated [2.63 secs]
-Completed proof of model.beans.Utente.setOrdini(java.util.ArrayList<model.beans.Ordine>) with prover z3_4_3 - no warnings [2.67 secs]
+Method assertions are validated [2.61 secs]
+Completed proof of model.beans.Utente.setOrdini(java.util.ArrayList<model.beans.Ordine>) with prover z3_4_3 - no warnings [2.64 secs]
 Starting proof of model.beans.Utente.setPassword(String) with prover z3_4_3
-Method assertions are validated [3.74 secs]
-Completed proof of model.beans.Utente.setPassword(String) with prover z3_4_3 - no warnings [3.80 secs]
+Method assertions are validated [3.80 secs]
+Completed proof of model.beans.Utente.setPassword(String) with prover z3_4_3 - no warnings [3.85 secs]
 Starting proof of model.beans.Utente.setRecensioni(java.util.ArrayList<model.beans.Recensione>) with prover z3_4_3
-Method assertions are validated [2.56 secs]
-Completed proof of model.beans.Utente.setRecensioni(java.util.ArrayList<model.beans.Recensione>) with prover z3_4_3 - no warnings [2.60 secs]
+Method assertions are validated [2.63 secs]
+Completed proof of model.beans.Utente.setRecensioni(java.util.ArrayList<model.beans.Recensione>) with prover z3_4_3 - no warnings [2.68 secs]
 Starting proof of model.beans.Utente.setTelefono(String) with prover z3_4_3
-Method assertions are validated [3.20 secs]
-Completed proof of model.beans.Utente.setTelefono(String) with prover z3_4_3 - no warnings [3.23 secs]
-Completed proving methods in model.beans.Utente [80.87 secs]
+Method assertions are validated [3.10 secs]
+Completed proof of model.beans.Utente.setTelefono(String) with prover z3_4_3 - no warnings [3.14 secs]
+Completed proving methods in model.beans.Utente [76.76 secs]
 Proving methods in model.beans.Ordine
 Starting proof of model.beans.Ordine.Ordine() with prover z3_4_3
 model.beans.Ordine.Ordine Method assertions are INVALID
-/mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/Ordine.java:11: verify: The prover cannot establish an assertion (NullField) in method Ordine
-    private Date dataOrdine;
-                 ^
-Completed proof of model.beans.Ordine.Ordine() with prover z3_4_3 - with warnings [1.27 secs]
+/mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/Ordine.java:14: verify: The prover cannot establish an assertion (NullField) in method Ordine
+    private String indirizzo;
+                   ^
+Completed proof of model.beans.Ordine.Ordine() with prover z3_4_3 - with warnings [1.46 secs]
 Starting proof of model.beans.Ordine.getCarrello() with prover z3_4_3
-Method assertions are validated [2.77 secs]
-Completed proof of model.beans.Ordine.getCarrello() with prover z3_4_3 - no warnings [2.79 secs]
+Method assertions are validated [2.71 secs]
+Completed proof of model.beans.Ordine.getCarrello() with prover z3_4_3 - no warnings [2.72 secs]
 Starting proof of model.beans.Ordine.getDataOrdine() with prover z3_4_3
-Method assertions are validated [2.73 secs]
-Completed proof of model.beans.Ordine.getDataOrdine() with prover z3_4_3 - no warnings [2.75 secs]
-Starting proof of model.beans.Ordine.getId() with prover z3_4_3
-Method assertions are validated [2.66 secs]
-Completed proof of model.beans.Ordine.getId() with prover z3_4_3 - no warnings [2.68 secs]
-Starting proof of model.beans.Ordine.getIndirizzo() with prover z3_4_3
-Method assertions are validated [2.57 secs]
-Completed proof of model.beans.Ordine.getIndirizzo() with prover z3_4_3 - no warnings [2.59 secs]
-Starting proof of model.beans.Ordine.getPrezzoTotale() with prover z3_4_3
-Method assertions are validated [2.62 secs]
-Completed proof of model.beans.Ordine.getPrezzoTotale() with prover z3_4_3 - no warnings [2.65 secs]
-Starting proof of model.beans.Ordine.getUtente() with prover z3_4_3
-Method assertions are validated [2.60 secs]
-Completed proof of model.beans.Ordine.getUtente() with prover z3_4_3 - no warnings [2.62 secs]
-Starting proof of model.beans.Ordine.setCarrello(model.beans.Carrello) with prover z3_4_3
-Method assertions are validated [2.75 secs]
-Completed proof of model.beans.Ordine.setCarrello(model.beans.Carrello) with prover z3_4_3 - no warnings [2.79 secs]
-Starting proof of model.beans.Ordine.setDataOrdine(java.util.Date) with prover z3_4_3
 Method assertions are validated [2.72 secs]
-Completed proof of model.beans.Ordine.setDataOrdine(java.util.Date) with prover z3_4_3 - no warnings [2.75 secs]
-Starting proof of model.beans.Ordine.setId(int) with prover z3_4_3
-Method assertions are validated [2.21 secs]
-Completed proof of model.beans.Ordine.setId(int) with prover z3_4_3 - no warnings [2.23 secs]
-Starting proof of model.beans.Ordine.setIndirizzo(String) with prover z3_4_3
-Method assertions are validated [3.78 secs]
-Completed proof of model.beans.Ordine.setIndirizzo(String) with prover z3_4_3 - no warnings [3.81 secs]
-Starting proof of model.beans.Ordine.setPrezzoTotale(double) with prover z3_4_3
+Completed proof of model.beans.Ordine.getDataOrdine() with prover z3_4_3 - no warnings [2.74 secs]
+Starting proof of model.beans.Ordine.getId() with prover z3_4_3
+Method assertions are validated [2.56 secs]
+Completed proof of model.beans.Ordine.getId() with prover z3_4_3 - no warnings [2.58 secs]
+Starting proof of model.beans.Ordine.getIndirizzo() with prover z3_4_3
+Method assertions are validated [2.76 secs]
+Completed proof of model.beans.Ordine.getIndirizzo() with prover z3_4_3 - no warnings [2.79 secs]
+Starting proof of model.beans.Ordine.getPrezzoTotale() with prover z3_4_3
 Method assertions are validated [2.52 secs]
-Completed proof of model.beans.Ordine.setPrezzoTotale(double) with prover z3_4_3 - no warnings [2.54 secs]
+Completed proof of model.beans.Ordine.getPrezzoTotale() with prover z3_4_3 - no warnings [2.54 secs]
+Starting proof of model.beans.Ordine.getUtente() with prover z3_4_3
+Method assertions are validated [2.74 secs]
+Completed proof of model.beans.Ordine.getUtente() with prover z3_4_3 - no warnings [2.76 secs]
+Starting proof of model.beans.Ordine.setCarrello(model.beans.Carrello) with prover z3_4_3
+Method assertions are validated [3.28 secs]
+Completed proof of model.beans.Ordine.setCarrello(model.beans.Carrello) with prover z3_4_3 - no warnings [3.31 secs]
+Starting proof of model.beans.Ordine.setDataOrdine(java.util.Date) with prover z3_4_3
+Method assertions are validated [3.26 secs]
+Completed proof of model.beans.Ordine.setDataOrdine(java.util.Date) with prover z3_4_3 - no warnings [3.30 secs]
+Starting proof of model.beans.Ordine.setId(int) with prover z3_4_3
+Method assertions are validated [2.70 secs]
+Completed proof of model.beans.Ordine.setId(int) with prover z3_4_3 - no warnings [2.72 secs]
+Starting proof of model.beans.Ordine.setIndirizzo(String) with prover z3_4_3
+Method assertions are validated [4.65 secs]
+Completed proof of model.beans.Ordine.setIndirizzo(String) with prover z3_4_3 - no warnings [4.69 secs]
+Starting proof of model.beans.Ordine.setPrezzoTotale(double) with prover z3_4_3
+Method assertions are validated [2.82 secs]
+Completed proof of model.beans.Ordine.setPrezzoTotale(double) with prover z3_4_3 - no warnings [2.85 secs]
 Starting proof of model.beans.Ordine.setUtente(model.beans.Utente) with prover z3_4_3
-Method assertions are validated [2.50 secs]
-Completed proof of model.beans.Ordine.setUtente(model.beans.Utente) with prover z3_4_3 - no warnings [2.54 secs]
-Completed proving methods in model.beans.Ordine [34.05 secs]
+Method assertions are validated [3.26 secs]
+Completed proof of model.beans.Ordine.setUtente(model.beans.Utente) with prover z3_4_3 - no warnings [3.29 secs]
+Completed proving methods in model.beans.Ordine [37.80 secs]
 Proving methods in model.beans.WishList
 Starting proof of model.beans.WishList.WishList() with prover z3_4_3
-model.beans.WishList.WishList Method assertions are INVALID
-/mnt/c/Users/aldom/Desktop/Projects/University of Salerno/2chance-dependability/src/main/java/model/beans/WishList.java:6: verify: The prover cannot establish an assertion (NullField) in method WishList
-    private Utente utente;
-                   ^
-Completed proof of model.beans.WishList.WishList() with prover z3_4_3 - with warnings [1.60 secs]
+Method assertions are validated [1.74 secs]
+Completed proof of model.beans.WishList.WishList() with prover z3_4_3 - no warnings [1.75 secs]
 Starting proof of model.beans.WishList.WishList(model.beans.Utente) with prover z3_4_3
-Method assertions are validated [1.82 secs]
-Completed proof of model.beans.WishList.WishList(model.beans.Utente) with prover z3_4_3 - no warnings [1.84 secs]
+Method assertions are validated [2.17 secs]
+Completed proof of model.beans.WishList.WishList(model.beans.Utente) with prover z3_4_3 - no warnings [2.19 secs]
 Starting proof of model.beans.WishList.getProdotti() with prover z3_4_3
-Method assertions are validated [1.57 secs]
-Completed proof of model.beans.WishList.getProdotti() with prover z3_4_3 - no warnings [1.58 secs]
+Method assertions are validated [1.59 secs]
+Completed proof of model.beans.WishList.getProdotti() with prover z3_4_3 - no warnings [1.60 secs]
 Starting proof of model.beans.WishList.getUtente() with prover z3_4_3
-Method assertions are validated [1.58 secs]
-Completed proof of model.beans.WishList.getUtente() with prover z3_4_3 - no warnings [1.59 secs]
+Method assertions are validated [1.48 secs]
+Completed proof of model.beans.WishList.getUtente() with prover z3_4_3 - no warnings [1.49 secs]
 Starting proof of model.beans.WishList.setProdotti(java.util.ArrayList<model.beans.Prodotto>) with prover z3_4_3
-Method assertions are validated [2.12 secs]
-Completed proof of model.beans.WishList.setProdotti(java.util.ArrayList<model.beans.Prodotto>) with prover z3_4_3 - no warnings [2.14 secs]
+Method assertions are validated [2.14 secs]
+Completed proof of model.beans.WishList.setProdotti(java.util.ArrayList<model.beans.Prodotto>) with prover z3_4_3 - no warnings [2.15 secs]
 Starting proof of model.beans.WishList.setUtente(model.beans.Utente) with prover z3_4_3
-Method assertions are validated [2.03 secs]
-Completed proof of model.beans.WishList.setUtente(model.beans.Utente) with prover z3_4_3 - no warnings [2.07 secs]
-Completed proving methods in model.beans.WishList [10.85 secs]
+Method assertions are validated [2.04 secs]
+Completed proof of model.beans.WishList.setUtente(model.beans.Utente) with prover z3_4_3 - no warnings [2.06 secs]
+Completed proving methods in model.beans.WishList [11.27 secs]
 Summary:
-  Valid:        95
-  Invalid:      9
+  Valid:        97
+  Invalid:      7
   Infeasible:   0
   Timeout:      0
   Error:        0
   Skipped:      0
  TOTAL METHODS: 104
- Classes:       3 proved of 9
+ Classes:       4 proved of 9
  Model Classes: 0
  Model methods: 0 proved of 0
- DURATION:        335.9 secs
+ DURATION:        333.0 secs
 
-34 verification failures
+33 verification failures

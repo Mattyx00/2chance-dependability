@@ -1,17 +1,16 @@
 package model.beans;
 
 public class ProdottoCarrello {
-    /*@ spec_public nullable @*/ private Prodotto prodotto;
+    /*@ spec_public non_null @*/ private Prodotto prodotto;
     /*@ spec_public @*/ private int quantita;
 
     //@ public invariant quantita >= 0;
 
     /*@
-      @ ensures prodotto == null;
       @ ensures quantita == 0;
       @*/
     public ProdottoCarrello() {
-
+        this.prodotto = new Prodotto();
     }
 
     /*@

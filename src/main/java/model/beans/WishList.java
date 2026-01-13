@@ -3,11 +3,12 @@ package model.beans;
 import java.util.ArrayList;
 
 public class WishList {
-    private Utente utente;
+    private /*@ spec_public non_null @*/ Utente utente;
     private ArrayList<Prodotto> prodotti;
 
 
     public WishList() {
+        this.utente = new Utente();
         prodotti = new ArrayList<>();
     }
 

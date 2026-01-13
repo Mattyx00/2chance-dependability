@@ -10,16 +10,16 @@ public class Utente {
     /*@ spec_public @*/
     private int id;
     
-    /*@ spec_public @*/
+    /*@ spec_public non_null @*/
     private String nome, cognome, email, telefono, password, immagine;
     
     /*@ spec_public @*/
     private boolean admin;
     
-    /*@ spec_public @*/
+    /*@ spec_public non_null @*/
     private ArrayList<Ordine> ordini;
     
-    /*@ spec_public @*/
+    /*@ spec_public non_null @*/
     private ArrayList<Recensione> recensioni;
 
     /*@ ensures \result == this.immagine; @*/
@@ -34,6 +34,14 @@ public class Utente {
 
     public Utente() {
         super();
+        this.nome = "";
+        this.cognome = "";
+        this.email = "";
+        this.telefono = "";
+        this.password = "";
+        this.immagine = "";
+        this.ordini = new ArrayList<>();
+        this.recensioni = new ArrayList<>();
     }
 
     /*@ ensures \result == this.id; @*/
