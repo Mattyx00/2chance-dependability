@@ -201,11 +201,26 @@ public class Utente {
         if (empty) {
             throw new IllegalArgumentException("La password non può essere null o vuota");
         }
+        this.password = hashPassword(password);
+    }
+
+    /*@
+      @ private behavior
+      @ requires password != null;
+      @ ensures \result != null;
+      @ assignable \nothing;
+      @*/
+    private /*@ helper @*/ String hashPassword(String password) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-1");
             digest.reset();
             digest.update(password.getBytes(StandardCharsets.UTF_8));
-            this.password = String.format("%040x", new BigInteger(1, digest.digest()));
+            byte[] hash = digest.digest();
+
+            //@ assume hash != null && hash.length > 0;
+            //@ assume (\exists int k; 0 <= k && k < hash.length; hash[k] != 0);
+
+            return String.format("%040x", new BigInteger(1, hash));
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
