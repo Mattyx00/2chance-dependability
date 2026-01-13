@@ -1,0 +1,33 @@
+Proving methods in model.beans.Specifiche
+Starting proof of model.beans.Specifiche.Specifiche() with prover z3_4_3
+Method assertions are validated [1.45 secs]
+Completed proof of model.beans.Specifiche.Specifiche() with prover z3_4_3 - no warnings [1.80 secs]
+Starting proof of model.beans.Specifiche.Specifiche(String,String) with prover z3_4_3
+Method assertions are validated [2.68 secs]
+Completed proof of model.beans.Specifiche.Specifiche(String,String) with prover z3_4_3 - no warnings [2.85 secs]
+Starting proof of model.beans.Specifiche.getNome() with prover z3_4_3
+Method assertions are validated [1.48 secs]
+Completed proof of model.beans.Specifiche.getNome() with prover z3_4_3 - no warnings [1.52 secs]
+Starting proof of model.beans.Specifiche.getValore() with prover z3_4_3
+Method assertions are validated [1.50 secs]
+Completed proof of model.beans.Specifiche.getValore() with prover z3_4_3 - no warnings [1.52 secs]
+Starting proof of model.beans.Specifiche.setNome(String) with prover z3_4_3
+Method assertions are validated [2.28 secs]
+Completed proof of model.beans.Specifiche.setNome(String) with prover z3_4_3 - no warnings [2.35 secs]
+Starting proof of model.beans.Specifiche.setValore(String) with prover z3_4_3
+Method assertions are validated [2.17 secs]
+Completed proof of model.beans.Specifiche.setValore(String) with prover z3_4_3 - no warnings [2.24 secs]
+Completed proving methods in model.beans.Specifiche [12.32 secs]
+Summary:
+  Valid:        6
+  Invalid:      0
+  Infeasible:   0
+  Timeout:      0
+  Error:        0
+  Skipped:      0
+ TOTAL METHODS: 6
+ Classes:       1 proved of 1
+ Model Classes: 0
+ Model methods: 0 proved of 0
+ DURATION:         13.0 secs
+

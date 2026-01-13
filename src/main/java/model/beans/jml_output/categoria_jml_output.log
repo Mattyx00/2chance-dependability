@@ -1,0 +1,27 @@
+Proving methods in model.beans.Categoria
+Starting proof of model.beans.Categoria.Categoria() with prover z3_4_3
+Method assertions are validated [1.33 secs]
+Completed proof of model.beans.Categoria.Categoria() with prover z3_4_3 - no warnings [1.52 secs]
+Starting proof of model.beans.Categoria.Categoria(String) with prover z3_4_3
+Method assertions are validated [2.25 secs]
+Completed proof of model.beans.Categoria.Categoria(String) with prover z3_4_3 - no warnings [2.41 secs]
+Starting proof of model.beans.Categoria.getNomeCategoria() with prover z3_4_3
+Method assertions are validated [1.43 secs]
+Completed proof of model.beans.Categoria.getNomeCategoria() with prover z3_4_3 - no warnings [1.47 secs]
+Starting proof of model.beans.Categoria.setNomeCategoria(String) with prover z3_4_3
+Method assertions are validated [2.37 secs]
+Completed proof of model.beans.Categoria.setNomeCategoria(String) with prover z3_4_3 - no warnings [2.46 secs]
+Completed proving methods in model.beans.Categoria [7.88 secs]
+Summary:
+  Valid:        4
+  Invalid:      0
+  Infeasible:   0
+  Timeout:      0
+  Error:        0
+  Skipped:      0
+ TOTAL METHODS: 4
+ Classes:       1 proved of 1
+ Model Classes: 0
+ Model methods: 0 proved of 0
+ DURATION:          8.5 secs
+

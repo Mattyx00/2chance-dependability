@@ -64,4 +64,4 @@ USER INPUT
 ================================================================================
 
 The following path is where the Java class to annotate is stored:
-src\main\java\model\beans\Carrello.java
+src\main\java\model\beans\Specifiche.java
