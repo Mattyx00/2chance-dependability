@@ -71,6 +71,7 @@ public class ProdottoCarrello {
     /*@
       @ requires quantita >= 0;
       @ ensures this.quantita == quantita;
+      @ assignable this.quantita;
       @*/
     public void setQuantita(int quantita) {
         if (quantita < 0) {
