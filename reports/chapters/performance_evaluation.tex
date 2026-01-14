@@ -1,7 +1,210 @@
 \chapter{Performance Evaluation}
 
-\section*{Context: JMH}
+\section{Context and Goals}
+Performance is a core non-functional requirement: beyond functional correctness, the system should remain responsive, predictable, and stable under typical workload conditions. In a dependability-oriented project, performance is not just a user-experience concern: if critical operations degrade or time out, performance becomes an availability issue. In addition, a backend that spends too much time per request is easier to overload, which increases exposure to denial-of-service scenarios.
 
-\lipsum[16-17]
+The project checklist explicitly requires microbenchmarks with JMH (Java Microbenchmark Harness). For this reason, the work described in this chapter focuses on \emph{microbenchmarking} selected backend components rather than executing full end-to-end load tests. The intent is to isolate representative operations that are likely to dominate latency (data-access and service orchestration), measure them in a controlled way, and establish a baseline that can be compared across future changes.
 
-\lipsum[18]
+\section{Methodology}
+\subsection{Selection of Performance-Critical Scenarios}
+The starting point is the identification of ``slow or expensive'' use cases at the backend level. Without production telemetry, the selection was engineering-driven: database interactions (queries and inserts) and service methods that combine validation with DAO calls often dominate request time. Therefore, the benchmark suite targets:
+\begin{itemize}
+  \item DAO-layer operations (persistence access and query paths);
+  \item service-layer operations (business logic + DAO/DB orchestration);
+  \item connection management (connection pool acquisition/release).
+\end{itemize}
+
+A deliberate aspect of the selection is the inclusion of both \emph{happy paths} (successful DB-backed calls) and \emph{error/validation paths} (null inputs, invalid IDs, not-found lookups). This mix provides two kinds of evidence: (i) realistic cost for successful retrieval paths, and (ii) the overhead (or benefit) of fail-fast validation and error handling.
+
+\subsection{Baseline and Repeatability}
+Even when no optimization is applied, a first controlled run is valuable as a baseline to detect regressions. To support repeatability, the project integrates JMH into the build, uses a consistent benchmark configuration across classes, and exports raw results to a machine-readable format (JSON) to be archived as evidence and reused for reporting.
+
+\section{Experimental Setup}
+\subsection{Project Integration and Build}
+JMH is integrated via Maven. Benchmark sources are located under \texttt{src/jmh/java} and included in compilation through \texttt{build-helper-maven-plugin}. The project depends on \texttt{org.openjdk.jmh:jmh-core} and \texttt{org.openjdk.jmh:jmh-generator-annprocess} (version \texttt{1.37}). The benchmark executable is packaged through \texttt{maven-assembly-plugin}, with \texttt{org.openjdk.jmh.Main} set as the main class and descriptor \texttt{src/assembly/benchmarks.xml}. The resulting artifact is the benchmark jar:
+\begin{verbatim}
+target/benchmarks.jar
+\end{verbatim}
+
+\subsection{Running JMH (Jar-First Workflow)}
+The lecture reference example follows a ``jar-first'' workflow (generate jar, list benchmarks, run selected benchmarks, export JSON). The same style is applied here because it is explicit, reproducible, and easy to document.
+
+A typical run consists of:
+\begin{verbatim}
+mvn -DskipTests package
+java -jar target/benchmarks.jar
+\end{verbatim}
+
+For reporting and evidence collection, raw results should be exported to JSON. The measured session in this project was executed using:
+\begin{verbatim}
+java -jar target/benchmarks.jar ... -rf json -rff reports/performance/jmh_result.json
+\end{verbatim}
+
+\noindent
+The \texttt{-rf json} option selects the JSON result format, while \texttt{-rff} specifies the output file path under the repository, so the raw output can be versioned or archived.
+
+\subsection{Execution Environment (Measured Run)}
+Benchmarks were executed under minimal system load to reduce noise and interference. The environment for the measured run is:
+\begin{itemize}
+  \item OS: macOS 26.2 (Apple Silicon)
+  \item Architecture: Apple M1 (ARM64)
+  \item RAM: 8 GB
+  \item Java: OpenJDK 17.0.17 (Temurin 17.0.17+10)
+  \item System load: minimal (dedicated execution, single-threaded run)
+\end{itemize}
+
+\subsection{Database Configuration}
+Several benchmarks include database calls; therefore the database setup has a direct impact on measurements. The measured run used:
+\begin{itemize}
+  \item DBMS: MySQL (8.0+)
+  \item Deployment: local loopback (\texttt{127.0.0.1:3306})
+  \item Database state: persistent pre-populated schema \texttt{second\_chance} (shared with integration tests)
+  \item Connection pooling: Apache Tomcat JDBC Pool (\texttt{maxActive=50}, \texttt{initialSize=5})
+\end{itemize}
+
+\noindent
+With a local loopback DB and a warm connection pool, sub-millisecond scores are plausible. These values should not be generalized to remote or cold-start environments without additional runs.
+
+\section{Benchmark Design (Theory-to-Code Rationale)}
+\subsection{Why JMH (and Why Not Naive Timing)}
+Microbenchmarking on the JVM is sensitive to warmup, JIT compilation, and aggressive optimizations. A naive \texttt{System.nanoTime()} wrapper can easily report misleading numbers (e.g., measuring cold-start behavior or having work optimized away). JMH is designed to address these pitfalls via structured warmup and measurement phases, JVM forking, and mechanisms to prevent dead code elimination.
+
+\subsection{Configuration Choices Implemented in Code}
+All benchmark classes share the same core configuration:
+\begin{itemize}
+  \item \texttt{@BenchmarkMode(Mode.AverageTime)}
+  \item \texttt{@OutputTimeUnit(TimeUnit.MILLISECONDS)}
+  \item \texttt{@Warmup(iterations = 5, time = 1)}
+  \item \texttt{@Measurement(iterations = 5, time = 1)}
+  \item \texttt{@Fork(1)}
+  \item \texttt{@State(Scope.Thread)}
+\end{itemize}
+
+\noindent
+This uniformity is intentional: it reduces variability caused by heterogeneous benchmark settings and makes internal comparisons easier to interpret. The choice of a single fork (\texttt{@Fork(1)}) is pragmatic (shorter total runtime); for final verification runs, increasing forks can improve robustness at the cost of longer execution time.
+
+\subsection{State, Setup, and Isolation}
+The benchmarks use \texttt{Scope.Thread} to avoid artificial contention between threads and to keep per-thread state isolated. Shared initialization is performed in \texttt{@Setup(Level.Trial)} to avoid contaminating measurements with one-off construction costs.
+
+A concrete example is \texttt{ConnectionPoolBenchmark}, which triggers lazy initialization in the setup phase by acquiring and closing a connection before measurement starts. This ensures the benchmark focuses on the acquire/release path rather than on pool startup.
+
+\subsection{Blackhole and Exception-Path Benchmarking (Updated Implementation)}
+The updated benchmarks make an important methodological choice explicit: when intentionally measuring failure paths (null input, invalid IDs, not-found scenarios, or an unreachable DB), letting exceptions propagate may abort the benchmark execution and prevent results from being produced. For this reason, most benchmark methods catch expected exceptions (e.g., \texttt{IllegalArgumentException}, \texttt{SQLException}, and in some cases \texttt{IOException}) and consume them via \texttt{Blackhole}.
+
+This approach keeps the harness running, makes the measured path explicit, and avoids dead code elimination because the outcome (value or error) is observed by the benchmark.
+
+\subsection{Input Strategy and ``Fail-Fast'' Paths}
+Input values are intentionally simple and deterministic. For instance, IDs such as \texttt{-1} represent invalid input, \texttt{99999} is used as a likely not-found ID, and \texttt{1} is used as a valid baseline entity ID on a pre-populated database. This design supports repeatability and lets the report clearly distinguish validation-only overhead from DB-backed execution.
+
+\section{Benchmark Suite}
+The repository includes eight benchmark classes under \texttt{src/jmh/java}, covering DAO, service, and infrastructure concerns:
+\begin{itemize}
+  \item DAO: \texttt{OrdineDAOBenchmark}, \texttt{SpecificheDAOBenchmark}, \texttt{UtenteDAOBenchmark}, \texttt{WishListDAOBenchmark}, \texttt{RecensioneDAOBenchmark}
+  \item Services: \texttt{AdminServiceBenchmark}, \texttt{LogoutServiceBenchmark}
+  \item Infrastructure: \texttt{ConnectionPoolBenchmark}
+\end{itemize}
+
+\noindent
+Table~\ref{tab:jmh-suite} maps benchmark methods to the scenarios they exercise. This improves auditability and reduces ambiguity when interpreting results.
+
+\begin{table}[h]
+\centering
+\caption{JMH benchmark suite and exercised scenarios (updated after benchmark refactoring).}
+\label{tab:jmh-suite}
+\begin{tabular}{p{0.33\textwidth} p{0.57\textwidth}}
+\hline
+\textbf{Benchmark method} & \textbf{Scenario} \\
+\hline
+\texttt{AdminServiceBenchmark.benchmarkGetProdottoFound} & Happy path: retrieve existing product (ID 1), consumes result. \\
+\texttt{AdminServiceBenchmark.benchmarkGetProdottoNotFound} & Error path: missing product (ID 99999), exceptions consumed. \\
+\texttt{AdminServiceBenchmark.benchmarkInfoOrdineFound} & Happy path: retrieve existing order (ID 1), consumes result. \\
+\texttt{AdminServiceBenchmark.benchmarkInfoOrdineNotFound} & Error path: missing order (ID 99999), exceptions consumed. \\
+\texttt{OrdineDAOBenchmark.benchmarkGetOrdineByIdValid} & Happy path: DB fetch for order (ID 1). \\
+\texttt{OrdineDAOBenchmark.benchmarkGetOrdineByIdInvalid} & Error path: invalid ID (\texttt{-1}), validation/exception path. \\
+\texttt{OrdineDAOBenchmark.benchmarkGetProdottoOrdineNull} & Error path: null input, validation/exception path. \\
+\texttt{SpecificheDAOBenchmark.benchmarkGetSpecificheValidId} & DB-dependent lookup for product ID 1 (catches \texttt{SQLException} if DB is down). \\
+\texttt{SpecificheDAOBenchmark.benchmarkGetSpecificheInvalidId} & Invalid product ID (\texttt{-1}), exception path. \\
+\texttt{UtenteDAOBenchmark.benchmarkGetUtenteByIdNotFound} & Attempt to find user ID \texttt{99999}, consumes returned value or \texttt{SQLException}. \\
+\texttt{WishListDAOBenchmark.benchmarkGetWishListWithNullUtente} & Null user input, exception path. \\
+\texttt{WishListDAOBenchmark.benchmarkGetWishListWithInvalidUtente} & Invalid user ID (\texttt{-1}), exception path. \\
+\texttt{RecensioneDAOBenchmark.benchmarkAddRecensione} & DB insert attempt (side effect), exceptions consumed if thrown. \\
+\texttt{LogoutServiceBenchmark.benchmarkLogoutValidSession} & Logout using a minimal \texttt{HttpSession} proxy; consumes session. \\
+\texttt{ConnectionPoolBenchmark.benchmarkGetReleaseConnection} & Acquire/release a DB connection; requires DB availability (throws \texttt{SQLException}). \\
+\hline
+\end{tabular}
+\end{table}
+
+\paragraph{Side effects (insert benchmark).}
+\texttt{RecensioneDAOBenchmark} measures a realistic insertion path but introduces a side effect (table growth and evolving DB state). This is useful evidence, but it must be interpreted carefully and ideally mitigated for strict comparability (see Section~\ref{sec:threats}).
+
+\section{Metrics and Results Reporting}
+The primary metric configured in the suite is AverageTime (\texttt{avgt}), reported in milliseconds per operation (ms/op). This is a natural choice when operations are expected to be latency-dominant (e.g., DB access) and when a per-call cost is easier to interpret than aggregate throughput.
+
+Percentile-oriented analysis (p95/p99) is not produced by the current configuration. If tail latency becomes relevant, the suite could be extended with \texttt{Mode.SampleTime} or by exporting detailed samples and analyzing distributions offline.
+
+\section{Results and Interpretation}
+\paragraph{Measured run scope and date.}
+The benchmark session summarized here was executed on \textbf{2026-01-14} and intentionally focused on two components: \texttt{AdminService} (business logic + DAO/DB calls) and \texttt{OrdineDAO} (data-access layer). This provides a clean first baseline contrasting happy paths with fail-fast/error paths.
+
+\paragraph{Traceability note.}
+Benchmark names in the provided output match the updated repository version, therefore results are directly traceable to the benchmark code. The received snippet does not include \texttt{Cnt} and \texttt{Error}; a JSON export (\texttt{reports/performance/jmh\_result.json}) should be attached to complete the statistical fields.
+
+\begin{table}[h]
+\centering
+\caption{Measured JMH results (AverageTime, ms/op) for the selected scope.}
+\label{tab:jmh-results}
+\begin{tabular}{p{0.44\textwidth} p{0.28\textwidth} p{0.10\textwidth}}
+\hline
+\textbf{Benchmark} & \textbf{Scenario} & \textbf{Score} \\
+\hline
+\texttt{AdminServiceBenchmark.benchmarkGetProdottoFound}    & Happy path (ID 1)     & 0.079 \\
+\texttt{AdminServiceBenchmark.benchmarkGetProdottoNotFound} & Error path (missing)  & 0.139 \\
+\texttt{AdminServiceBenchmark.benchmarkInfoOrdineFound}     & Happy path (ID 1)     & 0.216 \\
+\texttt{AdminServiceBenchmark.benchmarkInfoOrdineNotFound}  & Error path (missing)  & 0.085 \\
+\texttt{OrdineDAOBenchmark.benchmarkGetOrdineByIdValid}     & Happy path (ID 1)     & 0.104 \\
+\texttt{OrdineDAOBenchmark.benchmarkGetOrdineByIdInvalid}   & Error path (ID -1)    & 0.001 \\
+\texttt{OrdineDAOBenchmark.benchmarkGetProdottoOrdineNull}  & Error path (null)     & 0.001 \\
+\hline
+\end{tabular}
+\end{table}
+
+\paragraph{Interpretation.}
+The results align with a common backend intuition: fail-fast paths (invalid IDs or null inputs) are effectively negligible compared to DB-backed execution. In this run, the gap is roughly two orders of magnitude (0.001 vs 0.104 ms/op), indicating that input validation prevents unnecessary DB round-trips and avoids consuming pool resources---an effect that can matter under sustained load.
+
+For \texttt{AdminService}, found vs.\ not-found is not trivially predictable: not-found can be slower due to exception handling and additional checks, or faster due to early exit. Here, \texttt{infoOrdineNotFound} is faster than the found path, while \texttt{getProdottoNotFound} is slower than the found path. This kind of contrast is useful in practice: it tells us where error paths might be disproportionately expensive and where the implementation already fails quickly.
+
+Finally, scores below 1 ms/op are consistent with the measured setup (MySQL on loopback, pre-populated database, and a warm connection pool). These results should be treated as a local baseline rather than a general performance claim for remote deployments.
+
+\section{Threats to Validity}
+\label{sec:threats}
+\paragraph{JVM and OS noise.}
+Microbenchmarks on the JVM are affected by OS scheduling jitter, CPU frequency scaling and thermal behavior, background activity, and garbage collection. Running on a quiet machine reduces variance, but it does not eliminate it. Using additional forks and repeating runs can improve confidence.
+
+\paragraph{Database state and caching.}
+DB-dependent benchmarks are highly sensitive to database state: warm vs cold caches, buffer pool contents, index locality, and table size all affect latency. Results obtained with a persistent pre-populated database (shared with tests) should be interpreted accordingly. If strict comparability is needed, DB state should be reset or standardized between runs (e.g., snapshot/restore).
+
+\paragraph{Side effects (insert benchmark).}
+Benchmarks that mutate the database (e.g., inserting reviews) can drift over time as tables grow and indexes evolve. A clean mitigation is to reset the database state between runs, or to execute inserts inside transactions that are rolled back. Where such mitigation is not applied, results should be treated as indicative rather than strictly comparable.
+
+\paragraph{Exception cost and semantic mismatch.}
+Exception-path benchmarks can be disproportionately expensive because exception creation and handling may dominate time. These measurements should be interpreted as robustness/guard-logic overhead, not as a proxy for the latency of successful DB operations.
+
+\paragraph{CI execution.}
+Running performance benchmarks in standard CI runners often produces noisy and misleading results due to shared resources. A more defensible approach is to run JMH on-demand or on a controlled baseline machine, always recording environment, command line, and raw evidence.
+
+\section{Conclusions and Recommendations}
+The project implements a coherent JMH suite integrated into the Maven build and targeted at plausible backend hotspots (DAO operations, service orchestration, and connection pooling). The benchmark design reflects the key methodological points: structured warmup/measurement, JVM forking, thread-scoped state, and explicit handling of values/exceptions to reduce optimization artifacts.
+
+The measured baseline (2026-01-14) confirms a practical architectural benefit: fail-fast validation avoids spending DB round-trip time on invalid input, while the service-level benchmarks provide early insight into how success and failure paths differ in cost. The results are strong evidence for the value of defensive validation and for tracking regressions over time.
+
+Recommended next steps (low-impact):
+\begin{itemize}
+  \item Ensure the JSON output file (\texttt{reports/performance/jmh\_result.json}) is archived as evidence and referenced in the report, including \texttt{Cnt} and \texttt{Error}.
+  \item For final verification runs, increase \texttt{@Fork} (e.g., 2--3) to improve robustness, and repeat runs to check stability.
+  \item Consider adding a \texttt{SampleTime} run configuration if tail latency (p95/p99) becomes a reporting requirement.
+  \item For strict microbenchmark hygiene, consume returned values also on successful DB paths (even if the DB call itself prevents meaningful dead-code elimination in practice).
+  \item For side-effect benchmarks (inserts), add optional cleanup/rollback or reset DB state between runs to reduce drift.
+\end{itemize}
+
+\section{Missing Data}
+At this point, the run command and environment are documented. The remaining item is to ensure the JSON file (\texttt{reports/performance/jmh\_result.json}) is included as raw evidence (versioned in the repository or attached in the submission materials), so statistical fields (\texttt{Cnt}, \texttt{Error}) can be reported and the experiment can be independently verified.
