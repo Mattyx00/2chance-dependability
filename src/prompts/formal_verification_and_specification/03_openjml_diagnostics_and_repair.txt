@@ -63,7 +63,7 @@ USER INPUT
 ================================================================================
 
 Relative path to the Java Class:
-src/main/java/model/beans/Prodotto.java
+src/main/java/model/beans/Utente.java
 
 Relative path to the OpenJML Output Log:
 src/main/java/model/beans/jml_output/prodotto_jml_output.log

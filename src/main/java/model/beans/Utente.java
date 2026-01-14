@@ -10,20 +10,25 @@ public class Utente {
     /*@ spec_public @*/
     private int id;
     
-    /*@ spec_public non_null @*/
-    private String nome, cognome, email, telefono, password, immagine;
+    /*@ spec_public nullable @*/
+    private String nome, cognome, email, telefono, password;
+    
+    /*@ spec_public nullable @*/
+    private String immagine;
     
     /*@ spec_public @*/
     private boolean admin;
     
-    /*@ spec_public non_null @*/
+    /*@ spec_public nullable @*/
     private ArrayList<Ordine> ordini;
     
-    /*@ spec_public non_null @*/
+    /*@ spec_public nullable @*/
     private ArrayList<Recensione> recensioni;
 
+
+
     /*@ ensures \result == this.immagine; @*/
-    public String getImmagine() {
+    public /*@ pure nullable @*/ String getImmagine() {
         return immagine;
     }
 
@@ -55,7 +60,7 @@ public class Utente {
     }
 
     /*@ ensures \result == this.nome; @*/
-    public String getNome() {
+    public /*@ pure nullable @*/ String getNome() {
         return nome;
     }
 
@@ -80,7 +85,7 @@ public class Utente {
     }
 
     /*@ ensures \result == this.cognome; @*/
-    public String getCognome() {
+    public /*@ pure nullable @*/ String getCognome() {
         return cognome;
     }
 
@@ -105,7 +110,7 @@ public class Utente {
     }
 
     /*@ ensures \result == this.email; @*/
-    public String getEmail() {
+    public /*@ pure nullable @*/ String getEmail() {
         return email;
     }
 
@@ -130,7 +135,7 @@ public class Utente {
     }
 
     /*@ ensures \result == this.telefono; @*/
-    public String getTelefono() {
+    public /*@ pure nullable @*/ String getTelefono() {
         return telefono;
     }
 
@@ -165,7 +170,7 @@ public class Utente {
     }
 
     /*@ ensures \result == this.ordini; @*/
-    public ArrayList<Ordine> getOrdini() {
+    public /*@ pure nullable @*/ ArrayList<Ordine> getOrdini() {
         return ordini;
     }
 
@@ -181,7 +186,7 @@ public class Utente {
     }
 
     /*@ ensures \result == this.recensioni; @*/
-    public ArrayList<Recensione> getRecensioni() {
+    public /*@ pure nullable @*/ ArrayList<Recensione> getRecensioni() {
         return recensioni;
     }
 
@@ -235,16 +240,16 @@ public class Utente {
     }
 
     /*@ ensures \result == this.password; @*/
-    public String getPassword() {
+    public /*@ pure nullable @*/ String getPassword() {
         return password;
     }
 
     /*@ 
       @ requires o != null;
-
       @ ensures \result >= -1;
       @*/
     public int getOrdineIndex(Ordine o) {
+        /*@ assume ordini != null; @*/
         if (o == null) {
             throw new IllegalArgumentException("L'ordine non può essere null");
         }
@@ -254,17 +259,7 @@ public class Utente {
         for (int i = 0; i < ordini.size(); i++) {
             Ordine e = ordini.get(i);
             if (e.getId() == o.getId()) {
-                return i; // This was ordini.indexOf(e) which is essentially i, but since we refactored to loop, using i is more correct for flattened logic? 
-                // Wait, previous refactoring output I wrote: "return i;" in the manual loop.
-                // Let's double check the previous file content I wrote.
-                // Yes, I wrote: 
-                // for (int i = 0; i < ordini.size(); i++) {
-                //      Ordine e = ordini.get(i);
-                //      if (e.getId() == o.getId()) {
-                //         return i;
-                //      }
-                // }
-                // Use 'return i;' as it is consistent with refactoring.
+                return i;
             }
         }
         return -1;
