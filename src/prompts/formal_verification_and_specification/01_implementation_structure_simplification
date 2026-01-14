@@ -53,4 +53,4 @@ USER INPUT
 ================================================================================
 
 The following path is where the Java class to modify is stored:
-src\main\java\model\beans\ProdottoCarrello.java
+src\main\java\model\beans\WishList.java
