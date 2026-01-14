@@ -11,6 +11,7 @@ public class ProdottoCarrello {
       @*/
     public ProdottoCarrello() {
         this.prodotto = new Prodotto();
+        this.quantita = 0;
     }
 
     /*@

@@ -7,19 +7,19 @@ public class Ordine {
     /*@ spec_public @*/
     private int id;
     
-    /*@ spec_public non_null @*/
+    /*@ spec_public nullable @*/
     private Date dataOrdine;
     
-    /*@ spec_public @*/
+    /*@ spec_public nullable @*/
     private String indirizzo;
     
     /*@ spec_public @*/
     private double prezzoTotale;
     
-    /*@ spec_public @*/
+    /*@ spec_public nullable @*/
     private Utente utente;
     
-    /*@ spec_public @*/
+    /*@ spec_public nullable @*/
     private Carrello carrello; 
 
 
@@ -39,7 +39,7 @@ public class Ordine {
     }
 
     /*@ ensures \result == this.dataOrdine; @*/
-    public Date getDataOrdine() {
+    public /*@ pure nullable @*/ Date getDataOrdine() {
         return dataOrdine;
     }
 
@@ -55,7 +55,7 @@ public class Ordine {
     }
 
     /*@ ensures \result == this.indirizzo; @*/
-    public String getIndirizzo() {
+    public /*@ pure nullable @*/ String getIndirizzo() {
         return indirizzo;
     }
 
@@ -97,7 +97,7 @@ public class Ordine {
     }
 
     /*@ ensures \result == this.utente; @*/
-    public Utente getUtente() {
+    public /*@ pure nullable @*/ Utente getUtente() {
         return utente;
     }
 
@@ -113,7 +113,7 @@ public class Ordine {
     }
 
     /*@ ensures \result == this.carrello; @*/
-    public Carrello getCarrello() {
+    public /*@ pure nullable @*/ Carrello getCarrello() {
         return carrello;
     }
 

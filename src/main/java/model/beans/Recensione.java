@@ -5,10 +5,10 @@ import java.util.Date;
 public class Recensione {
     private /*@ spec_public @*/ int id;
     private /*@ spec_public @*/ int valutazione;
-    private /*@ spec_public non_null @*/ Date dataRecensione;
-    private /*@ spec_public @*/ String testo;
-    private /*@ spec_public @*/ Utente utente;
-    private /*@ spec_public @*/ Prodotto prodotto;
+    private /*@ spec_public nullable @*/ Date dataRecensione;
+    private /*@ spec_public nullable @*/ String testo;
+    private /*@ spec_public nullable @*/ Utente utente;
+    private /*@ spec_public nullable @*/ Prodotto prodotto;
 
     //@ public invariant valutazione >= 1 && valutazione <= 5;
 
@@ -87,7 +87,7 @@ public class Recensione {
         this.valutazione = valutazione;
     }
 
-    public Date getDataRecensione() {
+    public /*@ pure nullable @*/ Date getDataRecensione() {
         return dataRecensione;
     }
 
@@ -103,7 +103,7 @@ public class Recensione {
         this.dataRecensione = dataRecensione;
     }
 
-    public String getTesto() {
+    public /*@ pure nullable @*/ String getTesto() {
         return testo;
     }
 
@@ -129,7 +129,7 @@ public class Recensione {
         this.testo = testo;
     }
 
-    public Utente getUtente() {
+    public /*@ pure nullable @*/ Utente getUtente() {
         return utente;
     }
 
@@ -145,7 +145,7 @@ public class Recensione {
         this.utente = utente;
     }
 
-    public Prodotto getProdotto() {
+    public /*@ pure nullable @*/ Prodotto getProdotto() {
         return prodotto;
     }
 
