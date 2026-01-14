@@ -46,4 +46,27 @@ public class AdminServiceBenchmark {
             bh.consume(e);
         }
     }
+
+    @Benchmark
+    public void benchmarkGetProdottoFound(Blackhole bh) {
+        try {
+            // Happy path: Retrieve an existing product (ID 1)
+            // This measures the actual performance of the DB query + wrapping
+            String result = adminService.getProdotto(1);
+            bh.consume(result);
+        } catch (Exception e) {
+            bh.consume(e);
+        }
+    }
+
+    @Benchmark
+    public void benchmarkInfoOrdineFound(Blackhole bh) {
+        try {
+            // Happy path: Retrieve an existing order (ID 1)
+            String result = adminService.infoOrdine(1);
+            bh.consume(result);
+        } catch (Exception e) {
+            bh.consume(e);
+        }
+    }
 }

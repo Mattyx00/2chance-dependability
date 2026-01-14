@@ -44,4 +44,15 @@ public class OrdineDAOBenchmark {
             bh.consume(e);
         }
     }
+
+    @Benchmark
+    public void benchmarkGetOrdineByIdValid(Blackhole bh) {
+        try {
+            // Happy Path: Retrieve valid order (ID 1)
+            // This measures the real DB access time
+            ordineDAO.getOrdineById(1);
+        } catch (Exception e) {
+            bh.consume(e);
+        }
+    }
 }
