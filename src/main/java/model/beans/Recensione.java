@@ -15,6 +15,7 @@ public class Recensione {
     public Recensione() {
         super();
         this.dataRecensione = new Date();
+        this.valutazione = 1;
     }
 
     /*@

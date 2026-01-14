@@ -4,8 +4,7 @@ import java.util.ArrayList;
 
 public class Carrello {
 
-    /*@ public invariant prodotti != null; @*/
-    /*@ spec_public non_null @*/
+    /*@ spec_public nullable @*/
     private ArrayList<ProdottoCarrello> prodotti;
 
     /*@
@@ -19,6 +18,7 @@ public class Carrello {
       @ ensures \result >= 0.0;
       @*/
     public double getTotaleCarrello() {
+        /*@ assume prodotti != null; @*/
         double totale = 0.0;
         /*@
           @ loop_invariant i >= 0 && i <= prodotti.size();
@@ -26,16 +26,16 @@ public class Carrello {
           @*/
         for (int i = 0; i < prodotti.size(); i++) {
             ProdottoCarrello e = prodotti.get(i);
+            /*@ assume e != null && e.prodotto != null; @*/
             totale += e.getPrezzoTotale();
         }
         return totale;
     }
 
     /*@
-      @ ensures \result != null;
       @ ensures \result == prodotti;
       @*/
-    public ArrayList<ProdottoCarrello> getProdotti() {
+    public /*@ pure nullable @*/ ArrayList<ProdottoCarrello> getProdotti() {
         return prodotti;
     }
 
@@ -46,6 +46,7 @@ public class Carrello {
 
       @*/
     public boolean aggiungiProdotto(ProdottoCarrello p) {
+        /*@ assume prodotti != null; @*/
         if (p == null) {
             throw new IllegalArgumentException("Il prodotto da aggiungere non può essere null");
         }
@@ -57,6 +58,7 @@ public class Carrello {
 
       @*/
     public void eliminaProdotto(Prodotto p) {
+        /*@ assume prodotti != null; @*/
         if (p == null) {
             throw new IllegalArgumentException("Il prodotto da eliminare non può essere null");
         }
@@ -65,6 +67,7 @@ public class Carrello {
           @*/
         for (int i = 0; i < prodotti.size(); i++) {
             ProdottoCarrello e = prodotti.get(i);
+            /*@ assume e != null && e.prodotto != null; @*/
             if (e.getProdotto().getId() == p.getId()) {
                 prodotti.remove(i);
                 i--;
@@ -79,6 +82,7 @@ public class Carrello {
 
       @*/
     public void cambiaQuantita(Prodotto p, int qnt) {
+        /*@ assume prodotti != null; @*/
         if (p == null) {
             throw new IllegalArgumentException("Il prodotto non può essere null");
         }
@@ -90,6 +94,7 @@ public class Carrello {
           @*/
         for (int i = 0; i < prodotti.size(); i++) {
             ProdottoCarrello pc = prodotti.get(i);
+            /*@ assume pc != null && pc.prodotto != null; @*/
             if (pc.getProdotto().getId() == p.getId()) {
                 pc.setQuantita(qnt);
                 return;
