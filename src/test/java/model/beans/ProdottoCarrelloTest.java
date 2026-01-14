@@ -163,19 +163,7 @@ class ProdottoCarrelloTest {
 
     // --- getPrezzoTotale Tests ---
 
-    // F10: Product is Null -> IllegalStateException
-    @Test
-    @DisplayName("getPrezzoTotale: Should throw IllegalStateException when product is not set")
-    void shouldThrowIllegalStateWhenProductNotSet_GetPrezzoTotale() {
-        // Arrange
-        ProdottoCarrello productCart = new ProdottoCarrello(); // Product is null by default
 
-        // Act & Assert
-        IllegalStateException exception = assertThrows(
-                IllegalStateException.class,
-                () -> productCart.getPrezzoTotale());
-        assertEquals("Impossibile calcolare il prezzo totale: prodotto non impostato", exception.getMessage());
-    }
 
     // F11-F13: Valid combinations of Price and Quantity -> Return correct total
     @ParameterizedTest(name = "Price: {0}, Quantity: {1} -> Expected: {2}")

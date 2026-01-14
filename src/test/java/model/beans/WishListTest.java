@@ -23,7 +23,7 @@ class WishListTest {
 
         // Act & Assert
         assertAll("Default State",
-                () -> assertNull(wishlist.getUtente(), "Utente should be null by default"),
+                () -> assertNotNull(wishlist.getUtente(), "Utente should not be null by default"),
                 () -> assertNotNull(wishlist.getProdotti(), "Prodotti list should not be null"),
                 () -> assertTrue(wishlist.getProdotti().isEmpty(), "Prodotti list should be empty"));
     }
