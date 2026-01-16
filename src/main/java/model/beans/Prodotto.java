@@ -24,16 +24,15 @@ public class Prodotto {
         super();
     }
 
-    /*@ 
-      @ ensures \result == specifiche; 
+    /*@
+      @ ensures \result == specifiche;
       @*/
     public /*@ pure nullable @*/ ArrayList<Specifiche> getSpecifiche() {
         return specifiche;
     }
 
-    /*@ 
+    /*@
       @ ensures this.specifiche == specifiche;
-
       @*/
     public void setSpecifiche(ArrayList<Specifiche> specifiche) {
         if (specifiche == null) {
@@ -42,16 +41,15 @@ public class Prodotto {
         this.specifiche = specifiche;
     }
 
-    /*@ 
-      @ ensures \result == recensioni; 
+    /*@
+      @ ensures \result == recensioni;
       @*/
     public /*@ pure nullable @*/ ArrayList<Recensione> getRecensioni() {
         return recensioni;
     }
 
-    /*@ 
+    /*@
       @ ensures this.recensioni == recensioni;
-
       @*/
     public void setRecensioni(ArrayList<Recensione> recensioni) {
         if (recensioni == null) {
@@ -60,30 +58,29 @@ public class Prodotto {
         this.recensioni = recensioni;
     }
 
-    /*@ 
-      @ ensures \result == id; 
+    /*@
+      @ ensures \result == id;
       @*/
     public /*@ pure @*/ int getId() {
         return id;
     }
 
-    /*@ 
-      @ ensures this.id == id; 
+    /*@
+      @ ensures this.id == id;
       @*/
     public void setId(int id) {
         this.id = id;
     }
 
-    /*@ 
-      @ ensures \result == quantitaProdotto; 
+    /*@
+      @ ensures \result == quantitaProdotto;
       @*/
     public /*@ pure @*/ int getQuantitaProdotto() {
         return quantitaProdotto;
     }
 
-    /*@ 
+    /*@
       @ ensures this.quantitaProdotto == quantitaProdotto;
-
       @*/
     public void setQuantitaProdotto(int quantitaProdotto) {
         if (quantitaProdotto < 0) {
@@ -92,16 +89,15 @@ public class Prodotto {
         this.quantitaProdotto = quantitaProdotto;
     }
 
-    /*@ 
-      @ ensures \result == prezzo; 
+    /*@
+      @ ensures \result == prezzo;
       @*/
     public /*@ pure @*/ double getPrezzo() {
         return prezzo;
     }
 
-    /*@ 
+    /*@
       @ ensures this.prezzo == prezzo;
-
       @*/
     public void setPrezzo(double prezzo) {
         if (prezzo < 0) {
@@ -110,16 +106,15 @@ public class Prodotto {
         this.prezzo = prezzo;
     }
 
-    /*@ 
-      @ ensures \result == peso; 
+    /*@
+      @ ensures \result == peso;
       @*/
     public /*@ pure @*/ double getPeso() {
         return peso;
     }
 
-    /*@ 
+    /*@
       @ ensures this.peso == peso;
-
       @*/
     public void setPeso(double peso) {
         if (peso < 0) {
@@ -128,30 +123,29 @@ public class Prodotto {
         this.peso = peso;
     }
 
-    /*@ 
-      @ ensures \result == dimensioni; 
+    /*@
+      @ ensures \result == dimensioni;
       @*/
     public /*@ pure nullable @*/ String getDimensioni() {
         return dimensioni;
     }
 
-    /*@ 
-      @ ensures this.dimensioni == dimensioni; 
+    /*@
+      @ ensures this.dimensioni == dimensioni;
       @*/
     public void setDimensioni(String dimensioni) {
         this.dimensioni = dimensioni;
     }
 
-    /*@ 
-      @ ensures \result == marca; 
+    /*@
+      @ ensures \result == marca;
       @*/
     public /*@ pure nullable @*/ String getMarca() {
         return marca;
     }
 
-    /*@ 
+    /*@
       @ ensures this.marca == marca;
-
       @*/
     public void setMarca(String marca) {
         if (marca == null) {
@@ -172,16 +166,15 @@ public class Prodotto {
         this.marca = marca;
     }
 
-    /*@ 
-      @ ensures \result == modello; 
+    /*@
+      @ ensures \result == modello;
       @*/
     public /*@ pure nullable @*/ String getModello() {
         return modello;
     }
 
-    /*@ 
+    /*@
       @ ensures this.modello == modello;
-
       @*/
     public void setModello(String modello) {
         if (modello == null) {
@@ -202,30 +195,29 @@ public class Prodotto {
         this.modello = modello;
     }
 
-    /*@ 
-      @ ensures \result == immagine; 
+    /*@
+      @ ensures \result == immagine;
       @*/
     public /*@ pure nullable @*/ String getImmagine() {
         return immagine;
     }
 
-    /*@ 
-      @ ensures this.immagine == immagine; 
+    /*@
+      @ ensures this.immagine == immagine;
       @*/
     public void setImmagine(String immagine) {
         this.immagine = immagine;
     }
 
-    /*@ 
-      @ ensures \result == descrizione; 
+    /*@
+      @ ensures \result == descrizione;
       @*/
     public /*@ pure nullable @*/ String getDescrizione() {
         return descrizione;
     }
 
-    /*@ 
+    /*@
       @ ensures this.descrizione == descrizione;
-
       @*/
     public void setDescrizione(String descrizione) {
         if (descrizione == null) {
@@ -246,16 +238,15 @@ public class Prodotto {
         this.descrizione = descrizione;
     }
 
-    /*@ 
-      @ ensures \result == categoria; 
+    /*@
+      @ ensures \result == categoria;
       @*/
     public /*@ pure nullable @*/ Categoria getCategoria() {
         return categoria;
     }
 
-    /*@ 
+    /*@
       @ ensures this.categoria == categoria;
-
       @*/
     public void setCategoria(Categoria categoria) {
         if (categoria == null) {

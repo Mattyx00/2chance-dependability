@@ -29,7 +29,6 @@ public class Recensione {
       @ ensures this.valutazione == valutazione;
       @ ensures this.testo == testo;
       @ ensures this.dataRecensione == dataRecensione;
-
       @*/
     public Recensione(Utente utente, Prodotto prodotto, int valutazione, String testo, Date dataRecensione) {
         if (utente == null) {
@@ -79,7 +78,6 @@ public class Recensione {
     /*@
       @ requires valutazione >= 1 && valutazione <= 5;
       @ ensures this.valutazione == valutazione;
-
       @*/
     public void setValutazione(int valutazione) {
         if (valutazione < 1 || valutazione > 5) {
@@ -95,7 +93,6 @@ public class Recensione {
     /*@
       @ requires dataRecensione != null;
       @ ensures this.dataRecensione == dataRecensione;
-
       @*/
     public void setDataRecensione(Date dataRecensione) {
         if (dataRecensione == null) {
@@ -111,7 +108,6 @@ public class Recensione {
     /*@
       @ requires testo != null;
       @ ensures this.testo == testo;
-
       @*/
     public void setTesto(String testo) {
         if (testo == null) {
@@ -137,7 +133,6 @@ public class Recensione {
     /*@
       @ requires utente != null;
       @ ensures this.utente == utente;
-
       @*/
     public void setUtente(Utente utente) {
         if (utente == null) {
@@ -153,7 +148,6 @@ public class Recensione {
     /*@
       @ requires prodotto != null;
       @ ensures this.prodotto == prodotto;
-
       @*/
     public void setProdotto(Prodotto prodotto) {
         if (prodotto == null) {

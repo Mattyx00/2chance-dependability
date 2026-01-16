@@ -48,7 +48,6 @@ public class ProdottoCarrello {
     /*@
       @ requires prodotto != null;
       @ ensures \result == prodotto.getPrezzo() * quantita;
-
       @*/
     public /*@ pure @*/ double getPrezzoTotale() {
         if (prodotto == null) {

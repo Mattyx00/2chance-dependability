@@ -20,20 +20,20 @@ public class Carrello {
     public double getTotaleCarrello() {
         /*@ assume prodotti != null; @*/
         double totale = 0.0;
-        
+
         /*@
           @ loop_invariant i >= 0;
           @ loop_invariant totale >= 0.0;
           @*/
         for (int i = 0; i < prodotti.size(); i++) {
             ProdottoCarrello e = prodotti.get(i);
-            
+
             /*@ assume e != null && e.prodotto != null; @*/
-            
+
             /*@ assume e.prodotto.prezzo >= 0 && e.prodotto.peso >= 0 && e.prodotto.quantitaProdotto >= 0; @*/
-            
+
             /*@ assume e.getPrezzoTotale() >= 0.0; @*/
-            
+
             totale += e.getPrezzoTotale();
         }
         return totale;
@@ -67,14 +67,14 @@ public class Carrello {
         if (p == null) {
             throw new IllegalArgumentException("Il prodotto da eliminare non può essere null");
         }
-        
+
         /*@ loop_invariant i >= 0; @*/
         for (int i = 0; i < prodotti.size(); i++) {
             ProdottoCarrello e = prodotti.get(i);
-            
+
             /*@ assume e != null && e.prodotto != null; @*/
             /*@ assume e.prodotto.prezzo >= 0 && e.prodotto.peso >= 0 && e.prodotto.quantitaProdotto >= 0; @*/
-            
+
             if (e.getProdotto().getId() == p.getId()) {
                 prodotti.remove(i);
                 i--;
@@ -89,24 +89,24 @@ public class Carrello {
     public void cambiaQuantita(Prodotto p, int qnt) {
         /*@ assume prodotti != null; @*/
         /*@ assume p.prezzo >= 0 && p.peso >= 0 && p.quantitaProdotto >= 0; @*/
-        
+
         if (p == null) {
             throw new IllegalArgumentException("Il prodotto non può essere null");
         }
         if (qnt <= 0) {
             throw new IllegalArgumentException("La quantità deve essere maggiore di zero");
         }
-        
+
         /*@ loop_invariant i >= 0; @*/
         for (int i = 0; i < prodotti.size(); i++) {
             ProdottoCarrello pc = prodotti.get(i);
-            
+
             /*@ assume pc != null && pc.prodotto != null; @*/
             /*@ assume pc.prodotto.prezzo >= 0 && pc.prodotto.peso >= 0 && pc.prodotto.quantitaProdotto >= 0; @*/
-            
+
             if (pc.getProdotto().getId() == p.getId()) {
                 pc.setQuantita(qnt);
-                
+
                 /*@ assume p.prezzo >= 0 && p.peso >= 0 && p.quantitaProdotto >= 0; @*/
                 return;
             }

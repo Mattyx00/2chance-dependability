@@ -9,33 +9,21 @@ import java.util.ArrayList;
 public class Utente {
     /*@ spec_public @*/
     private int id;
-    
+
     /*@ spec_public nullable @*/
     private String nome, cognome, email, telefono, password;
-    
+
     /*@ spec_public nullable @*/
     private String immagine;
-    
+
     /*@ spec_public @*/
     private boolean admin;
-    
+
     /*@ spec_public nullable @*/
     private ArrayList<Ordine> ordini;
-    
+
     /*@ spec_public nullable @*/
     private ArrayList<Recensione> recensioni;
-
-
-
-    /*@ ensures \result == this.immagine; @*/
-    public /*@ pure nullable @*/ String getImmagine() {
-        return immagine;
-    }
-
-    /*@ ensures this.immagine == immagine; @*/
-    public void setImmagine(String immagine) {
-        this.immagine = immagine;
-    }
 
     public Utente() {
         super();
@@ -47,6 +35,16 @@ public class Utente {
         this.immagine = "";
         this.ordini = new ArrayList<>();
         this.recensioni = new ArrayList<>();
+    }
+
+    /*@ ensures \result == this.immagine; @*/
+    public /*@ pure nullable @*/ String getImmagine() {
+        return immagine;
+    }
+
+    /*@ ensures this.immagine == immagine; @*/
+    public void setImmagine(String immagine) {
+        this.immagine = immagine;
     }
 
     /*@ ensures \result == this.id; @*/
@@ -64,9 +62,8 @@ public class Utente {
         return nome;
     }
 
-    /*@ 
-      @ ensures this.nome == nome; 
-
+    /*@
+      @ ensures this.nome == nome;
       @*/
     public void setNome(String nome) {
         boolean empty = true;
@@ -89,9 +86,8 @@ public class Utente {
         return cognome;
     }
 
-    /*@ 
-      @ ensures this.cognome == cognome; 
-
+    /*@
+      @ ensures this.cognome == cognome;
       @*/
     public void setCognome(String cognome) {
         boolean empty = true;
@@ -114,9 +110,8 @@ public class Utente {
         return email;
     }
 
-    /*@ 
-      @ ensures this.email == email; 
-
+    /*@
+      @ ensures this.email == email;
       @*/
     public void setEmail(String email) {
         boolean empty = true;
@@ -139,9 +134,8 @@ public class Utente {
         return telefono;
     }
 
-    /*@ 
-      @ ensures this.telefono == telefono; 
-
+    /*@
+      @ ensures this.telefono == telefono;
       @*/
     public void setTelefono(String telefono) {
         boolean empty = true;
@@ -174,9 +168,8 @@ public class Utente {
         return ordini;
     }
 
-    /*@ 
-      @ ensures this.ordini == ordini; 
-
+    /*@
+      @ ensures this.ordini == ordini;
       @*/
     public void setOrdini(ArrayList<Ordine> ordini) {
         if (ordini == null) {
@@ -190,9 +183,8 @@ public class Utente {
         return recensioni;
     }
 
-    /*@ 
-      @ ensures this.recensioni == recensioni; 
-
+    /*@
+      @ ensures this.recensioni == recensioni;
       @*/
     public void setRecensioni(ArrayList<Recensione> recensioni) {
         if (recensioni == null) {
@@ -244,7 +236,7 @@ public class Utente {
         return password;
     }
 
-    /*@ 
+    /*@
       @ requires o != null;
       @ ensures \result >= -1;
       @*/

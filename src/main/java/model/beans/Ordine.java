@@ -6,22 +6,21 @@ public class Ordine {
 
     /*@ spec_public @*/
     private int id;
-    
+
     /*@ spec_public nullable @*/
     private Date dataOrdine;
-    
+
     /*@ spec_public nullable @*/
     private String indirizzo;
-    
+
     /*@ spec_public @*/
     private double prezzoTotale;
-    
+
     /*@ spec_public nullable @*/
     private Utente utente;
-    
-    /*@ spec_public nullable @*/
-    private Carrello carrello; 
 
+    /*@ spec_public nullable @*/
+    private Carrello carrello;
 
     public Ordine() {
         super();
@@ -43,7 +42,7 @@ public class Ordine {
         return dataOrdine;
     }
 
-    /*@ 
+    /*@
       @ requires dataOrdine != null;
       @ ensures this.dataOrdine == dataOrdine;
       @*/
@@ -59,7 +58,7 @@ public class Ordine {
         return indirizzo;
     }
 
-    /*@ 
+    /*@
       @ requires indirizzo != null;
       @ ensures this.indirizzo == indirizzo;
       @*/
@@ -85,7 +84,7 @@ public class Ordine {
         return prezzoTotale;
     }
 
-    /*@ 
+    /*@
       @ requires prezzoTotale >= 0;
       @ ensures this.prezzoTotale == prezzoTotale;
       @*/
@@ -101,7 +100,7 @@ public class Ordine {
         return utente;
     }
 
-    /*@ 
+    /*@
       @ requires utente != null;
       @ ensures this.utente == utente;
       @*/
@@ -117,7 +116,7 @@ public class Ordine {
         return carrello;
     }
 
-    /*@ 
+    /*@
       @ requires carrello != null;
       @ ensures this.carrello == carrello;
       @*/
