@@ -1,52 +1,86 @@
-\documentclass[12pt, a4paper]{report}
+\chapter{Mutation Testing}
 
-% Essential Packages
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
-\usepackage{lipsum}
-\usepackage{csquotes}
-\usepackage{hyperref}
-\usepackage{graphicx}
-\usepackage{geometry}
+\section*{Context: PiTest}
 
-% Geometry Settings
-\geometry{
-    a4paper,
-    total={170mm,257mm},
-    left=20mm,
-    top=20mm,
+\textbf{Mutation testing}
+
+\vspace{0.3cm}
+
+All’interno del nostro progetto utilizzeremo il mutation testing grazie a PiTest che ci permette di superare i limiti della semplice coverage per la quale utilizziamo jacoco ed individuare bug nel codice sorgente.
+
+\vspace{0.4cm}
+
+\textbf{Tool utilizzato: pitest}
+
+\vspace{0.2cm}
+
+Come tool per il mutation testing è stato selezionato pitest come visto a lezione.  
+Permette di essere integrato facilmente con Maven e supporta Junit 5.  
+La versione specifica utilizzata nel nostro progetto e funzionante è la 1.15.0.
+
+\section*{Configurazione tecnica ed utilizzo}
+
+All’interno del nostro pom.xml abbiamo inserito un profilo Maven chiamato pitest che permette di eseguire il mutation testing lanciando il comando:
+
+\begin{center}
+\texttt{mvn test-compile pitest:mutationCoverage -P pitest}
+\end{center}
+
+Le classi testate sono i beans i dao e i services.
+
+\vspace{0.3cm}
+
+Per l’analisi abbiamo utilizzato i mutatori standard di pitest:
+\begin{itemize}
+    \item Inversione dellec ondizioni
+    \item Sostituizione dei valori di ritorno
+    \item Modifica degli operatori aritmetici
+\end{itemize}
+
+I risultati li troveremo nella cartella \texttt{target/pit-reports}.
+
+\section*{Primi risultati}
+
+I primi risultati evidenziano scarsi risultati per quanto riguarda i test su dao e services.
+
+\vspace{0.4cm}
+
+\begin{center}
+\resizebox{\textwidth}{!}{
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+\textbf{Nome Pacchetto} & \textbf{Numero di Classi} & \textbf{Line Coverage} & \textbf{Mutation Coverage} & \textbf{Test Strength} \\
+\hline
+model.beans & 9 & 99\% (292/294) & 97\% (136/140) & 97\% (136/140) \\
+model.dao & 12 & 55\% (433/788) & 30\% (103/344) & 35\% (103/294) \\
+services & 19 & 60\% (339/565) & 45\% (96/214) & 47\% (96/203) \\
+\hline
+\textbf{TOTALE PROGETTO} & 51 & 53\% (1064/1999) & 42\% (335/797) & 52\% (335/637) \\
+\hline
+\end{tabular}
 }
+\end{center}
 
-% Hyperref Setup
-\hypersetup{
-    colorlinks=true,
-    linkcolor=black,
-    filecolor=magenta,      
-    urlcolor=blue,
-    pdftitle={2chance Dependability Report},
-    pdfpagemode=FullScreen,
+\vspace{0.3cm}
+
+Il problema è stato risolto aumentando i test e rendendoli più specifici.
+
+\section*{Risultati finali}
+
+\vspace{0.4cm}
+
+\begin{center}
+\resizebox{\textwidth}{!}{
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+\textbf{Nome Pacchetto} & \textbf{Numero di Classi} & \textbf{Line Coverage} & \textbf{Mutation Coverage} & \textbf{Test Strength} \\
+\hline
+model.beans & 9 & 99\% (292/294) & 97\% (136/140) & 97\% (136/140) \\
+model.dao & 12 & 77\% (606/788) & 50\% (173/344) & 59\% (173/294) \\
+services & 19 & 81\% (456/565) & 83\% (177/214) & 87\% (177/203) \\
+\hline
+\textbf{TOTALE PROGETTO} & 51 & 68\% (1354/1999) & 61\% (486/797) & 76\% (486/637) \\
+\hline
+\end{tabular}
 }
-
-% Document Metadata
-\title{\textbf{2Chance Web Application} \\ \large Software Dependability Project Report}
-\date{5 January 2026}
-
-\begin{document}
-
-% Cover Page
-\maketitle
-
-% Table of Contents
-\tableofcontents
-
-% Chapters
-\include{chapters/software_architectural_overview}
-\include{chapters/testing_and_coverage_analysis}
-\include{chapters/formal_specification_and_verification}
-\include{chapters/mutation_testing}
-\include{chapters/performance_evaluation}
-\include{chapters/containerization_and_orchestration_readiness}
-\include{chapters/security_assurance_and_vulnerability_assessment}
-\include{chapters/build_and_deployment_pipeline}
-
-\end{document}
+\end{center}
