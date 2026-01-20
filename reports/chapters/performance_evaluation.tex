@@ -1,5 +1,7 @@
 \chapter{Performance Evaluation}
 
+\newcommand{\benchmethod}[2]{\texttt{#1.\allowbreak #2}}
+
 \section{Context and Goals}
 Performance is a core non-functional requirement: beyond functional correctness, the system should remain responsive, predictable, and stable under typical workload conditions. In a dependability-oriented project, performance is not just a user-experience concern: if critical operations degrade or time out, performance becomes an availability issue. In addition, a backend that spends too much time per request is easier to overload, which increases exposure to denial-of-service scenarios.
 
@@ -109,27 +111,28 @@ Table~\ref{tab:jmh-suite} maps benchmark methods to the scenarios they exercise.
 
 \begin{table}[h]
 \centering
+\small
 \caption{JMH benchmark suite and exercised scenarios (updated after benchmark refactoring).}
 \label{tab:jmh-suite}
-\begin{tabular}{p{0.33\textwidth} p{0.57\textwidth}}
+\begin{tabular}{p{0.45\textwidth} p{0.50\textwidth}}
 \hline
 \textbf{Benchmark method} & \textbf{Scenario} \\
 \hline
-\texttt{AdminServiceBenchmark.benchmarkGetProdottoFound} & Happy path: retrieve existing product (ID 1), consumes result. \\
-\texttt{AdminServiceBenchmark.benchmarkGetProdottoNotFound} & Error path: missing product (ID 99999), exceptions consumed. \\
-\texttt{AdminServiceBenchmark.benchmarkInfoOrdineFound} & Happy path: retrieve existing order (ID 1), consumes result. \\
-\texttt{AdminServiceBenchmark.benchmarkInfoOrdineNotFound} & Error path: missing order (ID 99999), exceptions consumed. \\
-\texttt{OrdineDAOBenchmark.benchmarkGetOrdineByIdValid} & Happy path: DB fetch for order (ID 1). \\
-\texttt{OrdineDAOBenchmark.benchmarkGetOrdineByIdInvalid} & Error path: invalid ID (\texttt{-1}), validation/exception path. \\
-\texttt{OrdineDAOBenchmark.benchmarkGetProdottoOrdineNull} & Error path: null input, validation/exception path. \\
-\texttt{SpecificheDAOBenchmark.benchmarkGetSpecificheValidId} & DB-dependent lookup for product ID 1 (catches \texttt{SQLException} if DB is down). \\
-\texttt{SpecificheDAOBenchmark.benchmarkGetSpecificheInvalidId} & Invalid product ID (\texttt{-1}), exception path. \\
-\texttt{UtenteDAOBenchmark.benchmarkGetUtenteByIdNotFound} & Attempt to find user ID \texttt{99999}, consumes returned value or \texttt{SQLException}. \\
-\texttt{WishListDAOBenchmark.benchmarkGetWishListWithNullUtente} & Null user input, exception path. \\
-\texttt{WishListDAOBenchmark.benchmarkGetWishListWithInvalidUtente} & Invalid user ID (\texttt{-1}), exception path. \\
-\texttt{RecensioneDAOBenchmark.benchmarkAddRecensione} & DB insert attempt (side effect), exceptions consumed if thrown. \\
-\texttt{LogoutServiceBenchmark.benchmarkLogoutValidSession} & Logout using a minimal \texttt{HttpSession} proxy; consumes session. \\
-\texttt{ConnectionPoolBenchmark.benchmarkGetReleaseConnection} & Acquire/release a DB connection; requires DB availability (throws \texttt{SQLException}). \\
+\benchmethod{AdminServiceBenchmark}{benchmarkGetProdottoFound} & Happy path: retrieve existing product (ID 1), consumes result. \\
+\benchmethod{AdminServiceBenchmark}{benchmarkGetProdottoNotFound} & Error path: missing product (ID 99999), exceptions consumed. \\
+\benchmethod{AdminServiceBenchmark}{benchmarkInfoOrdineFound} & Happy path: retrieve existing order (ID 1), consumes result. \\
+\benchmethod{AdminServiceBenchmark}{benchmarkInfoOrdineNotFound} & Error path: missing order (ID 99999), exceptions consumed. \\
+\benchmethod{OrdineDAOBenchmark}{benchmarkGetOrdineByIdValid} & Happy path: DB fetch for order (ID 1). \\
+\benchmethod{OrdineDAOBenchmark}{benchmarkGetOrdineByIdInvalid} & Error path: invalid ID (\texttt{-1}), validation/exception path. \\
+\benchmethod{OrdineDAOBenchmark}{benchmarkGetProdottoOrdineNull} & Error path: null input, validation/exception path. \\
+\benchmethod{SpecificheDAOBenchmark}{benchmarkGetSpecificheValidId} & DB-dependent lookup for product ID 1 (catches \texttt{SQLException} if DB is down). \\
+\benchmethod{SpecificheDAOBenchmark}{benchmarkGetSpecificheInvalidId} & Invalid product ID (\texttt{-1}), exception path. \\
+\benchmethod{UtenteDAOBenchmark}{benchmarkGetUtenteByIdNotFound} & Attempt to find user ID \texttt{99999}, consumes returned value or \texttt{SQLException}. \\
+\benchmethod{WishListDAOBenchmark}{benchmarkGetWishListWithNullUtente} & Null user input, exception path. \\
+\benchmethod{WishListDAOBenchmark}{benchmarkGetWishListWithInvalidUtente} & Invalid user ID (\texttt{-1}), exception path. \\
+\benchmethod{RecensioneDAOBenchmark}{benchmarkAddRecensione} & DB insert attempt (side effect), exceptions consumed if thrown. \\
+\benchmethod{LogoutServiceBenchmark}{benchmarkLogoutValidSession} & Logout using a minimal \texttt{HttpSession} proxy; consumes session. \\
+\benchmethod{ConnectionPoolBenchmark}{benchmarkGetReleaseConnection} & Acquire/release a DB connection; requires DB availability (throws \texttt{SQLException}). \\
 \hline
 \end{tabular}
 \end{table}
@@ -151,19 +154,20 @@ Benchmark names in the provided output match the updated repository version, the
 
 \begin{table}[h]
 \centering
+\small
 \caption{Measured JMH results (AverageTime, ms/op) for the selected scope.}
 \label{tab:jmh-results}
-\begin{tabular}{p{0.44\textwidth} p{0.28\textwidth} p{0.10\textwidth}}
+\begin{tabular}{p{0.45\textwidth} p{0.32\textwidth} p{0.10\textwidth}}
 \hline
 \textbf{Benchmark} & \textbf{Scenario} & \textbf{Score} \\
 \hline
-\texttt{AdminServiceBenchmark.benchmarkGetProdottoFound}    & Happy path (ID 1)     & 0.079 \\
-\texttt{AdminServiceBenchmark.benchmarkGetProdottoNotFound} & Error path (missing)  & 0.139 \\
-\texttt{AdminServiceBenchmark.benchmarkInfoOrdineFound}     & Happy path (ID 1)     & 0.216 \\
-\texttt{AdminServiceBenchmark.benchmarkInfoOrdineNotFound}  & Error path (missing)  & 0.085 \\
-\texttt{OrdineDAOBenchmark.benchmarkGetOrdineByIdValid}     & Happy path (ID 1)     & 0.104 \\
-\texttt{OrdineDAOBenchmark.benchmarkGetOrdineByIdInvalid}   & Error path (ID -1)    & 0.001 \\
-\texttt{OrdineDAOBenchmark.benchmarkGetProdottoOrdineNull}  & Error path (null)     & 0.001 \\
+\benchmethod{AdminServiceBenchmark}{benchmarkGetProdottoFound}    & Happy path (ID 1)     & 0.079 \\
+\benchmethod{AdminServiceBenchmark}{benchmarkGetProdottoNotFound} & Error path (missing)  & 0.139 \\
+\benchmethod{AdminServiceBenchmark}{benchmarkInfoOrdineFound}     & Happy path (ID 1)     & 0.216 \\
+\benchmethod{AdminServiceBenchmark}{benchmarkInfoOrdineNotFound}  & Error path (missing)  & 0.085 \\
+\benchmethod{OrdineDAOBenchmark}{benchmarkGetOrdineByIdValid}     & Happy path (ID 1)     & 0.104 \\
+\benchmethod{OrdineDAOBenchmark}{benchmarkGetOrdineByIdInvalid}   & Error path (ID -1)    & 0.001 \\
+\benchmethod{OrdineDAOBenchmark}{benchmarkGetProdottoOrdineNull}  & Error path (null)     & 0.001 \\
 \hline
 \end{tabular}
 \end{table}
