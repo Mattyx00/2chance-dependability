@@ -5,9 +5,17 @@
 \section{Context and Goals}
 Performance is a core non-functional requirement: beyond functional correctness, the system should remain responsive, predictable, and stable under typical workload conditions. In a dependability-oriented project, performance is not just a user-experience concern: if critical operations degrade or time out, performance becomes an availability issue. In addition, a backend that spends too much time per request is easier to overload, which increases exposure to denial-of-service scenarios.
 
+In this context, \textit{performance testing} refers to the systematic evaluation of performance features (e.g., execution time and throughput) of software components in order to detect performance regressions over time. In practice, it is often organized as \textit{benchmarking}, i.e., executing an artificially generated workload against the system (or part of it) to compare versions, configurations, or environments. When the focus narrows to very small units of code (e.g., individual Java methods), the activity becomes \textit{microbenchmarking}.\par
+
+JMH (Java Microbenchmark Harness) is an annotation-based framework specifically designed to build, run, and analyze Java microbenchmarks. Its key value is methodological: on the JVM, just-in-time compilation and other optimizations can make naive timing measurements unstable or misleading, especially at the beginning of execution. JMH provides structured warmup and measurement phases, controlled JVM forking, and utilities (such as \texttt{Blackhole}) to reduce measurement artifacts.\par
+
 The project checklist explicitly requires microbenchmarks with JMH (Java Microbenchmark Harness). For this reason, the work described in this chapter focuses on \emph{microbenchmarking} selected backend components rather than executing full end-to-end load tests. The intent is to isolate representative operations that are likely to dominate latency (data-access and service orchestration), measure them in a controlled way, and establish a baseline that can be compared across future changes.
 
 \section{Methodology}
+This chapter adopts a microbenchmarking perspective: instead of stressing the whole application end-to-end, it repeatedly executes carefully selected operations and measures their cost in isolation. JMH supports this approach by letting benchmarks declare, through annotations, how measurements should be produced (threads, forks, warmup and measurement iterations, and output units).\par
+
+In our case, benchmarks are configured to report \texttt{AverageTime} (\texttt{avgt}) because the goal is to reason about latency per operation (ms/op) for DB-backed calls and for fail-fast validation paths. Other modes exist (e.g., throughput or sample time), but they were not prioritized for the baseline reported here.\par
+
 \subsection{Selection of Performance-Critical Scenarios}
 The starting point is the identification of ``slow or expensive'' use cases at the backend level. Without production telemetry, the selection was engineering-driven: database interactions (queries and inserts) and service methods that combine validation with DAO calls often dominate request time. Therefore, the benchmark suite targets:
 \begin{itemize}
