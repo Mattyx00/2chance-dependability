@@ -2,13 +2,17 @@
 
 \section{Formal Verification Strategy for Model Beans}
 
-After successfully completing the unit testing phase, we started the formal verification of the code's correctness. As already discussed in unit testing, the best strategy, especially in the context of a web application, is to begin with the most atomic components, namely those that do not depend on other components and instead provide the information base used by the rest of the system.\\
+After successfully completing the unit testing phase, we started the formal specification and verification of the code's correctness. As already discussed in unit testing, the best strategy, especially in the context of a web application, is to begin with the most atomic components, namely those that do not depend on other components and instead provide the information base used by the rest of the system.\\
 
 In our application, which follows an MVC architecture, the most elementary layer is represented by the \emph{model beans}. They model the domain entities and are used across the entire system by the other application layers (DAOs, services and controllers) as shared data structures for exchanging and managing information. Consequently, formally verifying the model beans first reduces the number of implicit assumptions: verifying more complex components would require assuming that the components they depend on are already correct, introducing a logical dependency that conflicts with the philosophy of formal verification, which aims to establish correctness through progressive and controlled steps.\\
 
-A further advantage comes from the implementation nature of model beans: they typically use simple constructs and, as a rule, do not include external dependencies such as database connections, remote service calls, third-party libraries, or infrastructure components. These elements common in DAOs, services, and controllers, make formal modeling significantly more demanding because they expand the state space and increase the complexity of the required specifications (e.g. to correctly describe preconditions, postconditions, and invariants in the presence of side effects or external interactions).\\
+A further advantage comes from the implementation nature of model beans: they typically use simple constructs and, as a rule, do not include external dependencies such as database connections, remote service calls, third-party libraries, or infrastructure components. These elements common in DAOs, services, and controllers, make formal modeling significantly more demanding because they expand the state space and increase the complexity to correctly describe the required specifications (preconditions, postconditions and invariants) in the presence of side effects or external interactions.\\
 
-It is worth noting that formal verification is mainly adopted in \emph{safety-critical} or \emph{mission-critical} domains such as firmware, medical devices, avionics, or industrial systems, where a fault may lead to failures with severe consequences (loss of human lives, substantial economic damage or violations of regulatory requirements). In web applications, by contrast, systematic adoption of formal verification is less common because it requires a significant investment in specification writing, property validation, and debugging based on counterexamples; moreover, it can slow software evolution, since any structural change requires coherent updates to the specifications. In such contexts, the overall cost often outweighs the expected benefits. In our case, however, the objective is educational and methodological: to demonstrate that formal techniques can be applied to a selected yet meaningful portion of the system, achieving increased reliability and stronger traceability of correctness properties.\\
+It is worth noting that formal verification is mainly adopted in \emph{safety-critical} or \emph{mission-critical} domains such as firmware, medical devices, avionics, or industrial systems, where a fault may lead to failures with severe consequences (loss of human lives, substantial economic damage or violations of regulatory requirements). In web applications, by contrast, systematic adoption of formal verification is less common because it requires a significant investment in specification writing, property validation, and debugging based on counterexamples which significantly slow software evolution, since any structural change requires coherent updates to the specifications. In such contexts, the overall cost often outweighs the expected benefits. In our case, however, the objective is educational and methodological to demonstrate that formal techniques can be applied to a selected yet meaningful portion of the system, achieving increased reliability and stronger traceability of correctness properties.\\
+
+\section{Dependency Analysis}
+
+Since formal verification systematically explores the state space and requires rigorous specifications (class invariants, field constraints, method preconditions and postconditions), it is essential to reduce complexity by decomposing the work into smaller, manageable tasks. The adopted strategy is to partition the model beans into multiple groups, verifying first those with fewer dependencies and then the more interconnected ones, in order to control state-space growth and improve specification maintainability.\\
 
 Our web application includes nine model beans: \textbf{Utente}, \textbf{Specifiche}, \textbf{Ordine}, \textbf{Recensione}, \textbf{Carrello}, \textbf{ProdottoCarrello}, \textbf{WishList}, \textbf{Categoria}, \textbf{Prodotto}. The first operational step is the construction of the \emph{class diagram}, which is necessary to explicitly identify dependencies among classes and to establish a coherent verification order.\\
 
@@ -18,10 +22,6 @@ Our web application includes nine model beans: \textbf{Utente}, \textbf{Specific
 	\caption{In the diagram, arrows with a diamond represent aggregation relationships (a class has, as an attribute, an instance of another class), while dashed arrows represent usage dependencies (a class uses another class within its methods or logic). This distinction is relevant because, in formal verification, both forms of dependency may affect the modeling and the set of properties that must be specified.}
 	\label{fig:class-diagram-model-beans}
 \end{figure}
-
-Since formal verification systematically explores the state space and requires rigorous specifications (class invariants, field constraints, method preconditions and postconditions), it is essential to reduce complexity by decomposing the work into smaller, manageable tasks. The adopted strategy is to partition the model beans into homogeneous groups, verifying first those with fewer dependencies and then the more interconnected ones, in order to control state-space growth and improve specification maintainability.
-
-\section{Dependency Analysis}
 
 From the analysis of the class diagram, the following points emerge:
 \begin{enumerate}
@@ -35,7 +35,7 @@ From the analysis of the class diagram, the following points emerge:
 		\item a \textbf{Carrello} contains \textbf{ProdottoCarrello} items;
 		\item a \textbf{ProdottoCarrello} refers to a \textbf{Prodotto}.
 	\end{itemize}
-	This structure closes the cycle by returning to \textbf{Prodotto} through reviews. For this reason, an effective verification requires specifying the involved classes jointly: isolating a single class within the cycle would force unjustified assumptions about the others, weakening the meaning of the proof.
+	Since there is a dependency cycle, an effective verification requires specifying the involved classes jointly. Isolating a single class within the cycle would force unjustified assumptions about the others, weakening the meaning of the proof.
 	\item The \textbf{WishList} class depends on \textbf{Utente} and \textbf{Prodotto}; once the cyclic group has been verified, it can be verified afterwards with already established dependencies.\\
 \end{enumerate}
 
@@ -47,49 +47,53 @@ Based on these considerations, formal verification will be organized into the fo
 	\item \textbf{Fourth group:} WishList
 \end{itemize}
 
-\section{Verification Plan}
+\section{Formal Specification \& Verification Plan}
 
-For each group, a standardized procedure will be applied, aimed at:
+For each group, we adopt a standardized workflow designed to:
 \begin{enumerate}
-	\item deriving structural constraints (invariants) from the domain model;
-	\item defining method specifications (preconditions and postconditions) consistent with the expected behavior;
-	\item running the verification and analyzing any counterexamples;
-	\item iteratively refining the specifications until formal correctness is achieved for the considered group.\\
+	\item \textbf{Code simplification}: restructure each class so that its implementation relies only on basic language constructs and on methods of other classes that have already been verified;
+	\item \textbf{Formal specification}: define JML annotations that precisely capture the intended behaviour of the program, including:
+	\begin{itemize}
+		\item \textbf{Invariants}: admissible domains and consistency constraints for class attributes;
+		\item \textbf{Preconditions}: admissible domains and required properties for input parameters supplied by the caller;
+		\item \textbf{Postconditions}: guarantees on the callee’s results and on the resulting state after method execution;
+		\item \textbf{Assertions}: intermediate constraints on local variables and program states within method bodies;
+		\item \textbf{Assumptions}: properties that are taken as true when they cannot be discharged by the verifier due to unavoidable modelling or code-complexity limitations, yet are guaranteed by the surrounding system context.
+	\end{itemize}
+	\item \textbf{Formal verification and refinement}: run the verification, inspect any reported counterexamples, and iteratively refine both code guards and specifications until the considered group satisfies the required correctness properties.
 \end{enumerate}
 
-As done for unit testing, these operations will be automated through a prompt pipeline, making the process repeatable, traceable, and less prone to manual errors. Afterwards, we manually performed an in-depth review of the AI agent’s output, since it is rarely flawless. The operations are listed below in the order in which they will be executed. 
+As done for unit testing, these operations will be automated through a prompt pipeline manually run on the Google Antigravity environment, making the process repeatable, traceable, and less prone to manual errors. Afterwards, we manually performed an in-depth review of the AI agent’s output, since it is rarely flawless. The operations are listed below in the order in which they will be executed. 
 
 \subsection{Class Code Simplification}
 
-OpenJML performs formal verification by translating both Java code and its JML specifications into a mathematical/logical model (typically discharged via SAT/SMT solving). For this translation to remain tractable and for specifications to be realistically writable, the code under analysis must be as simple as possible. Therefore, before writing formal specifications and running verification, the class implementation should be refactored into a verification-friendly form.\\
+OpenJML performs formal verification by translating both Java code and its JML specifications into a mathematical/logical model typically discharged via SAT/SMT solving. For this translation to remain tractable and for specifications to be realistically writable, the code under analysis must be as simple as possible. Therefore, before writing formal specifications and running verification, the class implementation should be refactored into a verification-friendly form.\\
 
-In practice, this means avoiding complex library features and opaque behaviors, limiting side effects, and reducing reliance on intricate object graphs. Whenever possible, methods should use only standard-library types (e.g., \texttt{Object}, \texttt{String}, primitive wrappers) or project-defined classes that have already been specified in JML and successfully verified.\\
+In practice, this means avoiding complex library features and opaque behaviors, limiting side effects and reducing reliance on intricate object graphs. Whenever possible, methods should use only standard-library types (e.g. \texttt{Object}, \texttt{String}, primitive wrappers) or project-defined classes that have already been specified in JML and successfully verified.\\
 
-Moreover, even methods from seemingly basic classes such as \texttt{String} and \texttt{Object} should be replaced with a simple algorithm whenever possible: during our analysis, several model beans that relied heavily on \texttt{String} utilities such as \texttt{isEmpty()}, \texttt{trim()}, and \texttt{contains()} triggered errors when OpenJML attempted to translate these calls into the underlying mathematical/logical model.\\
-
-This design choice is the reason why formal verification of the model beans is feasible within the project time constraints: unlike the model DAO, service, and controller layers, model beans do not rely on databases, external APIs, frameworks, or other infrastructure that would drastically enlarge the state space and complicate modeling; instead, they mainly use basic operations that can be straightforwardly replaced with simpler, verifier-friendly algorithms.\\
+Moreover, even methods from seemingly basic classes such as \texttt{String} and \texttt{Object} should be replaced with a simple algorithm whenever possible: during our analysis, several model beans that relied heavily on \texttt{String} utilities such as \texttt{isEmpty()}, \texttt{trim()}, and \texttt{contains()} triggered errors when OpenJML attempted to translate these calls into the underlying mathematical/logical model. This design choice is the reason why formal verification of the model beans is feasible within the project time constraints: because they mainly use basic operations that can be straightforwardly replaced with simpler, verifier-friendly algorithms.\\
 
 To support this step, we employ a prompt that configures a Java refactoring specialist which prepare the source code for formal verification with OpenJML. It addresses the black-box issues introduced by external methods calls (e.g. \texttt{trim()} or Java Streams) that verification engines often cannot model precisely. The task is to rewrite the class methods by replacing such library calls with explicit, primitive logic such as \texttt{for}/\texttt{while} loops and basic conditional statements, thereby making the implementation fully transparent to the underlying mathematical analysis.\\
 
-A strict zero-tolerance constraint is enforced on behavioral changes: the refactored code must preserve exact semantic equivalence and must handle all corner cases (including \texttt{null} values and exceptions) exactly as the original implementation, so as not to invalidate the existing unit tests. In this step, verifiability is explicitly prioritized over syntactic elegance or micro-optimizations.
+A strict zero-tolerance constraint is enforced on behavioral changes: the refactored code must preserve semantic equivalence and must handle all corner cases, such as \texttt{null} values and exceptions, already present in the original implementation, such that existing unit tests are not invalidated. In this step, verifiability is explicitly prioritized over syntactic elegance or micro-optimizations.
 
 \subsection{Definition of Formal Specifications Using Lightweight JML}
 
-JML can express formal specifications using either a \emph{lightweight} or a \emph{heavyweight} style. With \textbf{Lightweight JML}, the focus is on pragmatic, broadly applicable contracts that enforce basic safety and well-formedness properties such as non-null references, admissible ranges, and simple consistency constraints, without explicitly characterizing every execution path.\\
+JML can express formal specifications using either a \emph{lightweight} or a \emph{heavyweight} style. With \textbf{Lightweight JML}, the focus is on pragmatic, broadly applicable contracts that enforce basic safety and integrity properties such as non-null references, admissible ranges, and simple consistency constraints, without explicitly characterizing every execution path.\\
 
 With \textbf{Heavyweight JML}, by contrast, each relevant branch of execution is specified precisely, often separating normal and exceptional behavior and describing in detail how the method transforms data in each scenario. Heavyweight specifications can provide strong completeness guarantees, but they are considerably more demanding to write and maintain.
 
-In our initial attempt, we explored heavyweight specifications; however, achieving full verification coverage for all model beans with that approach would have exceeded by far the available effort budget (approximately 75 hours). We therefore adopted a lightweight strategy, which enables systematic detection and correction of domain and safety violations across all model-bean classes, rather than producing an exhaustive proof for only a small subset of them.\\
+In our initial attempt, we explored heavyweight specifications; however, achieving full verification coverage for all model beans with that approach would have exceeded by far the available effort budget of the team member in charge of formal specification and verification (approximately 75 hours). We therefore adopted a lightweight strategy, which enables systematic detection and correction of domain and safety violations across all model-bean classes, rather than producing an exhaustive proof for only a small subset of them.\\
 
-Moreover, given that the target system is an e-commerce web application (i.e. not safety-critical), applying Design by Contract through Lightweight JML constitutes an appropriately cautious and balanced verification level.
+Moreover, given that the target system is an e-commerce web application (i.e. not safety-critical), applying Design by Contract through Lightweight JML constitutes an appropriately cautious and balanced verification level.\\
 
-To support this step, we employ a prompt that configures an assistant specialized in generating \textbf{Lightweight JML} specifications. The assistant receives the path of a Java file and must return the full class content augmented with JML specification blocks, \textbf{without altering the original Java code}. The prompt enforces strict constraints to avoid modeling complex operations (e.g. advanced string manipulation, streams, or other constructs that are difficult for OpenJML to model reliably). Instead, it encourages simpler contracts such as non-nullness and simple range constraints, improving both runtime safety and verifiability while avoiding heavy quantification and unsustainable proof obligations.
+To support this step, we employ a prompt that configures an assistant specialized in generating \textbf{Lightweight JML} specifications. The assistant receives the path of a Java file and must return the full class content augmented with JML specification blocks, \textbf{without altering the original Java code}. The prompt enforces strict constraints to avoid modeling complex operations (e.g. advanced string manipulation, streams or other constructs that are difficult for OpenJML to model reliably). Instead, it encourages simpler contracts such as non-nullness and simple range constraints, improving both runtime safety and verifiability while avoiding heavy quantification and unsustainable proof obligations.
 
 \subsection{Resolution of Issues Detected by OpenJML}
 
-Once the class structure has been simplified and Lightweight JML specifications have been added, we run formal verification with OpenJML. The tool translates the Java code and the JML contracts into a logical model and checks whether any reachable state within the explored state space leads to a contradiction, meaning that the program’s behavior violates the declared specifications, then it produces a counterexample.\\
+Once the class structure has been simplified and Lightweight JML specifications have been added, we run formal verification with OpenJML. The tool translates the Java code and the JML contracts into a logical model and checks whether any reachable state within the explored state space leads to a contradiction, meaning that the program’s behavior violates the declared specifications, then it produces a counterexample. At the end, OpenJML output log is stored in a file.\\
 
-We then save the OpenJML output log and feed it to the final prompt of the pipeline. This prompt analyzes the log, identifies the first counterexample, maps it to the corresponding source lines, and proposes a corrective change that resolves the contradiction between code and specifications.\\
+To support this step, we employ a prompt that analyzes the log, identifies the first counterexample, maps it to the corresponding source lines, and proposes a corrective change that resolves the contradiction between code and specifications.\\
 
 A crucial aspect of this step is handling cases in which OpenJML reports a violation that is not due to an actual defect, but to modeling limitations or conservative assumptions (e.g. a field considered potentially \texttt{null} due to Java-level semantics or tool-side abstraction). In such cases, we introduce targeted assumptions or annotations that explicitly constrain the analysis so that OpenJML can rely on the intended invariants at the relevant program points, without weakening the specification globally.\\
 
@@ -104,3 +108,67 @@ The key decision is to classify each finding as either:
 \section{Corrections to Have Program Correctness}
 
 During the process of specifications definition using JML annotations and the process of verification using OpenJML, have been introduced some specific changes to the business logic within the default constructors of \textbf{Utente}, \textbf{Recensione}, \textbf{Ordine}, and \textbf{ProdottoCarrello} to enforce class invariants from the moment of instantiation. Previously, these constructors relied on implicit default values (leaving fields null or 0), but the updated implementation explicitly initializes them to valid non-null states such as assigning empty strings, empty lists, current timestamps, or default object instances, thereby preventing potential NullPointerExceptions and ensuring strictly valid initial states for static verification.
+
+\section{Formal Verification Outcome of OpenJML on Model Beans}
+
+This section reports the results of the formal verification activity carried out with \texttt{OpenJML} on the classes in the \texttt{model.beans} package. The verification was executed as a \emph{static} analysis: \texttt{OpenJML} translated the Java code and its JML contracts into verification conditions (VCs) and discharged them using the SMT solver \texttt{Z3} (as indicated in the tool output). For each analyzed method, the log follows a recurring pattern: the prover is invoked, the proof obligations are generated, and the analysis concludes with messages such as ``Method assertions are validated'' and ``no warnings''. This pattern indicates that all generated proof obligations were successfully discharged by the solver for the inspected methods.
+
+\subsection{Global Results}
+After approximately 20--30 refinement iterations alternating between \texttt{OpenJML} verification runs and targeted fixes addressing the following aspects:
+\begin{itemize}
+	\item missing defensive guards in the code (e.g., null checks, boundary checks);
+	\item inaccurate or incomplete JML clauses.
+\end{itemize}
+The final \texttt{OpenJML} report indicates a fully successful verification of the target package, every inspected method was discharged as \emph{valid}, with no \emph{invalid} proofs, no \emph{infeasible} paths, no solver \emph{timeouts}, and no tool \emph{errors}; additionally, all analyzed classes were proved. Overall, these results provide strong evidence that, under the adopted verification configuration and the final set of JML specifications, the implementation of the \texttt{model.beans} package is \emph{consistent} with its declared contracts.\\
+
+The tool output provides the following global counts of the successful \texttt{OpenJML} summary report: 
+
+\begin{itemize}
+	\item \textbf{Valid:} 104
+	\item \textbf{Invalid:} 0
+	\item \textbf{Infeasible:} 0
+	\item \textbf{Timeout:} 0
+	\item \textbf{Error:} 0
+	\item \textbf{Skipped:} 0
+	\item \textbf{Total methods analyzed:} 104
+	\item \textbf{Classes proved:} 9/9
+	\item \textbf{Total duration:} 306.7 seconds
+\end{itemize}
+
+The log also reports the cumulative proving time for each class, as shown in Table~\ref{tab:openjml-per-class-time}.
+
+\begin{table}[t]
+	\centering
+	\caption{Per-class verification outcome and cumulative proving time (as reported by \texttt{OpenJML}).}
+	\label{tab:openjml-per-class-time}
+	\begin{tabular}{l l r}
+		\hline
+		\textbf{Class} & \textbf{Outcome} & \textbf{Time} \\
+		\hline
+		\texttt{Carrello}          & all proved & 21.97 s \\
+		\texttt{ProdottoCarrello}  & all proved & 14.68 s \\
+		\texttt{Prodotto}          & all proved & 78.79 s \\
+		\texttt{Categoria}         & all proved & 7.10 s \\
+		\texttt{Recensione}        & all proved & 44.99 s \\
+		\texttt{Specifiche}        & all proved & 10.50 s \\
+		\texttt{Utente}            & all proved & 74.69 s \\
+		\texttt{Ordine}            & all proved & 39.47 s \\
+		\texttt{WishList}          & all proved & 10.53 s \\
+		\hline
+	\end{tabular}
+\end{table}
+
+Notably, \texttt{OpenJML} also discharged proofs for non-trivial methods (i.e., beyond plain getters/setters), including:
+\begin{itemize}
+	\item \texttt{Carrello.cambiaQuantita(Prodotto,int)} (about 10.29 s);
+	\item \texttt{Utente.hashPassword(String)} (about 12.45 s).
+\end{itemize}
+
+\subsection{Per-Class Outcome and Proof Effort}
+All the model bean classes included in the analysis completed without verification warnings. The logs also report non-negligible proving times for some classes and methods, which typically correlates with higher complexity in the control flow, richer specifications, or solver-intensive reasoning. For example, methods involving updates on collections (e.g. quantity changes inside a cart) or non-trivial computations (e.g. password hashing utilities) generally required more solver time than simple accessors (getters/setters). Although proof time is not a correctness indicator, it is a useful proxy for identifying hotspots where specifications and code interactions generate more complex verification conditions.
+
+\subsection{Interpretation and Limitations}
+The absence of warnings and invalid proofs is a strong indicator that the code satisfies the JML contracts that were actually checked by \texttt{OpenJML}. However, it is essential to emphasize that formal verification is only as strong as the specifications provided. A ``proved'' result guarantees that the implementation respects the expressed preconditions, postconditions, invariants, and assertions, but it does not automatically imply full \emph{business correctness} unless such domain rules are explicitly encoded in the contracts. In practice, overly permissive postconditions, missing invariants (e.g. non-null constraints, value bounds) or incomplete frame conditions can lead to proofs that are valid yet insufficient to capture the intended behavior.
+
+\subsection{Conclusion}
+In summary, the \texttt{OpenJML} analysis of the \texttt{model.beans} package concluded successfully: all inspected methods were proved valid and all classes were verified without warnings under the adopted configuration. This outcome provides solid evidence of consistency between the model-bean implementations and their JML contracts, and it establishes a strong baseline for further strengthening specifications toward higher semantic coverage and assurance.
