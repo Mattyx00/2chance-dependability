@@ -94,7 +94,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           python3 - <<'PY'
-          import os, time, re, json, urllib.request
+          import os, time, re, json, urllib.request, base64, glob
 
           token = os.environ["SONAR_TOKEN"]
           def req(url):
