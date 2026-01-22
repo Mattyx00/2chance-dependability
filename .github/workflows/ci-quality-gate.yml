@@ -51,6 +51,22 @@ jobs:
   scan_sonarcloud:
     name: Scan (SonarQube Cloud) - Quality Gate
     runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          # Qui impostiamo la password del database nel container
+          MYSQL_ROOT_PASSWORD: admin 
+          MYSQL_DATABASE: second_chance
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -u root -padmin"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
     permissions:
       contents: read
     steps:
@@ -61,7 +77,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: "21"
+          java-version: "19"
           cache: maven
 
       - name: Sonar analysis (Maven)
