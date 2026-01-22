@@ -6,42 +6,42 @@
 
 \vspace{0.3cm}
 
-All’interno del nostro progetto utilizzeremo il mutation testing grazie a PiTest che ci permette di superare i limiti della semplice coverage per la quale utilizziamo jacoco ed individuare bug nel codice sorgente.
+Within our project, we will use mutation testing thanks to PiTest, which allows us to overcome the limitations of simple coverage (for which we use Jacoco) and identify bugs in the source code.
 
 \vspace{0.4cm}
 
-\textbf{Tool utilizzato: pitest}
+\textbf{Tool used: pitest}
 
 \vspace{0.2cm}
 
-Come tool per il mutation testing è stato selezionato pitest come visto a lezione.  
-Permette di essere integrato facilmente con Maven e supporta Junit 5.  
-La versione specifica utilizzata nel nostro progetto e funzionante è la 1.15.0.
+Pitest was selected as the mutation testing tool, as seen in class.
+It allows for easy integration with Maven and supports Junit 5.
+The specific working version used in our project is 1.15.0.
 
-\section*{Configurazione tecnica ed utilizzo}
+\section*{Technical configuration and usage}
 
-All’interno del nostro pom.xml abbiamo inserito un profilo Maven chiamato pitest che permette di eseguire il mutation testing lanciando il comando:
+Inside our pom.xml, we inserted a Maven profile named pitest that allows executing mutation testing by running the command:
 
 \begin{center}
 \texttt{mvn test-compile pitest:mutationCoverage -P pitest}
 \end{center}
 
-Le classi testate sono i beans i dao e i services.
+The tested classes are the beans, the daos, and the services.
 
 \vspace{0.3cm}
 
-Per l’analisi abbiamo utilizzato i mutatori standard di pitest:
+For the analysis, we used the standard pitest mutators:
 \begin{itemize}
-    \item Inversione dellec ondizioni
-    \item Sostituizione dei valori di ritorno
-    \item Modifica degli operatori aritmetici
+    \item Condition inversion
+    \item Return value substitution
+    \item Arithmetic operator modification
 \end{itemize}
 
-I risultati li troveremo nella cartella \texttt{target/pit-reports}.
+We will find the results in the \texttt{target/pit-reports} folder.
 
-\section*{Primi risultati}
+\section*{First results}
 
-I primi risultati evidenziano scarsi risultati per quanto riguarda i test su dao e services.
+The first results highlight poor results regarding tests on daos and services.
 
 \vspace{0.4cm}
 
@@ -49,13 +49,13 @@ I primi risultati evidenziano scarsi risultati per quanto riguarda i test su dao
 \resizebox{\textwidth}{!}{
 \begin{tabular}{|l|c|c|c|c|}
 \hline
-\textbf{Nome Pacchetto} & \textbf{Numero di Classi} & \textbf{Line Coverage} & \textbf{Mutation Coverage} & \textbf{Test Strength} \\
+\textbf{Package Name} & \textbf{Number of Classes} & \textbf{Line Coverage} & \textbf{Mutation Coverage} & \textbf{Test Strength} \\
 \hline
 model.beans & 9 & 99\% (292/294) & 97\% (136/140) & 97\% (136/140) \\
 model.dao & 12 & 55\% (433/788) & 30\% (103/344) & 35\% (103/294) \\
 services & 19 & 60\% (339/565) & 45\% (96/214) & 47\% (96/203) \\
 \hline
-\textbf{TOTALE PROGETTO} & 51 & 53\% (1064/1999) & 42\% (335/797) & 52\% (335/637) \\
+\textbf{PROJECT TOTAL} & 51 & 53\% (1064/1999) & 42\% (335/797) & 52\% (335/637) \\
 \hline
 \end{tabular}
 }
@@ -63,9 +63,9 @@ services & 19 & 60\% (339/565) & 45\% (96/214) & 47\% (96/203) \\
 
 \vspace{0.3cm}
 
-Il problema è stato risolto aumentando i test e rendendoli più specifici.
+The problem was resolved by increasing the tests and making them more specific.
 
-\section*{Risultati finali}
+\section*{Final results}
 
 \vspace{0.4cm}
 
@@ -73,13 +73,13 @@ Il problema è stato risolto aumentando i test e rendendoli più specifici.
 \resizebox{\textwidth}{!}{
 \begin{tabular}{|l|c|c|c|c|}
 \hline
-\textbf{Nome Pacchetto} & \textbf{Numero di Classi} & \textbf{Line Coverage} & \textbf{Mutation Coverage} & \textbf{Test Strength} \\
+\textbf{Package Name} & \textbf{Number of Classes} & \textbf{Line Coverage} & \textbf{Mutation Coverage} & \textbf{Test Strength} \\
 \hline
 model.beans & 9 & 99\% (292/294) & 97\% (136/140) & 97\% (136/140) \\
 model.dao & 12 & 77\% (606/788) & 50\% (173/344) & 59\% (173/294) \\
 services & 19 & 81\% (456/565) & 83\% (177/214) & 87\% (177/203) \\
 \hline
-\textbf{TOTALE PROGETTO} & 51 & 68\% (1354/1999) & 61\% (486/797) & 76\% (486/637) \\
+\textbf{PROJECT TOTAL} & 51 & 68\% (1354/1999) & 61\% (486/797) & 76\% (486/637) \\
 \hline
 \end{tabular}
 }

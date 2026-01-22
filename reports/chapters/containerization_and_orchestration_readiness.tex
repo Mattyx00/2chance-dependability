@@ -2,34 +2,34 @@
 
 \section*{Context: Docker \& DockerHub}
 
-E’ stato predisposta una strategia di containerizzazione per il nostro progetto per poter distribuire il progetto più facilmente garantendo portabilità, isolamento delle dipendenze e coerenza tra gli ambienti di sviluppo.
+A containerization strategy has been prepared for our project to distribute the project more easily, ensuring portability, dependency isolation, and consistency between development environments.
 
-\section*{Strategia di containerizzazione}
+\section*{Containerization Strategy}
 
-E’ stato creato un dockerfile che costruisce il nostro applicativo in più step:
+A Dockerfile was created that builds our application in multiple steps:
 
 \begin{itemize}
-    \item \textbf{Build del war file}: attraverso il comando \texttt{mvn clean package -Dmaven.test.skip=true} viene creato il war file su un immagine \texttt{maven:3.9-eclipse-temurin-19}
-    \item \textbf{Applicazione}: Copia del war file all’interno dell’immagine \texttt{tomcat:9.0}
-    \item \textbf{Network}: viene esposta la porta 8080 per accedere all’applicazione
+    \item \textbf{War file build}: through the command \texttt{mvn clean package -Dmaven.test.skip=true}, the war file is created on a \texttt{maven:3.9-eclipse-temurin-19} image
+    \item \textbf{Application}: Copying of the war file inside the \texttt{tomcat:9.0} image
+    \item \textbf{Network}: port 8080 is exposed to access the application
 \end{itemize}
 
 \section*{Docker compose}
 
-Dato che la nostra architettura prevede un database che attualmente non è hostato online è stato necessario creare un docker compose che inizializzasse sia l’immagine dell’applicazione creata precedentemente sia il database.
+Since our architecture includes a database that is currently not hosted online, it was necessary to create a docker compose that initializes both the application image created previously and the database.
 
-Avremo quindi due services:
+We will therefore have two services:
 \begin{itemize}
-    \item \textbf{webapp}: l’applicazione creata precedentemente
-    \item \textbf{mysql-db}: il database mysql che viene inizializzato su un'immagine \texttt{mysql:8.0}. Inoltre il db viene inizializzato con i dati del dump \texttt{db\_import.sql}
+    \item \textbf{webapp}: the application created previously
+    \item \textbf{mysql-db}: the mysql database which is initialized on a \texttt{mysql:8.0} image. Furthermore, the db is initialized with data from the dump \texttt{db\_import.sql}
 \end{itemize}
 
 \section*{CI/CD}
 
-La containerizzazione è principale nella nostra pipeline di automazione gestita con le GitHub Actions.  
-Infatti ad ogni push verrà eseguita una github action che ricostruirà l’immagine ed eseguirà tutti i test e le operazione necessarie sull’immagine docker runnata.
+Containerization is central to our automation pipeline managed with GitHub Actions.
+In fact, upon every push, a github action will be executed that will rebuild the image and execute all tests and necessary operations on the running docker image.
 
-Infatti l’ultima operazione della nostra action è il push della nostra immagine su docker hub tramite il seguente step:
+Indeed, the last operation of our action is the push of our image to docker hub via the following step:
 
 \begin{verbatim}
 - name: Build and push Docker image
