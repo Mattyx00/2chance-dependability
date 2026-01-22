@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2026.1.3)  22 JAN 2026 11:17
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2026.1.3)  22 JAN 2026 13:15
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -478,7 +478,22 @@ Underfull \hbox (badness 10000) in paragraph at lines 56--57
 
  []
 
+
+Underfull \hbox (badness 10000) in paragraph at lines 61--63
+
+ []
+
 [8]
+Underfull \hbox (badness 10000) in paragraph at lines 67--69
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 73--75
+
+ []
+
+
 Underfull \hbox (badness 10000) in paragraph at lines 76--77
 
  []
@@ -541,7 +556,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 39--40
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 70--71
+Underfull \hbox (badness 10000) in paragraph at lines 69--71
 
  []
 
@@ -561,12 +576,12 @@ Underfull \hbox (badness 10000) in paragraph at lines 76--77
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 82--83
+Underfull \hbox (badness 10000) in paragraph at lines 78--79
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 84--85
+Underfull \hbox (badness 10000) in paragraph at lines 83--85
 
  []
 
@@ -575,35 +590,50 @@ Underfull \hbox (badness 10000) in paragraph at lines 86--87
 
  []
 
-[15]
+
 Underfull \hbox (badness 10000) in paragraph at lines 88--89
 
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 94--95
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 96--97
+[15]
+Underfull \hbox (badness 10000) in paragraph at lines 90--91
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 108--109
+Underfull \hbox (badness 10000) in paragraph at lines 92--93
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 97--99
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 100--101
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 102--103
 
  []
 
 [16]
-Overfull \hbox (0.85698pt too wide) in paragraph at lines 153--154
+Underfull \hbox (badness 10000) in paragraph at lines 114--115
+
+ []
+
+
+Overfull \hbox (0.85698pt too wide) in paragraph at lines 159--160
 []\T1/cmtt/m/n/12 OpenJML \T1/cmr/m/n/12 suc-cess-fully ver-i-fied all classes 
 in the \T1/cmtt/m/n/12 model.beans \T1/cmr/m/n/12 pack-age: ev-ery in-spected m
 ethod
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 153--154
+Underfull \hbox (badness 10000) in paragraph at lines 159--160
 
  []
 
@@ -875,17 +905,9 @@ Chapter 8.
 LaTeX2e <2025-11-01>
 L3 programming layer <2025-12-29>
  ***********
-
-
-Package rerunfilecheck Warning: File `report_software_dependability_project.out
-' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `report_software_dependability_proje
-ct.out':
-(rerunfilecheck)             Before: 9D2753ACEDD94349AE53D229A76965E4;18035
-(rerunfilecheck)             After:  82F3F0F286EB8A341290A28D98185D72;18078.
+Package rerunfilecheck Info: File `report_software_dependability_project.out' h
+as not changed.
+(rerunfilecheck)             Checksum: 82F3F0F286EB8A341290A28D98185D72;18078.
  ) 
 Here is how much of TeX's memory you used:
  10747 strings out of 467538
@@ -910,7 +932,7 @@ f-dist/fonts/type1/public/cm-super/sfrm1440.pfb><c:/Program Files/texlive/2025/
 texmf-dist/fonts/type1/public/cm-super/sfti1200.pfb><c:/Program Files/texlive/2
 025/texmf-dist/fonts/type1/public/cm-super/sftt1095.pfb><c:/Program Files/texli
 ve/2025/texmf-dist/fonts/type1/public/cm-super/sftt1200.pfb>
-Output written on report_software_dependability_project.pdf (39 pages, 705677 b
+Output written on report_software_dependability_project.pdf (39 pages, 706025 b
 ytes).
 PDF statistics:
  742 PDF objects out of 1000 (max. 8388607)

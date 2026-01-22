@@ -66,6 +66,8 @@ For each group, we adopt a standardized workflow designed to:
 As done for unit testing, these operations will be automated through a prompt pipeline manually run on the Google Antigravity environment, making the process repeatable, traceable, and less prone to manual errors. Afterwards, we manually performed an in-depth review of the AI agent’s output, since it is rarely flawless. The operations are listed below in the order in which they will be executed. 
 
 \subsection{Class Code Simplification}
+\noindent\textbf{Reference:} \texttt{src\textbackslash prompts\textbackslash formal\_verification\_and\_specification\textbackslash \\01\_implementation\_structure\_simplification}\\
+\textbf{Input:} Path of the class to refactor.\\
 
 OpenJML performs formal verification by translating both Java code and its JML specifications into a mathematical/logical model typically discharged via SAT/SMT solving. For this translation to remain tractable and for specifications to be realistically writable, the code under analysis must be as simple as possible. Therefore, before writing formal specifications and running verification, the class implementation should be refactored into a verification-friendly form.\\
 
@@ -78,6 +80,8 @@ To support this step, we employ a prompt that configures a Java refactoring spec
 A strict zero-tolerance constraint is enforced on behavioral changes: the refactored code must preserve semantic equivalence and must handle all corner cases, such as \texttt{null} values and exceptions, already present in the original implementation, such that existing unit tests are not invalidated. In this step, verifiability is explicitly prioritized over syntactic elegance or micro-optimizations.
 
 \subsection{Definition of Formal Specifications Using Lightweight JML}
+\noindent\textbf{Reference:} \texttt{src\textbackslash prompts\textbackslash formal\_verification\_and\_specification\textbackslash \\02\_jml\_annotations\_definition.txt}\\
+\textbf{Input:} Path of the class to annotate.\\
 
 JML can express formal specifications using either a \emph{lightweight} or a \emph{heavyweight} style. With \textbf{Lightweight JML}, the focus is on pragmatic, broadly applicable contracts that enforce basic safety and integrity properties such as non-null references, admissible ranges, and simple consistency constraints, without explicitly characterizing every execution path.\\
 
@@ -90,6 +94,8 @@ Moreover, given that the target system is an e-commerce web application (i.e. no
 To support this step, we employ a prompt that configures an assistant specialized in generating \textbf{Lightweight JML} specifications. The assistant receives the path of a Java file and must return the full class content augmented with JML specification blocks, \textbf{without altering the original Java code}. The prompt enforces strict constraints to avoid modeling complex operations (e.g. advanced string manipulation, streams or other constructs that are difficult for OpenJML to model reliably). Instead, it encourages simpler contracts such as non-nullness and simple range constraints, improving both runtime safety and verifiability while avoiding heavy quantification and unsustainable proof obligations.
 
 \subsection{Resolution of Issues Detected by OpenJML}
+\noindent\textbf{Reference:} \texttt{src\textbackslash prompts\textbackslash formal\_verification\_and\_specification\textbackslash \\03\_openjml\_diagnostics\_and\_repair.txt}\\
+\textbf{Input:} Path of the class to verify; path of the OpenJML output log.\\
 
 Once the class structure has been simplified and Lightweight JML specifications have been added, we run formal verification with OpenJML. The tool translates the Java code and the JML contracts into a logical model and checks whether any reachable state within the explored state space leads to a contradiction, meaning that the program’s behavior violates the declared specifications, then it produces a counterexample. At the end, OpenJML output log is stored in a file.\\
 

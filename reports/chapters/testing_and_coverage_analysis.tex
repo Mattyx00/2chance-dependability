@@ -59,19 +59,19 @@ Our Multi-Stage Prompting Pipeline is both \emph{data-parallel} and \emph{task-p
 
 \subsection{Automated Code Refactoring (Defensive Programming)}
 \noindent\textbf{Reference:} \texttt{src\textbackslash prompts\textbackslash unit\_testing\textbackslash 01\_implementation\_refactoring.txt}\\
-\textbf{Input:} Path of the class to refactor.
+\textbf{Input:} Path of the class to refactor.\\
 
 \noindent Prior to test-case generation, the codebase undergoes a rigorous refactoring step to ensure structural robustness. If business logic permits invalid states (e.g. \texttt{null} references or negative numerical values), an AI agent may generate tests that validate, rather than expose, these flaws. Consequently, our primary objective is to enforce \emph{Design by Contract} principles. We instruct the agent to analyze the source code and implement defensive checks, ensuring that appropriate unchecked exceptions (e.g. \texttt{IllegalArgumentException}) are thrown immediately upon detecting invalid inputs. This prevents the propagation of invalid states and guarantees that the subsequent test suite is constructed on a foundation of logically sound code.
 
 \subsection{Automated Tests Design (Category-Partition Method)}
 \noindent\textbf{Reference:} \texttt{src\textbackslash prompts\textbackslash unit\_testing\textbackslash 02\_category\_partition\_testing.txt}\\
-\textbf{Input:} Path of the class to analyze; path of the folder where Category-Partition reports will be stored.
+\textbf{Input:} Path of the class to analyze; path of the folder where Category-Partition reports will be stored.\\
 
 \noindent To mitigate the bias frequently exhibited by Large Language Models where only optimal success scenarios are verified we decouple test-case design from test implementation. We employ the \emph{Category-Partition Method} (CPM), a specification-based technique. In this phase, the agent decomposes the code into functional units, identifying \emph{categories} (input characteristics) and \emph{choices} (representative values). The output is a formal report of \emph{test frames}: specific combinations of inputs that determine expected behaviors. This forces the AI to account for edge cases and boundary values before any test code is written.
 
 \subsection{Automated Tests Implementation}
 \noindent\textbf{Reference:} \texttt{src\textbackslash prompts\textbackslash unit\_testing\textbackslash 03\_unit\_testing\_implementation.txt}\\
-\textbf{Input:} Path of the class to test; path of the Category-Partition report for the class.
+\textbf{Input:} Path of the class to test; path of the Category-Partition report for the class.\\
 
 \noindent The final phase translates abstract test frames into executable artifacts. The agent converts the Category-Partition report produced in Phase~2 into Java code using JUnit~5 and Mockito. Mockito is used exclusively to create fake objects for external dependencies (e.g. database connections or Data Access Objects), thereby ensuring strict unit isolation. This approach verifies each unit in a controlled environment, independent of external system stability, and produces a test suite that is well-structured and high in coverage.\\
 
