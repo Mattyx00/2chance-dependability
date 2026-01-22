@@ -108,7 +108,7 @@ jobs:
             raise SystemExit("report-task.txt not found (expected **/target/sonar/report-task.txt)")
           report = candidates[0]
 
-          with open(path, "r", encoding="utf-8") as f:
+          with open(report, "r", encoding="utf-8") as f:
             txt = f.read()
 
           m = re.search(r"ceTaskUrl=(.+)", txt)
