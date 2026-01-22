@@ -65,7 +65,6 @@ jobs:
           cache: maven
 
       - name: Sonar analysis (Maven)
-        working-directory: ${{ env.BACKEND_DIR }}
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
@@ -75,7 +74,6 @@ jobs:
             -Dsonar.projectKey=${{ vars.SONAR_PROJECT_KEY }}
 
       - name: Quality Gate (fail workflow if ERROR)
-        working-directory: ${{ env.BACKEND_DIR }}
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
