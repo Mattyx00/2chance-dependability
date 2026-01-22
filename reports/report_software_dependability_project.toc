@@ -20,74 +20,74 @@
 \contentsline {subsection}{\numberline {2.3.4}The Necessity of Human Oversight (Manual Code Review)}{9}{subsection.2.3.4}%
 \contentsline {section}{\numberline {2.4}Empirical Validation and Coverage Results}{10}{section.2.4}%
 \contentsline {chapter}{\numberline {3}Formal Specification and Verification}{12}{chapter.3}%
-\contentsline {section}{\numberline {3.1}Formal Verification Strategy for Model Beans}{12}{section.3.1}%
-\contentsline {section}{\numberline {3.2}Dependency Analysis}{13}{section.3.2}%
-\contentsline {section}{\numberline {3.3}Verification Plan}{14}{section.3.3}%
+\contentsline {section}{\numberline {3.1}Formal Specification \& Verification Strategy}{12}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Classes Dependency Analysis}{13}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Formal Specification \& Verification Plan}{14}{section.3.3}%
 \contentsline {subsection}{\numberline {3.3.1}Class Code Simplification}{15}{subsection.3.3.1}%
 \contentsline {subsection}{\numberline {3.3.2}Definition of Formal Specifications Using Lightweight JML}{15}{subsection.3.3.2}%
 \contentsline {subsection}{\numberline {3.3.3}Resolution of Issues Detected by OpenJML}{16}{subsection.3.3.3}%
-\contentsline {section}{\numberline {3.4}Corrections to Have Program Correctness}{17}{section.3.4}%
-\contentsline {chapter}{\numberline {4}Mutation Testing}{18}{chapter.4}%
-\contentsline {chapter}{\numberline {5}Performance Evaluation}{20}{chapter.5}%
-\contentsline {section}{\numberline {5.1}Context and Goals}{20}{section.5.1}%
-\contentsline {section}{\numberline {5.2}Methodology}{20}{section.5.2}%
-\contentsline {subsection}{\numberline {5.2.1}Selection of Performance-Critical Scenarios}{20}{subsection.5.2.1}%
-\contentsline {subsection}{\numberline {5.2.2}Baseline and Repeatability}{20}{subsection.5.2.2}%
-\contentsline {section}{\numberline {5.3}Experimental Setup}{21}{section.5.3}%
-\contentsline {subsection}{\numberline {5.3.1}Project Integration and Build}{21}{subsection.5.3.1}%
-\contentsline {subsection}{\numberline {5.3.2}Running JMH (Jar-First Workflow)}{21}{subsection.5.3.2}%
-\contentsline {subsection}{\numberline {5.3.3}Execution Environment (Measured Run)}{21}{subsection.5.3.3}%
-\contentsline {subsection}{\numberline {5.3.4}Database Configuration}{22}{subsection.5.3.4}%
-\contentsline {section}{\numberline {5.4}Benchmark Design (Theory-to-Code Rationale)}{22}{section.5.4}%
-\contentsline {subsection}{\numberline {5.4.1}Why JMH (and Why Not Naive Timing)}{22}{subsection.5.4.1}%
-\contentsline {subsection}{\numberline {5.4.2}Configuration Choices Implemented in Code}{22}{subsection.5.4.2}%
-\contentsline {subsection}{\numberline {5.4.3}State, Setup, and Isolation}{22}{subsection.5.4.3}%
-\contentsline {subsection}{\numberline {5.4.4}Blackhole and Exception-Path Benchmarking (Updated Implementation)}{23}{subsection.5.4.4}%
-\contentsline {subsection}{\numberline {5.4.5}Input Strategy and ``Fail-Fast'' Paths}{23}{subsection.5.4.5}%
-\contentsline {section}{\numberline {5.5}Benchmark Suite}{23}{section.5.5}%
-\contentsline {paragraph}{Side effects (insert benchmark).}{23}{section*.6}%
-\contentsline {section}{\numberline {5.6}Metrics and Results Reporting}{23}{section.5.6}%
-\contentsline {section}{\numberline {5.7}Results and Interpretation}{24}{section.5.7}%
-\contentsline {paragraph}{Measured run scope and date.}{24}{section*.7}%
-\contentsline {paragraph}{Traceability note.}{24}{section*.8}%
-\contentsline {paragraph}{Interpretation.}{24}{section*.9}%
-\contentsline {section}{\numberline {5.8}Threats to Validity}{25}{section.5.8}%
-\contentsline {paragraph}{JVM and OS noise.}{25}{section*.10}%
-\contentsline {paragraph}{Database state and caching.}{25}{section*.11}%
-\contentsline {paragraph}{Side effects (insert benchmark).}{25}{section*.12}%
-\contentsline {paragraph}{Exception cost and semantic mismatch.}{25}{section*.13}%
-\contentsline {paragraph}{CI execution.}{26}{section*.14}%
-\contentsline {section}{\numberline {5.9}Conclusions and Recommendations}{26}{section.5.9}%
-\contentsline {section}{\numberline {5.10}Missing Data}{26}{section.5.10}%
-\contentsline {chapter}{\numberline {6}Containerization and Orchestration Readiness}{27}{chapter.6}%
-\contentsline {chapter}{\numberline {7}Security Assurance and Vulnerability Assessment}{29}{chapter.7}%
-\contentsline {section}{\numberline {7.1}Context and Objectives}{29}{section.7.1}%
-\contentsline {section}{\numberline {7.2}Process, Toolchain, and Evidence Trail}{29}{section.7.2}%
-\contentsline {subsection}{\numberline {7.2.1}Before/After Summary}{30}{subsection.7.2.1}%
-\contentsline {section}{\numberline {7.3}Security Mechanisms in CI/CD (Checklist Item 0)}{30}{section.7.3}%
-\contentsline {section}{\numberline {7.4}GitGuardian: Secret Detection and Remediation}{30}{section.7.4}%
-\contentsline {subsection}{\numberline {7.4.1}Why Secret Scanning}{30}{subsection.7.4.1}%
-\contentsline {subsection}{\numberline {7.4.2}Baseline Findings}{30}{subsection.7.4.2}%
-\contentsline {subsection}{\numberline {7.4.3}Remediation and Rationale}{31}{subsection.7.4.3}%
-\contentsline {subsection}{\numberline {7.4.4}Verification}{31}{subsection.7.4.4}%
-\contentsline {section}{\numberline {7.5}Snyk: Dependency (SCA) Vulnerability Assessment}{31}{section.7.5}%
-\contentsline {subsection}{\numberline {7.5.1}Why SCA}{31}{subsection.7.5.1}%
-\contentsline {subsection}{\numberline {7.5.2}Baseline Findings}{31}{subsection.7.5.2}%
-\contentsline {subsection}{\numberline {7.5.3}Remediation}{32}{subsection.7.5.3}%
-\contentsline {subsection}{\numberline {7.5.4}Verification}{32}{subsection.7.5.4}%
-\contentsline {section}{\numberline {7.6}SonarQube Cloud: Static Security Analysis on the Controller Layer}{32}{section.7.6}%
-\contentsline {subsection}{\numberline {7.6.1}Why SAST for Servlets}{32}{subsection.7.6.1}%
-\contentsline {subsection}{\numberline {7.6.2}Baseline Findings}{32}{subsection.7.6.2}%
-\contentsline {subsection}{\numberline {7.6.3}Remediation Pattern and Motivation}{32}{subsection.7.6.3}%
-\contentsline {subsection}{\numberline {7.6.4}Verification}{33}{subsection.7.6.4}%
-\contentsline {section}{\numberline {7.7}Web Application Shows No Vulnerabilities (Checklist Item 2)}{33}{section.7.7}%
-\contentsline {paragraph}{Planned verification approach.}{33}{section*.19}%
-\contentsline {paragraph}{Status.}{33}{section*.20}%
-\contentsline {section}{\numberline {7.8}Threats to Validity}{33}{section.7.8}%
-\contentsline {paragraph}{False positives and rule interpretation.}{33}{section*.21}%
-\contentsline {paragraph}{Environment and reproducibility.}{33}{section*.22}%
-\contentsline {paragraph}{Dependency upgrades and behavioral drift.}{34}{section*.23}%
-\contentsline {paragraph}{Coverage gaps without dynamic testing.}{34}{section*.24}%
-\contentsline {section}{\numberline {7.9}Conclusions and Next Steps}{34}{section.7.9}%
-\contentsline {section}{\numberline {7.10}Missing Data}{34}{section.7.10}%
-\contentsline {chapter}{\numberline {8}Build and Deployment Pipeline}{35}{chapter.8}%
+\contentsline {section}{\numberline {3.4}Formal Verification Outcome}{17}{section.3.4}%
+\contentsline {chapter}{\numberline {4}Mutation Testing}{19}{chapter.4}%
+\contentsline {chapter}{\numberline {5}Performance Evaluation}{21}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Context and Goals}{21}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Methodology}{21}{section.5.2}%
+\contentsline {subsection}{\numberline {5.2.1}Selection of Performance-Critical Scenarios}{22}{subsection.5.2.1}%
+\contentsline {subsection}{\numberline {5.2.2}Baseline and Repeatability}{22}{subsection.5.2.2}%
+\contentsline {section}{\numberline {5.3}Experimental Setup}{22}{section.5.3}%
+\contentsline {subsection}{\numberline {5.3.1}Project Integration and Build}{22}{subsection.5.3.1}%
+\contentsline {subsection}{\numberline {5.3.2}Running JMH (Jar-First Workflow)}{22}{subsection.5.3.2}%
+\contentsline {subsection}{\numberline {5.3.3}Execution Environment (Measured Run)}{23}{subsection.5.3.3}%
+\contentsline {subsection}{\numberline {5.3.4}Database Configuration}{23}{subsection.5.3.4}%
+\contentsline {section}{\numberline {5.4}Benchmark Design (Theory-to-Code Rationale)}{23}{section.5.4}%
+\contentsline {subsection}{\numberline {5.4.1}Why JMH (and Why Not Naive Timing)}{23}{subsection.5.4.1}%
+\contentsline {subsection}{\numberline {5.4.2}Configuration Choices Implemented in Code}{24}{subsection.5.4.2}%
+\contentsline {subsection}{\numberline {5.4.3}State, Setup, and Isolation}{24}{subsection.5.4.3}%
+\contentsline {subsection}{\numberline {5.4.4}Blackhole and Exception-Path Benchmarking (Updated Implementation)}{24}{subsection.5.4.4}%
+\contentsline {subsection}{\numberline {5.4.5}Input Strategy and ``Fail-Fast'' Paths}{24}{subsection.5.4.5}%
+\contentsline {section}{\numberline {5.5}Benchmark Suite}{25}{section.5.5}%
+\contentsline {paragraph}{Side effects (insert benchmark).}{25}{section*.6}%
+\contentsline {section}{\numberline {5.6}Metrics and Results Reporting}{26}{section.5.6}%
+\contentsline {section}{\numberline {5.7}Results and Interpretation}{26}{section.5.7}%
+\contentsline {paragraph}{Measured run scope and date.}{26}{section*.7}%
+\contentsline {paragraph}{Traceability note.}{26}{section*.8}%
+\contentsline {paragraph}{Interpretation.}{26}{section*.9}%
+\contentsline {section}{\numberline {5.8}Threats to Validity}{27}{section.5.8}%
+\contentsline {paragraph}{JVM and OS noise.}{27}{section*.10}%
+\contentsline {paragraph}{Database state and caching.}{27}{section*.11}%
+\contentsline {paragraph}{Side effects (insert benchmark).}{27}{section*.12}%
+\contentsline {paragraph}{Exception cost and semantic mismatch.}{27}{section*.13}%
+\contentsline {paragraph}{CI execution.}{27}{section*.14}%
+\contentsline {section}{\numberline {5.9}Conclusions and Recommendations}{27}{section.5.9}%
+\contentsline {section}{\numberline {5.10}Missing Data}{28}{section.5.10}%
+\contentsline {chapter}{\numberline {6}Containerization and Orchestration Readiness}{29}{chapter.6}%
+\contentsline {chapter}{\numberline {7}Security Assurance and Vulnerability Assessment}{31}{chapter.7}%
+\contentsline {section}{\numberline {7.1}Context and Objectives}{31}{section.7.1}%
+\contentsline {section}{\numberline {7.2}Process, Toolchain, and Evidence Trail}{31}{section.7.2}%
+\contentsline {subsection}{\numberline {7.2.1}Before/After Summary}{32}{subsection.7.2.1}%
+\contentsline {section}{\numberline {7.3}Security Mechanisms in CI/CD (Checklist Item 0)}{32}{section.7.3}%
+\contentsline {section}{\numberline {7.4}GitGuardian: Secret Detection and Remediation}{32}{section.7.4}%
+\contentsline {subsection}{\numberline {7.4.1}Why Secret Scanning}{32}{subsection.7.4.1}%
+\contentsline {subsection}{\numberline {7.4.2}Baseline Findings}{32}{subsection.7.4.2}%
+\contentsline {subsection}{\numberline {7.4.3}Remediation and Rationale}{33}{subsection.7.4.3}%
+\contentsline {subsection}{\numberline {7.4.4}Verification}{33}{subsection.7.4.4}%
+\contentsline {section}{\numberline {7.5}Snyk: Dependency (SCA) Vulnerability Assessment}{33}{section.7.5}%
+\contentsline {subsection}{\numberline {7.5.1}Why SCA}{33}{subsection.7.5.1}%
+\contentsline {subsection}{\numberline {7.5.2}Baseline Findings}{33}{subsection.7.5.2}%
+\contentsline {subsection}{\numberline {7.5.3}Remediation}{34}{subsection.7.5.3}%
+\contentsline {subsection}{\numberline {7.5.4}Verification}{34}{subsection.7.5.4}%
+\contentsline {section}{\numberline {7.6}SonarQube Cloud: Static Security Analysis on the Controller Layer}{34}{section.7.6}%
+\contentsline {subsection}{\numberline {7.6.1}Why SAST for Servlets}{34}{subsection.7.6.1}%
+\contentsline {subsection}{\numberline {7.6.2}Baseline Findings}{34}{subsection.7.6.2}%
+\contentsline {subsection}{\numberline {7.6.3}Remediation Pattern and Motivation}{34}{subsection.7.6.3}%
+\contentsline {subsection}{\numberline {7.6.4}Verification}{35}{subsection.7.6.4}%
+\contentsline {section}{\numberline {7.7}Web Application Shows No Vulnerabilities (Checklist Item 2)}{35}{section.7.7}%
+\contentsline {paragraph}{Planned verification approach.}{35}{section*.19}%
+\contentsline {paragraph}{Status.}{35}{section*.20}%
+\contentsline {section}{\numberline {7.8}Threats to Validity}{35}{section.7.8}%
+\contentsline {paragraph}{False positives and rule interpretation.}{35}{section*.21}%
+\contentsline {paragraph}{Environment and reproducibility.}{35}{section*.22}%
+\contentsline {paragraph}{Dependency upgrades and behavioral drift.}{36}{section*.23}%
+\contentsline {paragraph}{Coverage gaps without dynamic testing.}{36}{section*.24}%
+\contentsline {section}{\numberline {7.9}Conclusions and Next Steps}{36}{section.7.9}%
+\contentsline {section}{\numberline {7.10}Missing Data}{36}{section.7.10}%
+\contentsline {chapter}{\numberline {8}Build and Deployment Pipeline}{37}{chapter.8}%

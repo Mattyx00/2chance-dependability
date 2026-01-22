@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2026.1.3)  20 JAN 2026 20:08
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2026.1.3)  22 JAN 2026 11:17
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -372,7 +372,7 @@ pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has
 been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.39 ...ment (Measured Run)}{21}{subsection.5.3.3}
+l.39 ...ment (Measured Run)}{23}{subsection.5.3.3}
                                                   % [1
 
 ])
@@ -514,12 +514,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 9--10
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 11--12
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 13--14
+Underfull \hbox (badness 10000) in paragraph at lines 15--16
 
  []
 
@@ -529,35 +524,19 @@ Underfull \hbox (badness 10000) in paragraph at lines 13--14
 
 
 ]
+Underfull \hbox (badness 10000) in paragraph at lines 17--18
+
+ []
+
 <images/class_diagram_model_beans.jpg, id=483, 845.0772pt x 510.9489pt>
 File: images/class_diagram_model_beans.jpg Graphic file (type jpg)
 <use images/class_diagram_model_beans.jpg>
 Package pdftex.def Info: images/class_diagram_model_beans.jpg  used on input li
-ne 17.
+ne 21.
 (pdftex.def)             Requested size: 483.69684pt x 292.45235pt.
- [13{c:/Program Files/texlive/2025/texmf-dist/fonts/enc/dvips/cm-super/cm-super
--ts1.enc} <./images/class_diagram_model_beans.jpg>]
+[13{c:/Program Files/texlive/2025/texmf-dist/fonts/enc/dvips/cm-super/cm-super-
+ts1.enc} <./images/class_diagram_model_beans.jpg>]
 Underfull \hbox (badness 10000) in paragraph at lines 39--40
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 57--58
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 64--65
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 66--67
-
- []
-
-[14]
-Underfull \hbox (badness 10000) in paragraph at lines 68--69
 
  []
 
@@ -566,13 +545,18 @@ Underfull \hbox (badness 10000) in paragraph at lines 70--71
 
  []
 
-
+[14]
 Underfull \hbox (badness 10000) in paragraph at lines 72--73
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 78--79
+Underfull \hbox (badness 10000) in paragraph at lines 74--75
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 76--77
 
  []
 
@@ -581,13 +565,18 @@ Underfull \hbox (badness 10000) in paragraph at lines 82--83
 
  []
 
-[15]
-Underfull \hbox (badness 10000) in paragraph at lines 90--91
+
+Underfull \hbox (badness 10000) in paragraph at lines 84--85
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 92--93
+Underfull \hbox (badness 10000) in paragraph at lines 86--87
+
+ []
+
+[15]
+Underfull \hbox (badness 10000) in paragraph at lines 88--89
 
  []
 
@@ -601,183 +590,195 @@ Underfull \hbox (badness 10000) in paragraph at lines 96--97
 
  []
 
-) [16] [17]
+
+Underfull \hbox (badness 10000) in paragraph at lines 108--109
+
+ []
+
+[16]
+Overfull \hbox (0.85698pt too wide) in paragraph at lines 153--154
+[]\T1/cmtt/m/n/12 OpenJML \T1/cmr/m/n/12 suc-cess-fully ver-i-fied all classes 
+in the \T1/cmtt/m/n/12 model.beans \T1/cmr/m/n/12 pack-age: ev-ery in-spected m
+ethod
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 153--154
+
+ []
+
+[17]) [18]
 \openout2 = `chapters/mutation_testing.aux'.
 
  (./chapters/mutation_testing.tex
 Chapter 4.
-[18
+[19
 
 
 
 
-]) [19]
+]) [20]
 \openout2 = `chapters/performance_evaluation.aux'.
 
  (./chapters/performance_evaluation.tex
 Chapter 5.
-[20
+[21
 
 
 
 
 ]
-Overfull \hbox (101.67088pt too wide) in paragraph at lines 26--27
+Overfull \hbox (101.67088pt too wide) in paragraph at lines 34--35
 \T1/cmr/m/n/12 cluded in com-pi-la-tion through \T1/cmtt/m/n/12 build-helper-ma
 ven-plugin\T1/cmr/m/n/12 . The project de-pends on \T1/cmtt/m/n/12 org.openjdk.
 jmh:jmh-core
  []
 
 
-Overfull \hbox (3.58371pt too wide) in paragraph at lines 26--27
+Overfull \hbox (3.58371pt too wide) in paragraph at lines 34--35
 \T1/cmr/m/n/12 and \T1/cmtt/m/n/12 org.openjdk.jmh:jmh-generator-annprocess \T1
 /cmr/m/n/12 (ver-sion \T1/cmtt/m/n/12 1.37\T1/cmr/m/n/12 ). The bench-mark ex-e
 -cutable
  []
 
 
-Overfull \hbox (41.05002pt too wide) in paragraph at lines 43--43
+Overfull \hbox (41.05002pt too wide) in paragraph at lines 51--51
 []\T1/cmtt/m/n/12 java -jar target/benchmarks.jar ... -rf json -rff reports/per
 formance/jmh_result.json[] 
  []
 
-[21] [22]
-Overfull \hbox (81.01237pt too wide) in paragraph at lines 104--105
+[22] [23]
+Overfull \hbox (81.01237pt too wide) in paragraph at lines 112--113
 []\T1/cmr/m/n/12 DAO: \T1/cmtt/m/n/12 OrdineDAOBenchmark\T1/cmr/m/n/12 , \T1/cm
 tt/m/n/12 SpecificheDAOBenchmark\T1/cmr/m/n/12 , \T1/cmtt/m/n/12 UtenteDAOBench
 mark\T1/cmr/m/n/12 , \T1/cmtt/m/n/12 WishListDAOBenchmark\T1/cmr/m/n/12 ,
  []
 
+[24]
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <10.95> on input line 117.
-
-Underfull \hbox (badness 10000) in paragraph at lines 121--121
-[]\T1/cmtt/m/n/10.95 AdminServiceBenchmark.
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 122--122
-[]\T1/cmtt/m/n/10.95 AdminServiceBenchmark.
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 123--123
-[]\T1/cmtt/m/n/10.95 AdminServiceBenchmark.
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 124--124
-[]\T1/cmtt/m/n/10.95 AdminServiceBenchmark.
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 125--125
-[]\T1/cmtt/m/n/10.95 OrdineDAOBenchmark.
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 126--126
-[]\T1/cmtt/m/n/10.95 OrdineDAOBenchmark.
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 127--127
-[]\T1/cmtt/m/n/10.95 OrdineDAOBenchmark.
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 128--128
-[]\T1/cmtt/m/n/10.95 SpecificheDAOBenchmark.
- []
-
+(Font)              <10.95> on input line 125.
 
 Underfull \hbox (badness 10000) in paragraph at lines 129--129
-[]\T1/cmtt/m/n/10.95 SpecificheDAOBenchmark.
+[]\T1/cmtt/m/n/10.95 AdminServiceBenchmark.
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 130--130
-[]\T1/cmtt/m/n/10.95 UtenteDAOBenchmark.
+[]\T1/cmtt/m/n/10.95 AdminServiceBenchmark.
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 131--131
-[]\T1/cmtt/m/n/10.95 WishListDAOBenchmark.
+[]\T1/cmtt/m/n/10.95 AdminServiceBenchmark.
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 132--132
-[]\T1/cmtt/m/n/10.95 WishListDAOBenchmark.
+[]\T1/cmtt/m/n/10.95 AdminServiceBenchmark.
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 133--133
-[]\T1/cmtt/m/n/10.95 RecensioneDAOBenchmark.
+[]\T1/cmtt/m/n/10.95 OrdineDAOBenchmark.
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 134--134
-[]\T1/cmtt/m/n/10.95 LogoutServiceBenchmark.
+[]\T1/cmtt/m/n/10.95 OrdineDAOBenchmark.
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 135--135
+[]\T1/cmtt/m/n/10.95 OrdineDAOBenchmark.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 136--136
+[]\T1/cmtt/m/n/10.95 SpecificheDAOBenchmark.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 137--137
+[]\T1/cmtt/m/n/10.95 SpecificheDAOBenchmark.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 138--138
+[]\T1/cmtt/m/n/10.95 UtenteDAOBenchmark.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 139--139
+[]\T1/cmtt/m/n/10.95 WishListDAOBenchmark.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 140--140
+[]\T1/cmtt/m/n/10.95 WishListDAOBenchmark.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 141--141
+[]\T1/cmtt/m/n/10.95 RecensioneDAOBenchmark.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 142--142
+[]\T1/cmtt/m/n/10.95 LogoutServiceBenchmark.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 143--143
 []\T1/cmtt/m/n/10.95 ConnectionPoolBenchmark.
  []
 
 
-Underfull \hbox (badness 1005) in paragraph at lines 135--136
+Underfull \hbox (badness 1005) in paragraph at lines 143--144
 []\T1/cmr/m/n/10.95 Acquire/release a DB con-nec-tion; re-quires DB
  []
 
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-[23]
-Underfull \hbox (badness 10000) in paragraph at lines 164--164
+[25]
+Underfull \hbox (badness 10000) in paragraph at lines 172--172
 []\T1/cmtt/m/n/10.95 AdminServiceBenchmark.
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 165--165
+Underfull \hbox (badness 10000) in paragraph at lines 173--173
 []\T1/cmtt/m/n/10.95 AdminServiceBenchmark.
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 166--166
+Underfull \hbox (badness 10000) in paragraph at lines 174--174
 []\T1/cmtt/m/n/10.95 AdminServiceBenchmark.
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 167--167
+Underfull \hbox (badness 10000) in paragraph at lines 175--175
 []\T1/cmtt/m/n/10.95 AdminServiceBenchmark.
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 168--168
+Underfull \hbox (badness 10000) in paragraph at lines 176--176
 []\T1/cmtt/m/n/10.95 OrdineDAOBenchmark.
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 169--169
+Underfull \hbox (badness 10000) in paragraph at lines 177--177
 []\T1/cmtt/m/n/10.95 OrdineDAOBenchmark.
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 170--170
+Underfull \hbox (badness 10000) in paragraph at lines 178--178
 []\T1/cmtt/m/n/10.95 OrdineDAOBenchmark.
  []
 
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-[24] [25]
-Overfull \hbox (2.83015pt too wide) in paragraph at lines 200--201
+[26]
+Overfull \hbox (2.83015pt too wide) in paragraph at lines 208--209
 \T1/cmr/m/n/12 The bench-mark de-sign re-flects the key method-olog-i-cal point
 s: struc-tured warmup/measurement,
  []
 
-) [26]
+[27]) [28]
 \openout2 = `chapters/containerization_and_orchestration_readiness.aux'.
 
  (./chapters/containerization_and_orchestration_readiness.tex
@@ -788,17 +789,17 @@ Overfull \hbox (9.12987pt too wide) in paragraph at lines 12--13
 1/cmtt/m/n/12 mvn clean package -Dmaven.test.skip=true
  []
 
-[27
+[29
 
 
 
 
-]) [28]
+]) [30]
 \openout2 = `chapters/security_assurance_and_vulnerability_assessment.aux'.
 
  (./chapters/security_assurance_and_vulnerability_assessment.tex
 Chapter 7.
-[29
+[31
 
 
 
@@ -815,13 +816,13 @@ Overfull \hbox (8.68979pt too wide) in paragraph at lines 70--71
 po \ _scan \ _after \ _cleanup .
  []
 
-[30]
+[32]
 Overfull \hbox (6.20438pt too wide) in paragraph at lines 86--89
 \T1/cmr/m/n/12 mented in: $\T1/cmtt/m/n/12 reports / evidence / security / gitg
 uardian / security \ _analysis \ _gitguardian .
  []
 
-[31]
+[33]
 Overfull \hbox (3.462pt too wide) in paragraph at lines 117--120
 \T1/cmtt/m/n/12 snyk / security \ _analysis \ _snyk . md$ \T1/cmr/m/n/12 and $\
 T1/cmtt/m/n/12 reports / evidence / security / snyk / snyk \ _fixes .
@@ -852,17 +853,17 @@ Overfull \hbox (45.80098pt too wide) in paragraph at lines 144--146
 f \T1/cmtt/m/n/12 src/main/java/utils/ResponseUtils.java\T1/cmr/m/n/12 ,
  []
 
-[32] [33]) [34]
+[34] [35]) [36]
 \openout2 = `chapters/build_and_deployment_pipeline.aux'.
 
  (./chapters/build_and_deployment_pipeline.tex
 Chapter 8.
-[35
+[37
 
 
 
 
-]) [36] (./report_software_dependability_project.aux
+]) [38] (./report_software_dependability_project.aux
 (./chapters/software_architectural_overview.aux)
 (./chapters/testing_and_coverage_analysis.aux)
 (./chapters/formal_specification_and_verification.aux)
@@ -874,18 +875,26 @@ Chapter 8.
 LaTeX2e <2025-11-01>
 L3 programming layer <2025-12-29>
  ***********
-Package rerunfilecheck Info: File `report_software_dependability_project.out' h
-as not changed.
-(rerunfilecheck)             Checksum: C3E682F66470A4D1A044B546A25F3A19;17974.
+
+
+Package rerunfilecheck Warning: File `report_software_dependability_project.out
+' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+Package rerunfilecheck Info: Checksums for `report_software_dependability_proje
+ct.out':
+(rerunfilecheck)             Before: 9D2753ACEDD94349AE53D229A76965E4;18035
+(rerunfilecheck)             After:  82F3F0F286EB8A341290A28D98185D72;18078.
  ) 
 Here is how much of TeX's memory you used:
- 10744 strings out of 467538
- 179007 string characters out of 5401323
- 686418 words of memory out of 5000000
- 39297 multiletter control sequences out of 15000+600000
+ 10747 strings out of 467538
+ 179051 string characters out of 5401323
+ 686527 words of memory out of 5000000
+ 39298 multiletter control sequences out of 15000+600000
  643210 words of font info for 71 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,10n,79p,1143b,682s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,10n,79p,1142b,682s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <c:/Program Files/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi
 12.pfb><c:/Program Files/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm
 /cmsy10.pfb><c:/Program Files/texlive/2025/texmf-dist/fonts/type1/public/cm-sup
@@ -901,11 +910,11 @@ f-dist/fonts/type1/public/cm-super/sfrm1440.pfb><c:/Program Files/texlive/2025/
 texmf-dist/fonts/type1/public/cm-super/sfti1200.pfb><c:/Program Files/texlive/2
 025/texmf-dist/fonts/type1/public/cm-super/sftt1095.pfb><c:/Program Files/texli
 ve/2025/texmf-dist/fonts/type1/public/cm-super/sftt1200.pfb>
-Output written on report_software_dependability_project.pdf (37 pages, 699633 b
+Output written on report_software_dependability_project.pdf (39 pages, 705677 b
 ytes).
 PDF statistics:
- 733 PDF objects out of 1000 (max. 8388607)
- 657 compressed objects within 7 object streams
- 170 named destinations out of 1000 (max. 500000)
+ 742 PDF objects out of 1000 (max. 8388607)
+ 664 compressed objects within 7 object streams
+ 172 named destinations out of 1000 (max. 500000)
  630 words of extra memory for PDF output out of 10000 (max. 10000000)
 
