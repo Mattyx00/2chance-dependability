@@ -16,6 +16,7 @@
         <junit.version>5.9.1</junit.version>
         <jmh.version>1.37</jmh.version>
         <argLine />
+        <sonar.organization>mattyx00</sonar.organization>
     </properties>
 
     <repositories>
