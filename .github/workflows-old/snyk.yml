@@ -22,6 +22,4 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         run: |
-          # --all-projects: scansiona tutti i file manifest (pom.xml, package.json, ecc.) trovati
-          # --severity-threshold=high: fallisce solo se trova vulnerabilità Alte o Critiche
           snyk test --all-projects --severity-threshold=high
