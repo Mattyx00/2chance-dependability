@@ -4,52 +4,68 @@
 
 \textbf{Build and deployment pipeline}
 
-Per automatizzare tutte le operazioni di testing, deployment e build è stata predisposta una github action che viene eseguita ad ogni push.
+To automate all testing, deployment and build operations a github action has been set up that is executed at every push.
 
 \section*{Overview}
 
-La nostra pipeline ‘maven.yml’ garantisce che ogni modifica sia pronta e sicura per la produzione.
+Our ‘main.yml’ pipeline ensures that every change is ready and safe for production.
 
 \begin{itemize}
-    \item \textbf{trigger}: Il workflow si attiva ad ogni push sul branch principale (main)
-    \item \textbf{ambiente}: L’intero workflow gira su una macchina virtuale basata su ‘ubuntu-latest’
+    \item \textbf{trigger}: The workflow activates at every push on the main branch (main)
+    \item \textbf{environment}: The entire workflow runs on a virtual machine based on ‘ubuntu-latest’
 \end{itemize}
 
-\textbf{flusso:}
+\textbf{flow:}
 
-Nella nostra pipeline vengono eseguiti più step, in ordine:
+In our pipeline multiple steps are executed, in order:
 \begin{itemize}
-    \item Checkout del codice e setup Java 19
-    \item Inizializzazione del database con import dei dati di test
-    \item Build, test e mutation coverage’
-    \item Upload dei risultati su codecov
-    \item Setup delle credenziali per dockerhub
-    \item Upload dell’immagine su dockerhub
+    \item Code checkout
+    \item Security scan with GitGuardian
+    \item Dependency vulnerability analysis with Snyk
+    \item Java 19 environment setup and dependency caching
+    \item MySQL database initialization with data import
+    \item Build, unit tests and mutation coverage, static analysis with SonarQube
+    \item Upload of coverage results to Codecov
+    \item Login to Docker Hub, image build and push
 \end{itemize}
 
-\section*{Steps nel dettaglio}
+\section*{Steps in detail}
 
-In questo paragrafo analizziamo alcuni passi fondamentali della nostra github action.
+In this paragraph we analyze some fundamental steps of our github action.
+
+\textbf{Security scan with GitGuardian:}
+
+thanks to sending the current commit data to GitGuardian we initialize a code scan on the latest changes.
+This will allow verifying the presence of exposed passwords or secrets, blocking pipeline execution in case vulnerabilities are identified.
+
+\vspace{0.3cm}
+
+\textbf{Dependency vulnerability analysis with Snyk:}
+
+thanks to the use of the tool 'snyk' we identify security weaknesses classified according to CWE through dependency analysis.
+
+\vspace{0.3cm}
 
 \textbf{Mysql:}
 
-all’interno della github action viene istanziato un database di test con dati di test. Questo è necessario perchè altrimenti la maggior parte dei test fallirebbero per mancata connessione al db.  
-Questa soluzione permette di eseguire i test su un ambiente totalmente isolato, riproducibile e modificabile.
+inside the github action a test database with test data is instantiated. This is necessary because otherwise most tests would fail due to missing connection to the db.
+This solution allows running tests on a totally isolated, reproducible and modifiable environment.
 
 \vspace{0.3cm}
 
-\textbf{Build, Unit Testing e Mutation Testing:}
+\textbf{Build, Unit Testing and Mutation Testing:}
 
-Tramite il comando ‘mvn clean test -P pitest’ riusciamo a buildare, lanciare gli unit test e mutation test sulla nostra applicazione.  
-Tramite il profilo maven ‘pitest’ vengono introdotti dei mutanti nei package model.beans, model.dao e services.
+Through the command ‘mvn -B clean verify -P pitest’ we are able to build, launch unit tests and mutation tests on our application.
+Through the maven profile ‘pitest’ mutants are introduced in packages model.beans, model.dao and services.
 
-I risultati dei test vengono successivamente caricati sulla piattaforma ‘Codecov’ che ci permetterà di visualizzare i risultati e gestirà il fallimento o successo della push grazie alla key ‘\verb|fail_ci_if_error|: true’
+The test results are subsequently uploaded to the ‘Codecov’ platform which will allow us to visualize results and will manage the failure or success of the push thanks to the key ‘\verb|fail_ci_if_error|: true’.
+Furthermore a static code analysis is performed via 'SonarQube' with the flag '\verb|-Dsonar.qualitygate.wait|=true' which allows blocking the pipeline in case of quality weaknesses.
 
 \vspace{0.3cm}
 
-\textbf{Sicurezza:}
+\textbf{Additional security:}
 
-All’interno della nostra github action non troveremo credenziali ma richiami a secrets salvate nella repo github, come ad esempio
+Inside our github action we will not find credentials but references to secrets saved in the github repo, such as for example
 
 \begin{verbatim}
 - name: Log in to Docker Hub
@@ -58,3 +74,7 @@ All’interno della nostra github action non troveremo credenziali ma richiami a
        username: ${{ secrets.DOCKER_USERNAME }}
        password: ${{ secrets.DOCKER_PASSWORD }}
 \end{verbatim}
+
+\textbf{Docker hub:}
+
+Finally if all the the steps of the pipeline have been executed successfully the build and push of the docker image on docker hub is performed.
