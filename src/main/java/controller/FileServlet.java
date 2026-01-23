@@ -294,14 +294,9 @@ public class FileServlet extends HttpServlet {
             // Send requested file (part(s)) to client
             // ------------------------------------------------
 
-            // Prepare streams.
-            RandomAccessFile input = null;
-            OutputStream output = null;
 
-            try {
-                // Open streams.
-                input = new RandomAccessFile(file, "r");
-                output = response.getOutputStream();
+            try (RandomAccessFile input = new RandomAccessFile(file, "r")){
+                OutputStream output = response.getOutputStream();
 
                 if (ranges.isEmpty() || ranges.get(0) == full) {
 
@@ -365,6 +360,8 @@ public class FileServlet extends HttpServlet {
                         sos.println("--" + MULTIPART_BOUNDARY + "--");
                     }
                 }
+                close(input);
+                close(output);
             } catch (IOException e) {
                 e.printStackTrace();
                 // Try to send error if possible
@@ -375,10 +372,6 @@ public class FileServlet extends HttpServlet {
                         ioException.printStackTrace();
                     }
                 }
-            } finally {
-                // Gently close streams.
-                close(output);
-                close(input);
             }
         } catch (Exception e) {
             e.printStackTrace();
