@@ -190,7 +190,7 @@ public class FileServlet extends HttpServlet {
 
             // Prepare some variables. The full Range represents the complete file.
             Range full = new Range(0, length - 1, length);
-            List<Range> ranges = new ArrayList<Range>();
+            List<Range> ranges = new ArrayList<>();
 
             // Validate and process Range and If-Range headers.
             String range = request.getHeader("Range");
@@ -294,8 +294,7 @@ public class FileServlet extends HttpServlet {
             // Send requested file (part(s)) to client
             // ------------------------------------------------
 
-
-            try (RandomAccessFile input = new RandomAccessFile(file, "r")){
+            try (RandomAccessFile input = new RandomAccessFile(file, "r")) {
                 OutputStream output = response.getOutputStream();
 
                 if (ranges.isEmpty() || ranges.get(0) == full) {
