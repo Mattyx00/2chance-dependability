@@ -52,5 +52,4 @@ Questa directory contiene la documentazione relativa all'analisi e risoluzione d
 
 ---
 
-**Ultima Modifica:** 2026-01-05 16:25  
-**Autore:** Antigravity AI
+**Ultima Modifica:** 2026-01-05 16:25

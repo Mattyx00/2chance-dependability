@@ -217,6 +217,3 @@ Recommended next steps (low-impact):
   \item For strict microbenchmark hygiene, consume returned values also on successful DB paths (even if the DB call itself prevents meaningful dead-code elimination in practice).
   \item For side-effect benchmarks (inserts), add optional cleanup/rollback or reset DB state between runs to reduce drift.
 \end{itemize}
-
-\section{Missing Data}
-At this point, the run command and environment are documented. The remaining item is to ensure the JSON file (\texttt{reports/performance/jmh\_result.json}) is included as raw evidence (versioned in the repository or attached in the submission materials), so statistical fields (\texttt{Cnt}, \texttt{Error}) can be reported and the experiment can be independently verified.

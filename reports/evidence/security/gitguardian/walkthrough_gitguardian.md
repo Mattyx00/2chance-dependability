@@ -535,4 +535,3 @@ ggshield secret scan path . --recursive
 **Data:** 2026-01-05  
 **Ultima Revisione:** 2026-01-05 13:30  
 **Versione:** 2.0 (Aggiornata con correzioni sintassi)  
-**Autore:** Antigravity AI

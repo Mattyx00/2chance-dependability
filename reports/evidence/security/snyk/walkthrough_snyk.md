@@ -68,5 +68,4 @@ Per garantire che i cambi di artifact non abbiano rotto la compatibilità:
 
 ---
 
-**Status:** ✅ Completato  
-**Autore:** Antigravity AI
+**Status:** ✅ Completato

@@ -198,4 +198,4 @@ mvn test -Dtest=RegistrazioneServiceTest
 
 **Ultima Modifica:** 2026-01-05 13:40  
 **Versione Documentazione:** 2.1 (Aggiornata con scan results)  
-**Autore:** Antigravity AI
+
