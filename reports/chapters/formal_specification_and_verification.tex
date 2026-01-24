@@ -93,6 +93,18 @@ Moreover, given that the target system is an e-commerce web application (i.e. no
 
 To support this step, we employ a prompt that configures an assistant specialized in generating \textbf{Lightweight JML} specifications. The assistant receives the path of a Java file and must return the full class content augmented with JML specification blocks, \textbf{without altering the original Java code}. The prompt enforces strict constraints to avoid modeling complex operations (e.g. advanced string manipulation, streams or other constructs that are difficult for OpenJML to model reliably). Instead, it encourages simpler contracts such as non-nullness and simple range constraints, improving both runtime safety and verifiability while avoiding heavy quantification and unsustainable proof obligations.
 
+\subsection{Environment Setup and Verification Process}
+
+The formal verification process was conducted by a team member operating on a Windows-based system. To facilitate the use of OpenJML and its dependencies in a native Linux environment, the verification was performed using the Windows Subsystem for Linux (WSL) with an Ubuntu distribution.\\
+
+To streamline the configuration of the verification environment, a shell script was developed and located at \texttt{src/scripts/openjml\_ubuntu\_installation.sh} to automate the installation and operational setup of OpenJML on Ubuntu systems.\\
+
+Once the environment was configured, the Extended Static Checking (ESC) was executed on the entire \texttt{model/beans} package to verify the JML specifications. The following command was used to run the verification:
+
+\begin{lstlisting}[language=bash, breaklines=true, basicstyle=\small\ttfamily]
+openjml -esc -progress -sourcepath /mnt/c/Users/aldom/Desktop/Projects/University\ of\ Salerno/2chance-dependability/src/main/java -dir /mnt/c/Users/aldom/Desktop/Projects/University\ of\ Salerno/2chance-dependability/src/main/java/model/beans
+\end{lstlisting}
+
 \subsection{Resolution of Issues Detected by OpenJML}
 \noindent\textbf{Reference:} \texttt{src\textbackslash prompts\textbackslash formal\_verification\_and\_specification\textbackslash \\03\_openjml\_diagnostics\_and\_repair.txt}\\
 \textbf{Input:} Path of the class to verify; path of the OpenJML output log.\\
