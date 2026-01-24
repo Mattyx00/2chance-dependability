@@ -294,86 +294,103 @@ public class FileServlet extends HttpServlet {
             // Send requested file (part(s)) to client
             // ------------------------------------------------
 
-            try (RandomAccessFile input = new RandomAccessFile(file, "r")) {
-                OutputStream output = response.getOutputStream();
-
-                if (ranges.isEmpty() || ranges.get(0) == full) {
-
-                    // Return full file.
-                    Range r = full;
-                    response.setContentType(contentType);
-
-                    if (content) {
-                        if (acceptsGzip) {
-                            // The browser accepts GZIP, so GZIP the content.
-                            response.setHeader("Content-Encoding", "gzip");
-                            output = new GZIPOutputStream(output, DEFAULT_BUFFER_SIZE);
-                        } else {
-                            // Content length is not directly predictable in case of GZIP.
-                            // So only add it if there is no means of GZIP, else browser will hang.
-                            response.setHeader("Content-Length", String.valueOf(r.length));
-                        }
-
-                        // Copy full range.
-                        copy(input, output, r.start, r.length);
-                    }
-
-                } else if (ranges.size() == 1) {
-
-                    // Return single part of file.
-                    Range r = ranges.get(0);
-                    response.setContentType(contentType);
-                    response.setHeader("Content-Range", "bytes " + r.start + "-" + r.end + "/" + r.total);
-                    response.setHeader("Content-Length", String.valueOf(r.length));
-                    response.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT); // 206.
-
-                    if (content) {
-                        // Copy single part range.
-                        copy(input, output, r.start, r.length);
-                    }
-
-                } else {
-
-                    // Return multiple parts of file.
-                    response.setContentType("multipart/byteranges; boundary=" + MULTIPART_BOUNDARY);
-                    response.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT); // 206.
-
-                    if (content) {
-                        // Cast back to ServletOutputStream to get the easy println methods.
-                        ServletOutputStream sos = (ServletOutputStream) output;
-
-                        // Copy multi part range.
-                        for (Range r : ranges) {
-                            // Add multipart boundary and header fields for every range.
-                            sos.println();
-                            sos.println("--" + MULTIPART_BOUNDARY);
-                            sos.println("Content-Type: " + contentType);
-                            sos.println("Content-Range: bytes " + r.start + "-" + r.end + "/" + r.total);
-
-                            // Copy single part range of multi part range.
-                            copy(input, output, r.start, r.length);
-                        }
-
-                        // End with multipart boundary.
-                        sos.println();
-                        sos.println("--" + MULTIPART_BOUNDARY + "--");
-                    }
-                }
-                close(input);
-                close(output);
-            } catch (IOException e) {
-                e.printStackTrace();
-                // Try to send error if possible
-                if (!response.isCommitted()) {
-                    try {
-                        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                    } catch (IOException ioException) {
-                        ioException.printStackTrace();
-                    }
-                }
-            }
+            sendFileContent(response, file, ranges, full, contentType, content, acceptsGzip);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * Send the file content to the response.
+     *
+     * @param response    The response to be created.
+     * @param file        The file to be sent.
+     * @param ranges      The ranges to be sent.
+     * @param full        The full range of the file.
+     * @param contentType The content type of the file.
+     * @param content     Whether the request body should be written (GET) or not
+     *                    (HEAD).
+     * @param acceptsGzip Whether the browser accepts GZIP.
+     */
+    private void sendFileContent(HttpServletResponse response, File file, List<Range> ranges, Range full,
+            String contentType, boolean content, boolean acceptsGzip) {
+        try (RandomAccessFile input = new RandomAccessFile(file, "r")) {
+            OutputStream output = response.getOutputStream();
+
+            if (ranges.isEmpty() || ranges.get(0) == full) {
+
+                // Return full file.
+                Range r = full;
+                response.setContentType(contentType);
+
+                if (content) {
+                    if (acceptsGzip) {
+                        // The browser accepts GZIP, so GZIP the content.
+                        response.setHeader("Content-Encoding", "gzip");
+                        output = new GZIPOutputStream(output, DEFAULT_BUFFER_SIZE);
+                    } else {
+                        // Content length is not directly predictable in case of GZIP.
+                        // So only add it if there is no means of GZIP, else browser will hang.
+                        response.setHeader("Content-Length", String.valueOf(r.length));
+                    }
+
+                    // Copy full range.
+                    copy(input, output, r.start, r.length);
+                }
+
+            } else if (ranges.size() == 1) {
+
+                // Return single part of file.
+                Range r = ranges.get(0);
+                response.setContentType(contentType);
+                response.setHeader("Content-Range", "bytes " + r.start + "-" + r.end + "/" + r.total);
+                response.setHeader("Content-Length", String.valueOf(r.length));
+                response.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT); // 206.
+
+                if (content) {
+                    // Copy single part range.
+                    copy(input, output, r.start, r.length);
+                }
+
+            } else {
+
+                // Return multiple parts of file.
+                response.setContentType("multipart/byteranges; boundary=" + MULTIPART_BOUNDARY);
+                response.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT); // 206.
+
+                if (content) {
+                    // Cast back to ServletOutputStream to get the easy println methods.
+                    ServletOutputStream sos = (ServletOutputStream) output;
+
+                    // Copy multi part range.
+                    for (Range r : ranges) {
+                        // Add multipart boundary and header fields for every range.
+                        sos.println();
+                        sos.println("--" + MULTIPART_BOUNDARY);
+                        sos.println("Content-Type: " + contentType);
+                        sos.println("Content-Range: bytes " + r.start + "-" + r.end + "/" + r.total);
+
+                        // Copy single part range of multi part range.
+                        copy(input, output, r.start, r.length);
+                    }
+
+                    // End with multipart boundary.
+                    sos.println();
+                    sos.println("--" + MULTIPART_BOUNDARY + "--");
+                }
+            }
+            close(input);
+            close(output);
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Try to send error if possible
+            if (!response.isCommitted()) {
+                try {
+                    response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
+            }
         }
     }
 
