@@ -85,11 +85,23 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Necessario per Sonar
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+#      run: |
+#        mvn -B clean verify -P pitest \
+#        org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+#        -Dsonar.projectKey=Mattyx00_2chance-dependability
+#      #-Dsonar.qualitygate.wait=true
       run: |
-        mvn -B clean verify -P pitest \
-        org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
-        -Dsonar.projectKey=Mattyx00_2chance-dependability
-      #-Dsonar.qualitygate.wait=true
+        # 1) Run tests with JaCoCo agent enabled (creates target/jacoco.exec)
+        mvn -B -P pitest org.jacoco:jacoco-maven-plugin:0.8.12:prepare-agent clean verify
+
+        # 2) Generate JaCoCo XML report (creates target/site/jacoco/jacoco.xml)
+        mvn -B org.jacoco:jacoco-maven-plugin:0.8.12:report
+
+        # 3) Run Sonar and import JaCoCo XML coverage
+        mvn -B org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+          -Dsonar.projectKey=Mattyx00_2chance-dependability \
+          -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
+        # -Dsonar.qualitygate.wait=true
     # 7. UPLOAD COVERAGE (Codecov)
     # Eseguito se i test passano (run precedente)
     - name: Upload coverage and test results to Codecov

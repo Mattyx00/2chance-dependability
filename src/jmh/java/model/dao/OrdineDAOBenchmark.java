@@ -1,6 +1,5 @@
 package model.dao;
 
-import model.beans.Ordine;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 
