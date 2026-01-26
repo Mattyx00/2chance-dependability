@@ -36,65 +36,64 @@
 \contentsline {subsection}{\numberline {5.2.2}Baseline and Repeatability}{22}{subsection.5.2.2}%
 \contentsline {section}{\numberline {5.3}Experimental Setup}{22}{section.5.3}%
 \contentsline {subsection}{\numberline {5.3.1}Project Integration and Build}{22}{subsection.5.3.1}%
-\contentsline {subsection}{\numberline {5.3.2}Running JMH (Jar-First Workflow)}{22}{subsection.5.3.2}%
+\contentsline {subsection}{\numberline {5.3.2}Running JMH (The Workflow)}{22}{subsection.5.3.2}%
 \contentsline {subsection}{\numberline {5.3.3}Execution Environment (Measured Run)}{23}{subsection.5.3.3}%
 \contentsline {subsection}{\numberline {5.3.4}Database Configuration}{23}{subsection.5.3.4}%
-\contentsline {section}{\numberline {5.4}Benchmark Design (Theory-to-Code Rationale)}{23}{section.5.4}%
+\contentsline {section}{\numberline {5.4}Benchmark Design}{23}{section.5.4}%
 \contentsline {subsection}{\numberline {5.4.1}Why JMH (and Why Not Naive Timing)}{23}{subsection.5.4.1}%
-\contentsline {subsection}{\numberline {5.4.2}Configuration Choices Implemented in Code}{24}{subsection.5.4.2}%
+\contentsline {subsection}{\numberline {5.4.2}Configuration Choices Implemented in Code}{23}{subsection.5.4.2}%
 \contentsline {subsection}{\numberline {5.4.3}State, Setup, and Isolation}{24}{subsection.5.4.3}%
 \contentsline {subsection}{\numberline {5.4.4}Blackhole and Exception-Path Benchmarking (Updated Implementation)}{24}{subsection.5.4.4}%
 \contentsline {subsection}{\numberline {5.4.5}Input Strategy and ``Fail-Fast'' Paths}{24}{subsection.5.4.5}%
-\contentsline {section}{\numberline {5.5}Benchmark Suite}{25}{section.5.5}%
+\contentsline {section}{\numberline {5.5}Benchmark Suite}{24}{section.5.5}%
 \contentsline {paragraph}{Side effects (insert benchmark).}{25}{section*.6}%
-\contentsline {section}{\numberline {5.6}Metrics and Results Reporting}{26}{section.5.6}%
+\contentsline {section}{\numberline {5.6}Metrics and Results Reporting}{25}{section.5.6}%
 \contentsline {section}{\numberline {5.7}Results and Interpretation}{26}{section.5.7}%
 \contentsline {paragraph}{Measured run scope and date.}{26}{section*.7}%
 \contentsline {paragraph}{Traceability note.}{26}{section*.8}%
 \contentsline {paragraph}{Interpretation.}{26}{section*.9}%
-\contentsline {section}{\numberline {5.8}Threats to Validity}{27}{section.5.8}%
-\contentsline {paragraph}{JVM and OS noise.}{27}{section*.10}%
+\contentsline {section}{\numberline {5.8}Threats to Validity}{26}{section.5.8}%
+\contentsline {paragraph}{JVM and OS noise.}{26}{section*.10}%
 \contentsline {paragraph}{Database state and caching.}{27}{section*.11}%
 \contentsline {paragraph}{Side effects (insert benchmark).}{27}{section*.12}%
 \contentsline {paragraph}{Exception cost and semantic mismatch.}{27}{section*.13}%
 \contentsline {paragraph}{CI execution.}{27}{section*.14}%
 \contentsline {section}{\numberline {5.9}Conclusions and Recommendations}{27}{section.5.9}%
-\contentsline {chapter}{\numberline {6}Containerization and Orchestration Readiness}{29}{chapter.6}%
-\contentsline {chapter}{\numberline {7}Security Assurance and Vulnerability Assessment}{31}{chapter.7}%
-\contentsline {section}{\numberline {7.1}Context and Objectives}{31}{section.7.1}%
-\contentsline {section}{\numberline {7.2}Background on Security Tools}{31}{section.7.2}%
-\contentsline {subsection}{\numberline {7.2.1}GitGuardian (Secret Detection)}{31}{subsection.7.2.1}%
-\contentsline {subsection}{\numberline {7.2.2}Snyk (Software Composition Analysis)}{32}{subsection.7.2.2}%
-\contentsline {subsection}{\numberline {7.2.3}SonarQube Cloud (Static Analysis)}{32}{subsection.7.2.3}%
-\contentsline {section}{\numberline {7.3}Process, Toolchain, and Evidence Trail}{32}{section.7.3}%
-\contentsline {subsection}{\numberline {7.3.1}Before/After Summary}{32}{subsection.7.3.1}%
-\contentsline {section}{\numberline {7.4}Security Mechanisms in CI/CD}{33}{section.7.4}%
-\contentsline {section}{\numberline {7.5}GitGuardian: Secret Detection and Remediation}{33}{section.7.5}%
-\contentsline {subsection}{\numberline {7.5.1}Why Secret Scanning}{33}{subsection.7.5.1}%
-\contentsline {subsection}{\numberline {7.5.2}Baseline Findings}{33}{subsection.7.5.2}%
-\contentsline {subsection}{\numberline {7.5.3}Remediation and Rationale}{33}{subsection.7.5.3}%
-\contentsline {paragraph}{Configuration Changes.}{33}{section*.19}%
-\contentsline {subsection}{\numberline {7.5.4}Verification}{34}{subsection.7.5.4}%
-\contentsline {section}{\numberline {7.6}Snyk: Dependency (SCA) Vulnerability Assessment}{34}{section.7.6}%
-\contentsline {subsection}{\numberline {7.6.1}Why SCA}{34}{subsection.7.6.1}%
-\contentsline {subsection}{\numberline {7.6.2}Baseline Findings}{34}{subsection.7.6.2}%
-\contentsline {subsection}{\numberline {7.6.3}Remediation}{34}{subsection.7.6.3}%
-\contentsline {paragraph}{Critical Migrations.}{34}{section*.20}%
-\contentsline {subsection}{\numberline {7.6.4}Verification}{35}{subsection.7.6.4}%
-\contentsline {section}{\numberline {7.7}SonarQube Cloud: Static Security Analysis on the Controller Layer}{35}{section.7.7}%
-\contentsline {subsection}{\numberline {7.7.1}Why SAST for Servlets}{35}{subsection.7.7.1}%
-\contentsline {subsection}{\numberline {7.7.2}Baseline Findings}{35}{subsection.7.7.2}%
-\contentsline {subsection}{\numberline {7.7.3}Remediation Pattern and Motivation}{35}{subsection.7.7.3}%
-\contentsline {subsection}{\numberline {7.7.4}Remediation Pattern and Motivation}{35}{subsection.7.7.4}%
-\contentsline {paragraph}{Implementation Details.}{35}{section*.21}%
-\contentsline {subsection}{\numberline {7.7.5}Verification}{36}{subsection.7.7.5}%
-\contentsline {section}{\numberline {7.8}Web Application Shows No Vulnerabilities}{36}{section.7.8}%
-\contentsline {paragraph}{Evidence-based claim (scope).}{36}{section*.22}%
-\contentsline {paragraph}{Completeness note.}{36}{section*.23}%
-\contentsline {section}{\numberline {7.9}Threats to Validity}{36}{section.7.9}%
-\contentsline {paragraph}{False positives and rule interpretation.}{36}{section*.24}%
-\contentsline {paragraph}{Environment and reproducibility.}{36}{section*.25}%
-\contentsline {paragraph}{Dependency upgrades and behavioral drift.}{36}{section*.26}%
-\contentsline {paragraph}{Coverage gaps without dynamic testing.}{36}{section*.27}%
-\contentsline {section}{\numberline {7.10}Conclusions and Next Steps}{37}{section.7.10}%
-\contentsline {chapter}{\numberline {8}Build and Deployment Pipeline}{38}{chapter.8}%
+\contentsline {chapter}{\numberline {6}Containerization and Orchestration Readiness}{28}{chapter.6}%
+\contentsline {chapter}{\numberline {7}Security Assurance and Vulnerability Assessment}{30}{chapter.7}%
+\contentsline {section}{\numberline {7.1}Context and Objectives}{30}{section.7.1}%
+\contentsline {section}{\numberline {7.2}Background on Security Tools}{30}{section.7.2}%
+\contentsline {subsection}{\numberline {7.2.1}GitGuardian (Secret Detection)}{30}{subsection.7.2.1}%
+\contentsline {subsection}{\numberline {7.2.2}Snyk (Software Composition Analysis)}{31}{subsection.7.2.2}%
+\contentsline {subsection}{\numberline {7.2.3}SonarQube Cloud (Static Analysis)}{31}{subsection.7.2.3}%
+\contentsline {section}{\numberline {7.3}Process, Toolchain, and Evidence Trail}{31}{section.7.3}%
+\contentsline {subsection}{\numberline {7.3.1}Before/After Summary}{31}{subsection.7.3.1}%
+\contentsline {section}{\numberline {7.4}Security Mechanisms in CI/CD}{32}{section.7.4}%
+\contentsline {section}{\numberline {7.5}GitGuardian: Secret Detection and Remediation}{32}{section.7.5}%
+\contentsline {subsection}{\numberline {7.5.1}Why Secret Scanning}{32}{subsection.7.5.1}%
+\contentsline {subsection}{\numberline {7.5.2}Baseline Findings}{32}{subsection.7.5.2}%
+\contentsline {subsection}{\numberline {7.5.3}Remediation and Rationale}{32}{subsection.7.5.3}%
+\contentsline {paragraph}{Configuration Changes.}{32}{section*.19}%
+\contentsline {subsection}{\numberline {7.5.4}Verification}{33}{subsection.7.5.4}%
+\contentsline {section}{\numberline {7.6}Snyk: Dependency (SCA) Vulnerability Assessment}{33}{section.7.6}%
+\contentsline {subsection}{\numberline {7.6.1}Why SCA}{33}{subsection.7.6.1}%
+\contentsline {subsection}{\numberline {7.6.2}Baseline Findings}{33}{subsection.7.6.2}%
+\contentsline {subsection}{\numberline {7.6.3}Remediation}{33}{subsection.7.6.3}%
+\contentsline {paragraph}{Critical Migrations.}{33}{section*.20}%
+\contentsline {subsection}{\numberline {7.6.4}Verification}{34}{subsection.7.6.4}%
+\contentsline {section}{\numberline {7.7}SonarQube Cloud: Static Security Analysis on the Controller Layer}{34}{section.7.7}%
+\contentsline {subsection}{\numberline {7.7.1}Why SAST for Servlets}{34}{subsection.7.7.1}%
+\contentsline {subsection}{\numberline {7.7.2}Baseline Findings}{34}{subsection.7.7.2}%
+\contentsline {subsection}{\numberline {7.7.3}Remediation Pattern and Motivation}{34}{subsection.7.7.3}%
+\contentsline {paragraph}{Implementation Details.}{34}{section*.21}%
+\contentsline {subsection}{\numberline {7.7.4}Verification}{34}{subsection.7.7.4}%
+\contentsline {section}{\numberline {7.8}Web Application Shows No Vulnerabilities}{35}{section.7.8}%
+\contentsline {paragraph}{Evidence-based claim (scope).}{35}{section*.22}%
+\contentsline {paragraph}{Completeness note.}{35}{section*.23}%
+\contentsline {section}{\numberline {7.9}Threats to Validity}{35}{section.7.9}%
+\contentsline {paragraph}{False positives and rule interpretation.}{35}{section*.24}%
+\contentsline {paragraph}{Environment and reproducibility.}{35}{section*.25}%
+\contentsline {paragraph}{Dependency upgrades and behavioral drift.}{35}{section*.26}%
+\contentsline {paragraph}{Coverage gaps without dynamic testing.}{35}{section*.27}%
+\contentsline {section}{\numberline {7.10}Conclusions and Next Steps}{35}{section.7.10}%
+\contentsline {chapter}{\numberline {8}Build and Deployment Pipeline}{36}{chapter.8}%
