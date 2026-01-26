@@ -9,7 +9,6 @@ In this context, \textit{performance testing} refers to the systematic evaluatio
 
 In our work, we used JMH (Java Microbenchmark Harness), an annotation-based framework designed to build, run, and analyze Java microbenchmarks. Its key value is methodological: on the JVM, just-in-time compilation and other optimizations can make naive timing measurements unstable or misleading, especially at the beginning of execution. JMH provides structured warmup and measurement phases, controlled JVM forking, and utilities (such as \texttt{Blackhole}) to reduce measurement artifacts.\par
 
-The project checklist explicitly requires microbenchmarks with JMH (Java Microbenchmark Harness). For this reason, the work described in this chapter focuses on \emph{microbenchmarking} selected backend components rather than executing full end-to-end load tests. The intent is to isolate representative operations that are likely to dominate latency (data-access and service orchestration), measure them in a controlled way, and establish a baseline that can be compared across future changes.
 The project checklist explicitly requires microbenchmarks with JMH, for this reason, the work described in this chapter focuses on \emph{microbenchmarking} selected backend components rather than executing full end-to-end load tests. The intent is to isolate representative operations that are likely to dominate latency (data-access and service orchestration), measure them in a controlled way, and establish a baseline that can be compared across future changes.
 
 \section{Methodology}
