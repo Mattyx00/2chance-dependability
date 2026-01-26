@@ -3,13 +3,14 @@
 \newcommand{\benchmethod}[2]{\texttt{#1.\allowbreak #2}}
 
 \section{Context and Goals}
-Performance is a core non-functional requirement: beyond functional correctness, the system should remain responsive, predictable, and stable under typical workload conditions. In a dependability-oriented project, performance is not just a user-experience concern: if critical operations degrade or time out, performance becomes an availability issue. In addition, a backend that spends too much time per request is easier to overload, which increases exposure to denial-of-service scenarios.
+Performance is an important non-functional requirement: beyond functional correctness, the system should remain responsive, predictable and efficient. In a dependability-oriented project, performance is not just a user-experience concern: if critical operations degrade or time out, performance becomes an availability issue. In addition, a backend that spends too much time per request is easier to overload, which increases exposure to denial-of-service scenarios. 
 
-In this context, \textit{performance testing} refers to the systematic evaluation of performance features (e.g., execution time and throughput) of software components in order to detect performance regressions over time. In practice, it is often organized as \textit{benchmarking}, i.e., executing an artificially generated workload against the system (or part of it) to compare versions, configurations, or environments. When the focus narrows to very small units of code (e.g., individual Java methods), the activity becomes \textit{microbenchmarking}.\par
+In this context, \textit{performance testing} refers to the systematic evaluation of performance features of software components in order to detect performance regressions over time. In practice, it is often organized as \textit{benchmarking}, i.e., executing an artificially generated workload against the system (or part of it) to compare versions, configurations, or environments. When the focus narrows to very small units of code (e.g., individual Java methods), the activity becomes \textit{microbenchmarking}.\par
 
-JMH (Java Microbenchmark Harness) is an annotation-based framework specifically designed to build, run, and analyze Java microbenchmarks. Its key value is methodological: on the JVM, just-in-time compilation and other optimizations can make naive timing measurements unstable or misleading, especially at the beginning of execution. JMH provides structured warmup and measurement phases, controlled JVM forking, and utilities (such as \texttt{Blackhole}) to reduce measurement artifacts.\par
+In our work, we used JMH (Java Microbenchmark Harness), an annotation-based framework designed to build, run, and analyze Java microbenchmarks. Its key value is methodological: on the JVM, just-in-time compilation and other optimizations can make naive timing measurements unstable or misleading, especially at the beginning of execution. JMH provides structured warmup and measurement phases, controlled JVM forking, and utilities (such as \texttt{Blackhole}) to reduce measurement artifacts.\par
 
 The project checklist explicitly requires microbenchmarks with JMH (Java Microbenchmark Harness). For this reason, the work described in this chapter focuses on \emph{microbenchmarking} selected backend components rather than executing full end-to-end load tests. The intent is to isolate representative operations that are likely to dominate latency (data-access and service orchestration), measure them in a controlled way, and establish a baseline that can be compared across future changes.
+The project checklist explicitly requires microbenchmarks with JMH, for this reason, the work described in this chapter focuses on \emph{microbenchmarking} selected backend components rather than executing full end-to-end load tests. The intent is to isolate representative operations that are likely to dominate latency (data-access and service orchestration), measure them in a controlled way, and establish a baseline that can be compared across future changes.
 
 \section{Methodology}
 This chapter adopts a microbenchmarking perspective: instead of stressing the whole application end-to-end, it repeatedly executes carefully selected operations and measures their cost in isolation. JMH supports this approach by letting benchmarks declare, through annotations, how measurements should be produced (threads, forks, warmup and measurement iterations, and output units).\par
@@ -17,7 +18,7 @@ This chapter adopts a microbenchmarking perspective: instead of stressing the wh
 In our case, benchmarks are configured to report \texttt{AverageTime} (\texttt{avgt}) because the goal is to reason about latency per operation (ms/op) for DB-backed calls and for fail-fast validation paths. Other modes exist (e.g., throughput or sample time), but they were not prioritized for the baseline reported here.\par
 
 \subsection{Selection of Performance-Critical Scenarios}
-The starting point is the identification of ``slow or expensive'' use cases at the backend level. Without production telemetry, the selection was engineering-driven: database interactions (queries and inserts) and service methods that combine validation with DAO calls often dominate request time. Therefore, the benchmark suite targets:
+The starting point is the identification of ``slow or expensive'' use cases at the backend level. So the selection includes: database interactions (queries and inserts) and service methods that combine validation with DAO calls, often dominate request time. Therefore, the benchmark suite targets:
 \begin{itemize}
   \item DAO-layer operations (persistence access and query paths);
   \item service-layer operations (business logic + DAO/DB orchestration);
@@ -36,8 +37,9 @@ JMH is integrated via Maven. Benchmark sources are located under \texttt{src/jmh
 target/benchmarks.jar
 \end{verbatim}
 
-\subsection{Running JMH (Jar-First Workflow)}
-The lecture reference example follows a ``jar-first'' workflow (generate jar, list benchmarks, run selected benchmarks, export JSON). The same style is applied here because it is explicit, reproducible, and easy to document.
+\subsection{Running JMH (The Workflow)}
+The workflow follows this approach: generate the jar, list benchmarks, run selected benchmarks, and export JSON.
+The same style is applied here because it is explicit, reproducible, and easy to document.
 
 A typical run consists of:
 \begin{verbatim}
@@ -75,7 +77,7 @@ Several benchmarks include database calls; therefore the database setup has a di
 \noindent
 With a local loopback DB and a warm connection pool, sub-millisecond scores are plausible. These values should not be generalized to remote or cold-start environments without additional runs.
 
-\section{Benchmark Design (Theory-to-Code Rationale)}
+\section{Benchmark Design}
 \subsection{Why JMH (and Why Not Naive Timing)}
 Microbenchmarking on the JVM is sensitive to warmup, JIT compilation, and aggressive optimizations. A naive \texttt{System.nanoTime()} wrapper can easily report misleading numbers (e.g., measuring cold-start behavior or having work optimized away). JMH is designed to address these pitfalls via structured warmup and measurement phases, JVM forking, and mechanisms to prevent dead code elimination.
 
@@ -158,7 +160,7 @@ Percentile-oriented analysis (p95/p99) is not produced by the current configurat
 The benchmark session summarized here was executed on \textbf{2026-01-14} and intentionally focused on two components: \texttt{AdminService} (business logic + DAO/DB calls) and \texttt{OrdineDAO} (data-access layer). This provides a clean first baseline contrasting happy paths with fail-fast/error paths.
 
 \paragraph{Traceability note.}
-Benchmark names in the provided output match the updated repository version, therefore results are directly traceable to the benchmark code. The received snippet does not include \texttt{Cnt} and \texttt{Error}; a JSON export (\texttt{reports/performance/jmh\_result.json}) should be attached to complete the statistical fields.
+The following Table \ref{tab:jmh-results} reports the measured Score (AverageTime, ms/op) for the selected scope; additional JMH statistical fields (e.g., Cnt and Error) are available in the JSON report at reports/performance/jmh_result.json.
 
 \begin{table}[h]
 \centering
@@ -208,12 +210,3 @@ Running performance benchmarks in standard CI runners often produces noisy and m
 The project implements a coherent JMH suite integrated into the Maven build and targeted at plausible backend hotspots (DAO operations, service orchestration, and connection pooling). The benchmark design reflects the key methodological points: structured warmup/measurement, JVM forking, thread-scoped state, and explicit handling of values/exceptions to reduce optimization artifacts.
 
 The measured baseline (2026-01-14) confirms a practical architectural benefit: fail-fast validation avoids spending DB round-trip time on invalid input, while the service-level benchmarks provide early insight into how success and failure paths differ in cost. The results are strong evidence for the value of defensive validation and for tracking regressions over time.
-
-Recommended next steps (low-impact):
-\begin{itemize}
-  \item Ensure the JSON output file (\texttt{reports/performance/jmh\_result.json}) is archived as evidence and referenced in the report, including \texttt{Cnt} and \texttt{Error}.
-  \item For final verification runs, increase \texttt{@Fork} (e.g., 2--3) to improve robustness, and repeat runs to check stability.
-  \item Consider adding a \texttt{SampleTime} run configuration if tail latency (p95/p99) becomes a reporting requirement.
-  \item For strict microbenchmark hygiene, consume returned values also on successful DB paths (even if the DB call itself prevents meaningful dead-code elimination in practice).
-  \item For side-effect benchmarks (inserts), add optional cleanup/rollback or reset DB state between runs to reduce drift.
-\end{itemize}
