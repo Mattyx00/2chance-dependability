@@ -15,7 +15,7 @@
         <maven.compiler.release>8</maven.compiler.release>
         <junit.version>5.9.1</junit.version>
         <jmh.version>1.37</jmh.version>
-        <argLine />
+        <argLine/>
         <sonar.organization>mattyx00</sonar.organization>
     </properties>
 
@@ -110,7 +110,7 @@
         <dependency>
             <groupId>org.pitest</groupId>
             <artifactId>pitest-parent</artifactId>
-            <version>1.1.10</version>
+            <version>1.22.0</version>
             <type>pom</type>
         </dependency>
 
