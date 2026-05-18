@@ -1,0 +1,50 @@
+\documentclass[12pt, a4paper]{report}
+
+% Essential Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lipsum}
+\usepackage{csquotes}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{listings}
+\usepackage{xcolor}
+
+% Geometry Settings
+\geometry{
+    a4paper,
+    total={170mm,257mm},
+    left=20mm,
+    top=20mm,
+}
+
+% Hyperref Setup
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    filecolor=magenta,      
+    urlcolor=blue,
+    pdftitle={2chance Sustainability Report},
+    pdfpagemode=FullScreen,
+}
+
+% Document Metadata
+\title{\textbf{2Chance Web Application} \\ \large Sustainable Software Engineering Project Report}
+\input{authors}
+\date{23 January 2026}
+
+\begin{document}
+
+% Cover Page
+\hypersetup{pageanchor=false}
+\maketitle
+\hypersetup{pageanchor=true}
+
+% Table of Contents
+\tableofcontents
+
+% Chapters
+\include{chapters/software_architectural_overview}
+
+\end{document}
