@@ -52,7 +52,7 @@ CREATE TABLE `composto` (
   `id_ordine` int NOT NULL,
   `id_prodotto` int NOT NULL,
   `quantita` int NOT NULL,
-  `prezzo` double NOT NULL
+  `prezzo_totale` double NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -77,8 +77,8 @@ CREATE TABLE `ordine` (
   `id_ordine` int NOT NULL AUTO_INCREMENT,
   `id_utente` int NOT NULL,
   `data` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `indirizzo` varchar(500) NOT NULL,
-  `totale` double NOT NULL,
+  `indirizzo_spedizione` varchar(500) NOT NULL,
+  `prezzo_totale` double NOT NULL,
   PRIMARY KEY (`id_ordine`)
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;

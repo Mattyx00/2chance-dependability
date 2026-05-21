@@ -15,6 +15,7 @@ services:
       - app-network
     volumes:
       - ./upload:/usr/local/tomcat/upload
+      - ./upload:/usr/local/upload
 
   mysql-db:
     image: mysql:8.0
@@ -34,6 +35,17 @@ services:
     networks:
       - app-network
     command: --default-authentication-plugin=mysql_native_password
+
+  jmeter:
+    image: justb4/jmeter:latest
+    depends_on:
+      - webapp
+    networks:
+      - app-network
+    volumes:
+      - ./src/jmeter:/tests
+    # Manteniamo il container in modalità "attesa" frugale
+    entrypoint: ["tail", "-f", "/dev/null"]
 
 networks:
   app-network:
