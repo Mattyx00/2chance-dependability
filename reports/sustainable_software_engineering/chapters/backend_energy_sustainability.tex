@@ -198,9 +198,9 @@ Il nucleo operativo della simulazione è costituito dai campionatori, che replic
 
 L'esecuzione sequenziale e parallela di questi blocchi costringe l'applicazione a reagire a un flusso di carico realistico. La tracciatura sincronizzata di tali eventi, accoppiata al profilatore energetico, fornisce il \textit{dataset} primario alla base dell'analisi di sostenibilità del sistema.
 
-\subsection{Automazione, Isolamento e Sincronizzazione dei Test (\texttt{run\_performance\_tests.ps1})}
+\subsection{Automazione, Isolamento e Sincronizzazione dei Test (\texttt{backend\_energy\_consumption\_analysis.ps1})}
 
-Al fine di garantire l'affidabilità scientifica, la riproducibilità e l'assenza di bias sperimentali durante le sessioni di misurazione dinamica del consumo energetico, è stato sviluppato uno script di orchestrazione in PowerShell (\texttt{run\_performance\_tests.ps1}). Dal punto di vista della metodologia di sperimentazione empirica, le scelte architetturali adottate in questo script rispondono a precisi requisiti teorici:
+Al fine di garantire l'affidabilità scientifica, la riproducibilità e l'assenza di bias sperimentali durante le sessioni di misurazione dinamica del consumo energetico, è stato sviluppato uno script di orchestrazione in PowerShell (\texttt{backend\_energy\_consumption\_analysis.ps1}). Dal punto di vista della metodologia di sperimentazione empirica, le scelte architetturali adottate in questo script rispondono a precisi requisiti teorici:
 
 \subsubsection{Isolamento dell'Ambiente e Prevenzione del Software Aging}
 Durante l'esecuzione di test di carico su macchine virtuali o containerizzate in Java (JVM), le prestazioni del sistema possono degradare progressivamente a causa del fenomeno noto come \textit{software aging} (invecchiamento del software). Questo degrado è indotto da:
@@ -229,6 +229,17 @@ In questo modo, la raccolta dei dati sul consumo di potenza (in Watt) e sull'uso
 
 \subsubsection{Separazione delle Preoccupazioni nella Telemetria}
 Lo script organizza in modo distinto la persistenza dei dati generati, incanalando le metriche prestazionali (file log prestazionali \texttt{.jtl} contenenti latenze di rete, tempi di servizio e codici di stato HTTP) all'interno della directory \texttt{jmeter\_logs}, e la telemetria energetica (file \texttt{.csv} registrati da EnergiBridge) nella cartella \texttt{energibridge\_logs}. Questa separazione logica semplifica l'elaborazione dei dati e garantisce l'isolamento tra l'analisi prestazionale classica (rispetto degli SLA) e la quantificazione del consumo ecologico (sostenibilità energetica).
+
+\subsubsection{Orchestrazione Automatizzata e Analisi End-to-End}
+Per ottimizzare il flusso di lavoro ed evitare disallineamenti temporali o errori umani nella fase di post-elaborazione dei dati energetici, l'architettura integra l'intera pipeline sperimentale in un unico script di orchestrazione automatizzato. Invece di richiedere l'avvio manuale di script separati per ciascuna fase (configurazione dell'ambiente, esecuzione del carico, cattura della telemetria ed estrazione dei risultati), il file \texttt{backend\_energy\_consumption\_analysis.ps1} esegue sequenzialmente e in modo autonomo le seguenti operazioni:
+\begin{enumerate}
+    \item \textbf{Setup dell'Ambiente:} Esegue il ciclo di teardown e startup di Docker per azzerare lo stato della JVM e delle connessioni JDBC.
+    \item \textbf{Profilazione Dinamica:} Esegue la sessione di carico JMeter non-GUI con telemetria EnergiBridge attiva.
+    \item \textbf{Post-Elaborazione Automatica:} Al termine del test di carico, lo script invoca automaticamente il modulo Python \texttt{energibridge\_metrics\_extractor.py} passandogli il tracciato CSV appena generato.
+    \item \textbf{Persistenza e Logging Sincronizzato:} L'output dell'estrazione energetica viene stampato sulla console e contemporaneamente persistito tramite il comando \texttt{Tee-Object} all'interno della cartella \texttt{extractor\_logs}. Il file di log energetico (es. \texttt{log\_load\_extractor\_2026\_05\_21\_20\_47\_24.log}) eredita la medesima marcatura temporale (\textit{timestamp}) generata all'inizio del test.
+\end{enumerate}
+
+Questo approccio end-to-end garantisce la riproducibilità scientifica dell'esperimento: ogni sessione di test produce in modo atomico e autocontenuto un set completo di file di output correlati tra loro dallo stesso identico timestamp (file \texttt{.jtl} prestazionale, file \texttt{.csv} di telemetria grezza, file \texttt{.log} di JMeter e file \texttt{.log} dell'estrattore energetico). In questo modo, l'intero ciclo di vita del test e dell'analisi energetica viene gestito da un singolo punto d'ingresso, garantendo coerenza metodologica e riducendo a zero l'overhead manuale.
 
 \section{Microbenchmarking Energetico (JMH)}
 
