@@ -244,3 +244,80 @@ Questo approccio end-to-end garantisce la riproducibilità scientifica dell'espe
 \section{Microbenchmarking Energetico (JMH)}
 
 \section{Analisi Statica del Codice (Creedengo)}
+
+Per l'Analisi Statica dell'Eco-Design basata su regole (\textit{Rule-Based Eco-Design Static Analysis}), è necessario integrare il codice sorgente locale, un'istanza attiva di SonarQube e il plugin Creedengo. Poiché Creedengo (evoluzione di \textit{ecoCode}) opera come plugin per SonarQube, esso si integra direttamente nella pipeline di Static Application Security Testing (SAST) esistente. Dato che il progetto è containerizzato tramite Docker, l'esecuzione locale di SonarQube in parallelo all'applicazione risulta estremamente efficiente.
+
+Di seguito viene descritta la guida pratica passo-passo per la configurazione, l'esecuzione e l'estrazione delle eco-vulnerabilità rilevate.
+
+\subsection{Configurazione di SonarQube con il Plugin Creedengo}
+
+Prima di procedere alla scansione del codice, è fondamentale assicurarsi che l'ambiente SonarQube disponga del ruleset Java di Creedengo. I passaggi per predisporre l'ambiente prevedono:
+
+\begin{enumerate}
+    \item \textbf{Avvio di SonarQube via Docker:} Se non si dispone di un server SonarQube dedicato, è possibile avviarlo standalone tramite il comando:
+    \begin{lstlisting}[language=bash, caption={Avvio del container SonarQube}, label={lst:run_sonarqube}]
+docker run -d --name sonarqube-sse -p 9000:9000 sonarqube:community
+    \end{lstlisting}
+
+    \item \textbf{Installazione del Plugin Creedengo:} Il plugin Creedengo per Java (in formato \texttt{.jar}) deve essere scaricato dalla sezione release del repository ufficiale GitHub (\texttt{green-code-initiative/creedengo-java}) ed inserito all'interno della cartella delle estensioni di SonarQube. Il trasferimento nel container avviene tramite:
+    \begin{lstlisting}[language=bash, caption={Copia del plugin Creedengo nel container}, label={lst:copy_plugin}]
+docker cp plugin/creedengo-java-plugin-2.1.2.jar sonarqube-sse:/opt/sonarqube/extensions/plugins/
+    \end{lstlisting}
+
+    \item \textbf{Riavvio del Container:} Per forzare il caricamento del plugin ed attivare le nuove regole di eco-design all'interno di SonarQube, si riavvia il container:
+    \begin{lstlisting}[language=bash, caption={Riavvio del container SonarQube}, label={lst:restart_sonarqube}]
+docker restart sonarqube-sse
+    \end{lstlisting}
+\end{enumerate}
+
+\subsection{Automazione del Setup su Nuove Infrastrutture}
+Per agevolare l'installazione e la configurazione di SonarQube con Creedengo su qualsiasi altra infrastruttura, è stato predisposto lo script di automazione \texttt{scripts/setup-sonarqube-creedengo.sh}. Tale script verifica la presenza di Docker, scarica automaticamente la versione desiderata del plugin da GitHub se non presente localmente, avvia il container SonarQube standalone, copia la libreria nella directory corretta del container ed esegue il riavvio del servizio.
+
+\subsection{Selezione delle Regole di Eco-Design}
+Per massimizzare il ritorno ecologico delle attività di refactoring e ridurre il rumore nelle metriche di telemetria statica, sono state selezionate 11 regole fondamentali del ruleset Creedengo Java. Ciascuna regola è stata scelta in base alla sua pertinenza tecnologica con l'architettura MVC di 2Chance (basata su Java Servlets e JDBC/DAO nativi) e all'impatto sulla riduzione del sovraccarico hardware.
+
+Le regole attivate e le relative motivazioni teoriche sono descritte di seguito:
+
+\begin{enumerate}
+    \item \textbf{Avoid getting the size of the collection in the loop (Evitare il calcolo della dimensione delle collezioni nei cicli):}
+    Questa regola rappresenta una variante diretta delle specifiche di progetto relative all'efficienza computazionale (GC169). L'invocazione continua del metodo \texttt{.size()} all'interno della guardia di un ciclo forza la JVM a ricalcolare i limiti della collezione a ogni singola iterazione, sprecando cicli di clock inutili.
+    
+    \item \textbf{Avoid SQL request in loop (Evitare query SQL all'interno di cicli):}
+    L'esecuzione di interrogazioni al database all'interno di cicli iterativi è un fattore altamente inefficiente. Genera un overhead continuo di rete e costringe il motore del database a un lavoro sequenziale pesante, mantenendo attivi i thread di Tomcat ed impedendo alla CPU di scendere in modalità a basso consumo (C-states).
+    
+    \item \textbf{Avoid usage of static collections (Evitare l'uso di collezioni statiche):}
+    Le collezioni statiche persistono per l'intera durata della JVM. Se non gestite in modo impeccabile, possono provocare perdite di memoria striscianti. Sotto stress (es. durante i Soak Test), la saturazione della memoria Heap costringe la JVM a frequenti cicli di Major Garbage Collection, con un consumo energetico molto elevato.
+    
+    \item \textbf{Avoid using Pattern.compile() in a non-static context (Evitare Pattern.compile() in contesto non statico):}
+    La compilazione di espressioni regolari è un'operazione onerosa per la CPU. Compilare ripetutamente lo stesso pattern all'interno dei metodi delle Servlet ad ogni richiesta, anziché memorizzarlo in una costante \texttt{private static final Pattern}, introduce un inutile overhead elaborativo.
+    
+    \item \textbf{Do not call a function when declaring a for-type loop (Non invocare funzioni nella dichiarazione del ciclo for):}
+    Corrisponde al vincolo GC169 (classificato a priorità elevata). Identifica chiamate a funzioni invarianti all'interno dei parametri di inizializzazione o di guardia dei cicli, suggerendo di estrarle in variabili locali ed evitando migliaia di invocazioni ridondanti del medesimo metodo.
+    
+    \item \textbf{Don't use the query SELECT * FROM (Evitare l'uso di SELECT *):}
+    Il recupero indiscriminato di tutte le colonne di una tabella costringe a trasferire byte inutili attraverso la connessione di rete e obbliga la JVM ad allocare oggetti in memoria per campi non utilizzati durante la creazione dei Model Beans.
+    
+    \item \textbf{Free resources (Rilascio delle risorse):}
+    La mancata chiusura manuale dei canali di comunicazione con il database (como \texttt{Connection}, \texttt{Statement} e \texttt{ResultSet}) porta a colli di bottiglia e memory leak. Quando il connection pool esaurisce le risorse, Tomcat deve gestire i thread in attesa attiva, degradando gravemente la stabilità e l'efficienza ecologica del server.
+    
+    \item \textbf{Initialize builder/buffer with the appropriate size (Inizializzazione StringBuilder con dimensione corretta):}
+    Questa regola contrasta l'impatto della mutabilità delle stringhe. Creare uno \texttt{StringBuilder} o uno \texttt{StringBuffer} senza indicare una capacità iniziale obbliga la JVM ad eseguire continui ridimensionamenti e copie degli array di caratteri interni man mano che la stringa si espande.
+    
+    \item \textbf{orElseGet instead of orElse (Utilizzo di orElseGet al posto di orElse):}
+    Nelle strutture di tipo \texttt{Optional}, il metodo \texttt{.orElse(...)} valuta l'espressione di fallback in ogni caso, anche se il valore principale è presente. Utilizzando \texttt{.orElseGet(...)} si sfrutta la \textit{lazy evaluation}, eseguendo il blocco di fallback unicamente se necessario ed eliminando calcoli ridondanti sotto carichi elevati.
+    
+    \item \textbf{Use PreparedStatement instead of Statement (Utilizzo di PreparedStatement):}
+    I \texttt{PreparedStatement} consentono al motore di MySQL di pre-compilare ed ottimizzare la query una sola volta. Reutilizzare query pre-compilate riduce sensibilmente il carico computazionale sull'infrastruttura del database durante l'esecuzione di transazioni concorrenti.
+    
+    \item \textbf{Use System.arraycopy to copy arrays (Utilizzo di System.arraycopy):}
+    Questa regola fa riferimento diretto alla specifica di progetto GC127 (Medium Severity). L'uso di cicli di iterazione manuali per copiare singoli elementi da un array all'altro è altamente inefficiente. La funzione \texttt{System.arraycopy()} si interfaccia direttamente con istruzioni native a basso livello del sistema operativo (scritte in C), garantendo una copia di blocchi di memoria estremamente efficiente.
+\end{enumerate}
+
+\subsection{Razionale della Selezione delle Regole}
+Il processo di selezione e la conseguente esclusione delle restanti regole risponde a tre criteri chiave:
+\begin{itemize}
+    \item \textbf{Allineamento Tecnologico (Stack Match):} Sono state rimosse tutte le regole relative a framework non presenti nel progetto (es. regole specifiche per Spring Boot/Spring Data), poiché l'applicazione è strutturata esclusivamente su Servlet nativi e JDBC puro. Le regole database-specifiche (\texttt{PreparedStatement}, \texttt{SELECT *}, \texttt{SQL in loop}) sono state invece prioritarizzate per il loro alto impatto prestazionale ed ecologico.
+    \item \textbf{Mitigazione della Garbage Collection (GC):} In un'applicazione web monolitica, i consumi più critici sono spesso legati alla CPU impegnata nelle attività di Garbage Collection. Regole mirate a evitare istanziazioni superflue (\texttt{Pattern.compile()}, ridimensionamento \texttt{StringBuilder}, collezioni statiche) riducono la pressione sulla memoria Heap.
+    \item \textbf{Vincoli di Progetto:} Le regole che indirizzano direttamente i requisiti GC169 (chiamate invarianti nei cicli) e GC127 (copia ottimizzata degli array) sono state ritenute mandatarie per garantire la conformità con le specifiche di sostenibilità.
+\end{itemize}
+
