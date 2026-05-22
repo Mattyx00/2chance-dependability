@@ -1,0 +1,18 @@
+
+=== Analisi Energetica di EnergiBridge ===
+Elaborazione file: .\src\jmeter\energibridge_logs\log_spike_energy_2026_05_21_21_23_18.csv
+=============================================
+Durata Workload Profiled: 404.12 secondi (~6.74 minuti)
+---------------------------------------------
+Metrica di Sostenibilita       | Valore       | Unita   
+--------------------------------------------------------
+Energia CPU Package            | 6763.45      | Joules (J)
+Potenza Media CPU Package      | 16.74        | Watt (W)
+Energia PPO (Core)             | 153.11       | Joules (J)
+CPU Usage (Media)              | 36.07        | Percentuale (%)
+CPU Usage (Picco)              | 99.62        | Percentuale (%)
+Frequenza Media CPU            | 2000.00      | MHz     
+Memoria RAM Usata (Media)      | 26.32        | Gigabyte (GB)
+Memoria RAM Usata (Picco)      | 27.21        | Gigabyte (GB)
+========================================================
+Analisi completata con successo.
