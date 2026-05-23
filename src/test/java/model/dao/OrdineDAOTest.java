@@ -205,21 +205,17 @@ class OrdineDAOTest {
         PreparedStatement stmtOrder = mock(PreparedStatement.class);
         ResultSet rsOrder = mock(ResultSet.class);
 
-        when(connection.prepareStatement(contains("FROM ordine WHERE"))).thenReturn(stmtOrder);
+        when(connection.prepareStatement(contains("FROM ordine o"))).thenReturn(stmtOrder);
         when(stmtOrder.executeQuery()).thenReturn(rsOrder);
 
         when(rsOrder.next()).thenReturn(true, false);
         when(rsOrder.getInt("id_ordine")).thenReturn(10);
-        when(rsOrder.getInt("id_utente")).thenReturn(1);
         when(rsOrder.getDate("data_ordine")).thenReturn(new java.sql.Date(System.currentTimeMillis()));
         when(rsOrder.getString("indirizzo_spedizione")).thenReturn("Via Roma 1");
-        when(rsOrder.getDouble("prezzo_totale")).thenReturn(100.0);
+        when(rsOrder.getDouble("ordine_prezzo")).thenReturn(100.0);
 
-        PreparedStatement stmtItems = mock(PreparedStatement.class);
-        ResultSet rsItems = mock(ResultSet.class);
-        when(connection.prepareStatement(contains("FROM composto"))).thenReturn(stmtItems);
-        when(stmtItems.executeQuery()).thenReturn(rsItems);
-        when(rsItems.next()).thenReturn(false);
+        when(rsOrder.getInt("id_prodotto")).thenReturn(0);
+        when(rsOrder.wasNull()).thenReturn(true);
 
         // Act
         ArrayList<Ordine> result = ordineDAO.getOrdiniByUtente(u);
@@ -325,20 +321,9 @@ class OrdineDAOTest {
         Ordine o = createValidOrder();
         o.getCarrello().getProdotti().get(0).getProdotto().setId(0);
 
-        when(connection.prepareStatement(anyString(), eq(Statement.RETURN_GENERATED_KEYS)))
-                .thenReturn(preparedStatement);
-        when(preparedStatement.executeUpdate()).thenReturn(1);
-
-        ResultSet generatedKeys = mock(ResultSet.class);
-        when(preparedStatement.getGeneratedKeys()).thenReturn(generatedKeys);
-        when(generatedKeys.next()).thenReturn(true);
-        when(generatedKeys.getInt(1)).thenReturn(999);
-
-        when(connection.prepareStatement(contains("INSERT INTO composto"))).thenReturn(preparedStatement);
-
         // Act & Assert
+        // Validation is now hoisted before connection opens, so no rollback occurs
         assertThrows(IllegalArgumentException.class, () -> ordineDAO.addOrdine(o));
-        verify(connection).rollback();
     }
 
     @Test

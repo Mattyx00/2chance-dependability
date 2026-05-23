@@ -171,20 +171,29 @@ public class ProdottoDAO {
         try (Connection connection = ConPool.getConnection();
                 PreparedStatement stmt = connection
                         .prepareStatement("INSERT INTO specifiche (nome, id_prodotto, valore) VALUES (?, ?, ?)")) {
-
-            boolean hasBatch = false;
-            for (Specifiche s : specifiche) {
-                if (s == null || s.getNome() == null || s.getValore() == null) {
-                    continue; // Skip invalid entries
+            
+            connection.setAutoCommit(false);
+            try {
+                boolean hasBatch = false;
+                for (Specifiche s : specifiche) {
+                    if (s == null || s.getNome() == null || s.getValore() == null) {
+                        continue; // Skip invalid entries
+                    }
+                    stmt.setString(1, s.getNome());
+                    stmt.setInt(2, idProdotto);
+                    stmt.setString(3, s.getValore());
+                    stmt.addBatch();
+                    hasBatch = true;
                 }
-                stmt.setString(1, s.getNome());
-                stmt.setInt(2, idProdotto);
-                stmt.setString(3, s.getValore());
-                stmt.addBatch();
-                hasBatch = true;
-            }
-            if (hasBatch) {
-                stmt.executeBatch();
+                if (hasBatch) {
+                    stmt.executeBatch();
+                }
+                connection.commit();
+            } catch (SQLException e) {
+                connection.rollback();
+                throw e;
+            } finally {
+                connection.setAutoCommit(true);
             }
         }
     }

@@ -30,12 +30,36 @@ public class RecensioneDAO {
         }
         try (Connection connection = ConPool.getConnection();
                 PreparedStatement stmt = connection.prepareStatement(
-                        "SELECT r.id_recensione, r.cliente, r.prodotto, r.data_recensione, r.testo, r.valutazione, u.nome, u.cognome, u.admin, u.email, u.telefono, u.password, u.immagine AS utente_immagine, p.categoria, p.descrizione, p.dimensioni, p.quantita, p.peso, p.immagine AS prodotto_immagine, p.marca, p.modello, p.prezzo FROM recensione r, utente u, prodotto p WHERE r.cliente = ? AND r.cliente = u.id_utente AND r.prodotto = p.id_prodotto")) {
+                        "SELECT r.id_recensione, r.prodotto, r.data_recensione, r.testo, r.valutazione, p.categoria, p.descrizione, p.dimensioni, p.quantita, p.peso, p.immagine AS prodotto_immagine, p.marca, p.modello, p.prezzo FROM recensione r JOIN prodotto p ON r.prodotto = p.id_prodotto WHERE r.cliente = ?")) {
             stmt.setInt(1, utente.getId());
             ArrayList<Recensione> recensioni = new ArrayList<>();
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    recensioni.add(mapRowToRecensione(rs));
+                    Recensione recensione = new Recensione();
+                    recensione.setId(rs.getInt("id_recensione"));
+                    
+                    recensione.setUtente(utente);
+                    
+                    Prodotto prodottoProvvisorio = new Prodotto();
+                    prodottoProvvisorio.setId(rs.getInt("prodotto"));
+                    Categoria categoria = new Categoria();
+                    categoria.setNomeCategoria(rs.getString("categoria"));
+                    prodottoProvvisorio.setCategoria(categoria);
+                    prodottoProvvisorio.setDescrizione(rs.getString("descrizione"));
+                    prodottoProvvisorio.setDimensioni(rs.getString("dimensioni"));
+                    prodottoProvvisorio.setQuantitaProdotto(rs.getInt("quantita"));
+                    prodottoProvvisorio.setPeso(rs.getDouble("peso"));
+                    prodottoProvvisorio.setImmagine(rs.getString("prodotto_immagine"));
+                    prodottoProvvisorio.setMarca(rs.getString("marca"));
+                    prodottoProvvisorio.setModello(rs.getString("modello"));
+                    prodottoProvvisorio.setPrezzo(rs.getDouble("prezzo"));
+                    recensione.setProdotto(prodottoProvvisorio);
+                    
+                    recensione.setDataRecensione(rs.getDate("data_recensione"));
+                    recensione.setTesto(rs.getString("testo"));
+                    recensione.setValutazione(rs.getInt("valutazione"));
+
+                    recensioni.add(recensione);
                 }
             }
             return recensioni;
@@ -48,12 +72,32 @@ public class RecensioneDAO {
         }
         try (Connection connection = ConPool.getConnection();
                 PreparedStatement stmt = connection.prepareStatement(
-                        "SELECT r.id_recensione, r.cliente, r.prodotto, r.data_recensione, r.testo, r.valutazione, u.nome, u.cognome, u.admin, u.email, u.telefono, u.password, u.immagine AS utente_immagine, p.categoria, p.descrizione, p.dimensioni, p.quantita, p.peso, p.immagine AS prodotto_immagine, p.marca, p.modello, p.prezzo FROM recensione r, utente u, prodotto p WHERE r.prodotto = ? AND r.cliente = u.id_utente AND r.prodotto = p.id_prodotto")) {
+                        "SELECT r.id_recensione, r.cliente, r.data_recensione, r.testo, r.valutazione, u.nome, u.cognome, u.admin, u.email, u.telefono, u.password, u.immagine AS utente_immagine FROM recensione r JOIN utente u ON r.cliente = u.id_utente WHERE r.prodotto = ?")) {
             stmt.setInt(1, prodotto.getId());
             ArrayList<Recensione> recensioni = new ArrayList<>();
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    recensioni.add(mapRowToRecensione(rs));
+                    Recensione recensione = new Recensione();
+                    recensione.setId(rs.getInt("id_recensione"));
+                    
+                    Utente utenteProvvisorio = new Utente();
+                    utenteProvvisorio.setId(rs.getInt("cliente"));
+                    utenteProvvisorio.setNome(rs.getString("nome"));
+                    utenteProvvisorio.setCognome(rs.getString("cognome"));
+                    utenteProvvisorio.setAdmin(rs.getBoolean("admin"));
+                    utenteProvvisorio.setEmail(rs.getString("email"));
+                    utenteProvvisorio.setTelefono(rs.getString("telefono"));
+                    utenteProvvisorio.setPassword(rs.getString("password"));
+                    utenteProvvisorio.setImmagine(rs.getString("utente_immagine"));
+                    recensione.setUtente(utenteProvvisorio);
+                    
+                    recensione.setProdotto(prodotto);
+                    
+                    recensione.setDataRecensione(rs.getDate("data_recensione"));
+                    recensione.setTesto(rs.getString("testo"));
+                    recensione.setValutazione(rs.getInt("valutazione"));
+
+                    recensioni.add(recensione);
                 }
             }
             return recensioni;
@@ -62,12 +106,16 @@ public class RecensioneDAO {
 
     public int addRecensione(Recensione recensione) throws SQLException {
         validateRecensione(recensione);
-        try (Connection connection = ConPool.getConnection();
-                PreparedStatement stmt = connection
-                        .prepareStatement("INSERT INTO recensione VALUES (default, ?, ?, default, ?, ?)")) {
-            // Replaced System.out.println with Logger or removed if purely debug
+        
+        // Log before acquiring the connection to save DB connection hold time
+        if (LOGGER.isLoggable(java.util.logging.Level.INFO)) {
             LOGGER.info("Adding review for user " + recensione.getUtente().getId() + " on product "
                     + recensione.getProdotto().getId());
+        }
+
+        try (Connection connection = ConPool.getConnection();
+                PreparedStatement stmt = connection
+                        .prepareStatement("INSERT INTO recensione (cliente, prodotto, testo, valutazione) VALUES (?, ?, ?, ?)")) {
 
             stmt.setInt(1, recensione.getUtente().getId());
             stmt.setInt(2, recensione.getProdotto().getId());

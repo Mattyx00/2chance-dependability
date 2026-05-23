@@ -80,9 +80,9 @@ public class OrdineDAO {
             throw new IllegalArgumentException("L'ID dell'ordine deve essere valido.");
         }
 
-        String query = "SELECT c.quantita, c.id_prodotto, p.marca, p.modello, p.immagine, c.prezzo_totale FROM composto c, ordine o, prodotto p "
-                +
-                "WHERE c.id_ordine = o.id_ordine AND c.id_prodotto = p.id_prodotto AND o.id_ordine = ?";
+        String query = "SELECT c.quantita, c.id_prodotto, p.marca, p.modello, p.immagine, c.prezzo_totale FROM composto c "
+                + "INNER JOIN prodotto p ON c.id_prodotto = p.id_prodotto "
+                + "WHERE c.id_ordine = ?";
 
         try (Connection connection = ConPool.getConnection();
                 PreparedStatement stmt = connection.prepareStatement(query)) {
@@ -117,14 +117,6 @@ public class OrdineDAO {
         }
     }
 
-    /**
-     * Retrieves all orders for a specific user.
-     *
-     * @param utente The user.
-     * @return List of orders.
-     * @throws SQLException             if error occurs.
-     * @throws IllegalArgumentException if utente is null or invalid.
-     */
     public ArrayList<Ordine> getOrdiniByUtente(Utente utente) throws SQLException {
         if (utente == null) {
             throw new IllegalArgumentException("L'utente non può essere null.");
@@ -133,46 +125,73 @@ public class OrdineDAO {
             throw new IllegalArgumentException("L'ID dell'utente deve essere valido.");
         }
 
-        String query = "SELECT id_ordine, id_utente, data_ordine, indirizzo_spedizione, prezzo_totale FROM ordine WHERE id_utente = ?";
+        String query = "SELECT o.id_ordine, o.data_ordine, o.indirizzo_spedizione, o.prezzo_totale AS ordine_prezzo, " +
+                       "c.quantita, c.id_prodotto, c.prezzo_totale AS prodotto_prezzo, " +
+                       "p.marca, p.modello, p.immagine " +
+                       "FROM ordine o " +
+                       "LEFT JOIN composto c ON o.id_ordine = c.id_ordine " +
+                       "LEFT JOIN prodotto p ON c.id_prodotto = p.id_prodotto " +
+                       "WHERE o.id_utente = ? " +
+                       "ORDER BY o.id_ordine";
+
         try (Connection connection = ConPool.getConnection();
                 PreparedStatement stmt = connection.prepareStatement(query)) {
 
             stmt.setInt(1, utente.getId());
 
             try (ResultSet rs = stmt.executeQuery()) {
-                ArrayList<Ordine> ordini = new ArrayList<>();
+                java.util.LinkedHashMap<Integer, Ordine> ordiniMap = new java.util.LinkedHashMap<>();
                 while (rs.next()) {
-                    Ordine ordine = new Ordine();
-                    ordine.setId(rs.getInt("id_ordine"));
+                    int idOrdine = rs.getInt("id_ordine");
 
-                    Utente utenteProvv = new Utente();
-                    utenteProvv.setId(rs.getInt("id_utente"));
-                    ordine.setUtente(utenteProvv);
+                    Ordine ordine = ordiniMap.get(idOrdine);
+                    if (ordine == null) {
+                        ordine = new Ordine();
+                        ordine.setId(idOrdine);
 
-                    // Avoid calling setters with null/empty values (tests may not stub them)
-                    Date data = rs.getDate("data_ordine");
-                    if (data != null) {
-                        ordine.setDataOrdine(data);
+                        Utente utenteProvv = new Utente();
+                        utenteProvv.setId(utente.getId());
+                        ordine.setUtente(utenteProvv);
+
+                        Date data = rs.getDate("data_ordine");
+                        if (data != null) {
+                            ordine.setDataOrdine(data);
+                        }
+
+                        String indirizzo = rs.getString("indirizzo_spedizione");
+                        if (indirizzo != null && !indirizzo.trim().isEmpty()) {
+                            ordine.setIndirizzo(indirizzo);
+                        }
+
+                        ordine.setPrezzoTotale(rs.getDouble("ordine_prezzo"));
+                        ordine.setCarrello(new Carrello());
+
+                        ordiniMap.put(idOrdine, ordine);
                     }
 
-                    String indirizzo = rs.getString("indirizzo_spedizione");
-                    if (indirizzo != null && !indirizzo.trim().isEmpty()) {
-                        ordine.setIndirizzo(indirizzo);
+                    int idProdotto = rs.getInt("id_prodotto");
+                    if (!rs.wasNull()) {
+                        ProdottoCarrello p = new ProdottoCarrello();
+                        p.setQuantita(rs.getInt("quantita"));
+
+                        Prodotto prod = new Prodotto();
+                        prod.setId(idProdotto);
+                        prod.setMarca(rs.getString("marca"));
+
+                        String modello = rs.getString("modello");
+                        if (modello == null || modello.trim().isEmpty()) {
+                            modello = "UNKNOWN_MODEL";
+                        }
+                        prod.setModello(modello);
+
+                        prod.setImmagine(rs.getString("immagine"));
+                        prod.setPrezzo(rs.getDouble("prodotto_prezzo"));
+
+                        p.setProdotto(prod);
+                        ordine.getCarrello().aggiungiProdotto(p);
                     }
-
-                    ordine.setPrezzoTotale(rs.getDouble("prezzo_totale"));
-
-                    // Fetch details
-                    try {
-                        Carrello carrello = getProdottoOrdine(ordine);
-                        ordine.setCarrello(carrello);
-                    } catch (Exception e) {
-                        throw e;
-                    }
-
-                    ordini.add(ordine);
                 }
-                return ordini;
+                return new ArrayList<>(ordiniMap.values());
             }
         }
     }
@@ -198,6 +217,16 @@ public class OrdineDAO {
         }
         if (ordine.getIndirizzo() == null || ordine.getIndirizzo().trim().isEmpty()) {
             throw new IllegalArgumentException("L'indirizzo di spedizione è obbligatorio.");
+        }
+
+        for (ProdottoCarrello e : ordine.getCarrello().getProdotti()) {
+            if (e.getProdotto() == null || e.getProdotto().getId() <= 0) {
+                throw new IllegalArgumentException("Prodotto non valido nel carrello.");
+            }
+            if (e.getQuantita() <= 0) {
+                throw new IllegalArgumentException(
+                        "Quantità non valida per prodotto " + e.getProdotto().getId());
+            }
         }
 
         String insertOrdineObj = "INSERT INTO ordine (id_utente, indirizzo_spedizione, prezzo_totale) VALUES (?, ?, ?)";
@@ -234,14 +263,6 @@ public class OrdineDAO {
             // 2. Insert Items (Composto)
             try (PreparedStatement stmt2 = connection.prepareStatement(insertComposto)) {
                 for (ProdottoCarrello e : ordine.getCarrello().getProdotti()) {
-                    if (e.getProdotto() == null || e.getProdotto().getId() <= 0) {
-                        throw new IllegalArgumentException("Prodotto non valido nel carrello.");
-                    }
-                    if (e.getQuantita() <= 0) {
-                        throw new IllegalArgumentException(
-                                "Quantità non valida per prodotto " + e.getProdotto().getId());
-                    }
-
                     stmt2.setInt(1, generatedId);
                     stmt2.setInt(2, e.getProdotto().getId());
                     stmt2.setInt(3, e.getQuantita());
