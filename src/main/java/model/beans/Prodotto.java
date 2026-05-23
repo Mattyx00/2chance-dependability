@@ -152,9 +152,10 @@ public class Prodotto {
             throw new IllegalArgumentException("La marca non può essere null o vuota");
         }
         boolean isAllWhitespace = true;
-        /*@ loop_invariant 0 <= i && i <= marca.length(); @*/
+        int len = marca.length();
+        /*@ loop_invariant 0 <= i && i <= len; @*/
         /*@ loop_invariant isAllWhitespace == (\forall int j; 0 <= j < i; marca.charAt(j) <= ' '); @*/
-        for (int i = 0; i < marca.length(); i++) {
+        for (int i = 0; i < len; i++) {
             if (marca.charAt(i) > ' ') {
                 isAllWhitespace = false;
                 break;
@@ -181,9 +182,10 @@ public class Prodotto {
             throw new IllegalArgumentException("Il modello non può essere null o vuoto");
         }
         boolean isAllWhitespace = true;
-        /*@ loop_invariant 0 <= i && i <= modello.length(); @*/
+        int len = modello.length();
+        /*@ loop_invariant 0 <= i && i <= len; @*/
         /*@ loop_invariant isAllWhitespace == (\forall int j; 0 <= j < i; modello.charAt(j) <= ' '); @*/
-        for (int i = 0; i < modello.length(); i++) {
+        for (int i = 0; i < len; i++) {
             if (modello.charAt(i) > ' ') {
                 isAllWhitespace = false;
                 break;
@@ -224,9 +226,10 @@ public class Prodotto {
             throw new IllegalArgumentException("La descrizione non può essere null o vuota");
         }
         boolean isAllWhitespace = true;
-        /*@ loop_invariant 0 <= i && i <= descrizione.length(); @*/
+        int len = descrizione.length();
+        /*@ loop_invariant 0 <= i && i <= len; @*/
         /*@ loop_invariant isAllWhitespace == (\forall int j; 0 <= j < i; descrizione.charAt(j) <= ' '); @*/
-        for (int i = 0; i < descrizione.length(); i++) {
+        for (int i = 0; i < len; i++) {
             if (descrizione.charAt(i) > ' ') {
                 isAllWhitespace = false;
                 break;

@@ -68,7 +68,8 @@ class OrdineDAOTest {
         // Assert
         assertEquals(orderId, result.getId());
         assertEquals("Via Roma 1", result.getIndirizzo());
-        verify(connection).prepareStatement("SELECT * FROM ordine WHERE id_ordine = ?");
+        verify(connection).prepareStatement(
+                "SELECT id_ordine, id_utente, data_ordine, indirizzo_spedizione, prezzo_totale FROM ordine WHERE id_ordine = ?");
         verify(preparedStatement).setInt(1, orderId);
     }
 
@@ -145,11 +146,11 @@ class OrdineDAOTest {
         when(resultSet.next()).thenReturn(true, true, false); // 2 items
 
         when(resultSet.getInt("quantita")).thenReturn(2, 1);
-        when(resultSet.getInt(2)).thenReturn(101, 102);
-        when(resultSet.getString(17)).thenReturn("BrandA", "BrandB");
-        when(resultSet.getString(18)).thenReturn("ModelA", "ModelB"); // IMPORTANT: DAO reads this
-        when(resultSet.getString(16)).thenReturn("imgA.jpg", "imgB.jpg");
-        when(resultSet.getDouble(4)).thenReturn(50.0, 75.0);
+        when(resultSet.getInt("id_prodotto")).thenReturn(101, 102);
+        when(resultSet.getString("marca")).thenReturn("BrandA", "BrandB");
+        when(resultSet.getString("modello")).thenReturn("ModelA", "ModelB");
+        when(resultSet.getString("immagine")).thenReturn("imgA.jpg", "imgB.jpg");
+        when(resultSet.getDouble("prezzo_totale")).thenReturn(50.0, 75.0);
 
         // Act
         Carrello result = ordineDAO.getProdottoOrdine(o);
@@ -208,11 +209,11 @@ class OrdineDAOTest {
         when(stmtOrder.executeQuery()).thenReturn(rsOrder);
 
         when(rsOrder.next()).thenReturn(true, false);
-        when(rsOrder.getInt(1)).thenReturn(10);
-        when(rsOrder.getInt(2)).thenReturn(1);
-        when(rsOrder.getDate(3)).thenReturn(new java.sql.Date(System.currentTimeMillis()));
-        when(rsOrder.getString(4)).thenReturn("Via Roma 1");
-        when(rsOrder.getDouble(5)).thenReturn(100.0);
+        when(rsOrder.getInt("id_ordine")).thenReturn(10);
+        when(rsOrder.getInt("id_utente")).thenReturn(1);
+        when(rsOrder.getDate("data_ordine")).thenReturn(new java.sql.Date(System.currentTimeMillis()));
+        when(rsOrder.getString("indirizzo_spedizione")).thenReturn("Via Roma 1");
+        when(rsOrder.getDouble("prezzo_totale")).thenReturn(100.0);
 
         PreparedStatement stmtItems = mock(PreparedStatement.class);
         ResultSet rsItems = mock(ResultSet.class);
@@ -358,7 +359,7 @@ class OrdineDAOTest {
 
         PreparedStatement stmtItems = mock(PreparedStatement.class);
         when(connection.prepareStatement(contains("INSERT INTO composto"))).thenReturn(stmtItems);
-        when(stmtItems.executeUpdate()).thenReturn(1);
+        when(stmtItems.executeBatch()).thenReturn(new int[] { 1 });
 
         // Act
         ordineDAO.addOrdine(o);
@@ -366,7 +367,8 @@ class OrdineDAOTest {
         // Assert
         verify(connection).setAutoCommit(false);
         verify(stmtOrder).executeUpdate();
-        verify(stmtItems).executeUpdate();
+        verify(stmtItems).addBatch();
+        verify(stmtItems).executeBatch();
         verify(connection).commit();
         verify(connection).setAutoCommit(true);
     }
@@ -389,7 +391,7 @@ class OrdineDAOTest {
 
         PreparedStatement stmtItems = mock(PreparedStatement.class);
         when(connection.prepareStatement(contains("INSERT INTO composto"))).thenReturn(stmtItems);
-        when(stmtItems.executeUpdate()).thenThrow(new SQLException("Item duplicate"));
+        when(stmtItems.executeBatch()).thenThrow(new SQLException("Item duplicate"));
 
         // Act & Assert
         assertThrows(SQLException.class, () -> ordineDAO.addOrdine(o));
@@ -419,12 +421,12 @@ class OrdineDAOTest {
         when(preparedStatement.executeQuery()).thenReturn(resultSet);
         when(resultSet.next()).thenReturn(true, true, false);
 
-        when(resultSet.getInt(1)).thenReturn(1, 2);
-        when(resultSet.getInt(2)).thenReturn(10, 20);
-        when(resultSet.getDate(3)).thenReturn(new java.sql.Date(System.currentTimeMillis()),
+        when(resultSet.getInt("id_ordine")).thenReturn(1, 2);
+        when(resultSet.getInt("id_utente")).thenReturn(10, 20);
+        when(resultSet.getDate("data_ordine")).thenReturn(new java.sql.Date(System.currentTimeMillis()),
                 new java.sql.Date(System.currentTimeMillis()));
-        when(resultSet.getString(4)).thenReturn("Via 1", "Via 2");
-        when(resultSet.getDouble(5)).thenReturn(10.0, 20.0);
+        when(resultSet.getString("indirizzo_spedizione")).thenReturn("Via 1", "Via 2");
+        when(resultSet.getDouble("prezzo_totale")).thenReturn(10.0, 20.0);
 
         ArrayList<Ordine> result = ordineDAO.getOrdini();
         assertEquals(2, result.size());

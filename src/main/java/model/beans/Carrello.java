@@ -21,11 +21,12 @@ public class Carrello {
         /*@ assume prodotti != null; @*/
         double totale = 0.0;
 
+        int size = prodotti.size();
         /*@
           @ loop_invariant i >= 0;
           @ loop_invariant totale >= 0.0;
           @*/
-        for (int i = 0; i < prodotti.size(); i++) {
+        for (int i = 0; i < size; i++) {
             ProdottoCarrello e = prodotti.get(i);
 
             /*@ assume e != null && e.prodotto != null; @*/
@@ -68,8 +69,9 @@ public class Carrello {
             throw new IllegalArgumentException("Il prodotto da eliminare non può essere null");
         }
 
+        int size = prodotti.size();
         /*@ loop_invariant i >= 0; @*/
-        for (int i = 0; i < prodotti.size(); i++) {
+        for (int i = 0; i < size; i++) {
             ProdottoCarrello e = prodotti.get(i);
 
             /*@ assume e != null && e.prodotto != null; @*/
@@ -78,6 +80,7 @@ public class Carrello {
             if (e.getProdotto().getId() == p.getId()) {
                 prodotti.remove(i);
                 i--;
+                size--;
             }
         }
     }
@@ -97,8 +100,9 @@ public class Carrello {
             throw new IllegalArgumentException("La quantità deve essere maggiore di zero");
         }
 
+        int size = prodotti.size();
         /*@ loop_invariant i >= 0; @*/
-        for (int i = 0; i < prodotti.size(); i++) {
+        for (int i = 0; i < size; i++) {
             ProdottoCarrello pc = prodotti.get(i);
 
             /*@ assume pc != null && pc.prodotto != null; @*/

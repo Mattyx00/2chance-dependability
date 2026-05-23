@@ -44,7 +44,8 @@ public class Recensione {
             throw new IllegalArgumentException("Il testo della recensione non può essere null o vuoto");
         }
         boolean isAllWhitespace = true;
-        for (int i = 0; i < testo.length(); i++) {
+        int len = testo.length();
+        for (int i = 0; i < len; i++) {
             if (testo.charAt(i) > ' ') {
                 isAllWhitespace = false;
                 break;
@@ -114,7 +115,8 @@ public class Recensione {
             throw new IllegalArgumentException("Il testo della recensione non può essere null o vuoto");
         }
         boolean isAllWhitespace = true;
-        for (int i = 0; i < testo.length(); i++) {
+        int len = testo.length();
+        for (int i = 0; i < len; i++) {
             if (testo.charAt(i) > ' ') {
                 isAllWhitespace = false;
                 break;

@@ -26,7 +26,7 @@ public class ProdottoDAO {
 
     public ArrayList<Prodotto> getProdotti() throws SQLException {
         try (Connection connection = ConPool.getConnection();
-                PreparedStatement stmt = connection.prepareStatement("SELECT * FROM prodotto WHERE disabilitato = 0")) {
+                PreparedStatement stmt = connection.prepareStatement("SELECT id_prodotto, categoria, descrizione, dimensioni, quantita, peso, immagine, marca, modello, prezzo FROM prodotto WHERE disabilitato = 0")) {
             ArrayList<Prodotto> prodotti = new ArrayList<>();
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
@@ -43,7 +43,7 @@ public class ProdottoDAO {
         }
         try (Connection connection = ConPool.getConnection();
                 PreparedStatement stmt = connection
-                        .prepareStatement("SELECT * FROM prodotto WHERE id_prodotto = ? AND disabilitato = 0")) {
+                        .prepareStatement("SELECT id_prodotto, categoria, descrizione, dimensioni, quantita, peso, immagine, marca, modello, prezzo FROM prodotto WHERE id_prodotto = ? AND disabilitato = 0")) {
             stmt.setInt(1, idProdotto);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
@@ -79,7 +79,7 @@ public class ProdottoDAO {
         }
         try (Connection connection = ConPool.getConnection();
                 PreparedStatement stmt = connection
-                        .prepareStatement("SELECT * FROM prodotto WHERE categoria = ? AND disabilitato = 0")) {
+                        .prepareStatement("SELECT id_prodotto, categoria, descrizione, dimensioni, quantita, peso, immagine, marca, modello, prezzo FROM prodotto WHERE categoria = ? AND disabilitato = 0")) {
             stmt.setString(1, categoria);
             ArrayList<Prodotto> prodotti = new ArrayList<>();
             try (ResultSet rs = stmt.executeQuery()) {
@@ -117,7 +117,7 @@ public class ProdottoDAO {
     public ArrayList<Prodotto> getUltimiProdotti() throws SQLException {
         try (Connection connection = ConPool.getConnection();
                 PreparedStatement stmt = connection.prepareStatement(
-                        "SELECT * FROM prodotto WHERE disabilitato = 0 ORDER BY id_prodotto DESC LIMIT 8")) {
+                        "SELECT id_prodotto, categoria, descrizione, dimensioni, quantita, peso, immagine, marca, modello, prezzo FROM prodotto WHERE disabilitato = 0 ORDER BY id_prodotto DESC LIMIT 8")) {
             ArrayList<Prodotto> prodotti = new ArrayList<>();
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
@@ -134,7 +134,7 @@ public class ProdottoDAO {
         }
         try (Connection connection = ConPool.getConnection();
                 PreparedStatement stmt = connection.prepareStatement(
-                        "SELECT * FROM prodotto WHERE UPPER(CONCAT(marca, modello, descrizione, categoria)) LIKE UPPER(?) AND disabilitato = 0")) {
+                        "SELECT id_prodotto, categoria, descrizione, dimensioni, quantita, peso, immagine, marca, modello, prezzo FROM prodotto WHERE UPPER(CONCAT(marca, modello, descrizione, categoria)) LIKE UPPER(?) AND disabilitato = 0")) {
             // Preserving strict behavior of original code for 'nome' passing
             // but assuming intent is to find substring if wildcard passed or logical match
             stmt.setString(1, nome);
@@ -172,6 +172,7 @@ public class ProdottoDAO {
                 PreparedStatement stmt = connection
                         .prepareStatement("INSERT INTO specifiche (nome, id_prodotto, valore) VALUES (?, ?, ?)")) {
 
+            boolean hasBatch = false;
             for (Specifiche s : specifiche) {
                 if (s == null || s.getNome() == null || s.getValore() == null) {
                     continue; // Skip invalid entries
@@ -179,7 +180,11 @@ public class ProdottoDAO {
                 stmt.setString(1, s.getNome());
                 stmt.setInt(2, idProdotto);
                 stmt.setString(3, s.getValore());
-                stmt.executeUpdate();
+                stmt.addBatch();
+                hasBatch = true;
+            }
+            if (hasBatch) {
+                stmt.executeBatch();
             }
         }
     }
@@ -277,20 +282,20 @@ public class ProdottoDAO {
         Prodotto p = new Prodotto();
         Categoria c = new Categoria();
 
-        p.setId(rs.getInt(1)); // id_prodotto
+        p.setId(rs.getInt("id_prodotto")); // id_prodotto
 
-        String catName = rs.getString(2); // categoria
+        String catName = rs.getString("categoria"); // categoria
         c.setNomeCategoria(catName != null ? catName : "Unknown");
         p.setCategoria(c);
 
-        p.setDescrizione(rs.getString(3));
-        p.setDimensioni(rs.getString(4));
-        p.setQuantitaProdotto(rs.getInt(5));
-        p.setPeso(rs.getDouble(6));
-        p.setImmagine(rs.getString(7));
-        p.setMarca(rs.getString(8));
-        p.setModello(rs.getString(9));
-        p.setPrezzo(rs.getDouble(10));
+        p.setDescrizione(rs.getString("descrizione"));
+        p.setDimensioni(rs.getString("dimensioni"));
+        p.setQuantitaProdotto(rs.getInt("quantita"));
+        p.setPeso(rs.getDouble("peso"));
+        p.setImmagine(rs.getString("immagine"));
+        p.setMarca(rs.getString("marca"));
+        p.setModello(rs.getString("modello"));
+        p.setPrezzo(rs.getDouble("prezzo"));
 
         return p;
     }

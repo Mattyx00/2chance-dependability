@@ -67,7 +67,8 @@ public class Ordine {
             throw new IllegalArgumentException("L'indirizzo non può essere null o vuoto");
         }
         boolean empty = true;
-        for (int i = 0; i < indirizzo.length(); i++) {
+        int len = indirizzo.length();
+        for (int i = 0; i < len; i++) {
             if (indirizzo.charAt(i) > ' ') {
                 empty = false;
                 break;

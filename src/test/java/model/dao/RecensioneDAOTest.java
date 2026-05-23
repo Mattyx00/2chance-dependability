@@ -328,52 +328,32 @@ class RecensioneDAOTest {
     }
 
     private void mockResultSetRow(ResultSet rs) throws SQLException {
-        // 1: Recensione ID
-        when(rs.getInt(1)).thenReturn(1);
-        // 2: Utente ID
-        when(rs.getInt(2)).thenReturn(1);
-        // 3: Prodotto ID
-        when(rs.getInt(3)).thenReturn(10);
-        // 4: Data Recensione
-        when(rs.getDate(4)).thenReturn(new Date(System.currentTimeMillis()));
-        // 5: Testo
-        when(rs.getString(5)).thenReturn("Ottimo prodotto");
-        // 6: Valutazione
-        when(rs.getInt(6)).thenReturn(5);
+        // Recensione properties
+        when(rs.getInt("id_recensione")).thenReturn(1);
+        when(rs.getInt("cliente")).thenReturn(1);
+        when(rs.getInt("prodotto")).thenReturn(10);
+        when(rs.getDate("data_recensione")).thenReturn(new Date(System.currentTimeMillis()));
+        when(rs.getString("testo")).thenReturn("Ottimo prodotto");
+        when(rs.getInt("valutazione")).thenReturn(5);
 
-        // Additional columns used in mapping
-        // 8: Utente Nome
-        when(rs.getString(8)).thenReturn("Mario");
-        // 9: Utente Cognome
-        when(rs.getString(9)).thenReturn("Rossi");
-        // 10: Utente Admin
-        when(rs.getBoolean(10)).thenReturn(false);
-        // 11: Email
-        when(rs.getString(11)).thenReturn("test@test.com");
-        // 12: Telefono
-        when(rs.getString(12)).thenReturn("1234567890");
-        // 13: Password
-        when(rs.getString(13)).thenReturn("pass");
-        // 14: Immagine
-        when(rs.getString(14)).thenReturn("img.jpg");
+        // Utente properties
+        when(rs.getString("nome")).thenReturn("Mario");
+        when(rs.getString("cognome")).thenReturn("Rossi");
+        when(rs.getBoolean("admin")).thenReturn(false);
+        when(rs.getString("email")).thenReturn("test@test.com");
+        when(rs.getString("telefono")).thenReturn("1234567890");
+        when(rs.getString("password")).thenReturn("pass");
+        when(rs.getString("utente_immagine")).thenReturn("img.jpg");
 
-        // 16: Categoria Nome
-        when(rs.getString(16)).thenReturn("Elettronica");
-        // 17: Descrizione
-        when(rs.getString(17)).thenReturn("Descrizione");
-        // 18: Dimensioni
-        when(rs.getString(18)).thenReturn("10x10");
-        // 19: Quantita
-        when(rs.getInt(19)).thenReturn(5);
-        // 20: Peso
-        when(rs.getDouble(20)).thenReturn(1.5);
-        // 21: Immagine Prod
-        when(rs.getString(21)).thenReturn("prod.jpg");
-        // 22: Marca
-        when(rs.getString(22)).thenReturn("Brand");
-        // 23: Modello
-        when(rs.getString(23)).thenReturn("Model");
-        // 24: Prezzo
-        when(rs.getDouble(24)).thenReturn(99.99);
+        // Prodotto properties
+        when(rs.getString("categoria")).thenReturn("Elettronica");
+        when(rs.getString("descrizione")).thenReturn("Descrizione");
+        when(rs.getString("dimensioni")).thenReturn("10x10");
+        when(rs.getInt("quantita")).thenReturn(5);
+        when(rs.getDouble("peso")).thenReturn(1.5);
+        when(rs.getString("prodotto_immagine")).thenReturn("prod.jpg");
+        when(rs.getString("marca")).thenReturn("Brand");
+        when(rs.getString("modello")).thenReturn("Model");
+        when(rs.getDouble("prezzo")).thenReturn(99.99);
     }
 }

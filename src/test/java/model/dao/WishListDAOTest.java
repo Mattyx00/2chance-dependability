@@ -174,7 +174,7 @@ class WishListDAOTest {
         Utente utente = createValidUtente(1);
         when(preparedStatement.executeQuery()).thenReturn(resultSet);
         when(resultSet.next()).thenReturn(true, true, false);
-        when(resultSet.getInt(2)).thenReturn(10, 20);
+        when(resultSet.getInt("id_prodotto")).thenReturn(10, 20);
 
         Prodotto p1 = createValidProdotto(10);
         Prodotto p2 = createValidProdotto(20);
@@ -240,7 +240,7 @@ class WishListDAOTest {
         Utente utente = createValidUtente(1);
         when(preparedStatement.executeQuery()).thenReturn(resultSet);
         when(resultSet.next()).thenReturn(true, true, false);
-        when(resultSet.getInt(2)).thenReturn(10, 20);
+        when(resultSet.getInt("id_prodotto")).thenReturn(10, 20);
 
         when(prodottoDAO.getProdottoById(10)).thenThrow(new SQLException("DB Error"));
         Prodotto p2 = createValidProdotto(20);
@@ -262,7 +262,7 @@ class WishListDAOTest {
         Utente utente = createValidUtente(1);
         when(preparedStatement.executeQuery()).thenReturn(resultSet);
         when(resultSet.next()).thenReturn(true, true, true, false);
-        when(resultSet.getInt(2)).thenReturn(0, -5, 30);
+        when(resultSet.getInt("id_prodotto")).thenReturn(0, -5, 30);
 
         Prodotto p3 = createValidProdotto(30);
         when(prodottoDAO.getProdottoById(30)).thenReturn(p3);

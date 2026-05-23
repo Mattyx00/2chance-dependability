@@ -73,7 +73,7 @@ class CategoriaDAOTest {
 
         // Assert
         assertTrue(result.isEmpty(), "Result list should be empty");
-        verify(connection).prepareStatement("SELECT * FROM categoria");
+        verify(connection).prepareStatement("SELECT nome FROM categoria");
     }
 
     @Test
@@ -83,7 +83,7 @@ class CategoriaDAOTest {
         when(connection.prepareStatement(anyString())).thenReturn(preparedStatement);
         when(preparedStatement.executeQuery()).thenReturn(resultSet);
         when(resultSet.next()).thenReturn(true, true, false); // 2 rows then stop
-        when(resultSet.getString(1)).thenReturn("Electronics", "Books");
+        when(resultSet.getString("nome")).thenReturn("Electronics", "Books");
 
         // Act
         ArrayList<Categoria> result = categoriaDAO.getCategorie();
@@ -102,7 +102,7 @@ class CategoriaDAOTest {
         when(preparedStatement.executeQuery()).thenReturn(resultSet);
         // Sequence: Valid("Valid"), Invalid(null), Invalid(""), Valid("AlsoValid"), End
         when(resultSet.next()).thenReturn(true, true, true, true, false);
-        when(resultSet.getString(1)).thenReturn("Valid", null, "", "AlsoValid");
+        when(resultSet.getString("nome")).thenReturn("Valid", null, "", "AlsoValid");
 
         // Act
         ArrayList<Categoria> result = categoriaDAO.getCategorie();

@@ -68,7 +68,8 @@ public class Utente {
     public void setNome(String nome) {
         boolean empty = true;
         if (nome != null) {
-            for (int i = 0; i < nome.length(); i++) {
+            int len = nome.length();
+            for (int i = 0; i < len; i++) {
                 if (nome.charAt(i) > ' ') {
                     empty = false;
                     break;
@@ -92,7 +93,8 @@ public class Utente {
     public void setCognome(String cognome) {
         boolean empty = true;
         if (cognome != null) {
-            for (int i = 0; i < cognome.length(); i++) {
+            int len = cognome.length();
+            for (int i = 0; i < len; i++) {
                 if (cognome.charAt(i) > ' ') {
                     empty = false;
                     break;
@@ -116,7 +118,8 @@ public class Utente {
     public void setEmail(String email) {
         boolean empty = true;
         if (email != null) {
-            for (int i = 0; i < email.length(); i++) {
+            int len = email.length();
+            for (int i = 0; i < len; i++) {
                 if (email.charAt(i) > ' ') {
                     empty = false;
                     break;
@@ -140,7 +143,8 @@ public class Utente {
     public void setTelefono(String telefono) {
         boolean empty = true;
         if (telefono != null) {
-            for (int i = 0; i < telefono.length(); i++) {
+            int len = telefono.length();
+            for (int i = 0; i < len; i++) {
                 if (telefono.charAt(i) > ' ') {
                     empty = false;
                     break;
@@ -196,7 +200,8 @@ public class Utente {
     public void setPassword(String password) {
         boolean empty = true;
         if (password != null) {
-            for (int i = 0; i < password.length(); i++) {
+            int len = password.length();
+            for (int i = 0; i < len; i++) {
                 if (password.charAt(i) > ' ') {
                     empty = false;
                     break;
@@ -248,7 +253,8 @@ public class Utente {
         if (ordini == null) {
             return -1;
         }
-        for (int i = 0; i < ordini.size(); i++) {
+        int size = ordini.size();
+        for (int i = 0; i < size; i++) {
             Ordine e = ordini.get(i);
             if (e.getId() == o.getId()) {
                 return i;

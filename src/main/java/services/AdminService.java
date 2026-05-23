@@ -92,7 +92,8 @@ public class AdminService {
             JSONArray array = obj.getJSONArray("specifiche");
             ArrayList<Specifiche> list = new ArrayList<>();
 
-            for (int i = 0; i < array.length(); i++) {
+            int len = array.length();
+            for (int i = 0; i < len; i++) {
                 Specifiche s = new Specifiche();
                 s.setNome(array.getJSONObject(i).getString("nome"));
                 s.setValore(array.getJSONObject(i).getString("valore"));
@@ -367,7 +368,8 @@ public class AdminService {
             JSONArray array = obj.getJSONArray("specifiche");
             ArrayList<Specifiche> list = new ArrayList<>();
 
-            for (int i = 0; i < array.length(); i++) {
+            int len = array.length();
+            for (int i = 0; i < len; i++) {
                 Specifiche s = new Specifiche();
                 s.setNome(array.getJSONObject(i).getString("nome"));
                 s.setValore(array.getJSONObject(i).getString("valore"));

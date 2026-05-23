@@ -61,16 +61,16 @@ class ProdottoDAOTest {
         when(preparedStatement.executeQuery()).thenReturn(resultSet);
         when(resultSet.next()).thenReturn(true, false, false);
 
-        when(resultSet.getInt(1)).thenReturn(productId);
-        when(resultSet.getString(2)).thenReturn("Elettronica");
-        when(resultSet.getString(3)).thenReturn("Descrizione test");
-        when(resultSet.getString(4)).thenReturn("10x10");
-        when(resultSet.getInt(5)).thenReturn(100);
-        when(resultSet.getDouble(6)).thenReturn(1.5);
-        when(resultSet.getString(7)).thenReturn("img.jpg");
-        when(resultSet.getString(8)).thenReturn("MarcaX");
-        when(resultSet.getString(9)).thenReturn("ModelloY");
-        when(resultSet.getDouble(10)).thenReturn(99.99);
+        when(resultSet.getInt("id_prodotto")).thenReturn(productId);
+        when(resultSet.getString("categoria")).thenReturn("Elettronica");
+        when(resultSet.getString("descrizione")).thenReturn("Descrizione test");
+        when(resultSet.getString("dimensioni")).thenReturn("10x10");
+        when(resultSet.getInt("quantita")).thenReturn(100);
+        when(resultSet.getDouble("peso")).thenReturn(1.5);
+        when(resultSet.getString("immagine")).thenReturn("img.jpg");
+        when(resultSet.getString("marca")).thenReturn("MarcaX");
+        when(resultSet.getString("modello")).thenReturn("ModelloY");
+        when(resultSet.getDouble("prezzo")).thenReturn(99.99);
 
         // Act
         Prodotto result = prodottoDAO.getProdottoById(productId);
@@ -122,16 +122,16 @@ class ProdottoDAOTest {
         when(connection.prepareStatement(anyString())).thenReturn(preparedStatement);
         when(preparedStatement.executeQuery()).thenReturn(resultSet);
         when(resultSet.next()).thenReturn(true, false, false);
-        when(resultSet.getInt(1)).thenReturn(productId);
-        when(resultSet.getString(2)).thenReturn("Cat");
-        when(resultSet.getString(3)).thenReturn("Descrizione");
-        when(resultSet.getString(4)).thenReturn("Dim");
-        when(resultSet.getInt(5)).thenReturn(10);
-        when(resultSet.getDouble(6)).thenReturn(1.0);
-        when(resultSet.getString(7)).thenReturn("img.jpg");
-        when(resultSet.getString(8)).thenReturn("Marca");
-        when(resultSet.getString(9)).thenReturn("Modello");
-        when(resultSet.getDouble(10)).thenReturn(10.0);
+        when(resultSet.getInt("id_prodotto")).thenReturn(productId);
+        when(resultSet.getString("categoria")).thenReturn("Cat");
+        when(resultSet.getString("descrizione")).thenReturn("Descrizione");
+        when(resultSet.getString("dimensioni")).thenReturn("Dim");
+        when(resultSet.getInt("quantita")).thenReturn(10);
+        when(resultSet.getDouble("peso")).thenReturn(1.0);
+        when(resultSet.getString("immagine")).thenReturn("img.jpg");
+        when(resultSet.getString("marca")).thenReturn("Marca");
+        when(resultSet.getString("modello")).thenReturn("Modello");
+        when(resultSet.getDouble("prezzo")).thenReturn(10.0);
 
         // Act
         Prodotto result = prodottoDAO.getProdottoById(productId);
@@ -276,16 +276,16 @@ class ProdottoDAOTest {
         when(resultSet.next()).thenReturn(true, false);
 
         // Mock all required fields to avoid Prodotto bean validation errors
-        when(resultSet.getInt(1)).thenReturn(1);
-        when(resultSet.getString(2)).thenReturn(cat);
-        when(resultSet.getString(3)).thenReturn("Descrizione");
-        when(resultSet.getString(4)).thenReturn("Dim");
-        when(resultSet.getInt(5)).thenReturn(10);
-        when(resultSet.getDouble(6)).thenReturn(1.0);
-        when(resultSet.getString(7)).thenReturn("img.jpg");
-        when(resultSet.getString(8)).thenReturn("Marca");
-        when(resultSet.getString(9)).thenReturn("Modello");
-        when(resultSet.getDouble(10)).thenReturn(10.0);
+        when(resultSet.getInt("id_prodotto")).thenReturn(1);
+        when(resultSet.getString("categoria")).thenReturn(cat);
+        when(resultSet.getString("descrizione")).thenReturn("Descrizione");
+        when(resultSet.getString("dimensioni")).thenReturn("Dim");
+        when(resultSet.getInt("quantita")).thenReturn(10);
+        when(resultSet.getDouble("peso")).thenReturn(1.0);
+        when(resultSet.getString("immagine")).thenReturn("img.jpg");
+        when(resultSet.getString("marca")).thenReturn("Marca");
+        when(resultSet.getString("modello")).thenReturn("Modello");
+        when(resultSet.getDouble("prezzo")).thenReturn(10.0);
 
         // Act
         ArrayList<Prodotto> result = prodottoDAO.getProdottiByCategoria(cat);
@@ -338,16 +338,16 @@ class ProdottoDAOTest {
         when(resultSet.next()).thenReturn(true, false);
 
         // Mock all required fields to avoid Prodotto bean validation errors
-        when(resultSet.getInt(1)).thenReturn(1);
-        when(resultSet.getString(2)).thenReturn("Cat");
-        when(resultSet.getString(3)).thenReturn("Descrizione");
-        when(resultSet.getString(4)).thenReturn("Dim");
-        when(resultSet.getInt(5)).thenReturn(10);
-        when(resultSet.getDouble(6)).thenReturn(1.0);
-        when(resultSet.getString(7)).thenReturn("img.jpg");
-        when(resultSet.getString(8)).thenReturn("Marca");
-        when(resultSet.getString(9)).thenReturn("Modello");
-        when(resultSet.getDouble(10)).thenReturn(10.0);
+        when(resultSet.getInt("id_prodotto")).thenReturn(1);
+        when(resultSet.getString("categoria")).thenReturn("Cat");
+        when(resultSet.getString("descrizione")).thenReturn("Descrizione");
+        when(resultSet.getString("dimensioni")).thenReturn("Dim");
+        when(resultSet.getInt("quantita")).thenReturn(10);
+        when(resultSet.getDouble("peso")).thenReturn(1.0);
+        when(resultSet.getString("immagine")).thenReturn("img.jpg");
+        when(resultSet.getString("marca")).thenReturn("Marca");
+        when(resultSet.getString("modello")).thenReturn("Modello");
+        when(resultSet.getDouble("prezzo")).thenReturn(10.0);
 
         // Act
         ArrayList<Prodotto> result = prodottoDAO.cercaProdotti("Test");

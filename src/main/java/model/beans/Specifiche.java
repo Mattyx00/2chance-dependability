@@ -20,7 +20,8 @@ public class Specifiche {
     public Specifiche(String nome, String valore) {
         boolean nomeHasContent = false;
         if (nome != null) {
-            for (int i = 0; i < nome.length(); i++) {
+            int len = nome.length();
+            for (int i = 0; i < len; i++) {
                 if (nome.charAt(i) > ' ') {
                     nomeHasContent = true;
                     break;
@@ -33,7 +34,8 @@ public class Specifiche {
 
         boolean valoreHasContent = false;
         if (valore != null) {
-            for (int i = 0; i < valore.length(); i++) {
+            int len = valore.length();
+            for (int i = 0; i < len; i++) {
                 if (valore.charAt(i) > ' ') {
                     valoreHasContent = true;
                     break;
@@ -60,7 +62,8 @@ public class Specifiche {
     public void setNome(String nome) {
         boolean nomeHasContent = false;
         if (nome != null) {
-            for (int i = 0; i < nome.length(); i++) {
+            int len = nome.length();
+            for (int i = 0; i < len; i++) {
                 if (nome.charAt(i) > ' ') {
                     nomeHasContent = true;
                     break;
@@ -86,7 +89,8 @@ public class Specifiche {
     public void setValore(String valore) {
         boolean valoreHasContent = false;
         if (valore != null) {
-            for (int i = 0; i < valore.length(); i++) {
+            int len = valore.length();
+            for (int i = 0; i < len; i++) {
                 if (valore.charAt(i) > ' ') {
                     valoreHasContent = true;
                     break;

@@ -29,12 +29,12 @@ public class CategoriaDAO {
      */
     public ArrayList<Categoria> getCategorie() throws SQLException {
         try (Connection connection = ConPool.getConnection();
-                PreparedStatement stmt = connection.prepareStatement("SELECT * FROM categoria")) {
+                PreparedStatement stmt = connection.prepareStatement("SELECT nome FROM categoria")) {
 
             ArrayList<Categoria> categorie = new ArrayList<>();
             try (ResultSet set = stmt.executeQuery()) {
                 while (set.next()) {
-                    String nomeCategoria = set.getString(1);
+                    String nomeCategoria = set.getString("nome");
 
                     // Defensive check: ensure data from DB is valid before creating object
                     if (isValidCategoriaName(nomeCategoria)) {

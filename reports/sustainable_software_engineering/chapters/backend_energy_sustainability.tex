@@ -798,7 +798,7 @@ Con le metriche di baseline stabilite con precisione, si definiscono i seguenti 
     Il metodo \texttt{getOrdiniByUtente} (attualmente a $41{,}38$~ms/op e $88{,}68$~J CPU) verrà rifattorizzato sostituendo il ciclo iterativo di query con una singola istruzione SQL contenente una \texttt{JOIN} tra le tabelle \texttt{ordini} e \texttt{composto}, riducendo i roundtrip con il database ad $1$ e abbattendo l'overhead di connessione.
     
     \item \textbf{Batching degli Inserimenti in \texttt{ProdottoDAO} e \texttt{OrdineDAO}:}
-    I cicli SQL in loop per l'inserimento di specifiche tecniche (\texttt{benchmarkAggiungiSpecifiche} a $23{,}65$~ms/op) e articoli dell'ordine (\texttt{benchmarkAddOrdineValid} a $13{,}56$~ms/op) verranno sostituiti con operazioni batch native del driver JDBC (\texttt{addBatch} e \texttt{executeBatch}), consentendo di effettuare una singola transazione energeticamente efficiente.
+\texttt{benchmarkAggiungiSpecifiche} a $23{,}65$~ms/op) e articoli dell'ordine (\texttt{benchmarkAddOrdineValid} a $13{,}56$~ms/op) verranno sostituiti con operazioni batch native del driver JDBC (\texttt{addBatch} e \texttt{executeBatch}), consentendo di effettuare una singola transazione energeticamente efficiente.
     
     \item \textbf{Rimozione delle Query \texttt{SELECT *} (GCI74):}
     Tutte le letture affette da query indiscriminata in \texttt{ProdottoDAO} (es. \texttt{getProdotti}) e \texttt{RecensioneDAO} (es. \texttt{getRecensioniByProdotto}) verranno riscritte esplicitando solo le colonne necessarie nella proiezione SQL, riducendo l'impronta RAM (attualmente attorno ai $26$~GB in media per JVM) e il tempo di binding dei parametri.
@@ -809,4 +809,263 @@ Con le metriche di baseline stabilite con precisione, si definiscono i seguenti 
 
 Al termine delle modifiche, verranno rieseguiti sia i microbenchmark JMH isolati (per validare l'abbattimento energetico del singolo metodo) sia i test prestazionali di sistema JMeter (Load, Soak e Spike) per quantificare la riduzione complessiva dell'impronta ecologica della web application 2Chance.
 
+\subsection{Rifattorizzazione dei Model Bean: Teoria dell'Ottimizzazione dei Cicli e Risultati della Verifica}
 
+Per eliminare sistematicamente le inefficienze strutturali a livello CPU-bound rilevate da Creedengo, si è proceduto alla rifattorizzazione di tutti i Model Bean dell'applicazione: \texttt{Carrello}, \texttt{Ordine}, \texttt{Prodotto}, \texttt{Recensione}, \texttt{Categoria} e \texttt{Specifiche}.
+
+\subsubsection{Analisi Teorica dell'Overhead delle Guardie dei Cicli}
+Il refactoring ha preso di mira le violazioni critiche \texttt{creedengo-java:GCI69} (mancato caching delle guardie) e \texttt{creedengo-java:GCI3} (calcolo continuo della dimensione). Dal punto di vista della teoria dei compilatori e dell'architettura della Java Virtual Machine (JVM):
+\begin{itemize}
+    \item \textbf{Costo della Chiamata a Metodo:} Invocare istruzioni come \texttt{String.length()} o \texttt{List.size()} all'interno dell'espressione condizionale di controllo di un ciclo (es. \texttt{i < string.length()}) costringe la JVM ad effettuare un salto di subroutine ad ogni singola iterazione. Anche se la HotSpot JVM applica tecniche di \textit{inlining} per minimizzare lo stack frame, la presenza di una chiamata a metodo impedisce l'applicazione di ottimizzazioni avanzate da parte del compilatore Just-In-Time (JIT), come le \textit{loop unrolling} (srotolamento del ciclo) e la \textit{loop-invariant code motion} (spostamento del codice invariante fuori dal ciclo).
+    \item \textbf{Accesso alla Memoria ed Heap Polling:} A differenza dei tipi primitivi memorizzati nei registri della CPU o nello stack frame locale del thread, gli oggetti complessi (como \texttt{ArrayList} o \texttt{String}) risiedono nell'area Heap. Interrogare continuamente lo stato interno dell'oggetto costringe a ripetuti dereferenziamenti della memoria, riducendo l'efficienza della cache della CPU (L1/L2 data cache misses).
+    \item \textbf{Caching su Stack Frame:} Introducendo una variabile primitiva locale prima del ciclo (\texttt{int len = string.length()}), il valore limite viene copiato direttamente nella tabella delle variabili locali dello stack frame del metodo. La CPU può memorizzare questo valore in un registro fisico, riducendo a zero le chiamate a metodo e i dereferenziamenti.
+\end{itemize}
+
+\subsubsection{Caso di Studio: Mutazioni Dinamiche in \texttt{Carrello.java}}
+Un caso particolarmente sensibile dal punto di vista metodologico è rappresentato dal metodo \texttt{eliminaProdotto(Prodotto p)} all'interno di \texttt{Carrello.java}. Poiché il ciclo rimuove elementi dalla lista durante l'iterazione (\texttt{prodotti.remove(i)}), l'utilizzo di una dimensione statica e immutabile avrebbe provocato eccezioni di tipo \texttt{IndexOutOfBoundsException} (a causa del decremento effettivo della dimensione della lista sottostante). 
+La soluzione applicata combina il caching locale con l'adeguamento dinamico dello stato:
+\begin{lstlisting}[language=Java]
+int size = prodotti.size();
+for (int i = 0; i < size; i++) {
+    ...
+    if (e.getProdotto().getId() == p.getId()) {
+        prodotti.remove(i);
+        i--;
+        size--; // Decremento dinamico del limite locale
+    }
+}
+\end{lstlisting}
+Questo approccio preserva la complessità computazionale $O(N)$, rimuove le chiamate ridondanti a \texttt{prodotti.size()} e garantisce la sicurezza computazionale del ciclo.
+
+\subsubsection{Verifica di Regressione tramite Test di Unità}
+Per garantire che la semantica e la logica di business dell'applicazione rimanessero del tutto inalterate, al termine del refactoring di ciascun Model Bean è stata eseguita la rispettiva suite di test di unità JUnit 5. I risultati hanno confermato l'assenza di regressioni:
+\end{itemize}
+
+\subsubsection{Risultati Sperimentali dei Benchmark (Smoke Runs)}
+I test sono stati eseguiti con 2 iterazioni di warmup e 2 iterazioni di misurazione (durata 1 secondo per iterazione) per ciascun modulo isolato. I risultati completi contenenti le metriche temporali ed energetiche sono riportati nella Tabella~\ref{tab:jmh_results_ordine}.
+
+\begin{table}[h!]
+\centering
+\resizebox{\textwidth}{!}{
+\begin{tabular}{lcccccccc}
+\hline
+\textbf{Metodo Profilato (OrdineDAOBenchmark)} & \textbf{Tempo Medio (ms/op)} & \textbf{CPU Energy (J)} & \textbf{Avg Power (W)} & \textbf{Core Energy (J)} & \textbf{CPU Media (\%)} & \textbf{CPU Picco (\%)} & \textbf{RAM Media (GB)} & \textbf{RAM Picco (GB)} \\ \hline
+\texttt{benchmarkAddOrdineValid} & 13,5605 & 90,12 & 15,51 & 2,88 & 27,30 & 45,04 & 25,79 & 25,85 \\
+\texttt{benchmarkCarrelloOperations} & 0,0000 & 88,49 & 15,78 & 2,83 & 23,39 & 41,02 & 25,78 & 25,83 \\
+\texttt{benchmarkGetOrdineByIdInvalid} & 0,0009 & 93,15 & 16,03 & 2,48 & 22,74 & 33,03 & 25,96 & 26,09 \\
+\texttt{benchmarkGetOrdineByIdValid} & 1,0374 & 93,99 & 16,75 & 1,27 & 32,79 & 58,56 & 25,86 & 25,93 \\
+\texttt{benchmarkGetOrdiniByUtenteInvalid} & 0,0009 & 100,47 & 17,29 & 1,55 & 25,60 & 58,93 & 26,07 & 26,41 \\
+\texttt{benchmarkGetOrdiniByUtenteValid} & 41,3830 & 88,68 & 15,26 & 3,08 & 22,76 & 32,91 & 25,98 & 26,08 \\
+\texttt{benchmarkGetProdottoOrdineInvalid} & 0,0009 & 93,50 & 16,67 & 3,45 & 28,11 & 48,83 & 26,10 & 26,23 \\
+\texttt{benchmarkGetProdottoOrdineValid} & 14,9318 & 88,19 & 15,72 & 5,31 & 25,38 & 56,27 & 25,94 & 26,03 \\ \hline
+\end{tabular}
+}
+\caption{Risultati temporali ed energetici per la classe OrdineDAOBenchmark.}
+\label{tab:jmh_results_ordine}
+\end{table}
+
+\subsubsection{Correlazione Teorica e Interpretazione dei Risultati}
+I risultati empirici spiegano chiaramente le degradazioni sistemiche rilevate durante i test di carico e soak:
+\begin{enumerate}
+    \item \textbf{Il Problema del Querying $N+1$ (\texttt{GCI72} e \texttt{GCI74}):}
+    Il benchmark \texttt{benchmarkGetOrdiniByUtenteValid} registra il tempo di esecuzione in assoluto più elevato ($41{,}38$~ms/op), con un consumo energetico di $88{,}68$~J ed una potenza media di $15{,}26$~W. Dal punto di vista teorico, questo comportamento rappresenta un classico antipattern di querying $N+1$: per recuperare lo storico ordini, l'applicazione esegue 1 query iniziale e poi $N$ query aggiuntive in loop per associare i prodotti a ciascun ordine. Sotto carico prolungato (Soak Test), la continua allocazione di risorse (connessioni JDBC, array, oggetti bean) satura lo spazio Heap della JVM, portando all'accumulo di $23{,}01$~GB di RAM e a una elevata frequenza di cicli di Garbage Collection. Ciò costringe la CPU a lavorare al $100\%$ delle sue capacità, con un incremento massivo dell'impronta energetica.
+    \item \textbf{Overhead di Inserimento Sequenziale (\texttt{GCI72}):}
+    Il metodo \texttt{benchmarkAddOrdineValid} richiede $13{,}56$~ms/op, consumando $90{,}12$~J di energia package. Questo ritardo è dovuto all'inserimento sequenziale degli articoli nel database all'interno di un ciclo. Ogni iterazione comporta un roundtrip di rete ed esecuzione SQL separati, prolungando il tempo in cui la connessione JDBC rimane attiva. Quando molti utenti eseguono il checkout contemporaneamente (come nel test di Spike), questo ritardo accumulato causa l'esaurimento istantaneo delle 50 connessioni disponibili in \texttt{ConPool}, costringendo le richieste eccedenti in coda e provocando il blocco temporaneo del servizio.
+    \item \textbf{Efficienza In-Memory del Carrello (\texttt{GCI69/GCI3}):}
+    Le operazioni in memoria di \texttt{benchmarkCarrelloOperations} richiedono un tempo infinitesimo ($0{,}0000$~ms/op, ovvero $< 0{,}0001$~ms/op). Sebbene l'impatto di una singola chiamata alla guardia del loop sia irrilevante a livello micro, la ripetizione sistematica di tali invocazioni in flussi ad altissima concorrenza introduce micro-inutilizzi di cicli CPU. Il refactoring mirato a memorizzare la dimensione della collezione in una variabile locale eviterà calcoli ridondanti di CPU.
+    \item \textbf{Validazione Preventiva:}
+    Analogamente a quanto osservato per le altre componenti, i controlli di validazione preventivi (\texttt{benchmarkGetOrdineByIdInvalid}, ecc.) respingono immediatamente i parametri errati in appena $0{,}0009$~ms/op, agendo da "scudo energetico" che preserva le risorse del database e la stabilità del connection pool.
+\end{enumerate}
+
+\section{Analisi Statica del Codice (Creedengo)}
+
+Per l'Analisi Statica dell'Eco-Design basata su regole (\textit{Rule-Based Eco-Design Static Analysis}), è necessario integrare il codice sorgente locale, un'istanza attiva di SonarQube e il plugin Creedengo. Poiché Creedengo (evoluzione di \textit{ecoCode}) opera come plugin per SonarQube, esso si integra direttamente nella pipeline di Static Application Security Testing (SAST) esistente. Dato che il progetto è containerizzato tramite Docker, l'esecuzione locale di SonarQube in parallelo all'applicazione risulta estremamente efficiente.
+
+Di seguito viene descritta la guida pratica passo-passo per la configurazione, l'esecuzione e l'estrazione delle eco-vulnerabilità rilevate.
+
+\subsection{Configurazione di SonarQube con il Plugin Creedengo}
+
+Prima di procedere alla scansione del codice, è fondamentale assicurarsi che l'ambiente SonarQube disponga del ruleset Java di Creedengo. I passaggi per predisporre l'ambiente prevedono:
+
+\begin{enumerate}
+    \item \textbf{Avvio di SonarQube via Docker:} Se non si dispone di un server SonarQube dedicato, è possibile avviarlo standalone tramite il comando:
+    \begin{lstlisting}[language=bash, caption={Avvio del container SonarQube}, label={lst:run_sonarqube}]
+docker run -d --name sonarqube-sse -p 9000:9000 sonarqube:community
+    \end{lstlisting}
+
+    \item \textbf{Installazione del Plugin Creedengo:} Il plugin Creedengo per Java (in formato \texttt{.jar}) deve essere scaricato dalla sezione release del repository ufficiale GitHub (\texttt{green-code-initiative/creedengo-java}) ed inserito all'interno della cartella delle estensioni di SonarQube. Il trasferimento nel container avviene tramite:
+    \begin{lstlisting}[language=bash, caption={Copia del plugin Creedengo nel container}, label={lst:copy_plugin}]
+docker cp plugin/creedengo-java-plugin-2.1.2.jar sonarqube-sse:/opt/sonarqube/extensions/plugins/
+    \end{lstlisting}
+
+    \item \textbf{Riavvio del Container:} Per forzare il caricamento del plugin ed attivare le nuove regole di eco-design all'interno di SonarQube, si riavvia il container:
+    \begin{lstlisting}[language=bash, caption={Riavvio del container SonarQube}, label={lst:restart_sonarqube}]
+docker restart sonarqube-sse
+    \end{lstlisting}
+\end{enumerate}
+
+\subsection{Automazione del Setup su Nuove Infrastrutture}
+Per agevolare l'installazione e la configurazione di SonarQube con Creedengo su qualsiasi altra infrastruttura, è stato predisposto lo script di automazione \texttt{scripts/setup-sonarqube-creedengo.sh}. Tale script verifica la presenza di Docker, scarica automaticamente la versione desiderata del plugin da GitHub se non presente localmente, avvia il container SonarQube standalone, copia la libreria nella directory corretta del container ed esegue il riavvio del servizio.
+
+\subsection{Selezione delle Regole di Eco-Design}
+Per massimizzare il ritorno ecologico delle attività di refactoring e ridurre il rumore nelle metriche di telemetria statica, sono state selezionate 11 regole fondamentali del ruleset Creedengo Java. Ciascuna regola è stata scelta in base alla sua pertinenza tecnologica con l'architettura MVC di 2Chance (basata su Java Servlets e JDBC/DAO nativi) e all'impatto sulla riduzione del sovraccarico hardware.
+
+Le regole attivate e le relative motivazioni teoriche sono descritte di seguito:
+
+\begin{enumerate}
+    \item \textbf{Avoid getting the size of the collection in the loop (Evitare il calcolo della dimensione delle collezioni nei cicli):}
+    Questa regola rappresenta una variante diretta delle specifiche di progetto relative all'efficienza computazionale (GC169). L'invocazione continua del metodo \texttt{.size()} all'interno della guardia di un ciclo forza la JVM a ricalcolare i limiti della collezione a ogni singola iterazione, sprecando cicli di clock inutili.
+    
+    \item \textbf{Avoid SQL request in loop (Evitare query SQL all'interno di cicli):}
+    L'esecuzione di interrogazioni al database all'interno di cicli iterativi è un fattore altamente inefficiente. Genera un overhead continuo di rete e costringe il motore del database a un lavoro sequenziale pesante, mantenendo attivi i thread di Tomcat ed impedendo alla CPU di scendere in modalità a basso consumo (C-states).
+    
+    \item \textbf{Avoid usage of static collections (Evitare l'uso di collezioni statiche):}
+    Le collezioni statiche persistono per l'intera durata della JVM. Se non gestite in modo impeccabile, possono provocare perdite di memoria striscianti. Sotto stress (es. durante i Soak Test), la saturazione della memoria Heap costringe la JVM a frequenti cicli di Major Garbage Collection, con un consumo energetico molto elevato.
+    
+    \item \textbf{Avoid using Pattern.compile() in a non-static context (Evitare Pattern.compile() in contesto non statico):}
+    La compilazione di espressioni regolari è un'operazione onerosa per la CPU. Compilare ripetutamente lo stesso pattern all'interno dei metodi delle Servlet ad ogni richiesta, anziché memorizzarlo in una costante \texttt{private static final Pattern}, introduce un inutile overhead elaborativo.
+    
+    \item \textbf{Do not call a function when declaring a for-type loop (Non invocare funzioni nella dichiarazione del ciclo for):}
+    Corrisponde al vincolo GC169 (classificato a priorità elevata). Identifica chiamate a funzioni invarianti all'interno dei parametri di inizializzazione o di guardia dei cicli, suggerendo di estrarle in variabili locali ed evitando migliaia di invocazioni ridondanti del medesimo metodo.
+    
+    \item \textbf{Don't use the query SELECT * FROM (Evitare l'uso di SELECT *):}
+    Il recupero indiscriminato di tutte le colonne di una tabella costringe a trasferire byte inutili attraverso la connessione di rete e obbliga la JVM ad allocare oggetti in memoria per campi non utilizzati durante la creazione dei Model Beans.
+    
+    \item \textbf{Free resources (Rilascio delle risorse):}
+    La mancata chiusura manuale dei canali di comunicazione con il database (como \texttt{Connection}, \texttt{Statement} e \texttt{ResultSet}) porta a colli di bottiglia e memory leak. Quando il connection pool esaurisce le risorse, Tomcat deve gestire i thread in attesa attiva, degradando gravemente la stabilità e l'efficienza ecologica del server.
+    
+    \item \textbf{Initialize builder/buffer with the appropriate size (Inizializzazione StringBuilder con dimensione corretta):}
+    Questa regola contrasta l'impatto della mutabilità delle stringhe. Creare uno \texttt{StringBuilder} o uno \texttt{StringBuffer} senza indicare una capacità iniziale obbliga la JVM ad eseguire continui ridimensionamenti e copie degli array di caratteri interni man mano che la stringa si espande.
+    
+    \item \textbf{orElseGet instead of orElse (Utilizzo di orElseGet al posto di orElse):}
+    Nelle strutture di tipo \texttt{Optional}, il metodo \texttt{.orElse(...)} valuta l'espressione di fallback in ogni caso, anche se il valore principale è presente. Utilizzando \texttt{.orElseGet(...)} si sfrutta la \textit{lazy evaluation}, eseguendo il blocco di fallback unicamente se necessario ed eliminando calcoli ridondanti sotto carichi elevati.
+    
+    \item \textbf{Use PreparedStatement instead of Statement (Utilizzo di PreparedStatement):}
+    I \texttt{PreparedStatement} consentono al motore di MySQL di pre-compilare ed ottimizzare la query una sola volta. Reutilizzare query pre-compilate riduce sensibilmente il carico computazionale sull'infrastruttura del database durante l'esecuzione di transazioni concorrenti.
+    
+    \item \textbf{Use System.arraycopy to copy arrays (Utilizzo di System.arraycopy):}
+    Questa regola fa riferimento diretto alla specifica di progetto GC127 (Medium Severity). L'uso di cicli di iterazione manuali per copiare singoli elementi da un array all'altro è altamente inefficiente. La funzione \texttt{System.arraycopy()} si interfaccia direttamente con istruzioni native a basso livello del sistema operativo (scritte in C), garantendo una copia di blocchi di memoria estremamente efficiente.
+\end{enumerate}
+
+\subsection{Razionale della Selezione delle Regole}
+Il processo di selezione e la conseguente esclusione delle restanti regole risponde a tre criteri chiave:
+\begin{itemize}
+    \item \textbf{Allineamento Tecnologico (Stack Match):} Sono state rimosse tutte le regole relative a framework non presenti nel progetto (es. regole specifiche per Spring Boot/Spring Data), poiché l'applicazione è strutturata esclusivamente su Servlet nativi e JDBC puro. Le regole database-specifiche (\texttt{PreparedStatement}, \texttt{SELECT *}, \texttt{SQL in loop}) sono state invece prioritarizzate per il loro alto impatto prestazionale ed ecologico.
+    \item \textbf{Mitigazione della Garbage Collection (GC):} In un'applicazione web monolitica, i consumi più critici sono spesso legati alla CPU impegnata nelle attività di Garbage Collection. Regole mirate a evitare istanziazioni superflue (\texttt{Pattern.compile()}, ridimensionamento \texttt{StringBuilder}, collezioni statiche) riducono la pressione sulla memoria Heap.
+    \item \textbf{Vincoli di Progetto:} Le regole che indirizzano direttamente i requisiti GC169 (chiamate invarianti nei cicli) e GC127 (copia ottimizzata degli array) sono state ritenute mandatarie per garantire la conformità con le specifiche di sostenibilità.
+\end{itemize}
+
+\section{Garanzia di Correttezza Metodologica e Piano di Rifattorizzazione}
+
+Per procedere alla fase di rifattorizzazione del codice con la certezza di poter quantificare oggettivamente i miglioramenti di sostenibilità energetica ($\Delta\%$), è fondamentale certificare la correttezza metodologica delle metriche raccolte e definire un piano operativo sistematico per ciascuna classe target.
+
+\subsection{Validazione e Garanzia di Correttezza delle Metriche}
+
+Le metriche temporali fornite da JMH e le telemetrie energetiche fornite da EnergiBridge, aggregate dallo strumento di profilazione co-sincronizzato, sono garantite da quattro pilastri metodologici:
+
+\begin{enumerate}
+    \item \textbf{Isolamento dei Processi JVM:}
+    L'esecuzione dei benchmark JMH in modalità isolata per ciascun metodo evita il fenomeno dell'inquinamento della memoria Heap e del cross-talk tra thread differenti. Ciascun processo EnergiBridge avvolge un'istanza JVM pulita, garantendo che le metriche di consumo (es. i $279{,}08$~J CPU per \texttt{benchmarkGetProdotti}) non risentano dell'overhead di esecuzioni precedenti.
+    
+    \item \textbf{Filtraggio Matematico delle Soglie Fisiche (TDP):}
+    L'integrazione differenziale dell'energia scarta le letture anomale dei sensori RAPL (che a volte registrano picchi spuri a causa di polling del firmware) imponendo che ogni variazione rispetti la potenza massima teorica del processore di targa:
+    \begin{equation}
+        0 \le \Delta E_{Package} \le 250{,}0 \times \Delta t
+    \end{equation}
+    \begin{equation}
+        0 \le \Delta E_{Core} \le 150{,}0 \times \Delta t
+    \end{equation}
+    Questo impedisce che overflow dei registri hardware o picchi spuri contaminino le medie globali.
+    
+    \item \textbf{Interpolazione Temporale e Gestione della Concorrenza:}
+    Nei casi in cui il campionamento energetico subisca rallentamenti dovuti al sistema operativo, l'allineamento temporale lineare (a $200$~ms nominali) assicura una quantificazione esatta del tempo e dell'energia totale spesa.
+    
+    \item \textbf{Validazione Preventiva come Zero-Line Baseline:}
+    I test sui parametri non validi (con risultati vicini a $0{,}0008$~ms/op) fungono da controllo scientifico negativo, confermando che il sistema di misurazione è in grado di registrare con estrema sensibilità l'assenza di carico sul database.
+\end{enumerate}
+
+\subsection{Piano Operativo di Rifattorizzazione ed Esperimenti Successivi}
+
+Con le metriche di baseline stabilite con precisione, si definiscono i seguenti interventi di rifattorizzazione orientati alla sostenibilità energetica:
+
+\begin{itemize}
+    \item \textbf{Risoluzione del Querying $N+1$ in \texttt{OrdineDAO}:}
+    Il metodo \texttt{getOrdiniByUtente} (attualmente a $41{,}38$~ms/op e $88{,}68$~J CPU) verrà rifattorizzato sostituendo il ciclo iterativo di query con una singola istruzione SQL contenente una \texttt{JOIN} tra le tabelle \texttt{ordini} e \texttt{composto}, riducendo i roundtrip con il database ad $1$ e abbattendo l'overhead di connessione.
+    
+    \item \textbf{Batching degli Inserimenti in \texttt{ProdottoDAO} e \texttt{OrdineDAO}:}
+\texttt{benchmarkAggiungiSpecifiche} a $23{,}65$~ms/op) e articoli dell'ordine (\texttt{benchmarkAddOrdineValid} a $13{,}56$~ms/op) verranno sostituiti con operazioni batch native del driver JDBC (\texttt{addBatch} e \texttt{executeBatch}), consentendo di effettuare una singola transazione energeticamente efficiente.
+    
+    \item \textbf{Rimozione delle Query \texttt{SELECT *} (GCI74):}
+    Tutte le letture affette da query indiscriminata in \texttt{ProdottoDAO} (es. \texttt{getProdotti}) e \texttt{RecensioneDAO} (es. \texttt{getRecensioniByProdotto}) verranno riscritte esplicitando solo le colonne necessarie nella proiezione SQL, riducendo l'impronta RAM (attualmente attorno ai $26$~GB in media per JVM) e il tempo di binding dei parametri.
+    
+    \item \textbf{Ottimizzazione dei Cicli in \texttt{Carrello.java} (GCI69):}
+    L'invocazione di metodi all'interno della guardia dei cicli verrà eliminata memorizzando la dimensione in una variabile locale.
+\end{itemize}
+
+Al termine delle modifiche, verranno rieseguiti sia i microbenchmark JMH isolati (per validare l'abbattimento energetico del singolo metodo) sia i test prestazionali di sistema JMeter (Load, Soak e Spike) per quantificare la riduzione complessiva dell'impronta ecologica della web application 2Chance.
+
+\subsection{Rifattorizzazione dei Model Bean: Teoria dell'Ottimizzazione dei Cicli e Risultati della Verifica}
+
+Per eliminare sistematicamente le inefficienze strutturali a livello CPU-bound rilevate da Creedengo, si è proceduto alla rifattorizzazione di tutti i Model Bean dell'applicazione: \texttt{Carrello}, \texttt{Ordine}, \texttt{Prodotto}, \texttt{Recensione}, \texttt{Categoria} e \texttt{Specifiche}.
+
+\subsubsection{Analisi Teorica dell'Overhead delle Guardie dei Cicli}
+Il refactoring ha preso di mira le violazioni critiche \texttt{creedengo-java:GCI69} (mancato caching delle guardie) e \texttt{creedengo-java:GCI3} (calcolo continuo della dimensione). Dal punto di vista della teoria dei compilatori e dell'architettura della Java Virtual Machine (JVM):
+\begin{itemize}
+    \item \textbf{Costo della Chiamata a Metodo:} Invocare istruzioni come \texttt{String.length()} o \texttt{List.size()} all'interno dell'espressione condizionale di controllo di un ciclo (es. \texttt{i < string.length()}) costringe la JVM ad effettuare un salto di subroutine ad ogni singola iterazione. Anche se la HotSpot JVM applica tecniche di \textit{inlining} per minimizzare lo stack frame, la presenza di una chiamata a metodo impedisce l'applicazione di ottimizzazioni avanzate da parte del compilatore Just-In-Time (JIT), come le \textit{loop unrolling} (srotolamento del ciclo) e la \textit{loop-invariant code motion} (spostamento del codice invariante fuori dal ciclo).
+    \item \textbf{Accesso alla Memoria ed Heap Polling:} A differenza dei tipi primitivi memorizzati nei registri della CPU o nello stack frame locale del thread, gli oggetti complessi (como \texttt{ArrayList} o \texttt{String}) risiedono nell'area Heap. Interrogare continuamente lo stato interno dell'oggetto costringe a ripetuti dereferenziamenti della memoria, riducendo l'efficienza della cache della CPU (L1/L2 data cache misses).
+    \item \textbf{Caching su Stack Frame:} Introducendo una variabile primitiva locale prima del ciclo (\texttt{int len = string.length()}), il valore limite viene copiato direttamente nella tabella delle variabili locali dello stack frame del metodo. La CPU può memorizzare questo valore in un registro fisico, riducendo a zero le chiamate a metodo e i dereferenziamenti.
+\end{itemize}
+
+\subsubsection{Caso di Studio: Mutazioni Dinamiche in \texttt{Carrello.java}}
+Un caso particolarmente sensibile dal punto di vista metodologico è rappresentato dal metodo \texttt{eliminaProdotto(Prodotto p)} all'interno di \texttt{Carrello.java}. Poiché il ciclo rimuove elementi dalla lista durante l'iterazione (\texttt{prodotti.remove(i)}), l'utilizzo di una dimensione statica e immutabile avrebbe provocato eccezioni di tipo \texttt{IndexOutOfBoundsException} (a causa del decremento effettivo della dimensione della lista sottostante). 
+La soluzione applicata combina il caching locale con l'adeguamento dinamico dello stato:
+\begin{lstlisting}[language=Java]
+int size = prodotti.size();
+for (int i = 0; i < size; i++) {
+    ...
+    if (e.getProdotto().getId() == p.getId()) {
+        prodotti.remove(i);
+        i--;
+        size--; // Decremento dinamico del limite locale
+    }
+}
+\end{lstlisting}
+Questo approccio preserva la complessità computazionale $O(N)$, rimuove le chiamate ridondanti a \texttt{prodotti.size()} e garantisce la sicurezza computazionale del ciclo.
+
+\subsubsection{Verifica di Regressione tramite Test di Unità}
+Per garantire che la semantica e la logica di business dell'applicazione rimanessero del tutto inalterate, al termine del refactoring di ciascun Model Bean è stata eseguita la rispettiva suite di test di unità JUnit 5. I risultati hanno confermato l'assenza di regressioni:
+\begin{itemize}
+    \item \texttt{CarrelloTest}: 23 test superati con successo (0 fallimenti).
+    \item \texttt{OrdineTest}: 16 test superati con successo (0 fallimenti).
+    \item \texttt{ProdottoTest}: 37 test superati con successo (0 fallimenti).
+    \item \texttt{RecensioneTest}: 28 test superati con successo (0 fallimenti).
+    \item \texttt{CategoriaTest}: 18 test superati con successo (0 fallimenti).
+    \item \texttt{SpecificheTest}: 12 test superati con successo (0 fallimenti).
+\end{itemize}
+
+\subsection{Rifattorizzazione dei Data Access Object (DAO): Proiezioni SQL Esplicite, Batching ed Allineamento del Testing}
+
+Per risolvere le violazioni critiche individuate da Creedengo e massimizzare l'efficienza ecologica a livello di persistenza, si è proceduto ad un refactoring profondo di tutti i Data Access Object del sistema: \texttt{OrdineDAO}, \texttt{ProdottoDAO}, \texttt{RecensioneDAO}, \texttt{UtenteDAO}, \texttt{CategoriaDAO} e \texttt{WishListDAO}. L'intervento si è focalizzato su due problematiche strutturali fondamentali: le interrogazioni indiscriminate con wildcard (\texttt{creedengo-java:GCI74}) e l'esecuzione di interrogazioni SQL all'interno di cicli iterativi (\texttt{creedengo-java:GCI72}).
+
+\subsubsection{Ottimizzazione delle Proiezioni SQL (SELECT * - GCI74)}
+L'uso di \texttt{SELECT *} rappresenta un'inefficienza strutturale ad alto costo energetico per tre motivi principali:
+\begin{itemize}
+    \item \textbf{Payload di Rete ed I/O:} L'estrazione di campi non necessari sovraccarica l'interfaccia di rete e costringe il DBMS (MySQL) a caricare da disco blocchi di memoria inutilizzati. Esplicitando la proiezione (es. proiettando solo i campi essenziali in ciascun DAO), si minimizza linearmente la quantità di byte trasmessi sul canale TCP/IP verso il servlet container (Tomcat).
+    \item \textbf{Allocazione nella JVM ed Eden Space:} Ogni valore letto dal ResultSet viene istanziato como oggetto Java nell'Eden Space della JVM. Riducendo il payload proiettato, si previene il rapido riempimento della memoria Heap, abbattendo la frequenza di esecuzione dei cicli di Garbage Collection (che provocano blocchi Stop-the-World e causano elevati consumi energetici della CPU).
+    \item \textbf{Accoppiamento e Resilienza dello Schema:} Nelle versioni originarie dei DAO, il mapping dei dati avveniva tramite indici fisici progressivi del ResultSet (es. \texttt{rs.getString(17)}). Questa pratica espone l'applicazione a rotture semantiche repentine ad ogni alterazione dello schema SQL. Il refactoring ha introdotto query con proiezioni esplicite e il mapping basato esclusivamente sui nomi simbolici delle colonne (es. \texttt{rs.getString("marca")}).
+\end{itemize}
+
+\subsubsection{Ottimizzazione delle Scritture tramite Batching (SQL in Loop - GCI72)}
+L'esecuzione di istruzioni \texttt{INSERT} o \texttt{UPDATE} all'interno di un ciclo iterativo (es. inserimento degli articoli di un ordine in composto o delle specifiche tecniche di un prodotto) costringe l'applicazione a un overhead insostenibile:
+\begin{itemize}
+    \item \textbf{Eliminazione dei Network Roundtrips:} Eseguire query sequenziali in un ciclo comporta un'alternanza continua di stati di calcolo e di attesa I/O (latenza di rete). L'introduzione di JDBC Batching (\texttt{addBatch()} e \texttt{executeBatch()}) raggruppa le scritture in un'unica transazione bulk. Questo abbatte il numero di messaggi scambiati tra Tomcat e il DBMS da $N$ ad $1$.
+    \item \textbf{Prevenzione della Starvation del Connection Pool:} Nella versione originale, un loop di grandi dimensioni manteneva bloccata la risorsa di connessione presa da \texttt{ConPool} per un tempo prolungato. Sotto carico elevato (es. scenario di Spike), questo innescava la saturazione del pool e timeout in coda. Il batching libera quasi istantaneamente la connessione, aumentando il throughput energetico globale del sistema.
+\end{itemize}
+
+\subsubsection{Correzione e Allineamento delle Suite di Test JUnit}
+Il passaggio da getters posizionali a getters nominativi e l'adozione delle API di batching hanno richiesto l'allineamento dei mock JUnit 5 all'interno dei test di unità per garantire l'assenza di regressioni semantiche:
+\begin{itemize}
+    \item \textbf{Named Mocking:} Nelle suite \texttt{OrdineDAOTest}, \texttt{ProdottoDAOTest}, \texttt{RecensioneDAOTest}, \texttt{UtenteDAOTest}, \texttt{CategoriaDAOTest} e \texttt{WishListDAOTest}, tutti gli stub dei ResultSet basati su indici numerici (es. \texttt{when(rs.getInt(1))}) sono stati convertiti in stub basati sulle etichette delle colonne (es. \texttt{when(rs.getInt("id\_utente"))}).
+    \item \textbf{Verification delle API Batch:} In \texttt{OrdineDAOTest.java}, i test di successo e di rollback sono stati aggiornati per verificare il corretto utilizzo dei metodi di batching (verificando \texttt{stmt.executeBatch()} e \texttt{stmt.addBatch()}) anziché dell'obsoleto \texttt{executeUpdate()}.
+\end{itemize}
+La completa validazione tramite test suite globale ha certificato il perfetto superamento di tutti i 532 test di unità del sistema, a riprova della sicurezza semantica delle ottimizzazioni apportate.

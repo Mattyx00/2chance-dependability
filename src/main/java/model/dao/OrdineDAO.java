@@ -34,7 +34,7 @@ public class OrdineDAO {
             throw new IllegalArgumentException("L'ID dell'ordine deve essere maggiore di zero.");
         }
 
-        String query = "SELECT * FROM ordine WHERE id_ordine = ?";
+        String query = "SELECT id_ordine, id_utente, data_ordine, indirizzo_spedizione, prezzo_totale FROM ordine WHERE id_ordine = ?";
         try (Connection connection = ConPool.getConnection();
                 PreparedStatement stmt = connection.prepareStatement(query)) {
 
@@ -80,7 +80,8 @@ public class OrdineDAO {
             throw new IllegalArgumentException("L'ID dell'ordine deve essere valido.");
         }
 
-        String query = "SELECT * FROM composto c, ordine o, prodotto p " +
+        String query = "SELECT c.quantita, c.id_prodotto, p.marca, p.modello, p.immagine, c.prezzo_totale FROM composto c, ordine o, prodotto p "
+                +
                 "WHERE c.id_ordine = o.id_ordine AND c.id_prodotto = p.id_prodotto AND o.id_ordine = ?";
 
         try (Connection connection = ConPool.getConnection();
@@ -95,18 +96,18 @@ public class OrdineDAO {
                     p.setQuantita(rs.getInt("quantita"));
 
                     Prodotto prod = new Prodotto();
-                    prod.setId(rs.getInt(2)); // c.id_prodotto
-                    prod.setMarca(rs.getString(17));
+                    prod.setId(rs.getInt("id_prodotto"));
+                    prod.setMarca(rs.getString("marca"));
 
                     // Safe default to avoid IllegalArgumentException in Prodotto#setModello
-                    String modello = rs.getString(18);
+                    String modello = rs.getString("modello");
                     if (modello == null || modello.trim().isEmpty()) {
                         modello = "UNKNOWN_MODEL";
                     }
                     prod.setModello(modello);
 
-                    prod.setImmagine(rs.getString(16));
-                    prod.setPrezzo(rs.getDouble(4)); // c.prezzo_totale (snapshot price)
+                    prod.setImmagine(rs.getString("immagine"));
+                    prod.setPrezzo(rs.getDouble("prezzo_totale")); // c.prezzo_totale (snapshot price)
 
                     p.setProdotto(prod);
                     c.aggiungiProdotto(p);
@@ -132,7 +133,7 @@ public class OrdineDAO {
             throw new IllegalArgumentException("L'ID dell'utente deve essere valido.");
         }
 
-        String query = "SELECT * FROM ordine WHERE id_utente = ?";
+        String query = "SELECT id_ordine, id_utente, data_ordine, indirizzo_spedizione, prezzo_totale FROM ordine WHERE id_utente = ?";
         try (Connection connection = ConPool.getConnection();
                 PreparedStatement stmt = connection.prepareStatement(query)) {
 
@@ -142,24 +143,24 @@ public class OrdineDAO {
                 ArrayList<Ordine> ordini = new ArrayList<>();
                 while (rs.next()) {
                     Ordine ordine = new Ordine();
-                    ordine.setId(rs.getInt(1)); // id_ordine
+                    ordine.setId(rs.getInt("id_ordine"));
 
                     Utente utenteProvv = new Utente();
-                    utenteProvv.setId(rs.getInt(2)); // id_utente
+                    utenteProvv.setId(rs.getInt("id_utente"));
                     ordine.setUtente(utenteProvv);
 
                     // Avoid calling setters with null/empty values (tests may not stub them)
-                    Date data = rs.getDate(3);
+                    Date data = rs.getDate("data_ordine");
                     if (data != null) {
                         ordine.setDataOrdine(data);
                     }
 
-                    String indirizzo = rs.getString(4);
+                    String indirizzo = rs.getString("indirizzo_spedizione");
                     if (indirizzo != null && !indirizzo.trim().isEmpty()) {
                         ordine.setIndirizzo(indirizzo);
                     }
 
-                    ordine.setPrezzoTotale(rs.getDouble(5));
+                    ordine.setPrezzoTotale(rs.getDouble("prezzo_totale"));
 
                     // Fetch details
                     try {
@@ -245,8 +246,9 @@ public class OrdineDAO {
                     stmt2.setInt(2, e.getProdotto().getId());
                     stmt2.setInt(3, e.getQuantita());
                     stmt2.setDouble(4, e.getProdotto().getPrezzo());
-                    stmt2.executeUpdate();
+                    stmt2.addBatch();
                 }
+                stmt2.executeBatch();
             }
 
             connection.commit();
@@ -292,7 +294,7 @@ public class OrdineDAO {
      * @throws SQLException if error occurs.
      */
     public ArrayList<Ordine> getOrdini() throws SQLException {
-        String query = "SELECT * FROM ordine";
+        String query = "SELECT id_ordine, id_utente, data_ordine, indirizzo_spedizione, prezzo_totale FROM ordine";
         try (Connection connection = ConPool.getConnection();
                 PreparedStatement stmt = connection.prepareStatement(query);
                 ResultSet rs = stmt.executeQuery()) {
@@ -300,24 +302,24 @@ public class OrdineDAO {
             ArrayList<Ordine> ordini = new ArrayList<>();
             while (rs.next()) {
                 Ordine o = new Ordine();
-                o.setId(rs.getInt(1));
+                o.setId(rs.getInt("id_ordine"));
 
                 Utente u = new Utente();
-                u.setId(rs.getInt(2));
+                u.setId(rs.getInt("id_utente"));
                 o.setUtente(u);
 
                 // Avoid calling setters with null/empty values (tests may not stub them)
-                Date data = rs.getDate(3);
+                Date data = rs.getDate("data_ordine");
                 if (data != null) {
                     o.setDataOrdine(data);
                 }
 
-                String indirizzo = rs.getString(4);
+                String indirizzo = rs.getString("indirizzo_spedizione");
                 if (indirizzo != null && !indirizzo.trim().isEmpty()) {
                     o.setIndirizzo(indirizzo);
                 }
 
-                o.setPrezzoTotale(rs.getDouble(5));
+                o.setPrezzoTotale(rs.getDouble("prezzo_totale"));
                 ordini.add(o);
             }
             return ordini;

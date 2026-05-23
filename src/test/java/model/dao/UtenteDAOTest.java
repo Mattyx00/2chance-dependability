@@ -321,14 +321,14 @@ class UtenteDAOTest {
     // =============================================================================================
 
     private void stubValidUserRow(int id, String nome, String cognome, String email) throws SQLException {
-        when(resultSet.getInt(1)).thenReturn(id);
-        when(resultSet.getString(2)).thenReturn(nome);
-        when(resultSet.getString(3)).thenReturn(cognome);
-        when(resultSet.getBoolean(4)).thenReturn(false);
-        when(resultSet.getString(5)).thenReturn(email);
-        when(resultSet.getString(6)).thenReturn("1234567890");
-        when(resultSet.getString(7)).thenReturn("pass");
-        when(resultSet.getString(8)).thenReturn(null);
+        when(resultSet.getInt("id_utente")).thenReturn(id);
+        when(resultSet.getString("nome")).thenReturn(nome);
+        when(resultSet.getString("cognome")).thenReturn(cognome);
+        when(resultSet.getBoolean("admin")).thenReturn(false);
+        when(resultSet.getString("email")).thenReturn(email);
+        when(resultSet.getString("telefono")).thenReturn("1234567890");
+        when(resultSet.getString("passwordhash")).thenReturn("pass");
+        when(resultSet.getString("immagine")).thenReturn(null);
     }
 
     private ArrayList<Ordine> createFakeOrdini() {

@@ -22,7 +22,7 @@ public class UtenteDAO {
             throw new IllegalArgumentException("L'ID dell'utente deve essere maggiore di zero.");
         }
         try (Connection connection = ConPool.getConnection();
-                PreparedStatement stmt = connection.prepareStatement("SELECT * FROM utente WHERE id_utente= ?")) {
+                PreparedStatement stmt = connection.prepareStatement("SELECT id_utente, nome, cognome, admin, email, telefono, passwordhash, immagine FROM utente WHERE id_utente = ?")) {
             stmt.setInt(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
@@ -54,7 +54,7 @@ public class UtenteDAO {
 
     public ArrayList<Utente> getUtenti() throws SQLException {
         try (Connection connection = ConPool.getConnection();
-                PreparedStatement stmt = connection.prepareStatement("SELECT * FROM utente")) {
+                PreparedStatement stmt = connection.prepareStatement("SELECT id_utente, nome, cognome, admin, email, telefono, passwordhash, immagine FROM utente")) {
             ArrayList<Utente> utenti = new ArrayList<>();
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
@@ -99,7 +99,7 @@ public class UtenteDAO {
 
         try (Connection connection = ConPool.getConnection();
                 PreparedStatement stmt = connection
-                        .prepareStatement("SELECT * FROM utente WHERE email = ? AND passwordhash = SHA1(?)")) {
+                        .prepareStatement("SELECT id_utente, nome, cognome, admin, email, telefono, passwordhash, immagine FROM utente WHERE email = ? AND passwordhash = SHA1(?)")) {
             stmt.setString(1, email);
             stmt.setString(2, password);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -204,14 +204,14 @@ public class UtenteDAO {
 
     private Utente mapRowToUtente(ResultSet rs) throws SQLException {
         Utente utente = new Utente();
-        utente.setId(rs.getInt(1));
-        utente.setNome(rs.getString(2));
-        utente.setCognome(rs.getString(3));
-        utente.setAdmin(rs.getBoolean(4));
-        utente.setEmail(rs.getString(5));
-        utente.setTelefono(rs.getString(6));
-        utente.setPassword(rs.getString(7));
-        utente.setImmagine(rs.getString(8));
+        utente.setId(rs.getInt("id_utente"));
+        utente.setNome(rs.getString("nome"));
+        utente.setCognome(rs.getString("cognome"));
+        utente.setAdmin(rs.getBoolean("admin"));
+        utente.setEmail(rs.getString("email"));
+        utente.setTelefono(rs.getString("telefono"));
+        utente.setPassword(rs.getString("passwordhash"));
+        utente.setImmagine(rs.getString("immagine"));
         return utente;
     }
 

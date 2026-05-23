@@ -76,7 +76,7 @@ public class WishListDAO {
         }
 
         try (Connection connection = ConPool.getConnection();
-                PreparedStatement stmt = connection.prepareStatement("SELECT * FROM wishlist WHERE id_cliente = ?")) {
+                PreparedStatement stmt = connection.prepareStatement("SELECT id_cliente, id_prodotto FROM wishlist WHERE id_cliente = ?")) {
             stmt.setInt(1, u.getId());
 
             WishList w = new WishList();
@@ -87,7 +87,7 @@ public class WishListDAO {
                 ProdottoDAO dao = getProdottoDAO();
 
                 while (rs.next()) {
-                    int productId = rs.getInt(2);
+                    int productId = rs.getInt("id_prodotto");
                     if (productId <= 0) {
                         LOGGER.warning("Invalid product ID " + productId + " in wishlist for user " + u.getId());
                         continue; // Skip invalid entries

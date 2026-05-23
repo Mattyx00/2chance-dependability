@@ -19,7 +19,8 @@ public class Categoria {
             throw new IllegalArgumentException("Il nome della categoria non può essere null o vuoto");
         }
         boolean isAllWhitespace = true;
-        for (int i = 0; i < nomeCategoria.length(); i++) {
+        int len = nomeCategoria.length();
+        for (int i = 0; i < len; i++) {
             if (nomeCategoria.charAt(i) > ' ') {
                 isAllWhitespace = false;
                 break;
@@ -47,7 +48,8 @@ public class Categoria {
             throw new IllegalArgumentException("Il nome della categoria non può essere null o vuoto");
         }
         boolean isAllWhitespace = true;
-        for (int i = 0; i < nomeCategoria.length(); i++) {
+        int len = nomeCategoria.length();
+        for (int i = 0; i < len; i++) {
             if (nomeCategoria.charAt(i) > ' ') {
                 isAllWhitespace = false;
                 break;
