@@ -1,0 +1,15 @@
+=== Analisi Energetica per Singolo Microbenchmark ===
+Elaborazione classe JMH: RecensioneDAOBenchmark
+File JMH JSON correlato: C:\Users\aldom\Desktop\Projects\University of Salerno\2chance-dependability\src\jmh\java\model\dao\jmh_logs\log_RecensioneDAOBenchmark_2026_05_22_18_51_46.json
+===============================================================================================================================================================================
+Microbenchmark                                | Avg Time (ms/op)     | CPU Energy (J) | Avg Power (W) | Core Energy (J) | Avg CPU (%)  | Peak CPU (%) | Avg RAM (GB) | Peak RAM (GB)
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+benchmarkAddRecensione                        | 7.5219               | 77.45          | 15.46         | 3.20            | 26.21        | 40.95        | 26.06        | 26.14       
+benchmarkGetRecensioniByProdottoInvalid       | 0.0008               | 73.85          | 14.75         | 2.74            | 22.10        | 48.23        | 26.24        | 26.34       
+benchmarkGetRecensioniByProdottoNonExistent   | 1.1259               | 75.78          | 15.13         | 2.43            | 25.90        | 38.03        | 26.12        | 26.26       
+benchmarkGetRecensioniByProdottoValid         | 15.3983              | 76.26          | 15.23         | 3.30            | 25.36        | 55.45        | 26.06        | 26.12       
+benchmarkGetRecensioniByUtenteInvalid         | 0.0008               | 82.31          | 16.44         | 2.57            | 29.29        | 54.12        | 26.12        | 26.23       
+benchmarkGetRecensioniByUtenteNonExistent     | 1.0402               | 95.78          | 19.13         | 3.67            | 33.67        | 56.66        | 25.75        | 25.82       
+benchmarkGetRecensioniByUtenteValid           | 15.0104              | 77.52          | 15.48         | 0.45            | 25.62        | 48.25        | 25.61        | 25.77       
+===============================================================================================================================================================================
+Analisi di unita completata con successo.

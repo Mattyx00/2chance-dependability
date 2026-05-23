@@ -1,0 +1,16 @@
+=== Analisi Energetica per Singolo Microbenchmark ===
+Elaborazione classe JMH: OrdineDAOBenchmark
+File JMH JSON correlato: C:\Users\aldom\Desktop\Projects\University of Salerno\2chance-dependability\src\jmh\java\model\dao\jmh_logs\log_OrdineDAOBenchmark_2026_05_22_18_48_00.json
+===============================================================================================================================================================================
+Microbenchmark                                | Avg Time (ms/op)     | CPU Energy (J) | Avg Power (W) | Core Energy (J) | Avg CPU (%)  | Peak CPU (%) | Avg RAM (GB) | Peak RAM (GB)
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+benchmarkAddOrdineValid                       | 13.5605              | 90.12          | 15.51         | 2.88            | 27.30        | 45.04        | 25.79        | 25.85       
+benchmarkCarrelloOperations                   | 0.0000               | 88.49          | 15.78         | 2.83            | 23.39        | 41.02        | 25.78        | 25.83       
+benchmarkGetOrdineByIdInvalid                 | 0.0009               | 93.15          | 16.03         | 2.48            | 22.74        | 33.03        | 25.96        | 26.09       
+benchmarkGetOrdineByIdValid                   | 1.0374               | 93.99          | 16.75         | 1.27            | 32.79        | 58.56        | 25.86        | 25.93       
+benchmarkGetOrdiniByUtenteInvalid             | 0.0009               | 100.47         | 17.29         | 1.55            | 25.60        | 58.93        | 26.07        | 26.41       
+benchmarkGetOrdiniByUtenteValid               | 41.3830              | 88.68          | 15.26         | 3.08            | 22.76        | 32.91        | 25.98        | 26.08       
+benchmarkGetProdottoOrdineInvalid             | 0.0009               | 93.50          | 16.67         | 3.45            | 28.11        | 48.83        | 26.10        | 26.23       
+benchmarkGetProdottoOrdineValid               | 14.9318              | 88.19          | 15.72         | 5.31            | 25.38        | 56.27        | 25.94        | 26.03       
+===============================================================================================================================================================================
+Analisi di unita completata con successo.

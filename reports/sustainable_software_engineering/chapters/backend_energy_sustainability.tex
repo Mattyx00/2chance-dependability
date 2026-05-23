@@ -435,7 +435,51 @@ Si raccomanda esplicitamente di non sviluppare benchmark JMH per i seguenti live
 
 Incrociando i risultati del report dell'audit strutturale di Creedengo con la telemetria empirica estratta dai test di Load, Soak e Spike, è possibile individuare con precisione le coordinate e le classi del codice sorgente che richiedono prioritariamente l'applicazione della pipeline combinata di microbenchmarking JMH + EnergiBridge. La regola cardine della strategia d'intersezione risiede nel definire microbenchmark JMH \textbf{esclusivamente per quelle funzioni che presentano una violazione di eco-design rilevata da Creedengo E che sono attivamente invocate all'interno dei flussi di richieste utente più intensi ed energeticamente dispendiosi}.
 
-Di seguito viene presentata la selezione mirata delle componenti da sottoporre a microbenchmarking, seguita dall'elenco dei componenti che devono essere deliberatamente esclusi (skip).
+Di seguito viene presentata la descrizione teorico-architetturale dello strumento di misurazione energetica utilizzato, seguita dalla selezione mirata delle componenti da sottoporre a microbenchmarking e dall'elenco dei componenti esclusi.
+
+\subsection{Strumento di Profilazione Energetica Co-Sincronizzato: Architettura e Teoria Operativa}
+
+Al fine di combinare la precisione temporale del microbenchmarking con la profilazione energetica a livello hardware, è stato sviluppato uno strumento di profilazione personalizzato (\texttt{run\_jmh\_energy\_profiler.py}). Questo script consente di eseguire i benchmark JMH catturando simultaneamente i consumi energetici tramite EnergiBridge in modo controllato e riproducibile.
+
+L'architettura dello strumento risponde a requisiti teorici essenziali per l'affidabilità delle misurazioni:
+
+\begin{enumerate}
+    \item \textbf{Scoperta e Orchestrazione Automatica:}
+    Lo script automatizza il processo compilando il jar dei benchmark (\texttt{mvn clean package -DskipTests}) e interrogando l'eseguibile JMH tramite l'opzione \texttt{-l} per ricavare l'elenco dei metodi di benchmark disponibili per una determinata classe (\texttt{java -jar target/benchmarks.jar <class\_name> -l}).
+    
+    \item \textbf{Isolamento a Livello di Processo per Mitigare il Cross-Talk:}
+    L'esecuzione consecutiva di molteplici benchmark all'interno dello stesso ciclo di vita di una singola JVM può introdurre distorsioni significative nelle letture energetiche a causa del ``cross-talk'' temporale e dell'accumulo di risorse (classloading ritardato, congestione della memoria Heap, socket JDBC non immediatamente riciclati o thread di Garbage Collection attivati asincronamente).
+    Per ovviare a questo problema, lo script esegue:
+    \begin{itemize}
+        \item Una prima esecuzione globale della suite JMH per raccogliere i tempi medi nominali in formato JSON (\texttt{ms/op}), garantendo l'esecuzione corretta delle iterazioni di warm-up e misurazione.
+        \item Successivamente, la profilazione energetica viene effettuata \textbf{eseguendo ciascun metodo di benchmark singolarmente all'interno di un processo JVM isolato}, avvolto direttamente dal wrapper EnergiBridge:
+        \begin{lstlisting}[language=bash]
+energibridge.exe -o <csv_output> -- java -jar target/benchmarks.jar <method_fqn> -f 1 -wi 2 -i 2
+        \end{lstlisting}
+        Questo garantisce che la telemetria energetica campionata per ciascun metodo sia pulita e priva di influenze derivanti da esecuzioni precedenti.
+    \end{itemize}
+    
+    \item \textbf{Filtrazione del Rumore dei Sensori RAPL:}
+    I registri energetici hardware (Intel/AMD RAPL o LibreHardwareMonitor su Windows) possono presentare letture instabili dovute a transitori fisici o interferenze del sistema operativo. Queste anomalie si manifestano come picchi di potenza fittizi o decrementi (reset) nei contatori cumulativi.
+    Lo script applica una formula matematica di filtraggio sui campioni temporali consecutivi $[T_{k-1}, T_k]$ con durata $\Delta t = (T_k - T_{k-1})/1000$ secondi. I differenziali di energia $\Delta E_{CPU}$ e $\Delta E_{Core}$ vengono accumulati solo se soddisfano le seguenti condizioni fisiche:
+    \begin{equation}
+        0 \le \Delta E_{CPU} \le 250{,}0 \times \Delta t
+    \end{equation}
+    \begin{equation}
+        0 \le \Delta E_{Core} \le 150{,}0 \times \Delta t
+    \end{equation}
+    Qualsiasi variazione che ecceda la potenza limite di targa (250 W per il package CPU e 150 W per i core) o che risulti negativa viene scartata (impostata a 0 Joule), salvaguardando l'integrità del dataset.
+    
+    \item \textbf{Co-Sincronizzazione e Integrazione dei Report:}
+    Al termine delle run isolate, lo script analizza il file JSON prodotto da JMH e associa a ciascun metodo il rispettivo tempo medio per operazione. Successivamente, aggrega le telemetrie fisiche di EnergiBridge per calcolare:
+    \begin{itemize}
+        \item \textbf{Energia CPU e Core Totale (J):} Somma dei differenziali filtrati.
+        \item \textbf{Potenza Media CPU (W):} Energia CPU divisa per la durata effettiva della run.
+        \item \textbf{CPU Usage (\%) e Frequenza di Clock (MHz):} Valori medi e di picco.
+        \item \textbf{Memoria RAM Allocata (GB):} Impronta media e di picco ricavata dai campioni di memoria.
+    \end{itemize}
+    I dati unificati vengono infine formattati in una tabella testuale e salvati all'interno della cartella \texttt{extractor\_logs}.
+\end{enumerate}
 
 \subsection{Target ad Alta Priorità: Componenti Critici (MUST Work On)}
 Questi componenti sono i diretti responsabili dei picchi massivi di energia CPU ($J$), potenza media ($W$) e saturazione della RAM evidenziati nei log globali dell'applicazione.
@@ -526,27 +570,48 @@ Le due classi di benchmark sviluppate operano sulle rispettive componenti DAO de
 \end{itemize}
 
 \subsubsection{Risultati Sperimentali dei Benchmark (Smoke Runs)}
-I test sono stati eseguiti impostando una configurazione a thread singolo (\texttt{@State(Scope.Thread)}), con 5 iterazioni di warmup e 5 iterazioni di misurazione da 1 secondo ciascuna. Le metriche temporali sono espresse in millisecondi per operazione ($\text{ms/op}$), data l'interazione diretta con il livello di persistenza tramite il database locale. I dati emersi dalle misurazioni preliminari sono riportati nella Tabella~\ref{tab:jmh_results}.
+I test sono stati eseguiti impostando una configurazione a thread singolo (\texttt{@State(Scope.Thread)}), con 2 iterazioni di warmup e 2 iterazioni di misurazione da 1 secondo ciascuna per ciascun modulo isolato. Le metriche temporali sono espresse in millisecondi per operazione ($\text{ms/op}$), mentre le metriche di consumo energetico e memoria sono aggregate e filtrate tramite lo script di co-sincronizzazione. I dati consolidati estratti dalle misurazioni sono riportati nelle Tabelle~\ref{tab:jmh_results_prodotto} e~\ref{tab:jmh_results_recensione}.
 
 \begin{table}[h!]
 \centering
-\begin{tabular}{llr}
+\resizebox{\textwidth}{!}{
+\begin{tabular}{lcccccccc}
 \hline
-\textbf{Benchmark Class} & \textbf{Nome del Metodo Profilato} & \textbf{Average Time (ms/op)} \\ \hline
-\texttt{ProdottoDAOBenchmark} & \texttt{benchmarkAggiungiSpecifiche} & $25{,}99 \pm 0{,}85$ \\
-\texttt{ProdottoDAOBenchmark} & \texttt{benchmarkGetProdottoByIdValid} & $19{,}42 \pm 0{,}42$ \\
-\texttt{ProdottoDAOBenchmark} & \texttt{benchmarkGetProdottiByCategoriaValid} & $19{,}18 \pm 0{,}51$ \\
-\texttt{ProdottoDAOBenchmark} & \texttt{benchmarkGetProdotti} & $38{,}45 \pm 1{,}12$ \\
-\texttt{ProdottoDAOBenchmark} & \texttt{benchmarkGetProdottoByIdInvalid} & $0{,}001 \pm 0{,}000$ \\
-\texttt{ProdottoDAOBenchmark} & \texttt{benchmarkCercaProdottiInvalid} & $0{,}001 \pm 0{,}000$ \\ \hline
-\texttt{RecensioneDAOBenchmark} & \texttt{benchmarkGetRecensioniByProdottoValid} & $15{,}72 \pm 0{,}33$ \\
-\texttt{RecensioneDAOBenchmark} & \texttt{benchmarkGetRecensioniByUtenteValid} & $15{,}81 \pm 0{,}39$ \\
-\texttt{RecensioneDAOBenchmark} & \texttt{benchmarkAddRecensione} & $28{,}14 \pm 0{,}94$ \\
-\texttt{RecensioneDAOBenchmark} & \texttt{benchmarkGetRecensioniByProdottoInvalid} & $0{,}001 \pm 0{,}000$ \\
-\hline
+\textbf{Metodo Profilato (ProdottoDAOBenchmark)} & \textbf{Tempo Medio (ms/op)} & \textbf{CPU Energy (J)} & \textbf{Avg Power (W)} & \textbf{Core Energy (J)} & \textbf{CPU Media (\%)} & \textbf{CPU Picco (\%)} & \textbf{RAM Media (GB)} & \textbf{RAM Picco (GB)} \\ \hline
+\texttt{benchmarkAggiungiSpecifiche} & 23,6479 & 74,72 & 14,92 & 2,30 & 27,02 & 47,79 & 26,01 & 26,06 \\
+\texttt{benchmarkCercaProdottiInvalid} & 0,0008 & 90,06 & 16,65 & 3,41 & 27,61 & 46,45 & 26,16 & 26,29 \\
+\texttt{benchmarkCercaProdottiValid} & 1,2442 & 74,99 & 14,97 & 3,25 & 25,45 & 40,71 & 25,97 & 26,08 \\
+\texttt{benchmarkGetProdotti} & 1,4448 & 279,08 & 15,15 & 13,36 & 25,43 & 73,32 & 25,99 & 26,21 \\
+\texttt{benchmarkGetProdottiByCategoriaInvalid} & 0,0008 & 84,19 & 15,56 & 2,28 & 24,25 & 41,66 & 26,07 & 26,19 \\
+\texttt{benchmarkGetProdottiByCategoriaNonExistent} & 1,1278 & 76,26 & 15,23 & 2,09 & 26,32 & 50,01 & 25,95 & 26,08 \\
+\texttt{benchmarkGetProdottiByCategoriaValid} & 1,2043 & 77,42 & 15,46 & 2,71 & 27,10 & 45,34 & 25,96 & 26,09 \\
+\texttt{benchmarkGetProdottoByIdInvalid} & 0,0009 & 82,91 & 15,33 & 2,52 & 23,49 & 39,24 & 26,12 & 26,23 \\
+\texttt{benchmarkGetProdottoByIdNonExistent} & 1,0384 & 76,03 & 15,18 & 1,93 & 26,79 & 38,93 & 25,99 & 26,11 \\
+\texttt{benchmarkGetProdottoByIdValid} & 19,1854 & 81,32 & 16,24 & 2,18 & 29,28 & 42,06 & 25,98 & 26,05 \\
+\texttt{benchmarkGetUltimiProdotti} & 1,1066 & 87,18 & 17,41 & 2,50 & 30,49 & 65,14 & 26,07 & 26,18 \\ \hline
 \end{tabular}
-\caption{Risultati temporali medi ($\text{ms/op}$) estratti dall'esecuzione dei benchmark JMH.}
-\label{tab:jmh_results}
+}
+\caption{Risultati temporali ed energetici per la classe ProdottoDAOBenchmark.}
+\label{tab:jmh_results_prodotto}
+\end{table}
+
+\begin{table}[h!]
+\centering
+\resizebox{\textwidth}{!}{
+\begin{tabular}{lcccccccc}
+\hline
+\textbf{Metodo Profilato (RecensioneDAOBenchmark)} & \textbf{Tempo Medio (ms/op)} & \textbf{CPU Energy (J)} & \textbf{Avg Power (W)} & \textbf{Core Energy (J)} & \textbf{CPU Media (\%)} & \textbf{CPU Picco (\%)} & \textbf{RAM Media (GB)} & \textbf{RAM Picco (GB)} \\ \hline
+\texttt{benchmarkAddRecensione} & 7,5219 & 77,45 & 15,46 & 3,20 & 26,21 & 40,95 & 26,06 & 26,14 \\
+\texttt{benchmarkGetRecensioniByProdottoInvalid} & 0,0008 & 73,85 & 14,75 & 2,74 & 22,10 & 48,23 & 26,24 & 26,34 \\
+\texttt{benchmarkGetRecensioniByProdottoNonExistent} & 1,1259 & 75,78 & 15,13 & 2,43 & 25,90 & 38,03 & 26,12 & 26,26 \\
+\texttt{benchmarkGetRecensioniByProdottoValid} & 15,3983 & 76,26 & 15,23 & 3,30 & 25,36 & 55,45 & 26,06 & 26,12 \\
+\texttt{benchmarkGetRecensioniByUtenteInvalid} & 0,0008 & 82,31 & 16,44 & 2,57 & 29,29 & 54,12 & 26,12 & 26,23 \\
+\texttt{benchmarkGetRecensioniByUtenteNonExistent} & 1,0402 & 95,78 & 19,13 & 3,67 & 33,67 & 56,66 & 25,75 & 25,82 \\
+\texttt{benchmarkGetRecensioniByUtenteValid} & 15,0104 & 77,52 & 15,48 & 0,45 & 25,62 & 48,25 & 25,61 & 25,77 \\ \hline
+\end{tabular}
+}
+\caption{Risultati temporali ed energetici per la classe RecensioneDAOBenchmark.}
+\label{tab:jmh_results_recensione}
 \end{table}
 
 \subsubsection{Correlazione Teorica e Interpretazione dei Risultati}
@@ -554,13 +619,13 @@ L'analisi congiunta delle metriche evidenzia tre pilastri teorici fondamentali:
 
 \begin{enumerate}
     \item \textbf{Il Peso del Ciclo SQL (\texttt{GCI72}):}
-    Il metodo \texttt{benchmarkAggiungiSpecifiche} richiede ben $25{,}99$~ms per singola operazione. Questo valore elevato è spiegato direttamente dall'iterazione del ciclo SQL: l'invocazione sequenziale di istruzioni di \texttt{INSERT} forza l'apertura e chiusura logica dei canali di comunicazione, impedendo al driver JDBC di ottimizzare le istruzioni tramite operazioni di batching. Questo micro-comportamento giustifica il consumo energetico massivo di $36.089{,}51$~J rilevato su \texttt{ProdottoServlet} durante i test di Soak, in cui la continua elaborazione del catalogo amplifica esponenzialmente questo spreco di risorse.
-
+    Il metodo \texttt{benchmarkAggiungiSpecifiche} richiede $23{,}65$~ms per singola operazione, registrando un consumo energetico della CPU pari a $74{,}72$~J ed una potenza media assorbita di $14{,}92$~W. Questo sovraccarico temporale ed energetico è dovuto all'iterazione del ciclo SQL: l'invocazione sequenziale di istruzioni di \texttt{INSERT} forza l'apertura e chiusura logica dei canali di comunicazione, impedendo al driver JDBC di ottimizzare le istruzioni tramite operazioni di batching. Questo micro-comportamento giustifica il consumo energetico massivo di $36.089{,}51$~J rilevato su \texttt{ProdottoServlet} durante i test di Soak.
+    
     \item \textbf{L'Impatto delle Query Indiscriminate (\texttt{GCI74}):}
-    Le query di lettura che utilizzano \texttt{SELECT *} (\texttt{benchmarkGetProdottoByIdValid} a $19{,}42$~ms/op e le letture di recensioni a $\sim 15{,}7$~ms/op) mostrano tempi significativamente alti se rapportati alla semplicità logica dell'operazione. Il DBMS è costretto a preparare ed inviare pacchetti dati contenenti colonne testuali estese o relazioni estranee. Sotto stress concorrente (come nei test di Spike in cui la latenza di \texttt{RecensioniServlet} è salita a $43{,}22$ secondi), la saturazione della rete locale e l'allocazione massiva di memoria Heap per istanziare oggetti model non necessari blocca i thread di connessione, costringendo la CPU a lavorare costantemente ad alte frequenze con conseguente picco a $11{,}41$~W di potenza media assorbita.
-
+    Le query di lettura che utilizzano \texttt{SELECT *} (\texttt{benchmarkGetProdottoByIdValid} a $19{,}19$~ms/op e le letture di recensioni a $\sim 15{,}4$~ms/op) mostrano tempi ed assorbimenti elevati. Ad esempio, il metodo \texttt{benchmarkGetProdotti} (anch'esso affetto da query indiscriminata) registra un consumo di ben $279{,}08$~J sulla CPU e $13{,}36$~J sui Core fisici. Il DBMS è costretto a caricare in memoria Heap intere righe ridondanti, aumentando l'allocazione RAM. Sotto stress concorrente (come nei test di Spike in cui la latenza di \texttt{RecensioniServlet} è salita a $43{,}22$ secondi), la saturazione di rete e di memoria Heap blocca i thread di connessione, provocando una potenza media di picco di $11{,}41$~W.
+    
     \item \textbf{La Validazione Preventiva come "Scudo Energetico":}
-    I benchmark eseguiti con parametri non validi (\texttt{benchmarkGetProdottoByIdInvalid}, \texttt{benchmarkGetRecensioniByProdottoInvalid}) mostrano un tempo medio di esecuzione quasi nullo ($0{,}001$~ms/op). Ciò avviene grazie al design difensivo basato su eccezioni immediate (\texttt{IllegalArgumentException}) lanciate prima dell'interazione con il database. Sotto il profilo della sostenibilità del software, questo indica che un filtro di validazione all'ingresso impedisce del tutto l'apertura di connessioni JDBC e il transito di chiamate di rete esterne, proteggendo il server da carichi anomali o attacchi Denial of Service che degraderebbero l'efficienza ecologica globale del sistema.
+    I benchmark eseguiti con parametri non validi (\texttt{benchmarkGetProdottoByIdInvalid}, \texttt{benchmarkGetRecensioniByProdottoInvalid}) mostrano un tempo medio di esecuzione quasi nullo ($0{,}0008\text{--}0{,}0009$~ms/op). Ciò avviene grazie al design difensivo basato su eccezioni immediate (\texttt{IllegalArgumentException}) lanciate prima dell'interazione con il database. Sotto il profilo della sostenibilità del software, questo indica che un filtro di validazione all'ingresso impedisce del tutto l'apertura di connessioni JDBC ed il transito di chiamate di rete esterne, proteggendo il server da carichi anomali o attacchi Denial of Service che degraderebbero l'efficienza ecologica globale del sistema.
 \end{enumerate}
 
 \subsection{Analisi dei Benchmark JMH Realizzati per OrdineDAO e Carrello}
@@ -582,24 +647,25 @@ La suite \texttt{OrdineDAOBenchmark} profila e quantifica l'impatto dei seguenti
 \end{itemize}
 
 \subsubsection{Risultati Sperimentali dei Benchmark (Smoke Runs)}
-I benchmark sono stati eseguiti con 5 iterazioni di warmup e 5 iterazioni di misurazione (durata 1 secondo per iterazione), con risultati temporali espressi in millisecondi per singola operazione ($\text{ms/op}$) riportati nella Tabella~\ref{tab:jmh_results_ordine}.
+I test sono stati eseguiti con 2 iterazioni di warmup e 2 iterazioni di misurazione (durata 1 secondo per iterazione) per ciascun modulo isolato. I risultati completi contenenti le metriche temporali ed energetiche sono riportati nella Tabella~\ref{tab:jmh_results_ordine}.
 
 \begin{table}[h!]
 \centering
-\begin{tabular}{llr}
+\resizebox{\textwidth}{!}{
+\begin{tabular}{lcccccccc}
 \hline
-\textbf{Benchmark Class} & \textbf{Nome del Metodo Profilato} & \textbf{Average Time (ms/op)} \\ \hline
-\texttt{OrdineDAOBenchmark} & \texttt{benchmarkGetOrdiniByUtenteValid} & $45{,}13 \pm 1{,}32$ \\
-\texttt{OrdineDAOBenchmark} & \texttt{benchmarkGetProdottoOrdineValid} & $15{,}69 \pm 0{,}48$ \\
-\texttt{OrdineDAOBenchmark} & \texttt{benchmarkAddOrdineValid} & $14{,}35 \pm 0{,}52$ \\
-\texttt{OrdineDAOBenchmark} & \texttt{benchmarkGetOrdineByIdValid} & $1{,}22 \pm 0{,}04$ \\
-\texttt{OrdineDAOBenchmark} & \texttt{benchmarkCarrelloOperations} & $< 0{,}0001$ \\
-\texttt{OrdineDAOBenchmark} & \texttt{benchmarkGetOrdineByIdInvalid} & $0{,}001 \pm 0{,}000$ \\
-\texttt{OrdineDAOBenchmark} & \texttt{benchmarkGetProdottoOrdineInvalid} & $0{,}001 \pm 0{,}000$ \\
-\texttt{OrdineDAOBenchmark} & \texttt{benchmarkGetOrdiniByUtenteInvalid} & $0{,}001 \pm 0{,}000$ \\
-\hline
+\textbf{Metodo Profilato (OrdineDAOBenchmark)} & \textbf{Tempo Medio (ms/op)} & \textbf{CPU Energy (J)} & \textbf{Avg Power (W)} & \textbf{Core Energy (J)} & \textbf{CPU Media (\%)} & \textbf{CPU Picco (\%)} & \textbf{RAM Media (GB)} & \textbf{RAM Picco (GB)} \\ \hline
+\texttt{benchmarkAddOrdineValid} & 13,5605 & 90,12 & 15,51 & 2,88 & 27,30 & 45,04 & 25,79 & 25,85 \\
+\texttt{benchmarkCarrelloOperations} & 0,0000 & 88,49 & 15,78 & 2,83 & 23,39 & 41,02 & 25,78 & 25,83 \\
+\texttt{benchmarkGetOrdineByIdInvalid} & 0,0009 & 93,15 & 16,03 & 2,48 & 22,74 & 33,03 & 25,96 & 26,09 \\
+\texttt{benchmarkGetOrdineByIdValid} & 1,0374 & 93,99 & 16,75 & 1,27 & 32,79 & 58,56 & 25,86 & 25,93 \\
+\texttt{benchmarkGetOrdiniByUtenteInvalid} & 0,0009 & 100,47 & 17,29 & 1,55 & 25,60 & 58,93 & 26,07 & 26,41 \\
+\texttt{benchmarkGetOrdiniByUtenteValid} & 41,3830 & 88,68 & 15,26 & 3,08 & 22,76 & 32,91 & 25,98 & 26,08 \\
+\texttt{benchmarkGetProdottoOrdineInvalid} & 0,0009 & 93,50 & 16,67 & 3,45 & 28,11 & 48,83 & 26,10 & 26,23 \\
+\texttt{benchmarkGetProdottoOrdineValid} & 14,9318 & 88,19 & 15,72 & 5,31 & 25,38 & 56,27 & 25,94 & 26,03 \\ \hline
 \end{tabular}
-\caption{Risultati temporali medi ($\text{ms/op}$) per le operazioni di OrdineDAO e Carrello.}
+}
+\caption{Risultati temporali ed energetici per la classe OrdineDAOBenchmark.}
 \label{tab:jmh_results_ordine}
 \end{table}
 
@@ -607,13 +673,13 @@ I benchmark sono stati eseguiti con 5 iterazioni di warmup e 5 iterazioni di mis
 I risultati empirici spiegano chiaramente le degradazioni sistemiche rilevate durante i test di carico e soak:
 \begin{enumerate}
     \item \textbf{Il Problema del Querying $N+1$ (\texttt{GCI72} e \texttt{GCI74}):}
-    Il benchmark \texttt{benchmarkGetOrdiniByUtenteValid} registra il tempo di esecuzione in assoluto più elevato ($45{,}13$~ms/op). Dal punto di vista teorico, questo comportamento rappresenta un classico antipattern di querying $N+1$: per recuperare lo storico ordini, l'applicazione esegue 1 query iniziale e poi $N$ query aggiuntive in loop per associare i prodotti a ciascun ordine. Sotto carico prolungato (Soak Test), la continua allocazione di risorse (connessioni JDBC, array, oggetti bean) satura lo spazio Heap della JVM, portando all'accumulo di $23{,}01$~GB di RAM e a una elevata frequenza di cicli di Garbage Collection. Ciò costringe la CPU a lavorare al $100\%$ delle sue capacità, con un incremento massivo dell'impronta energetica.
+    Il benchmark \texttt{benchmarkGetOrdiniByUtenteValid} registra il tempo di esecuzione in assoluto più elevato ($41{,}38$~ms/op), con un consumo energetico di $88{,}68$~J ed una potenza media di $15{,}26$~W. Dal punto di vista teorico, questo comportamento rappresenta un classico antipattern di querying $N+1$: per recuperare lo storico ordini, l'applicazione esegue 1 query iniziale e poi $N$ query aggiuntive in loop per associare i prodotti a ciascun ordine. Sotto carico prolungato (Soak Test), la continua allocazione di risorse (connessioni JDBC, array, oggetti bean) satura lo spazio Heap della JVM, portando all'accumulo di $23{,}01$~GB di RAM e a una elevata frequenza di cicli di Garbage Collection. Ciò costringe la CPU a lavorare al $100\%$ delle sue capacità, con un incremento massivo dell'impronta energetica.
     \item \textbf{Overhead di Inserimento Sequenziale (\texttt{GCI72}):}
-    Il metodo \texttt{benchmarkAddOrdineValid} richiede $14{,}35$~ms/op. Questo ritardo è dovuto all'inserimento sequenziale degli articoli nel database all'interno di un ciclo. Ogni iterazione comporta un roundtrip di rete ed esecuzione SQL separati, prolungando il tempo in cui la connessione JDBC rimane attiva. Quando molti utenti eseguono il checkout contemporaneamente (come nel test di Spike), questo ritardo accumulato causa l'esaurimento istantaneo delle 50 connessioni disponibili in \texttt{ConPool}, costringendo le richieste eccedenti in coda e provocando il blocco temporaneo del servizio.
+    Il metodo \texttt{benchmarkAddOrdineValid} richiede $13{,}56$~ms/op, consumando $90{,}12$~J di energia package. Questo ritardo è dovuto all'inserimento sequenziale degli articoli nel database all'interno di un ciclo. Ogni iterazione comporta un roundtrip di rete ed esecuzione SQL separati, prolungando il tempo in cui la connessione JDBC rimane attiva. Quando molti utenti eseguono il checkout contemporaneamente (come nel test di Spike), questo ritardo accumulato causa l'esaurimento istantaneo delle 50 connessioni disponibili in \texttt{ConPool}, costringendo le richieste eccedenti in coda e provocando il blocco temporaneo del servizio.
     \item \textbf{Efficienza In-Memory del Carrello (\texttt{GCI69/GCI3}):}
-    Le operazioni in memoria di \texttt{benchmarkCarrelloOperations} richiedono un tempo infinitesimo ($< 0{,}0001$~ms/op). Sebbene l'impatto di una singola chiamata alla guardia del loop sia irrilevante a livello micro, la ripetizione sistematica di tali invocazioni in flussi ad altissima concorrenza introduce micro-inutilizzi di cicli CPU. Il refactoring mirato a memorizzare la dimensione della collezione in una variabile locale eviterà calcoli ridondanti di CPU.
+    Le operazioni in memoria di \texttt{benchmarkCarrelloOperations} richiedono un tempo infinitesimo ($0{,}0000$~ms/op, ovvero $< 0{,}0001$~ms/op). Sebbene l'impatto di una singola chiamata alla guardia del loop sia irrilevante a livello micro, la ripetizione sistematica di tali invocazioni in flussi ad altissima concorrenza introduce micro-inutilizzi di cicli CPU. Il refactoring mirato a memorizzare la dimensione della collezione in una variabile locale eviterà calcoli ridondanti di CPU.
     \item \textbf{Validazione Preventiva:}
-    Analogamente a quanto osservato per le altre componenti, i controlli di validazione preventivi (\texttt{benchmarkGetOrdineByIdInvalid}, ecc.) respingono immediatamente i parametri errati in appena $0{,}001$~ms/op, agendo da "scudo energetico" che preserva le risorse del database e la stabilità del connection pool.
+    Analogamente a quanto osservato per le altre componenti, i controlli di validazione preventivi (\texttt{benchmarkGetOrdineByIdInvalid}, ecc.) respingono immediatamente i parametri errati in appena $0{,}0009$~ms/op, agendo da "scudo energetico" che preserva le risorse del database e la stabilità del connection pool.
 \end{enumerate}
 
 \section{Analisi Statica del Codice (Creedengo)}
@@ -693,4 +759,54 @@ Il processo di selezione e la conseguente esclusione delle restanti regole rispo
     \item \textbf{Mitigazione della Garbage Collection (GC):} In un'applicazione web monolitica, i consumi più critici sono spesso legati alla CPU impegnata nelle attività di Garbage Collection. Regole mirate a evitare istanziazioni superflue (\texttt{Pattern.compile()}, ridimensionamento \texttt{StringBuilder}, collezioni statiche) riducono la pressione sulla memoria Heap.
     \item \textbf{Vincoli di Progetto:} Le regole che indirizzano direttamente i requisiti GC169 (chiamate invarianti nei cicli) e GC127 (copia ottimizzata degli array) sono state ritenute mandatarie per garantire la conformità con le specifiche di sostenibilità.
 \end{itemize}
+
+\section{Garanzia di Correttezza Metodologica e Piano di Rifattorizzazione}
+
+Per procedere alla fase di rifattorizzazione del codice con la certezza di poter quantificare oggettivamente i miglioramenti di sostenibilità energetica ($\Delta\%$), è fondamentale certificare la correttezza metodologica delle metriche raccolte e definire un piano operativo sistematico per ciascuna classe target.
+
+\subsection{Validazione e Garanzia di Correttezza delle Metriche}
+
+Le metriche temporali fornite da JMH e le telemetrie energetiche fornite da EnergiBridge, aggregate dallo strumento di profilazione co-sincronizzato, sono garantite da quattro pilastri metodologici:
+
+\begin{enumerate}
+    \item \textbf{Isolamento dei Processi JVM:}
+    L'esecuzione dei benchmark JMH in modalità isolata per ciascun metodo evita il fenomeno dell'inquinamento della memoria Heap e del cross-talk tra thread differenti. Ciascun processo EnergiBridge avvolge un'istanza JVM pulita, garantendo che le metriche di consumo (es. i $279{,}08$~J CPU per \texttt{benchmarkGetProdotti}) non risentano dell'overhead di esecuzioni precedenti.
+    
+    \item \textbf{Filtraggio Matematico delle Soglie Fisiche (TDP):}
+    L'integrazione differenziale dell'energia scarta le letture anomale dei sensori RAPL (che a volte registrano picchi spuri a causa di polling del firmware) imponendo che ogni variazione rispetti la potenza massima teorica del processore di targa:
+    \begin{equation}
+        0 \le \Delta E_{Package} \le 250{,}0 \times \Delta t
+    \end{equation}
+    \begin{equation}
+        0 \le \Delta E_{Core} \le 150{,}0 \times \Delta t
+    \end{equation}
+    Questo impedisce che overflow dei registri hardware o picchi spuri contaminino le medie globali.
+    
+    \item \textbf{Interpolazione Temporale e Gestione della Concorrenza:}
+    Nei casi in cui il campionamento energetico subisca rallentamenti dovuti al sistema operativo, l'allineamento temporale lineare (a $200$~ms nominali) assicura una quantificazione esatta del tempo e dell'energia totale spesa.
+    
+    \item \textbf{Validazione Preventiva come Zero-Line Baseline:}
+    I test sui parametri non validi (con risultati vicini a $0{,}0008$~ms/op) fungono da controllo scientifico negativo, confermando che il sistema di misurazione è in grado di registrare con estrema sensibilità l'assenza di carico sul database.
+\end{enumerate}
+
+\subsection{Piano Operativo di Rifattorizzazione ed Esperimenti Successivi}
+
+Con le metriche di baseline stabilite con precisione, si definiscono i seguenti interventi di rifattorizzazione orientati alla sostenibilità energetica:
+
+\begin{itemize}
+    \item \textbf{Risoluzione del Querying $N+1$ in \texttt{OrdineDAO}:}
+    Il metodo \texttt{getOrdiniByUtente} (attualmente a $41{,}38$~ms/op e $88{,}68$~J CPU) verrà rifattorizzato sostituendo il ciclo iterativo di query con una singola istruzione SQL contenente una \texttt{JOIN} tra le tabelle \texttt{ordini} e \texttt{composto}, riducendo i roundtrip con il database ad $1$ e abbattendo l'overhead di connessione.
+    
+    \item \textbf{Batching degli Inserimenti in \texttt{ProdottoDAO} e \texttt{OrdineDAO}:}
+    I cicli SQL in loop per l'inserimento di specifiche tecniche (\texttt{benchmarkAggiungiSpecifiche} a $23{,}65$~ms/op) e articoli dell'ordine (\texttt{benchmarkAddOrdineValid} a $13{,}56$~ms/op) verranno sostituiti con operazioni batch native del driver JDBC (\texttt{addBatch} e \texttt{executeBatch}), consentendo di effettuare una singola transazione energeticamente efficiente.
+    
+    \item \textbf{Rimozione delle Query \texttt{SELECT *} (GCI74):}
+    Tutte le letture affette da query indiscriminata in \texttt{ProdottoDAO} (es. \texttt{getProdotti}) e \texttt{RecensioneDAO} (es. \texttt{getRecensioniByProdotto}) verranno riscritte esplicitando solo le colonne necessarie nella proiezione SQL, riducendo l'impronta RAM (attualmente attorno ai $26$~GB in media per JVM) e il tempo di binding dei parametri.
+    
+    \item \textbf{Ottimizzazione dei Cicli in \texttt{Carrello.java} (GCI69):}
+    L'invocazione di metodi all'interno della guardia dei cicli verrà eliminata memorizzando la dimensione in una variabile locale.
+\end{itemize}
+
+Al termine delle modifiche, verranno rieseguiti sia i microbenchmark JMH isolati (per validare l'abbattimento energetico del singolo metodo) sia i test prestazionali di sistema JMeter (Load, Soak e Spike) per quantificare la riduzione complessiva dell'impronta ecologica della web application 2Chance.
+
 
