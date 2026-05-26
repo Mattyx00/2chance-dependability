@@ -57,51 +57,77 @@ def main():
             
         page += 1
         
-    # Filter for Creedengo (eco-design) issues only
-    creedengo_issues = []
+    # Filter for active and closed Creedengo (eco-design) issues
+    active_issues = []
+    closed_issues = []
     for issue in all_issues:
         rule = issue.get("rule", "")
+        status = issue.get("status", "")
         if "creedengo" in rule or "ecoCode" in rule or rule.startswith("creedengo-java:"):
-            creedengo_issues.append(issue)
-            
-    if not creedengo_issues:
+            if status not in ("CLOSED", "RESOLVED"):
+                active_issues.append(issue)
+            else:
+                closed_issues.append(issue)
+                
+    if not active_issues and not closed_issues:
         print("No Creedengo eco-design issues found or project has not been analyzed yet.")
         sys.exit(0)
-        
-    # Group issues by rule key for a summary table
-    by_rule = {}
-    for issue in creedengo_issues:
-        rule = issue.get("rule", "")
-        by_rule.setdefault(rule, []).append(issue)
         
     # Generate the Markdown content
     report_content = []
     report_content.append("# Creedengo (Eco-Design) Violations Report\n")
     report_content.append(f"Generated on: **{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}**\n")
-    report_content.append(f"Total Creedengo issues found: **{len(creedengo_issues)}**\n\n")
     
-    report_content.append("## Summary by Rule\n\n")
-    report_content.append("| Rule | Description | Count |\n")
-    report_content.append("|---|---|---|\n")
-    for rule, rule_issues in sorted(by_rule.items(), key=lambda x: len(x[1]), reverse=True):
-        msg_sample = rule_issues[0].get("message", "")
-        if len(msg_sample) > 60:
-            msg_sample = msg_sample[:57] + "..."
-        report_content.append(f"| `{rule}` | {msg_sample} | {len(rule_issues)} |\n")
+    if not active_issues:
+        report_content.append("## 🎉 All Creedengo issues have been resolved!\n\n")
+        report_content.append(f"No active eco-design violations were found in the codebase. All previously identified **{len(closed_issues)}** issues have been resolved and closed successfully.\n\n")
+        report_content.append("### Closed / Resolved Violations Summary\n\n")
         
-    report_content.append("\n## Detailed Issues List\n\n")
-    report_content.append("| # | File | Line | Rule | Message | Severity |\n")
-    report_content.append("|---|------|------|------|---------|----------|\n")
-    
-    for idx, issue in enumerate(creedengo_issues, 1):
-        component = issue.get("component", "")
-        file_path = component.split(":")[-1] if ":" in component else component
-        line = issue.get("line", "N/A")
-        rule = issue.get("rule", "")
-        message = issue.get("message", "").replace("|", "\\|")
-        severity = issue.get("severity", "")
-        report_content.append(f"| {idx} | `{file_path}` | {line} | `{rule}` | {message} | {severity} |\n")
+        # Group closed issues by rule
+        closed_by_rule = {}
+        for issue in closed_issues:
+            rule = issue.get("rule", "")
+            closed_by_rule.setdefault(rule, []).append(issue)
+            
+        report_content.append("| Rule | Description | Count Resolved |\n")
+        report_content.append("|---|---|---|\n")
+        for rule, rule_issues in sorted(closed_by_rule.items(), key=lambda x: len(x[1]), reverse=True):
+            msg_sample = rule_issues[0].get("message", "")
+            if len(msg_sample) > 60:
+                msg_sample = msg_sample[:57] + "..."
+            report_content.append(f"| `{rule}` | {msg_sample} | {len(rule_issues)} |\n")
+    else:
+        report_content.append(f"Total active Creedengo issues found: **{len(active_issues)}**\n")
+        report_content.append(f"Total resolved Creedengo issues: **{len(closed_issues)}**\n\n")
         
+        # Group issues by rule key for a summary table
+        by_rule = {}
+        for issue in active_issues:
+            rule = issue.get("rule", "")
+            by_rule.setdefault(rule, []).append(issue)
+            
+        report_content.append("## Summary of Active Issues by Rule\n\n")
+        report_content.append("| Rule | Description | Count |\n")
+        report_content.append("|---|---|---|\n")
+        for rule, rule_issues in sorted(by_rule.items(), key=lambda x: len(x[1]), reverse=True):
+            msg_sample = rule_issues[0].get("message", "")
+            if len(msg_sample) > 60:
+                msg_sample = msg_sample[:57] + "..."
+            report_content.append(f"| `{rule}` | {msg_sample} | {len(rule_issues)} |\n")
+            
+        report_content.append("\n## Detailed Active Issues List\n\n")
+        report_content.append("| # | File | Line | Rule | Message | Severity |\n")
+        report_content.append("|---|------|------|------|---------|----------|\n")
+        
+        for idx, issue in enumerate(active_issues, 1):
+            component = issue.get("component", "")
+            file_path = component.split(":")[-1] if ":" in component else component
+            line = issue.get("line", "N/A")
+            rule = issue.get("rule", "")
+            message = issue.get("message", "").replace("|", "\\|")
+            severity = issue.get("severity", "")
+            report_content.append(f"| {idx} | `{file_path}` | {line} | `{rule}` | {message} | {severity} |\n")
+            
     markdown_text = "".join(report_content)
     
     # Save 1: Main report file in reports/creedengo_only_issues_report.md

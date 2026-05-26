@@ -1,0 +1,19 @@
+=== Analisi Energetica per Singolo Microbenchmark ===
+Elaborazione classe JMH: ProdottoDAOBenchmark
+File JMH JSON correlato: C:\Users\aldom\Desktop\Projects\University of Salerno\2chance-dependability\src\jmh\java\model\dao\jmh_logs\log_ProdottoDAOBenchmark_2026_05_23_18_26_16.json
+===============================================================================================================================================================================
+Microbenchmark                                | Avg Time (ms/op)     | CPU Energy (J) | Avg Power (W) | Core Energy (J) | Avg CPU (%)  | Peak CPU (%) | Avg RAM (GB) | Peak RAM (GB)
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+benchmarkAggiungiSpecifiche                   | 12.7803              | 80.41          | 16.06         | 3.03            | 30.92        | 45.54        | 24.87        | 24.95       
+benchmarkCercaProdottiInvalid                 | 0.0008               | 85.15          | 15.74         | 1.82            | 23.78        | 37.73        | 25.05        | 25.18       
+benchmarkCercaProdottiValid                   | 1.0937               | 77.76          | 15.52         | 1.24            | 25.69        | 47.94        | 24.93        | 25.03       
+benchmarkGetProdotti                          | 1.1194               | 283.47         | 15.55         | 9.68            | 25.48        | 57.77        | 25.05        | 25.23       
+benchmarkGetProdottiByCategoriaInvalid        | 0.0007               | 79.16          | 15.19         | 2.60            | 22.85        | 48.94        | 25.21        | 25.33       
+benchmarkGetProdottiByCategoriaNonExistent    | 1.0905               | 75.45          | 15.06         | 3.29            | 26.97        | 57.61        | 25.08        | 25.17       
+benchmarkGetProdottiByCategoriaValid          | 1.1371               | 76.68          | 15.31         | 2.73            | 26.23        | 43.70        | 25.09        | 25.25       
+benchmarkGetProdottoByIdInvalid               | 0.0009               | 86.52          | 15.99         | 1.71            | 24.89        | 67.76        | 25.19        | 25.31       
+benchmarkGetProdottoByIdNonExistent           | 1.0238               | 78.59          | 15.69         | 2.47            | 28.24        | 43.74        | 25.05        | 25.14       
+benchmarkGetProdottoByIdValid                 | 3.8568               | 93.89          | 18.74         | 1.01            | 31.75        | 41.84        | 25.05        | 25.19       
+benchmarkGetUltimiProdotti                    | 1.1989               | 75.35          | 15.05         | 2.68            | 26.26        | 49.56        | 25.11        | 25.26       
+===============================================================================================================================================================================
+Analisi di unita completata con successo.

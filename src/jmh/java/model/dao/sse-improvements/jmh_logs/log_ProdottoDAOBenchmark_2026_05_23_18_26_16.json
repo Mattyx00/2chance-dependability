@@ -1,0 +1,532 @@
+[
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "model.dao.ProdottoDAOBenchmark.benchmarkAggiungiSpecifiche",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 1,
+        "jvm" : "C:\\Program Files\\Java\\jdk-25\\bin\\java.exe",
+        "jvmArgs" : [
+        ],
+        "jdkVersion" : "25.0.1",
+        "vmName" : "Java HotSpot(TM) 64-Bit Server VM",
+        "vmVersion" : "25.0.1+8-LTS-27",
+        "warmupIterations" : 2,
+        "warmupTime" : "1 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 2,
+        "measurementTime" : "1 s",
+        "measurementBatchSize" : 1,
+        "primaryMetric" : {
+            "score" : 12.780320022300096,
+            "scoreError" : "NaN",
+            "scoreConfidence" : [
+                "NaN",
+                "NaN"
+            ],
+            "scorePercentiles" : {
+                "0.0" : 11.742967441860465,
+                "50.0" : 12.780320022300096,
+                "90.0" : 13.817672602739727,
+                "95.0" : 13.817672602739727,
+                "99.0" : 13.817672602739727,
+                "99.9" : 13.817672602739727,
+                "99.99" : 13.817672602739727,
+                "99.999" : 13.817672602739727,
+                "99.9999" : 13.817672602739727,
+                "100.0" : 13.817672602739727
+            },
+            "scoreUnit" : "ms/op",
+            "rawData" : [
+                [
+                    11.742967441860465,
+                    13.817672602739727
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "model.dao.ProdottoDAOBenchmark.benchmarkCercaProdottiInvalid",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 1,
+        "jvm" : "C:\\Program Files\\Java\\jdk-25\\bin\\java.exe",
+        "jvmArgs" : [
+        ],
+        "jdkVersion" : "25.0.1",
+        "vmName" : "Java HotSpot(TM) 64-Bit Server VM",
+        "vmVersion" : "25.0.1+8-LTS-27",
+        "warmupIterations" : 2,
+        "warmupTime" : "1 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 2,
+        "measurementTime" : "1 s",
+        "measurementBatchSize" : 1,
+        "primaryMetric" : {
+            "score" : 7.786418814584614E-4,
+            "scoreError" : "NaN",
+            "scoreConfidence" : [
+                "NaN",
+                "NaN"
+            ],
+            "scorePercentiles" : {
+                "0.0" : 7.702824161139875E-4,
+                "50.0" : 7.786418814584614E-4,
+                "90.0" : 7.870013468029352E-4,
+                "95.0" : 7.870013468029352E-4,
+                "99.0" : 7.870013468029352E-4,
+                "99.9" : 7.870013468029352E-4,
+                "99.99" : 7.870013468029352E-4,
+                "99.999" : 7.870013468029352E-4,
+                "99.9999" : 7.870013468029352E-4,
+                "100.0" : 7.870013468029352E-4
+            },
+            "scoreUnit" : "ms/op",
+            "rawData" : [
+                [
+                    7.702824161139875E-4,
+                    7.870013468029352E-4
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "model.dao.ProdottoDAOBenchmark.benchmarkCercaProdottiValid",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 1,
+        "jvm" : "C:\\Program Files\\Java\\jdk-25\\bin\\java.exe",
+        "jvmArgs" : [
+        ],
+        "jdkVersion" : "25.0.1",
+        "vmName" : "Java HotSpot(TM) 64-Bit Server VM",
+        "vmVersion" : "25.0.1+8-LTS-27",
+        "warmupIterations" : 2,
+        "warmupTime" : "1 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 2,
+        "measurementTime" : "1 s",
+        "measurementBatchSize" : 1,
+        "primaryMetric" : {
+            "score" : 1.093707096948955,
+            "scoreError" : "NaN",
+            "scoreConfidence" : [
+                "NaN",
+                "NaN"
+            ],
+            "scorePercentiles" : {
+                "0.0" : 1.0806073354908305,
+                "50.0" : 1.093707096948955,
+                "90.0" : 1.1068068584070796,
+                "95.0" : 1.1068068584070796,
+                "99.0" : 1.1068068584070796,
+                "99.9" : 1.1068068584070796,
+                "99.99" : 1.1068068584070796,
+                "99.999" : 1.1068068584070796,
+                "99.9999" : 1.1068068584070796,
+                "100.0" : 1.1068068584070796
+            },
+            "scoreUnit" : "ms/op",
+            "rawData" : [
+                [
+                    1.1068068584070796,
+                    1.0806073354908305
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "model.dao.ProdottoDAOBenchmark.benchmarkGetProdotti",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 1,
+        "jvm" : "C:\\Program Files\\Java\\jdk-25\\bin\\java.exe",
+        "jvmArgs" : [
+        ],
+        "jdkVersion" : "25.0.1",
+        "vmName" : "Java HotSpot(TM) 64-Bit Server VM",
+        "vmVersion" : "25.0.1+8-LTS-27",
+        "warmupIterations" : 2,
+        "warmupTime" : "1 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 2,
+        "measurementTime" : "1 s",
+        "measurementBatchSize" : 1,
+        "primaryMetric" : {
+            "score" : 1.1194308222970473,
+            "scoreError" : "NaN",
+            "scoreConfidence" : [
+                "NaN",
+                "NaN"
+            ],
+            "scorePercentiles" : {
+                "0.0" : 1.1102968923418424,
+                "50.0" : 1.1194308222970473,
+                "90.0" : 1.1285647522522522,
+                "95.0" : 1.1285647522522522,
+                "99.0" : 1.1285647522522522,
+                "99.9" : 1.1285647522522522,
+                "99.99" : 1.1285647522522522,
+                "99.999" : 1.1285647522522522,
+                "99.9999" : 1.1285647522522522,
+                "100.0" : 1.1285647522522522
+            },
+            "scoreUnit" : "ms/op",
+            "rawData" : [
+                [
+                    1.1285647522522522,
+                    1.1102968923418424
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "model.dao.ProdottoDAOBenchmark.benchmarkGetProdottiByCategoriaInvalid",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 1,
+        "jvm" : "C:\\Program Files\\Java\\jdk-25\\bin\\java.exe",
+        "jvmArgs" : [
+        ],
+        "jdkVersion" : "25.0.1",
+        "vmName" : "Java HotSpot(TM) 64-Bit Server VM",
+        "vmVersion" : "25.0.1+8-LTS-27",
+        "warmupIterations" : 2,
+        "warmupTime" : "1 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 2,
+        "measurementTime" : "1 s",
+        "measurementBatchSize" : 1,
+        "primaryMetric" : {
+            "score" : 7.15994651985764E-4,
+            "scoreError" : "NaN",
+            "scoreConfidence" : [
+                "NaN",
+                "NaN"
+            ],
+            "scorePercentiles" : {
+                "0.0" : 7.112823111075739E-4,
+                "50.0" : 7.15994651985764E-4,
+                "90.0" : 7.207069928639541E-4,
+                "95.0" : 7.207069928639541E-4,
+                "99.0" : 7.207069928639541E-4,
+                "99.9" : 7.207069928639541E-4,
+                "99.99" : 7.207069928639541E-4,
+                "99.999" : 7.207069928639541E-4,
+                "99.9999" : 7.207069928639541E-4,
+                "100.0" : 7.207069928639541E-4
+            },
+            "scoreUnit" : "ms/op",
+            "rawData" : [
+                [
+                    7.207069928639541E-4,
+                    7.112823111075739E-4
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "model.dao.ProdottoDAOBenchmark.benchmarkGetProdottiByCategoriaNonExistent",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 1,
+        "jvm" : "C:\\Program Files\\Java\\jdk-25\\bin\\java.exe",
+        "jvmArgs" : [
+        ],
+        "jdkVersion" : "25.0.1",
+        "vmName" : "Java HotSpot(TM) 64-Bit Server VM",
+        "vmVersion" : "25.0.1+8-LTS-27",
+        "warmupIterations" : 2,
+        "warmupTime" : "1 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 2,
+        "measurementTime" : "1 s",
+        "measurementBatchSize" : 1,
+        "primaryMetric" : {
+            "score" : 1.0904628897607545,
+            "scoreError" : "NaN",
+            "scoreConfidence" : [
+                "NaN",
+                "NaN"
+            ],
+            "scorePercentiles" : {
+                "0.0" : 1.0718168094218414,
+                "50.0" : 1.0904628897607545,
+                "90.0" : 1.1091089700996677,
+                "95.0" : 1.1091089700996677,
+                "99.0" : 1.1091089700996677,
+                "99.9" : 1.1091089700996677,
+                "99.99" : 1.1091089700996677,
+                "99.999" : 1.1091089700996677,
+                "99.9999" : 1.1091089700996677,
+                "100.0" : 1.1091089700996677
+            },
+            "scoreUnit" : "ms/op",
+            "rawData" : [
+                [
+                    1.0718168094218414,
+                    1.1091089700996677
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "model.dao.ProdottoDAOBenchmark.benchmarkGetProdottiByCategoriaValid",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 1,
+        "jvm" : "C:\\Program Files\\Java\\jdk-25\\bin\\java.exe",
+        "jvmArgs" : [
+        ],
+        "jdkVersion" : "25.0.1",
+        "vmName" : "Java HotSpot(TM) 64-Bit Server VM",
+        "vmVersion" : "25.0.1+8-LTS-27",
+        "warmupIterations" : 2,
+        "warmupTime" : "1 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 2,
+        "measurementTime" : "1 s",
+        "measurementBatchSize" : 1,
+        "primaryMetric" : {
+            "score" : 1.1370731728182086,
+            "scoreError" : "NaN",
+            "scoreConfidence" : [
+                "NaN",
+                "NaN"
+            ],
+            "scorePercentiles" : {
+                "0.0" : 1.115300334075724,
+                "50.0" : 1.1370731728182086,
+                "90.0" : 1.1588460115606936,
+                "95.0" : 1.1588460115606936,
+                "99.0" : 1.1588460115606936,
+                "99.9" : 1.1588460115606936,
+                "99.99" : 1.1588460115606936,
+                "99.999" : 1.1588460115606936,
+                "99.9999" : 1.1588460115606936,
+                "100.0" : 1.1588460115606936
+            },
+            "scoreUnit" : "ms/op",
+            "rawData" : [
+                [
+                    1.1588460115606936,
+                    1.115300334075724
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "model.dao.ProdottoDAOBenchmark.benchmarkGetProdottoByIdInvalid",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 1,
+        "jvm" : "C:\\Program Files\\Java\\jdk-25\\bin\\java.exe",
+        "jvmArgs" : [
+        ],
+        "jdkVersion" : "25.0.1",
+        "vmName" : "Java HotSpot(TM) 64-Bit Server VM",
+        "vmVersion" : "25.0.1+8-LTS-27",
+        "warmupIterations" : 2,
+        "warmupTime" : "1 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 2,
+        "measurementTime" : "1 s",
+        "measurementBatchSize" : 1,
+        "primaryMetric" : {
+            "score" : 8.657100768883913E-4,
+            "scoreError" : "NaN",
+            "scoreConfidence" : [
+                "NaN",
+                "NaN"
+            ],
+            "scorePercentiles" : {
+                "0.0" : 8.629715140955266E-4,
+                "50.0" : 8.657100768883913E-4,
+                "90.0" : 8.684486396812561E-4,
+                "95.0" : 8.684486396812561E-4,
+                "99.0" : 8.684486396812561E-4,
+                "99.9" : 8.684486396812561E-4,
+                "99.99" : 8.684486396812561E-4,
+                "99.999" : 8.684486396812561E-4,
+                "99.9999" : 8.684486396812561E-4,
+                "100.0" : 8.684486396812561E-4
+            },
+            "scoreUnit" : "ms/op",
+            "rawData" : [
+                [
+                    8.684486396812561E-4,
+                    8.629715140955266E-4
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "model.dao.ProdottoDAOBenchmark.benchmarkGetProdottoByIdNonExistent",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 1,
+        "jvm" : "C:\\Program Files\\Java\\jdk-25\\bin\\java.exe",
+        "jvmArgs" : [
+        ],
+        "jdkVersion" : "25.0.1",
+        "vmName" : "Java HotSpot(TM) 64-Bit Server VM",
+        "vmVersion" : "25.0.1+8-LTS-27",
+        "warmupIterations" : 2,
+        "warmupTime" : "1 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 2,
+        "measurementTime" : "1 s",
+        "measurementBatchSize" : 1,
+        "primaryMetric" : {
+            "score" : 1.0238225853413656,
+            "scoreError" : "NaN",
+            "scoreConfidence" : [
+                "NaN",
+                "NaN"
+            ],
+            "scorePercentiles" : {
+                "0.0" : 1.0046510040160643,
+                "50.0" : 1.0238225853413656,
+                "90.0" : 1.0429941666666667,
+                "95.0" : 1.0429941666666667,
+                "99.0" : 1.0429941666666667,
+                "99.9" : 1.0429941666666667,
+                "99.99" : 1.0429941666666667,
+                "99.999" : 1.0429941666666667,
+                "99.9999" : 1.0429941666666667,
+                "100.0" : 1.0429941666666667
+            },
+            "scoreUnit" : "ms/op",
+            "rawData" : [
+                [
+                    1.0046510040160643,
+                    1.0429941666666667
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "model.dao.ProdottoDAOBenchmark.benchmarkGetProdottoByIdValid",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 1,
+        "jvm" : "C:\\Program Files\\Java\\jdk-25\\bin\\java.exe",
+        "jvmArgs" : [
+        ],
+        "jdkVersion" : "25.0.1",
+        "vmName" : "Java HotSpot(TM) 64-Bit Server VM",
+        "vmVersion" : "25.0.1+8-LTS-27",
+        "warmupIterations" : 2,
+        "warmupTime" : "1 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 2,
+        "measurementTime" : "1 s",
+        "measurementBatchSize" : 1,
+        "primaryMetric" : {
+            "score" : 3.8567584789341867,
+            "scoreError" : "NaN",
+            "scoreConfidence" : [
+                "NaN",
+                "NaN"
+            ],
+            "scorePercentiles" : {
+                "0.0" : 3.6926671586715867,
+                "50.0" : 3.8567584789341867,
+                "90.0" : 4.020849799196787,
+                "95.0" : 4.020849799196787,
+                "99.0" : 4.020849799196787,
+                "99.9" : 4.020849799196787,
+                "99.99" : 4.020849799196787,
+                "99.999" : 4.020849799196787,
+                "99.9999" : 4.020849799196787,
+                "100.0" : 4.020849799196787
+            },
+            "scoreUnit" : "ms/op",
+            "rawData" : [
+                [
+                    3.6926671586715867,
+                    4.020849799196787
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    },
+    {
+        "jmhVersion" : "1.37",
+        "benchmark" : "model.dao.ProdottoDAOBenchmark.benchmarkGetUltimiProdotti",
+        "mode" : "avgt",
+        "threads" : 1,
+        "forks" : 1,
+        "jvm" : "C:\\Program Files\\Java\\jdk-25\\bin\\java.exe",
+        "jvmArgs" : [
+        ],
+        "jdkVersion" : "25.0.1",
+        "vmName" : "Java HotSpot(TM) 64-Bit Server VM",
+        "vmVersion" : "25.0.1+8-LTS-27",
+        "warmupIterations" : 2,
+        "warmupTime" : "1 s",
+        "warmupBatchSize" : 1,
+        "measurementIterations" : 2,
+        "measurementTime" : "1 s",
+        "measurementBatchSize" : 1,
+        "primaryMetric" : {
+            "score" : 1.198928317107729,
+            "scoreError" : "NaN",
+            "scoreConfidence" : [
+                "NaN",
+                "NaN"
+            ],
+            "scorePercentiles" : {
+                "0.0" : 1.1335515837104073,
+                "50.0" : 1.198928317107729,
+                "90.0" : 1.2643050505050506,
+                "95.0" : 1.2643050505050506,
+                "99.0" : 1.2643050505050506,
+                "99.9" : 1.2643050505050506,
+                "99.99" : 1.2643050505050506,
+                "99.999" : 1.2643050505050506,
+                "99.9999" : 1.2643050505050506,
+                "100.0" : 1.2643050505050506
+            },
+            "scoreUnit" : "ms/op",
+            "rawData" : [
+                [
+                    1.2643050505050506,
+                    1.1335515837104073
+                ]
+            ]
+        },
+        "secondaryMetrics" : {
+        }
+    }
+]
+
+

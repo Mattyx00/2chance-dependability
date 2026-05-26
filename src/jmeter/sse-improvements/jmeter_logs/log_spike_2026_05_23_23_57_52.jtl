@@ -1,0 +1,818 @@
+timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,URL,Latency,IdleTime,Connect
+1779573479036,633,1. POST Registrazione,200,,Parameterized Thread Group 1-11,text,true,,9970,1665,32,32,http://webapp:8080/landingpage,115,0,3
+1779573478803,865,1. POST Registrazione,200,,Parameterized Thread Group 1-13,text,true,,9970,1657,32,32,http://webapp:8080/landingpage,118,0,3
+1779573479036,115,1. POST Registrazione-0,302,,Parameterized Thread Group 1-11,,true,,220,1485,32,32,http://webapp:8080//RegistrazioneServlet,115,0,3
+1779573478514,1155,1. POST Registrazione,200,,Parameterized Thread Group 1-8,text,true,,9970,1689,32,32,http://webapp:8080/landingpage,120,0,3
+1779573479152,517,1. POST Registrazione-1,200,,Parameterized Thread Group 1-11,text,true,,9750,180,32,32,http://webapp:8080/landingpage,516,0,0
+1779573478803,118,1. POST Registrazione-0,302,,Parameterized Thread Group 1-13,,true,,220,1477,32,32,http://webapp:8080//RegistrazioneServlet,118,0,3
+1779573478346,1324,1. POST Registrazione,200,,Parameterized Thread Group 1-1,text,true,,9970,1681,32,32,http://webapp:8080/landingpage,136,0,2
+1779573478237,1432,1. POST Registrazione,200,,Parameterized Thread Group 1-6,text,true,,9970,1649,32,32,http://webapp:8080/landingpage,194,0,4
+1779573478514,120,1. POST Registrazione-0,302,,Parameterized Thread Group 1-8,,true,,220,1509,32,32,http://webapp:8080//RegistrazioneServlet,120,0,3
+1779573478921,747,1. POST Registrazione-1,200,,Parameterized Thread Group 1-13,text,true,,9750,180,32,32,http://webapp:8080/landingpage,747,0,0
+1779573478346,136,1. POST Registrazione-0,302,,Parameterized Thread Group 1-1,,true,,220,1501,32,32,http://webapp:8080//RegistrazioneServlet,136,0,2
+1779573478237,199,1. POST Registrazione-0,302,,Parameterized Thread Group 1-6,,true,,220,1469,32,32,http://webapp:8080//RegistrazioneServlet,194,0,4
+1779573478635,1034,1. POST Registrazione-1,200,,Parameterized Thread Group 1-8,text,true,,9750,180,32,32,http://webapp:8080/landingpage,1033,0,0
+1779573478482,1188,1. POST Registrazione-1,200,,Parameterized Thread Group 1-1,text,true,,9750,180,32,32,http://webapp:8080/landingpage,1187,0,0
+1779573478440,1229,1. POST Registrazione-1,200,,Parameterized Thread Group 1-6,text,true,,9750,180,32,32,http://webapp:8080/landingpage,1228,0,0
+1779573478201,1469,1. POST Registrazione,200,,Parameterized Thread Group 1-4,text,true,,9970,1665,32,32,http://webapp:8080/landingpage,230,0,3
+1779573478525,1144,1. POST Registrazione,200,,Parameterized Thread Group 1-7,text,true,,9970,1689,32,32,http://webapp:8080/landingpage,120,0,3
+1779573478201,235,1. POST Registrazione-0,302,,Parameterized Thread Group 1-4,,true,,220,1485,32,32,http://webapp:8080//RegistrazioneServlet,230,0,3
+1779573478525,120,1. POST Registrazione-0,302,,Parameterized Thread Group 1-7,,true,,220,1509,32,32,http://webapp:8080//RegistrazioneServlet,120,0,3
+1779573478440,1230,1. POST Registrazione-1,200,,Parameterized Thread Group 1-4,text,true,,9750,180,32,32,http://webapp:8080/landingpage,1230,0,0
+1779573479044,626,1. POST Registrazione,200,,Parameterized Thread Group 1-14,text,true,,9970,1705,32,32,http://webapp:8080/landingpage,122,0,2
+1779573479044,122,1. POST Registrazione-0,302,,Parameterized Thread Group 1-14,,true,,220,1525,32,32,http://webapp:8080//RegistrazioneServlet,122,0,2
+1779573479167,503,1. POST Registrazione-1,200,,Parameterized Thread Group 1-14,text,true,,9750,180,32,32,http://webapp:8080/landingpage,503,0,0
+1779573478549,1120,1. POST Registrazione,200,,Parameterized Thread Group 1-10,text,true,,9970,1697,32,32,http://webapp:8080/landingpage,134,0,3
+1779573478549,134,1. POST Registrazione-0,302,,Parameterized Thread Group 1-10,,true,,220,1517,32,32,http://webapp:8080//RegistrazioneServlet,134,0,3
+1779573478683,986,1. POST Registrazione-1,200,,Parameterized Thread Group 1-10,text,true,,9750,180,32,32,http://webapp:8080/landingpage,985,0,0
+1779573478982,689,1. POST Registrazione,200,,Parameterized Thread Group 1-15,text,true,,9970,1633,32,32,http://webapp:8080/landingpage,120,0,3
+1779573478645,1024,1. POST Registrazione-1,200,,Parameterized Thread Group 1-7,text,true,,9750,180,32,32,http://webapp:8080/landingpage,1021,0,0
+1779573478982,120,1. POST Registrazione-0,302,,Parameterized Thread Group 1-15,,true,,220,1453,32,32,http://webapp:8080//RegistrazioneServlet,120,0,3
+1779573479103,568,1. POST Registrazione-1,200,,Parameterized Thread Group 1-15,text,true,,9750,180,32,32,http://webapp:8080/landingpage,568,0,0
+1779573478708,964,1. POST Registrazione,200,,Parameterized Thread Group 1-5,text,true,,9970,1673,32,32,http://webapp:8080/landingpage,109,0,2
+1779573478708,109,1. POST Registrazione-0,302,,Parameterized Thread Group 1-5,,true,,220,1493,32,32,http://webapp:8080//RegistrazioneServlet,109,0,2
+1779573478818,854,1. POST Registrazione-1,200,,Parameterized Thread Group 1-5,text,true,,9750,180,32,32,http://webapp:8080/landingpage,854,0,0
+1779573479066,606,1. POST Registrazione,200,,Parameterized Thread Group 1-12,text,true,,9970,1713,32,32,http://webapp:8080/landingpage,111,0,3
+1779573479066,111,1. POST Registrazione-0,302,,Parameterized Thread Group 1-12,,true,,220,1533,32,32,http://webapp:8080//RegistrazioneServlet,111,0,3
+1779573479177,495,1. POST Registrazione-1,200,,Parameterized Thread Group 1-12,text,true,,9750,180,32,32,http://webapp:8080/landingpage,495,0,0
+1779573478342,1330,1. POST Registrazione,200,,Parameterized Thread Group 1-2,text,true,,9970,1689,32,32,http://webapp:8080/landingpage,140,0,3
+1779573478342,140,1. POST Registrazione-0,302,,Parameterized Thread Group 1-2,,true,,220,1509,32,32,http://webapp:8080//RegistrazioneServlet,140,0,3
+1779573478483,1189,1. POST Registrazione-1,200,,Parameterized Thread Group 1-2,text,true,,9750,180,32,32,http://webapp:8080/landingpage,1189,0,0
+1779573477862,1812,1. POST Registrazione,200,,Parameterized Thread Group 1-3,text,true,,9970,1697,32,32,http://webapp:8080/landingpage,569,0,43
+1779573477862,574,1. POST Registrazione-0,302,,Parameterized Thread Group 1-3,,true,,220,1517,32,32,http://webapp:8080//RegistrazioneServlet,569,0,43
+1779573478440,1234,1. POST Registrazione-1,200,,Parameterized Thread Group 1-3,text,true,,9750,180,32,32,http://webapp:8080/landingpage,1234,0,0
+1779573478440,1234,1. POST Registrazione,200,,Parameterized Thread Group 1-9,text,true,,9970,1633,32,32,http://webapp:8080/landingpage,135,0,4
+1779573478440,135,1. POST Registrazione-0,302,,Parameterized Thread Group 1-9,,true,,220,1453,32,32,http://webapp:8080//RegistrazioneServlet,135,0,4
+1779573478576,1098,1. POST Registrazione-1,200,,Parameterized Thread Group 1-9,text,true,,9750,180,32,32,http://webapp:8080/landingpage,1092,0,0
+1779573479567,148,1. POST Registrazione,200,,Parameterized Thread Group 1-18,text,true,,9970,1705,32,32,http://webapp:8080/landingpage,134,0,4
+1779573479567,134,1. POST Registrazione-0,302,,Parameterized Thread Group 1-18,,true,,220,1525,32,32,http://webapp:8080//RegistrazioneServlet,134,0,4
+1779573479701,14,1. POST Registrazione-1,200,,Parameterized Thread Group 1-18,text,true,,9750,180,32,32,http://webapp:8080/landingpage,13,0,0
+1779573479649,123,1. POST Registrazione,200,,Parameterized Thread Group 1-17,text,true,,9970,1689,33,33,http://webapp:8080/landingpage,114,0,4
+1779573479649,114,1. POST Registrazione-0,302,,Parameterized Thread Group 1-17,,true,,220,1509,33,33,http://webapp:8080//RegistrazioneServlet,114,0,4
+1779573479763,9,1. POST Registrazione-1,200,,Parameterized Thread Group 1-17,text,true,,9750,180,33,33,http://webapp:8080/landingpage,9,0,0
+1779573479695,104,1. POST Registrazione,200,,Parameterized Thread Group 1-20,text,true,,9970,1681,33,33,http://webapp:8080/landingpage,97,0,2
+1779573479695,97,1. POST Registrazione-0,302,,Parameterized Thread Group 1-20,,true,,220,1501,33,33,http://webapp:8080//RegistrazioneServlet,97,0,2
+1779573479793,6,1. POST Registrazione-1,200,,Parameterized Thread Group 1-20,text,true,,9750,180,33,33,http://webapp:8080/landingpage,5,0,0
+1779573479948,122,1. POST Registrazione,200,,Parameterized Thread Group 1-16,text,true,,9970,1713,35,35,http://webapp:8080/landingpage,112,0,3
+1779573479948,112,1. POST Registrazione-0,302,,Parameterized Thread Group 1-16,,true,,220,1533,35,35,http://webapp:8080//RegistrazioneServlet,112,0,3
+1779573480061,9,1. POST Registrazione-1,200,,Parameterized Thread Group 1-16,text,true,,9750,180,35,35,http://webapp:8080/landingpage,9,0,0
+1779573479952,120,1. POST Registrazione,200,,Parameterized Thread Group 1-23,text,true,,9970,1697,35,35,http://webapp:8080/landingpage,113,0,2
+1779573479952,113,1. POST Registrazione-0,302,,Parameterized Thread Group 1-23,,true,,220,1517,35,35,http://webapp:8080//RegistrazioneServlet,113,0,2
+1779573480065,7,1. POST Registrazione-1,200,,Parameterized Thread Group 1-23,text,true,,9750,180,35,35,http://webapp:8080/landingpage,7,0,0
+1779573479993,111,1. POST Registrazione,200,,Parameterized Thread Group 1-22,text,true,,9970,1673,36,36,http://webapp:8080/landingpage,104,0,3
+1779573479993,104,1. POST Registrazione-0,302,,Parameterized Thread Group 1-22,,true,,220,1493,36,36,http://webapp:8080//RegistrazioneServlet,104,0,3
+1779573480098,6,1. POST Registrazione-1,200,,Parameterized Thread Group 1-22,text,true,,9750,180,36,36,http://webapp:8080/landingpage,5,0,0
+1779573480143,104,1. POST Registrazione,200,,Parameterized Thread Group 1-25,text,true,,9970,1689,37,37,http://webapp:8080/landingpage,99,0,2
+1779573480143,99,1. POST Registrazione-0,302,,Parameterized Thread Group 1-25,,true,,220,1509,37,37,http://webapp:8080//RegistrazioneServlet,99,0,2
+1779573480242,5,1. POST Registrazione-1,200,,Parameterized Thread Group 1-25,text,true,,9750,180,37,37,http://webapp:8080/landingpage,5,0,0
+1779573480219,99,1. POST Registrazione,200,,Parameterized Thread Group 1-26,text,true,,9970,1673,38,38,http://webapp:8080/landingpage,94,0,2
+1779573480219,94,1. POST Registrazione-0,302,,Parameterized Thread Group 1-26,,true,,220,1493,38,38,http://webapp:8080//RegistrazioneServlet,94,0,2
+1779573480313,5,1. POST Registrazione-1,200,,Parameterized Thread Group 1-26,text,true,,9750,180,38,38,http://webapp:8080/landingpage,5,0,0
+1779573480291,109,1. POST Registrazione,200,,Parameterized Thread Group 1-19,text,true,,9970,1641,39,39,http://webapp:8080/landingpage,104,0,2
+1779573480291,104,1. POST Registrazione-0,302,,Parameterized Thread Group 1-19,,true,,220,1461,39,39,http://webapp:8080//RegistrazioneServlet,104,0,2
+1779573480395,5,1. POST Registrazione-1,200,,Parameterized Thread Group 1-19,text,true,,9750,180,39,39,http://webapp:8080/landingpage,5,0,0
+1779573480303,110,1. POST Registrazione,200,,Parameterized Thread Group 1-27,text,true,,9970,1633,39,39,http://webapp:8080/landingpage,100,0,2
+1779573480303,100,1. POST Registrazione-0,302,,Parameterized Thread Group 1-27,,true,,220,1453,39,39,http://webapp:8080//RegistrazioneServlet,100,0,2
+1779573480404,9,1. POST Registrazione-1,200,,Parameterized Thread Group 1-27,text,true,,9750,180,39,39,http://webapp:8080/landingpage,9,0,0
+1779573480303,115,1. POST Registrazione,200,,Parameterized Thread Group 1-28,text,true,,9970,1697,39,39,http://webapp:8080/landingpage,103,0,2
+1779573480303,103,1. POST Registrazione-0,302,,Parameterized Thread Group 1-28,,true,,220,1517,39,39,http://webapp:8080//RegistrazioneServlet,103,0,2
+1779573480406,12,1. POST Registrazione-1,200,,Parameterized Thread Group 1-28,text,true,,9750,180,39,39,http://webapp:8080/landingpage,11,0,0
+1779573480406,95,1. POST Registrazione,200,,Parameterized Thread Group 1-24,text,true,,9970,1713,40,40,http://webapp:8080/landingpage,90,0,2
+1779573480406,90,1. POST Registrazione-0,302,,Parameterized Thread Group 1-24,,true,,220,1533,40,40,http://webapp:8080//RegistrazioneServlet,90,0,2
+1779573480496,5,1. POST Registrazione-1,200,,Parameterized Thread Group 1-24,text,true,,9750,180,40,40,http://webapp:8080/landingpage,5,0,0
+1779573480416,94,1. POST Registrazione,200,,Parameterized Thread Group 1-21,text,true,,9970,1705,40,40,http://webapp:8080/landingpage,89,0,3
+1779573480416,89,1. POST Registrazione-0,302,,Parameterized Thread Group 1-21,,true,,220,1525,40,40,http://webapp:8080//RegistrazioneServlet,89,0,3
+1779573480506,4,1. POST Registrazione-1,200,,Parameterized Thread Group 1-21,text,true,,9750,180,40,40,http://webapp:8080/landingpage,4,0,0
+1779573480841,7,2. GET Landing Page,200,,Parameterized Thread Group 1-4,text,true,,9750,180,43,43,http://webapp:8080//landingpage,6,0,0
+1779573480752,114,1. POST Registrazione,200,,Parameterized Thread Group 1-30,text,true,,9970,1705,43,43,http://webapp:8080/landingpage,109,0,2
+1779573480752,109,1. POST Registrazione-0,302,,Parameterized Thread Group 1-30,,true,,220,1525,43,43,http://webapp:8080//RegistrazioneServlet,109,0,2
+1779573480861,5,1. POST Registrazione-1,200,,Parameterized Thread Group 1-30,text,true,,9750,180,43,43,http://webapp:8080/landingpage,5,0,0
+1779573481000,6,2. GET Landing Page,200,,Parameterized Thread Group 1-6,text,true,,9750,180,44,44,http://webapp:8080//landingpage,6,0,0
+1779573480903,106,1. POST Registrazione,200,,Parameterized Thread Group 1-29,text,true,,9970,1657,44,44,http://webapp:8080/landingpage,101,0,3
+1779573480903,101,1. POST Registrazione-0,302,,Parameterized Thread Group 1-29,,true,,220,1477,44,44,http://webapp:8080//RegistrazioneServlet,101,0,3
+1779573481004,5,1. POST Registrazione-1,200,,Parameterized Thread Group 1-29,text,true,,9750,180,44,44,http://webapp:8080/landingpage,5,0,0
+1779573481037,7,2. GET Landing Page,200,,Parameterized Thread Group 1-10,text,true,,9750,180,45,45,http://webapp:8080//landingpage,7,0,0
+1779573481044,5,2. GET Landing Page,200,,Parameterized Thread Group 1-2,text,true,,9750,180,45,45,http://webapp:8080//landingpage,5,0,0
+1779573480939,110,1. POST Registrazione,200,,Parameterized Thread Group 1-31,text,true,,9970,1681,45,45,http://webapp:8080/landingpage,104,0,3
+1779573480939,104,1. POST Registrazione-0,302,,Parameterized Thread Group 1-31,,true,,220,1501,45,45,http://webapp:8080//RegistrazioneServlet,104,0,3
+1779573481044,5,1. POST Registrazione-1,200,,Parameterized Thread Group 1-31,text,true,,9750,180,45,45,http://webapp:8080/landingpage,5,0,0
+1779573481049,5,2. GET Landing Page,200,,Parameterized Thread Group 1-8,text,true,,9750,180,45,45,http://webapp:8080//landingpage,5,0,0
+1779573481072,7,2. GET Landing Page,200,,Parameterized Thread Group 1-18,text,true,,9750,180,45,45,http://webapp:8080//landingpage,7,0,0
+1779573481075,4,2. GET Landing Page,200,,Parameterized Thread Group 1-23,text,true,,9750,180,45,45,http://webapp:8080//landingpage,4,0,0
+1779573481115,6,2. GET Landing Page,200,,Parameterized Thread Group 1-13,text,true,,9750,180,46,46,http://webapp:8080//landingpage,6,0,0
+1779573481122,3,2. GET Landing Page,200,,Parameterized Thread Group 1-20,text,true,,9750,180,46,46,http://webapp:8080//landingpage,3,0,0
+1779573481142,4,2. GET Landing Page,200,,Parameterized Thread Group 1-15,text,true,,9750,180,46,46,http://webapp:8080//landingpage,4,0,0
+1779573481212,5,2. GET Landing Page,200,,Parameterized Thread Group 1-12,text,true,,9750,180,46,46,http://webapp:8080//landingpage,5,0,0
+1779573481253,5,2. GET Landing Page,200,,Parameterized Thread Group 1-16,text,true,,9750,180,47,47,http://webapp:8080//landingpage,5,0,0
+1779573481258,4,2. GET Landing Page,200,,Parameterized Thread Group 1-1,text,true,,9750,180,47,47,http://webapp:8080//landingpage,4,0,0
+1779573481157,108,1. POST Registrazione,200,,Parameterized Thread Group 1-36,text,true,,9970,1713,47,47,http://webapp:8080/landingpage,104,0,2
+1779573481157,104,1. POST Registrazione-0,302,,Parameterized Thread Group 1-36,,true,,220,1533,47,47,http://webapp:8080//RegistrazioneServlet,104,0,2
+1779573481261,4,1. POST Registrazione-1,200,,Parameterized Thread Group 1-36,text,true,,9750,180,47,47,http://webapp:8080/landingpage,4,0,0
+1779573481215,107,1. POST Registrazione,200,,Parameterized Thread Group 1-34,text,true,,9970,1649,47,47,http://webapp:8080/landingpage,102,0,3
+1779573481215,102,1. POST Registrazione-0,302,,Parameterized Thread Group 1-34,,true,,220,1469,47,47,http://webapp:8080//RegistrazioneServlet,102,0,3
+1779573481318,4,1. POST Registrazione-1,200,,Parameterized Thread Group 1-34,text,true,,9750,180,47,47,http://webapp:8080/landingpage,4,0,0
+1779573481329,4,2. GET Landing Page,200,,Parameterized Thread Group 1-22,text,true,,9750,180,48,48,http://webapp:8080//landingpage,4,0,0
+1779573481370,5,2. GET Landing Page,200,,Parameterized Thread Group 1-11,text,true,,9750,180,48,48,http://webapp:8080//landingpage,5,0,0
+1779573481370,6,2. GET Landing Page,200,,Parameterized Thread Group 1-7,text,true,,9750,180,48,48,http://webapp:8080//landingpage,5,0,0
+1779573481400,5,2. GET Landing Page,200,,Parameterized Thread Group 1-5,text,true,,9750,180,48,48,http://webapp:8080//landingpage,4,0,0
+1779573481332,109,1. POST Registrazione,200,,Parameterized Thread Group 1-37,text,true,,9970,1633,48,48,http://webapp:8080/landingpage,102,0,2
+1779573481332,102,1. POST Registrazione-0,302,,Parameterized Thread Group 1-37,,true,,220,1453,48,48,http://webapp:8080//RegistrazioneServlet,102,0,2
+1779573481435,6,1. POST Registrazione-1,200,,Parameterized Thread Group 1-37,text,true,,9750,180,48,48,http://webapp:8080/landingpage,6,0,0
+1779573481372,117,1. POST Registrazione,200,,Parameterized Thread Group 1-33,text,true,,9970,1705,48,48,http://webapp:8080/landingpage,111,0,2
+1779573481372,111,1. POST Registrazione-0,302,,Parameterized Thread Group 1-33,,true,,220,1525,48,48,http://webapp:8080//RegistrazioneServlet,111,0,2
+1779573481483,6,1. POST Registrazione-1,200,,Parameterized Thread Group 1-33,text,true,,9750,180,48,48,http://webapp:8080/landingpage,6,0,0
+1779573481491,5,2. GET Landing Page,200,,Parameterized Thread Group 1-9,text,true,,9750,180,48,48,http://webapp:8080//landingpage,5,0,0
+1779573481503,5,2. GET Landing Page,200,,Parameterized Thread Group 1-3,text,true,,9750,180,48,48,http://webapp:8080//landingpage,5,0,0
+1779573481444,108,1. POST Registrazione,200,,Parameterized Thread Group 1-39,text,true,,9970,1641,48,48,http://webapp:8080/landingpage,102,0,2
+1779573481444,102,1. POST Registrazione-0,302,,Parameterized Thread Group 1-39,,true,,220,1461,48,48,http://webapp:8080//RegistrazioneServlet,102,0,2
+1779573481547,5,1. POST Registrazione-1,200,,Parameterized Thread Group 1-39,text,true,,9750,180,48,48,http://webapp:8080/landingpage,5,0,0
+1779573481554,5,2. GET Landing Page,200,,Parameterized Thread Group 1-14,text,true,,9750,180,48,48,http://webapp:8080//landingpage,5,0,0
+1779573481470,105,1. POST Registrazione,200,,Parameterized Thread Group 1-38,text,true,,9970,1649,48,48,http://webapp:8080/landingpage,100,0,2
+1779573481470,100,1. POST Registrazione-0,302,,Parameterized Thread Group 1-38,,true,,220,1469,48,48,http://webapp:8080//RegistrazioneServlet,100,0,2
+1779573481570,5,1. POST Registrazione-1,200,,Parameterized Thread Group 1-38,text,true,,9750,180,48,48,http://webapp:8080/landingpage,5,0,0
+1779573481534,98,1. POST Registrazione,200,,Parameterized Thread Group 1-32,text,true,,9970,1713,48,48,http://webapp:8080/landingpage,93,0,2
+1779573481534,93,1. POST Registrazione-0,302,,Parameterized Thread Group 1-32,,true,,220,1533,48,48,http://webapp:8080//RegistrazioneServlet,93,0,2
+1779573481627,5,1. POST Registrazione-1,200,,Parameterized Thread Group 1-32,text,true,,9750,180,48,48,http://webapp:8080/landingpage,4,0,0
+1779573481669,5,2. GET Landing Page,200,,Parameterized Thread Group 1-25,text,true,,9750,180,48,48,http://webapp:8080//landingpage,5,0,0
+1779573481690,5,2. GET Landing Page,200,,Parameterized Thread Group 1-17,text,true,,9750,180,48,48,http://webapp:8080//landingpage,4,0,0
+1779573481685,96,1. POST Registrazione,200,,Parameterized Thread Group 1-35,text,true,,9970,1633,48,48,http://webapp:8080/landingpage,91,0,2
+1779573481685,91,1. POST Registrazione-0,302,,Parameterized Thread Group 1-35,,true,,220,1453,48,48,http://webapp:8080//RegistrazioneServlet,91,0,2
+1779573481776,5,1. POST Registrazione-1,200,,Parameterized Thread Group 1-35,text,true,,9750,180,48,48,http://webapp:8080/landingpage,5,0,0
+1779573481920,5,2. GET Landing Page,200,,Parameterized Thread Group 1-28,text,true,,9750,180,48,48,http://webapp:8080//landingpage,5,0,0
+1779573481923,4,2. GET Landing Page,200,,Parameterized Thread Group 1-24,text,true,,9750,180,48,48,http://webapp:8080//landingpage,4,0,0
+1779573481978,7,2. GET Landing Page,200,,Parameterized Thread Group 1-30,text,true,,9750,180,48,48,http://webapp:8080//landingpage,7,0,0
+1779573481887,107,1. POST Registrazione,200,,Parameterized Thread Group 1-40,text,true,,9970,1713,48,48,http://webapp:8080/landingpage,102,0,2
+1779573481887,102,1. POST Registrazione-0,302,,Parameterized Thread Group 1-40,,true,,220,1533,48,48,http://webapp:8080//RegistrazioneServlet,102,0,2
+1779573481989,5,1. POST Registrazione-1,200,,Parameterized Thread Group 1-40,text,true,,9750,180,48,48,http://webapp:8080/landingpage,5,0,0
+1779573481979,138,1. POST Registrazione,200,,Parameterized Thread Group 1-41,text,true,,9970,1657,48,48,http://webapp:8080/landingpage,133,0,3
+1779573481979,133,1. POST Registrazione-0,302,,Parameterized Thread Group 1-41,,true,,220,1477,48,48,http://webapp:8080//RegistrazioneServlet,133,0,3
+1779573482112,5,1. POST Registrazione-1,200,,Parameterized Thread Group 1-41,text,true,,9750,180,48,48,http://webapp:8080/landingpage,5,0,0
+1779573482143,6,2. GET Landing Page,200,,Parameterized Thread Group 1-27,text,true,,9750,180,48,48,http://webapp:8080//landingpage,6,0,0
+1779573482149,4,2. GET Landing Page,200,,Parameterized Thread Group 1-26,text,true,,9750,180,48,48,http://webapp:8080//landingpage,4,0,0
+1779573482008,202,3. GET Utente Profilo,200,,Parameterized Thread Group 1-4,text,true,,5910,191,48,48,http://webapp:8080//UtenteServlet?utente=1,202,0,0
+1779573482075,135,3. GET Utente Profilo,200,,Parameterized Thread Group 1-6,text,true,,5910,191,48,48,http://webapp:8080//UtenteServlet?utente=1,135,0,0
+1779573482132,127,1. POST Registrazione,200,,Parameterized Thread Group 1-42,text,true,,9970,1641,48,48,http://webapp:8080/landingpage,121,0,2
+1779573482132,121,1. POST Registrazione-0,302,,Parameterized Thread Group 1-42,,true,,220,1461,48,48,http://webapp:8080//RegistrazioneServlet,121,0,2
+1779573482254,5,1. POST Registrazione-1,200,,Parameterized Thread Group 1-42,text,true,,9750,180,48,48,http://webapp:8080/landingpage,5,0,0
+1779573482259,5,2. GET Landing Page,200,,Parameterized Thread Group 1-31,text,true,,9750,180,48,48,http://webapp:8080//landingpage,5,0,0
+1779573482299,5,3. GET Utente Profilo,200,,Parameterized Thread Group 1-23,text,true,,5910,191,48,48,http://webapp:8080//UtenteServlet?utente=1,4,0,0
+1779573482324,5,2. GET Landing Page,200,,Parameterized Thread Group 1-21,text,true,,9750,180,48,48,http://webapp:8080//landingpage,5,0,0
+1779573482334,5,2. GET Landing Page,200,,Parameterized Thread Group 1-19,text,true,,9750,180,48,48,http://webapp:8080//landingpage,5,0,0
+1779573482361,4,3. GET Utente Profilo,200,,Parameterized Thread Group 1-12,text,true,,5910,191,48,48,http://webapp:8080//UtenteServlet?utente=1,4,0,0
+1779573482381,4,3. GET Utente Profilo,200,,Parameterized Thread Group 1-8,text,true,,5910,191,48,48,http://webapp:8080//UtenteServlet?utente=1,4,0,0
+1779573482378,112,1. POST Registrazione,200,,Parameterized Thread Group 1-46,text,true,,9970,1681,48,48,http://webapp:8080/landingpage,107,0,2
+1779573482378,107,1. POST Registrazione-0,302,,Parameterized Thread Group 1-46,,true,,220,1501,48,48,http://webapp:8080//RegistrazioneServlet,107,0,2
+1779573482486,4,1. POST Registrazione-1,200,,Parameterized Thread Group 1-46,text,true,,9750,180,48,48,http://webapp:8080/landingpage,3,0,0
+1779573482511,3,3. GET Utente Profilo,200,,Parameterized Thread Group 1-11,text,true,,5910,191,48,48,http://webapp:8080//UtenteServlet?utente=1,2,0,0
+1779573482509,5,3. GET Utente Profilo,200,,Parameterized Thread Group 1-1,text,true,,5910,191,48,48,http://webapp:8080//UtenteServlet?utente=1,4,0,0
+1779573482418,119,1. POST Registrazione,200,,Parameterized Thread Group 1-45,text,true,,9970,1641,48,48,http://webapp:8080/landingpage,115,0,3
+1779573482418,115,1. POST Registrazione-0,302,,Parameterized Thread Group 1-45,,true,,220,1461,48,48,http://webapp:8080//RegistrazioneServlet,115,0,3
+1779573482533,4,1. POST Registrazione-1,200,,Parameterized Thread Group 1-45,text,true,,9750,180,48,48,http://webapp:8080/landingpage,4,0,0
+1779573482587,5,3. GET Utente Profilo,200,,Parameterized Thread Group 1-20,text,true,,5910,191,48,48,http://webapp:8080//UtenteServlet?utente=1,5,0,0
+1779573482588,4,2. GET Landing Page,200,,Parameterized Thread Group 1-36,text,true,,9750,180,48,48,http://webapp:8080//landingpage,4,0,0
+1779573482639,9,3. GET Utente Profilo,200,,Parameterized Thread Group 1-3,text,true,,5910,191,48,48,http://webapp:8080//UtenteServlet?utente=1,9,0,0
+1779573482650,8,2. GET Landing Page,200,,Parameterized Thread Group 1-38,text,true,,9750,180,48,48,http://webapp:8080//landingpage,8,0,0
+1779573482711,4,3. GET Utente Profilo,200,,Parameterized Thread Group 1-2,text,true,,5910,191,48,48,http://webapp:8080//UtenteServlet?utente=1,4,0,0
+1779573482753,5,2. GET Landing Page,200,,Parameterized Thread Group 1-33,text,true,,9750,180,48,48,http://webapp:8080//landingpage,5,0,0
+1779573482688,101,1. POST Registrazione,200,,Parameterized Thread Group 1-43,text,true,,9970,1697,48,48,http://webapp:8080/landingpage,97,0,2
+1779573482688,97,1. POST Registrazione-0,302,,Parameterized Thread Group 1-43,,true,,220,1517,48,48,http://webapp:8080//RegistrazioneServlet,97,0,2
+1779573482786,3,1. POST Registrazione-1,200,,Parameterized Thread Group 1-43,text,true,,9750,180,48,48,http://webapp:8080/landingpage,3,0,0
+1779573482741,102,1. POST Registrazione,200,,Parameterized Thread Group 1-48,text,true,,9970,1665,48,48,http://webapp:8080/landingpage,99,0,3
+1779573482741,99,1. POST Registrazione-0,302,,Parameterized Thread Group 1-48,,true,,220,1485,48,48,http://webapp:8080//RegistrazioneServlet,99,0,3
+1779573482840,3,1. POST Registrazione-1,200,,Parameterized Thread Group 1-48,text,true,,9750,180,48,48,http://webapp:8080/landingpage,3,0,0
+1779573482794,95,1. POST Registrazione,200,,Parameterized Thread Group 1-47,text,true,,9970,1633,48,48,http://webapp:8080/landingpage,91,0,2
+1779573482794,91,1. POST Registrazione-0,302,,Parameterized Thread Group 1-47,,true,,220,1453,48,48,http://webapp:8080//RegistrazioneServlet,91,0,2
+1779573482886,3,1. POST Registrazione-1,200,,Parameterized Thread Group 1-47,text,true,,9750,180,48,48,http://webapp:8080/landingpage,3,0,0
+1779573482896,3,3. GET Utente Profilo,200,,Parameterized Thread Group 1-22,text,true,,5910,191,48,48,http://webapp:8080//UtenteServlet?utente=1,3,0,0
+1779573482902,3,3. GET Utente Profilo,200,,Parameterized Thread Group 1-15,text,true,,5910,191,48,48,http://webapp:8080//UtenteServlet?utente=1,3,0,0
+1779573482907,2,3. GET Utente Profilo,200,,Parameterized Thread Group 1-13,text,true,,5910,191,48,48,http://webapp:8080//UtenteServlet?utente=1,2,0,0
+1779573482911,3,2. GET Landing Page,200,,Parameterized Thread Group 1-35,text,true,,9750,180,48,48,http://webapp:8080//landingpage,3,0,0
+1779573482825,93,1. POST Registrazione,200,,Parameterized Thread Group 1-44,text,true,,9970,1649,48,48,http://webapp:8080/landingpage,90,0,2
+1779573482825,90,1. POST Registrazione-0,302,,Parameterized Thread Group 1-44,,true,,220,1469,48,48,http://webapp:8080//RegistrazioneServlet,90,0,2
+1779573482915,3,1. POST Registrazione-1,200,,Parameterized Thread Group 1-44,text,true,,9750,180,48,48,http://webapp:8080/landingpage,3,0,0
+1779573482921,3,2. GET Landing Page,200,,Parameterized Thread Group 1-29,text,true,,9750,180,48,48,http://webapp:8080//landingpage,3,0,0
+1779573482928,2,3. GET Utente Profilo,200,,Parameterized Thread Group 1-18,text,true,,5910,191,48,48,http://webapp:8080//UtenteServlet?utente=1,2,0,0
+1779573482929,2,3. GET Utente Profilo,200,,Parameterized Thread Group 1-10,text,true,,5910,191,48,48,http://webapp:8080//UtenteServlet?utente=1,2,0,0
+1779573482989,4,3. GET Utente Profilo,200,,Parameterized Thread Group 1-17,text,true,,5910,191,48,48,http://webapp:8080//UtenteServlet?utente=1,4,0,0
+1779573483045,5,2. GET Landing Page,200,,Parameterized Thread Group 1-32,text,true,,9750,180,48,48,http://webapp:8080//landingpage,5,0,0
+1779573483066,3,2. GET Landing Page,200,,Parameterized Thread Group 1-34,text,true,,9750,180,48,48,http://webapp:8080//landingpage,3,0,0
+1779573483089,4,3. GET Utente Profilo,200,,Parameterized Thread Group 1-25,text,true,,5910,191,48,48,http://webapp:8080//UtenteServlet?utente=1,4,0,0
+1779573483189,5,3. GET Utente Profilo,200,,Parameterized Thread Group 1-16,text,true,,5910,191,48,48,http://webapp:8080//UtenteServlet?utente=1,4,0,0
+1779573483239,4,3. GET Utente Profilo,200,,Parameterized Thread Group 1-7,text,true,,5910,191,48,48,http://webapp:8080//UtenteServlet?utente=1,4,0,0
+1779573483250,5,2. GET Landing Page,200,,Parameterized Thread Group 1-37,text,true,,9750,180,48,48,http://webapp:8080//landingpage,5,0,0
+1779573483313,4,3. GET Utente Profilo,200,,Parameterized Thread Group 1-14,text,true,,5910,191,48,48,http://webapp:8080//UtenteServlet?utente=1,4,0,0
+1779573483376,5,2. GET Landing Page,200,,Parameterized Thread Group 1-39,text,true,,9750,180,48,48,http://webapp:8080//landingpage,4,0,0
+1779573483394,4,3. GET Utente Profilo,200,,Parameterized Thread Group 1-5,text,true,,5910,191,48,48,http://webapp:8080//UtenteServlet?utente=1,4,0,0
+1779573483473,5,3. GET Utente Profilo,200,,Parameterized Thread Group 1-9,text,true,,5910,191,48,48,http://webapp:8080//UtenteServlet?utente=1,5,0,0
+1779573483516,5,2. GET Landing Page,200,,Parameterized Thread Group 1-41,text,true,,9750,180,48,48,http://webapp:8080//landingpage,5,0,0
+1779573483520,4,3. GET Utente Profilo,200,,Parameterized Thread Group 1-28,text,true,,5910,191,48,48,http://webapp:8080//UtenteServlet?utente=1,4,0,0
+1779573483525,5,2. GET Landing Page,200,,Parameterized Thread Group 1-40,text,true,,9750,180,48,48,http://webapp:8080//landingpage,5,0,0
+1779573483562,5,3. GET Utente Profilo,200,,Parameterized Thread Group 1-31,text,true,,5910,191,48,48,http://webapp:8080//UtenteServlet?utente=1,5,0,0
+1779573483574,4,3. GET Utente Profilo,200,,Parameterized Thread Group 1-24,text,true,,5910,191,48,48,http://webapp:8080//UtenteServlet?utente=1,4,0,0
+1779573483460,172,4. GET Prodotti Per Categoria,200,,Parameterized Thread Group 1-23,text,true,,2958,212,48,48,http://webapp:8080//ProdottiPerCategoriaServlet?val=Elettronica,172,0,0
+1779573483651,4,3. GET Utente Profilo,200,,Parameterized Thread Group 1-36,text,true,,5910,191,48,48,http://webapp:8080//UtenteServlet?utente=1,4,0,0
+1779573483744,3,3. GET Utente Profilo,200,,Parameterized Thread Group 1-30,text,true,,5910,191,48,48,http://webapp:8080//UtenteServlet?utente=1,3,0,0
+1779573483932,4,4. GET Prodotti Per Categoria,200,,Parameterized Thread Group 1-10,text,true,,2958,212,48,48,http://webapp:8080//ProdottiPerCategoriaServlet?val=Elettronica,4,0,0
+1779573483936,4,2. GET Landing Page,200,,Parameterized Thread Group 1-47,text,true,,9750,180,48,48,http://webapp:8080//landingpage,4,0,0
+1779573483966,4,4. GET Prodotti Per Categoria,200,,Parameterized Thread Group 1-4,text,true,,2958,212,48,48,http://webapp:8080//ProdottiPerCategoriaServlet?val=Elettronica,4,0,0
+1779573483967,3,3. GET Utente Profilo,200,,Parameterized Thread Group 1-26,text,true,,5910,191,48,48,http://webapp:8080//UtenteServlet?utente=1,3,0,0
+1779573484009,4,3. GET Utente Profilo,200,,Parameterized Thread Group 1-27,text,true,,5910,191,48,48,http://webapp:8080//UtenteServlet?utente=1,3,0,0
+1779573484009,4,4. GET Prodotti Per Categoria,200,,Parameterized Thread Group 1-20,text,true,,2958,212,48,48,http://webapp:8080//ProdottiPerCategoriaServlet?val=Elettronica,3,0,0
+1779573484019,3,2. GET Landing Page,200,,Parameterized Thread Group 1-42,text,true,,9750,180,48,48,http://webapp:8080//landingpage,3,0,0
+1779573484035,4,4. GET Prodotti Per Categoria,200,,Parameterized Thread Group 1-1,text,true,,2958,212,48,48,http://webapp:8080//ProdottiPerCategoriaServlet?val=Elettronica,4,0,0
+1779573484040,2,2. GET Landing Page,200,,Parameterized Thread Group 1-45,text,true,,9750,180,48,48,http://webapp:8080//landingpage,2,0,0
+1779573484136,4,4. GET Prodotti Per Categoria,200,,Parameterized Thread Group 1-11,text,true,,2958,212,48,48,http://webapp:8080//ProdottiPerCategoriaServlet?val=Elettronica,4,0,0
+1779573484169,6,2. GET Landing Page,200,,Parameterized Thread Group 1-44,text,true,,9750,180,48,48,http://webapp:8080//landingpage,6,0,0
+1779573484192,5,4. GET Prodotti Per Categoria,200,,Parameterized Thread Group 1-6,text,true,,2958,212,48,48,http://webapp:8080//ProdottiPerCategoriaServlet?val=Elettronica,5,0,0
+1779573484197,4,4. GET Prodotti Per Categoria,200,,Parameterized Thread Group 1-3,text,true,,2958,212,48,48,http://webapp:8080//ProdottiPerCategoriaServlet?val=Elettronica,4,0,0
+1779573484217,4,4. GET Prodotti Per Categoria,200,,Parameterized Thread Group 1-13,text,true,,2958,212,48,48,http://webapp:8080//ProdottiPerCategoriaServlet?val=Elettronica,4,0,0
+1779573484246,4,4. GET Prodotti Per Categoria,200,,Parameterized Thread Group 1-8,text,true,,2958,212,48,48,http://webapp:8080//ProdottiPerCategoriaServlet?val=Elettronica,4,0,0
+1779573484274,5,3. GET Utente Profilo,200,,Parameterized Thread Group 1-19,text,true,,5910,191,48,48,http://webapp:8080//UtenteServlet?utente=1,4,0,0
+1779573484286,4,3. GET Utente Profilo,200,,Parameterized Thread Group 1-21,text,true,,5910,191,48,48,http://webapp:8080//UtenteServlet?utente=1,4,0,0
+1779573484330,4,4. GET Prodotti Per Categoria,200,,Parameterized Thread Group 1-15,text,true,,2958,212,48,48,http://webapp:8080//ProdottiPerCategoriaServlet?val=Elettronica,4,0,0
+1779573484333,3,4. GET Prodotti Per Categoria,200,,Parameterized Thread Group 1-12,text,true,,2958,212,48,48,http://webapp:8080//ProdottiPerCategoriaServlet?val=Elettronica,3,0,0
+1779573484341,2,4. GET Prodotti Per Categoria,200,,Parameterized Thread Group 1-14,text,true,,2958,212,48,48,http://webapp:8080//ProdottiPerCategoriaServlet?val=Elettronica,2,0,0
+1779573484340,3,2. GET Landing Page,200,,Parameterized Thread Group 1-46,text,true,,9750,180,48,48,http://webapp:8080//landingpage,3,0,0
+1779573484399,4,3. GET Utente Profilo,200,,Parameterized Thread Group 1-32,text,true,,5910,191,48,48,http://webapp:8080//UtenteServlet?utente=1,4,0,0
+1779573484426,5,4. GET Prodotti Per Categoria,200,,Parameterized Thread Group 1-17,text,true,,2958,212,48,48,http://webapp:8080//ProdottiPerCategoriaServlet?val=Elettronica,4,0,0
+1779573484502,4,4. GET Prodotti Per Categoria,200,,Parameterized Thread Group 1-2,text,true,,2958,212,48,48,http://webapp:8080//ProdottiPerCategoriaServlet?val=Elettronica,4,0,0
+1779573484505,3,3. GET Utente Profilo,200,,Parameterized Thread Group 1-33,text,true,,5910,191,48,48,http://webapp:8080//UtenteServlet?utente=1,3,0,0
+1779573484506,4,4. GET Prodotti Per Categoria,200,,Parameterized Thread Group 1-22,text,true,,2958,212,48,48,http://webapp:8080//ProdottiPerCategoriaServlet?val=Elettronica,3,0,0
+1779573484526,6,4. GET Prodotti Per Categoria,200,,Parameterized Thread Group 1-9,text,true,,2958,212,48,48,http://webapp:8080//ProdottiPerCategoriaServlet?val=Elettronica,6,0,0
+1779573484546,5,4. GET Prodotti Per Categoria,200,,Parameterized Thread Group 1-16,text,true,,2958,212,48,48,http://webapp:8080//ProdottiPerCategoriaServlet?val=Elettronica,4,0,0
+1779573484587,5,4. GET Prodotti Per Categoria,200,,Parameterized Thread Group 1-28,text,true,,2958,212,48,48,http://webapp:8080//ProdottiPerCategoriaServlet?val=Elettronica,5,0,0
+1779573484591,5,3. GET Utente Profilo,200,,Parameterized Thread Group 1-29,text,true,,5910,191,48,48,http://webapp:8080//UtenteServlet?utente=1,5,0,0
+1779573484633,3,4. GET Prodotti Per Categoria,200,,Parameterized Thread Group 1-31,text,true,,2958,212,48,48,http://webapp:8080//ProdottiPerCategoriaServlet?val=Elettronica,3,0,0
+1779573484653,5,3. GET Utente Profilo,200,,Parameterized Thread Group 1-38,text,true,,5910,191,48,48,http://webapp:8080//UtenteServlet?utente=1,5,0,0
+1779573484655,4,4. GET Prodotti Per Categoria,200,,Parameterized Thread Group 1-24,text,true,,2958,212,48,48,http://webapp:8080//ProdottiPerCategoriaServlet?val=Elettronica,4,0,0
+1779573484668,4,3. GET Utente Profilo,200,,Parameterized Thread Group 1-40,text,true,,5910,191,48,48,http://webapp:8080//UtenteServlet?utente=1,4,0,0
+1779573484670,4,2. GET Landing Page,200,,Parameterized Thread Group 1-48,text,true,,9750,180,48,48,http://webapp:8080//landingpage,4,0,0
+1779573484678,3,4. GET Prodotti Per Categoria,200,,Parameterized Thread Group 1-18,text,true,,2958,212,48,48,http://webapp:8080//ProdottiPerCategoriaServlet?val=Elettronica,3,0,0
+1779573484701,3,3. GET Utente Profilo,200,,Parameterized Thread Group 1-35,text,true,,5910,191,48,48,http://webapp:8080//UtenteServlet?utente=1,3,0,0
+1779573484703,3,2. GET Landing Page,200,,Parameterized Thread Group 1-43,text,true,,9750,180,48,48,http://webapp:8080//landingpage,3,0,0
+1779573484715,4,4. GET Prodotti Per Categoria,200,,Parameterized Thread Group 1-7,text,true,,2958,212,48,48,http://webapp:8080//ProdottiPerCategoriaServlet?val=Elettronica,4,0,0
+1779573484773,4,3. GET Utente Profilo,200,,Parameterized Thread Group 1-37,text,true,,5910,191,48,48,http://webapp:8080//UtenteServlet?utente=1,4,0,0
+1779573484853,4,3. GET Utente Profilo,200,,Parameterized Thread Group 1-41,text,true,,5910,191,48,48,http://webapp:8080//UtenteServlet?utente=1,4,0,0
+1779573484950,4,3. GET Utente Profilo,200,,Parameterized Thread Group 1-34,text,true,,5910,191,48,48,http://webapp:8080//UtenteServlet?utente=1,4,0,0
+1779573484982,5,4. GET Prodotti Per Categoria,200,,Parameterized Thread Group 1-5,text,true,,2958,212,48,48,http://webapp:8080//ProdottiPerCategoriaServlet?val=Elettronica,5,0,0
+1779573485036,5,4. GET Prodotti Per Categoria,200,,Parameterized Thread Group 1-30,text,true,,2958,212,48,48,http://webapp:8080//ProdottiPerCategoriaServlet?val=Elettronica,5,0,0
+1779573485042,3,4. GET Prodotti Per Categoria,200,,Parameterized Thread Group 1-25,text,true,,2958,212,48,48,http://webapp:8080//ProdottiPerCategoriaServlet?val=Elettronica,2,0,0
+1779573485086,4,3. GET Utente Profilo,200,,Parameterized Thread Group 1-45,text,true,,5910,191,48,48,http://webapp:8080//UtenteServlet?utente=1,4,0,0
+1779573485049,132,5. GET Prodotto Specifico,200,,Parameterized Thread Group 1-4,text,true,,8627,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=3,132,0,0
+1779573485193,4,4. GET Prodotti Per Categoria,200,,Parameterized Thread Group 1-26,text,true,,2958,212,48,48,http://webapp:8080//ProdottiPerCategoriaServlet?val=Elettronica,4,0,0
+1779573485228,21,5. GET Prodotto Specifico,200,,Parameterized Thread Group 1-23,text,true,,8627,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=3,20,0,0
+1779573485293,5,4. GET Prodotti Per Categoria,200,,Parameterized Thread Group 1-36,text,true,,2958,212,48,48,http://webapp:8080//ProdottiPerCategoriaServlet?val=Elettronica,5,0,0
+1779573485310,5,3. GET Utente Profilo,200,,Parameterized Thread Group 1-44,text,true,,5910,191,48,48,http://webapp:8080//UtenteServlet?utente=1,5,0,0
+1779573485334,5,3. GET Utente Profilo,200,,Parameterized Thread Group 1-39,text,true,,5910,191,48,48,http://webapp:8080//UtenteServlet?utente=1,5,0,0
+1779573485367,22,5. GET Prodotto Specifico,200,,Parameterized Thread Group 1-20,text,true,,8627,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=3,22,0,0
+1779573485401,20,5. GET Prodotto Specifico,200,,Parameterized Thread Group 1-1,text,true,,8627,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=3,20,0,0
+1779573485499,2,4. GET Prodotti Per Categoria,200,,Parameterized Thread Group 1-19,text,true,,2958,212,48,48,http://webapp:8080//ProdottiPerCategoriaServlet?val=Elettronica,2,0,0
+1779573485484,22,5. GET Prodotto Specifico,200,,Parameterized Thread Group 1-3,text,true,,8627,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=3,22,0,0
+1779573485582,27,5. GET Prodotto Specifico,200,,Parameterized Thread Group 1-11,text,true,,8627,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=3,27,0,0
+1779573485593,27,5. GET Prodotto Specifico,200,,Parameterized Thread Group 1-10,text,true,,8627,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=3,27,0,0
+1779573485650,5,3. GET Utente Profilo,200,,Parameterized Thread Group 1-42,text,true,,5910,191,48,48,http://webapp:8080//UtenteServlet?utente=1,5,0,0
+1779573485713,4,4. GET Prodotti Per Categoria,200,,Parameterized Thread Group 1-38,text,true,,2958,212,48,48,http://webapp:8080//ProdottiPerCategoriaServlet?val=Elettronica,4,0,0
+1779573485720,4,3. GET Utente Profilo,200,,Parameterized Thread Group 1-47,text,true,,5910,191,48,48,http://webapp:8080//UtenteServlet?utente=1,4,0,0
+1779573485735,20,5. GET Prodotto Specifico,200,,Parameterized Thread Group 1-12,text,true,,8627,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=3,20,0,0
+1779573485735,20,5. GET Prodotto Specifico,200,,Parameterized Thread Group 1-24,text,true,,8627,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=3,20,0,0
+1779573485738,20,5. GET Prodotto Specifico,200,,Parameterized Thread Group 1-15,text,true,,8627,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=3,20,0,0
+1779573485826,3,4. GET Prodotti Per Categoria,200,,Parameterized Thread Group 1-40,text,true,,2958,212,48,48,http://webapp:8080//ProdottiPerCategoriaServlet?val=Elettronica,3,0,0
+1779573485818,22,5. GET Prodotto Specifico,200,,Parameterized Thread Group 1-6,text,true,,8627,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=3,22,0,0
+1779573485854,21,5. GET Prodotto Specifico,200,,Parameterized Thread Group 1-16,text,true,,8627,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=3,21,0,0
+1779573485874,3,4. GET Prodotti Per Categoria,200,,Parameterized Thread Group 1-29,text,true,,2958,212,48,48,http://webapp:8080//ProdottiPerCategoriaServlet?val=Elettronica,3,0,0
+1779573485896,4,4. GET Prodotti Per Categoria,200,,Parameterized Thread Group 1-27,text,true,,2958,212,48,48,http://webapp:8080//ProdottiPerCategoriaServlet?val=Elettronica,4,0,0
+1779573485883,19,5. GET Prodotto Specifico,200,,Parameterized Thread Group 1-8,text,true,,8627,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=3,19,0,0
+1779573485926,20,5. GET Prodotto Specifico,200,,Parameterized Thread Group 1-22,text,true,,8627,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=3,20,0,0
+1779573486048,4,4. GET Prodotti Per Categoria,200,,Parameterized Thread Group 1-33,text,true,,2958,212,48,48,http://webapp:8080//ProdottiPerCategoriaServlet?val=Elettronica,4,0,0
+1779573486055,20,5. GET Prodotto Specifico,200,,Parameterized Thread Group 1-13,text,true,,8627,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=3,20,0,0
+1779573486078,4,4. GET Prodotti Per Categoria,200,,Parameterized Thread Group 1-37,text,true,,2958,212,48,48,http://webapp:8080//ProdottiPerCategoriaServlet?val=Elettronica,4,0,0
+1779573486100,4,4. GET Prodotti Per Categoria,200,,Parameterized Thread Group 1-41,text,true,,2958,212,48,48,http://webapp:8080//ProdottiPerCategoriaServlet?val=Elettronica,4,0,0
+1779573486113,4,3. GET Utente Profilo,200,,Parameterized Thread Group 1-46,text,true,,5910,191,48,48,http://webapp:8080//UtenteServlet?utente=1,4,0,0
+1779573486116,3,3. GET Utente Profilo,200,,Parameterized Thread Group 1-43,text,true,,5910,191,48,48,http://webapp:8080//UtenteServlet?utente=1,3,0,0
+1779573486142,4,4. GET Prodotti Per Categoria,200,,Parameterized Thread Group 1-21,text,true,,2958,212,48,48,http://webapp:8080//ProdottiPerCategoriaServlet?val=Elettronica,4,0,0
+1779573486156,4,4. GET Prodotti Per Categoria,200,,Parameterized Thread Group 1-32,text,true,,2958,212,48,48,http://webapp:8080//ProdottiPerCategoriaServlet?val=Elettronica,3,0,0
+1779573486172,3,3. GET Utente Profilo,200,,Parameterized Thread Group 1-48,text,true,,5910,191,48,48,http://webapp:8080//UtenteServlet?utente=1,3,0,0
+1779573486153,22,5. GET Prodotto Specifico,200,,Parameterized Thread Group 1-9,text,true,,8627,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=3,22,0,0
+1779573486162,18,5. GET Prodotto Specifico,200,,Parameterized Thread Group 1-7,text,true,,8627,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=3,18,0,0
+1779573486217,22,5. GET Prodotto Specifico,200,,Parameterized Thread Group 1-17,text,true,,8627,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=3,22,0,0
+1779573486217,23,5. GET Prodotto Specifico,200,,Parameterized Thread Group 1-2,text,true,,8627,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=3,23,0,0
+1779573486242,21,5. GET Prodotto Specifico,200,,Parameterized Thread Group 1-18,text,true,,8627,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=3,21,0,0
+1779573486262,21,5. GET Prodotto Specifico,200,,Parameterized Thread Group 1-25,text,true,,8627,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=3,21,0,0
+1779573486264,20,5. GET Prodotto Specifico,200,,Parameterized Thread Group 1-14,text,true,,8627,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=3,20,0,0
+1779573486336,23,5. GET Prodotto Specifico,200,,Parameterized Thread Group 1-28,text,true,,8627,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=3,23,0,0
+1779573486451,3,4. GET Prodotti Per Categoria,200,,Parameterized Thread Group 1-44,text,true,,2958,212,48,48,http://webapp:8080//ProdottiPerCategoriaServlet?val=Elettronica,3,0,0
+1779573486443,22,5. GET Prodotto Specifico,200,,Parameterized Thread Group 1-31,text,true,,8627,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=3,22,0,0
+1779573486482,5,4. GET Prodotti Per Categoria,200,,Parameterized Thread Group 1-39,text,true,,2958,212,48,48,http://webapp:8080//ProdottiPerCategoriaServlet?val=Elettronica,4,0,0
+1779573486500,23,5. GET Prodotto Specifico,200,,Parameterized Thread Group 1-30,text,true,,8627,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=3,23,0,0
+1779573486610,5,4. GET Prodotti Per Categoria,200,,Parameterized Thread Group 1-35,text,true,,2958,212,48,48,http://webapp:8080//ProdottiPerCategoriaServlet?val=Elettronica,5,0,0
+1779573486596,24,5. GET Prodotto Specifico,200,,Parameterized Thread Group 1-5,text,true,,8627,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=3,24,0,0
+1779573486617,36,6. POST Aggiungi a Wishlist,200,,Parameterized Thread Group 1-3,text,true,,9895,465,48,48,http://webapp:8080/landingpage,32,0,0
+1779573486617,32,6. POST Aggiungi a Wishlist-0,302,,Parameterized Thread Group 1-3,,true,,145,285,48,48,http://webapp:8080//WishlistServlet,32,0,0
+1779573486649,4,6. POST Aggiungi a Wishlist-1,200,,Parameterized Thread Group 1-3,text,true,,9750,180,48,48,http://webapp:8080/landingpage,4,0,0
+1779573486641,33,6. POST Aggiungi a Wishlist,200,,Parameterized Thread Group 1-4,text,true,,9895,465,48,48,http://webapp:8080/landingpage,28,0,0
+1779573486641,28,6. POST Aggiungi a Wishlist-0,302,,Parameterized Thread Group 1-4,,true,,145,285,48,48,http://webapp:8080//WishlistServlet,28,0,0
+1779573486669,5,6. POST Aggiungi a Wishlist-1,200,,Parameterized Thread Group 1-4,text,true,,9750,180,48,48,http://webapp:8080/landingpage,4,0,0
+1779573486693,3,4. GET Prodotti Per Categoria,200,,Parameterized Thread Group 1-34,text,true,,2958,212,48,48,http://webapp:8080//ProdottiPerCategoriaServlet?val=Elettronica,3,0,0
+1779573486790,4,4. GET Prodotti Per Categoria,200,,Parameterized Thread Group 1-45,text,true,,2958,212,48,48,http://webapp:8080//ProdottiPerCategoriaServlet?val=Elettronica,4,0,0
+1779573486859,22,5. GET Prodotto Specifico,200,,Parameterized Thread Group 1-19,text,true,,8627,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=3,22,0,0
+1779573486870,20,5. GET Prodotto Specifico,200,,Parameterized Thread Group 1-26,text,true,,8627,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=3,20,0,0
+1779573486926,19,5. GET Prodotto Specifico,200,,Parameterized Thread Group 1-36,text,true,,8627,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=3,19,0,0
+1779573486938,31,6. POST Aggiungi a Wishlist,200,,Parameterized Thread Group 1-24,text,true,,9895,465,48,48,http://webapp:8080/landingpage,28,0,0
+1779573486938,28,6. POST Aggiungi a Wishlist-0,302,,Parameterized Thread Group 1-24,,true,,145,285,48,48,http://webapp:8080//WishlistServlet,28,0,0
+1779573486966,3,6. POST Aggiungi a Wishlist-1,200,,Parameterized Thread Group 1-24,text,true,,9750,180,48,48,http://webapp:8080/landingpage,3,0,0
+1779573486947,30,6. POST Aggiungi a Wishlist,200,,Parameterized Thread Group 1-23,text,true,,9895,465,48,48,http://webapp:8080/landingpage,27,0,0
+1779573486947,27,6. POST Aggiungi a Wishlist-0,302,,Parameterized Thread Group 1-23,,true,,145,285,48,48,http://webapp:8080//WishlistServlet,27,0,0
+1779573486974,3,6. POST Aggiungi a Wishlist-1,200,,Parameterized Thread Group 1-23,text,true,,9750,180,48,48,http://webapp:8080/landingpage,3,0,0
+1779573486974,30,6. POST Aggiungi a Wishlist,200,,Parameterized Thread Group 1-20,text,true,,9895,465,48,48,http://webapp:8080/landingpage,27,0,0
+1779573486974,27,6. POST Aggiungi a Wishlist-0,302,,Parameterized Thread Group 1-20,,true,,145,285,48,48,http://webapp:8080//WishlistServlet,27,0,0
+1779573487001,3,6. POST Aggiungi a Wishlist-1,200,,Parameterized Thread Group 1-20,text,true,,9750,180,48,48,http://webapp:8080/landingpage,3,0,0
+1779573487115,33,6. POST Aggiungi a Wishlist,200,,Parameterized Thread Group 1-10,text,true,,9895,465,48,48,http://webapp:8080/landingpage,29,0,0
+1779573487115,29,6. POST Aggiungi a Wishlist-0,302,,Parameterized Thread Group 1-10,,true,,145,285,48,48,http://webapp:8080//WishlistServlet,29,0,0
+1779573487145,3,6. POST Aggiungi a Wishlist-1,200,,Parameterized Thread Group 1-10,text,true,,9750,180,48,48,http://webapp:8080/landingpage,3,0,0
+1779573487125,36,6. POST Aggiungi a Wishlist,200,,Parameterized Thread Group 1-6,text,true,,9895,465,48,48,http://webapp:8080/landingpage,33,0,0
+1779573487125,33,6. POST Aggiungi a Wishlist-0,302,,Parameterized Thread Group 1-6,,true,,145,285,48,48,http://webapp:8080//WishlistServlet,33,0,0
+1779573487158,3,6. POST Aggiungi a Wishlist-1,200,,Parameterized Thread Group 1-6,text,true,,9750,180,48,48,http://webapp:8080/landingpage,3,0,0
+1779573487155,33,6. POST Aggiungi a Wishlist,200,,Parameterized Thread Group 1-22,text,true,,9895,465,48,48,http://webapp:8080/landingpage,29,0,0
+1779573487155,29,6. POST Aggiungi a Wishlist-0,302,,Parameterized Thread Group 1-22,,true,,145,285,48,48,http://webapp:8080//WishlistServlet,29,0,0
+1779573487184,4,6. POST Aggiungi a Wishlist-1,200,,Parameterized Thread Group 1-22,text,true,,9750,180,48,48,http://webapp:8080/landingpage,3,0,0
+1779573487221,3,4. GET Prodotti Per Categoria,200,,Parameterized Thread Group 1-42,text,true,,2958,212,48,48,http://webapp:8080//ProdottiPerCategoriaServlet?val=Elettronica,2,0,0
+1779573487212,20,5. GET Prodotto Specifico,200,,Parameterized Thread Group 1-41,text,true,,8627,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=3,20,0,0
+1779573487214,32,6. POST Aggiungi a Wishlist,200,,Parameterized Thread Group 1-1,text,true,,9895,465,48,48,http://webapp:8080/landingpage,29,0,0
+1779573487214,29,6. POST Aggiungi a Wishlist-0,302,,Parameterized Thread Group 1-1,,true,,145,285,48,48,http://webapp:8080//WishlistServlet,29,0,0
+1779573487243,3,6. POST Aggiungi a Wishlist-1,200,,Parameterized Thread Group 1-1,text,true,,9750,180,48,48,http://webapp:8080/landingpage,3,0,0
+1779573487271,4,4. GET Prodotti Per Categoria,200,,Parameterized Thread Group 1-47,text,true,,2958,212,48,48,http://webapp:8080//ProdottiPerCategoriaServlet?val=Elettronica,4,0,0
+1779573487277,2,4. GET Prodotti Per Categoria,200,,Parameterized Thread Group 1-46,text,true,,2958,212,48,48,http://webapp:8080//ProdottiPerCategoriaServlet?val=Elettronica,2,0,0
+1779573487293,19,5. GET Prodotto Specifico,200,,Parameterized Thread Group 1-29,text,true,,8627,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=3,19,0,0
+1779573487290,33,6. POST Aggiungi a Wishlist,200,,Parameterized Thread Group 1-7,text,true,,9895,465,48,48,http://webapp:8080/landingpage,29,0,0
+1779573487290,29,6. POST Aggiungi a Wishlist-0,302,,Parameterized Thread Group 1-7,,true,,145,285,48,48,http://webapp:8080//WishlistServlet,29,0,0
+1779573487319,4,6. POST Aggiungi a Wishlist-1,200,,Parameterized Thread Group 1-7,text,true,,9750,180,48,48,http://webapp:8080/landingpage,4,0,0
+1779573487324,26,5. GET Prodotto Specifico,200,,Parameterized Thread Group 1-40,text,true,,8627,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=3,26,0,0
+1779573487337,32,6. POST Aggiungi a Wishlist,200,,Parameterized Thread Group 1-14,text,true,,9895,465,48,48,http://webapp:8080/landingpage,28,0,0
+1779573487337,28,6. POST Aggiungi a Wishlist-0,302,,Parameterized Thread Group 1-14,,true,,145,285,48,48,http://webapp:8080//WishlistServlet,28,0,0
+1779573487366,3,6. POST Aggiungi a Wishlist-1,200,,Parameterized Thread Group 1-14,text,true,,9750,180,48,48,http://webapp:8080/landingpage,3,0,0
+1779573487376,30,6. POST Aggiungi a Wishlist,200,,Parameterized Thread Group 1-11,text,true,,9895,465,48,48,http://webapp:8080/landingpage,27,0,0
+1779573487376,27,6. POST Aggiungi a Wishlist-0,302,,Parameterized Thread Group 1-11,,true,,145,285,48,48,http://webapp:8080//WishlistServlet,27,0,0
+1779573487403,3,6. POST Aggiungi a Wishlist-1,200,,Parameterized Thread Group 1-11,text,true,,9750,180,48,48,http://webapp:8080/landingpage,3,0,0
+1779573487385,30,6. POST Aggiungi a Wishlist,200,,Parameterized Thread Group 1-9,text,true,,9895,465,48,48,http://webapp:8080/landingpage,27,0,0
+1779573487385,27,6. POST Aggiungi a Wishlist-0,302,,Parameterized Thread Group 1-9,,true,,145,285,48,48,http://webapp:8080//WishlistServlet,27,0,0
+1779573487412,3,6. POST Aggiungi a Wishlist-1,200,,Parameterized Thread Group 1-9,text,true,,9750,180,48,48,http://webapp:8080/landingpage,3,0,0
+1779573487444,4,4. GET Prodotti Per Categoria,200,,Parameterized Thread Group 1-43,text,true,,2958,212,48,48,http://webapp:8080//ProdottiPerCategoriaServlet?val=Elettronica,4,0,0
+1779573487461,20,5. GET Prodotto Specifico,200,,Parameterized Thread Group 1-37,text,true,,8627,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=3,20,0,0
+1779573487494,25,5. GET Prodotto Specifico,200,,Parameterized Thread Group 1-32,text,true,,8627,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=3,24,0,0
+1779573487486,38,6. POST Aggiungi a Wishlist,200,,Parameterized Thread Group 1-12,text,true,,9895,465,48,48,http://webapp:8080/landingpage,34,0,0
+1779573487486,34,6. POST Aggiungi a Wishlist-0,302,,Parameterized Thread Group 1-12,,true,,145,285,48,48,http://webapp:8080//WishlistServlet,34,0,0
+1779573487520,4,6. POST Aggiungi a Wishlist-1,200,,Parameterized Thread Group 1-12,text,true,,9750,180,48,48,http://webapp:8080/landingpage,4,0,0
+1779573487517,21,5. GET Prodotto Specifico,200,,Parameterized Thread Group 1-39,text,true,,8627,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=3,21,0,0
+1779573487506,36,6. POST Aggiungi a Wishlist,200,,Parameterized Thread Group 1-17,text,true,,9895,465,48,48,http://webapp:8080/landingpage,32,0,0
+1779573487506,32,6. POST Aggiungi a Wishlist-0,302,,Parameterized Thread Group 1-17,,true,,145,285,48,48,http://webapp:8080//WishlistServlet,32,0,0
+1779573487538,4,6. POST Aggiungi a Wishlist-1,200,,Parameterized Thread Group 1-17,text,true,,9750,180,48,48,http://webapp:8080/landingpage,4,0,0
+1779573487583,19,5. GET Prodotto Specifico,200,,Parameterized Thread Group 1-21,text,true,,8627,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=3,19,0,0
+1779573487613,19,5. GET Prodotto Specifico,200,,Parameterized Thread Group 1-38,text,true,,8627,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=3,19,0,0
+1779573487682,6,7. GET Ricerca Prodotto,200,,Parameterized Thread Group 1-3,text,true,,2958,192,48,48,http://webapp:8080//RicercaServlet?val=test,6,0,0
+1779573487655,36,6. POST Aggiungi a Wishlist,200,,Parameterized Thread Group 1-15,text,true,,9895,465,48,48,http://webapp:8080/landingpage,33,0,0
+1779573487655,33,6. POST Aggiungi a Wishlist-0,302,,Parameterized Thread Group 1-15,,true,,145,285,48,48,http://webapp:8080//WishlistServlet,33,0,0
+1779573487688,3,6. POST Aggiungi a Wishlist-1,200,,Parameterized Thread Group 1-15,text,true,,9750,180,48,48,http://webapp:8080/landingpage,3,0,0
+1779573487675,29,5. GET Prodotto Specifico,200,,Parameterized Thread Group 1-44,text,true,,8627,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=3,29,0,0
+1779573487673,39,6. POST Aggiungi a Wishlist,200,,Parameterized Thread Group 1-8,text,true,,9895,465,48,48,http://webapp:8080/landingpage,36,0,0
+1779573487673,36,6. POST Aggiungi a Wishlist-0,302,,Parameterized Thread Group 1-8,,true,,145,285,48,48,http://webapp:8080//WishlistServlet,36,0,0
+1779573487709,3,6. POST Aggiungi a Wishlist-1,200,,Parameterized Thread Group 1-8,text,true,,9750,180,48,48,http://webapp:8080/landingpage,3,0,0
+1779573487707,32,6. POST Aggiungi a Wishlist,200,,Parameterized Thread Group 1-2,text,true,,9895,465,48,48,http://webapp:8080/landingpage,28,0,0
+1779573487707,28,6. POST Aggiungi a Wishlist-0,302,,Parameterized Thread Group 1-2,,true,,145,285,48,48,http://webapp:8080//WishlistServlet,28,0,0
+1779573487735,4,6. POST Aggiungi a Wishlist-1,200,,Parameterized Thread Group 1-2,text,true,,9750,180,48,48,http://webapp:8080/landingpage,3,0,0
+1779573487805,21,5. GET Prodotto Specifico,200,,Parameterized Thread Group 1-27,text,true,,8627,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=3,21,0,0
+1779573487797,32,6. POST Aggiungi a Wishlist,200,,Parameterized Thread Group 1-28,text,true,,9895,465,48,48,http://webapp:8080/landingpage,29,0,0
+1779573487797,29,6. POST Aggiungi a Wishlist-0,302,,Parameterized Thread Group 1-28,,true,,145,285,48,48,http://webapp:8080//WishlistServlet,29,0,0
+1779573487826,3,6. POST Aggiungi a Wishlist-1,200,,Parameterized Thread Group 1-28,text,true,,9750,180,48,48,http://webapp:8080/landingpage,3,0,0
+1779573487821,33,6. POST Aggiungi a Wishlist,200,,Parameterized Thread Group 1-13,text,true,,9895,465,48,48,http://webapp:8080/landingpage,29,0,0
+1779573487821,29,6. POST Aggiungi a Wishlist-0,302,,Parameterized Thread Group 1-13,,true,,145,285,48,48,http://webapp:8080//WishlistServlet,29,0,0
+1779573487850,4,6. POST Aggiungi a Wishlist-1,200,,Parameterized Thread Group 1-13,text,true,,9750,180,48,48,http://webapp:8080/landingpage,3,0,0
+1779573487821,34,6. POST Aggiungi a Wishlist,200,,Parameterized Thread Group 1-16,text,true,,9895,465,48,48,http://webapp:8080/landingpage,31,0,0
+1779573487821,31,6. POST Aggiungi a Wishlist-0,302,,Parameterized Thread Group 1-16,,true,,145,285,48,48,http://webapp:8080//WishlistServlet,31,0,0
+1779573487852,3,6. POST Aggiungi a Wishlist-1,200,,Parameterized Thread Group 1-16,text,true,,9750,180,48,48,http://webapp:8080/landingpage,3,0,0
+1779573487862,20,5. GET Prodotto Specifico,200,,Parameterized Thread Group 1-33,text,true,,8627,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=3,20,0,0
+1779573487898,32,6. POST Aggiungi a Wishlist,200,,Parameterized Thread Group 1-25,text,true,,9895,465,48,48,http://webapp:8080/landingpage,29,0,0
+1779573487898,29,6. POST Aggiungi a Wishlist-0,302,,Parameterized Thread Group 1-25,,true,,145,285,48,48,http://webapp:8080//WishlistServlet,29,0,0
+1779573487927,3,6. POST Aggiungi a Wishlist-1,200,,Parameterized Thread Group 1-25,text,true,,9750,180,48,48,http://webapp:8080/landingpage,3,0,0
+1779573487964,20,5. GET Prodotto Specifico,200,,Parameterized Thread Group 1-45,text,true,,8627,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=3,20,0,0
+1779573487993,4,7. GET Ricerca Prodotto,200,,Parameterized Thread Group 1-4,text,true,,2958,192,48,48,http://webapp:8080//RicercaServlet?val=test,4,0,0
+1779573487996,32,6. POST Aggiungi a Wishlist,200,,Parameterized Thread Group 1-18,text,true,,9895,465,48,48,http://webapp:8080/landingpage,28,0,0
+1779573487996,28,6. POST Aggiungi a Wishlist-0,302,,Parameterized Thread Group 1-18,,true,,145,285,48,48,http://webapp:8080//WishlistServlet,28,0,0
+1779573488024,4,6. POST Aggiungi a Wishlist-1,200,,Parameterized Thread Group 1-18,text,true,,9750,180,48,48,http://webapp:8080/landingpage,4,0,0
+1779573488007,21,5. GET Prodotto Specifico,200,,Parameterized Thread Group 1-34,text,true,,8627,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=3,21,0,0
+1779573488040,3,4. GET Prodotti Per Categoria,200,,Parameterized Thread Group 1-48,text,true,,2958,212,48,48,http://webapp:8080//ProdottiPerCategoriaServlet?val=Elettronica,3,0,0
+1779573488049,2,7. GET Ricerca Prodotto,200,,Parameterized Thread Group 1-23,text,true,,2958,192,48,48,http://webapp:8080//RicercaServlet?val=test,2,0,0
+1779573488052,28,6. POST Aggiungi a Wishlist,200,,Parameterized Thread Group 1-26,text,true,,9895,465,48,48,http://webapp:8080/landingpage,25,0,0
+1779573488052,25,6. POST Aggiungi a Wishlist-0,302,,Parameterized Thread Group 1-26,,true,,145,285,48,48,http://webapp:8080//WishlistServlet,25,0,0
+1779573488077,3,6. POST Aggiungi a Wishlist-1,200,,Parameterized Thread Group 1-26,text,true,,9750,180,48,48,http://webapp:8080/landingpage,3,0,0
+1779573488147,28,6. POST Aggiungi a Wishlist,200,,Parameterized Thread Group 1-36,text,true,,9895,465,48,48,http://webapp:8080/landingpage,26,0,0
+1779573488147,26,6. POST Aggiungi a Wishlist-0,302,,Parameterized Thread Group 1-36,,true,,145,285,48,48,http://webapp:8080//WishlistServlet,26,0,0
+1779573488173,2,6. POST Aggiungi a Wishlist-1,200,,Parameterized Thread Group 1-36,text,true,,9750,180,48,48,http://webapp:8080/landingpage,2,0,0
+1779573488154,28,6. POST Aggiungi a Wishlist,200,,Parameterized Thread Group 1-31,text,true,,9895,465,48,48,http://webapp:8080/landingpage,25,0,0
+1779573488154,25,6. POST Aggiungi a Wishlist-0,302,,Parameterized Thread Group 1-31,,true,,145,285,48,48,http://webapp:8080//WishlistServlet,25,0,0
+1779573488179,3,6. POST Aggiungi a Wishlist-1,200,,Parameterized Thread Group 1-31,text,true,,9750,180,48,48,http://webapp:8080/landingpage,3,0,0
+1779573488266,21,5. GET Prodotto Specifico,200,,Parameterized Thread Group 1-35,text,true,,8627,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=3,21,0,0
+1779573488299,3,7. GET Ricerca Prodotto,200,,Parameterized Thread Group 1-1,text,true,,2958,192,48,48,http://webapp:8080//RicercaServlet?val=test,3,0,0
+1779573488304,31,6. POST Aggiungi a Wishlist,200,,Parameterized Thread Group 1-30,text,true,,9895,465,48,48,http://webapp:8080/landingpage,28,0,0
+1779573488304,28,6. POST Aggiungi a Wishlist-0,302,,Parameterized Thread Group 1-30,,true,,145,285,48,48,http://webapp:8080//WishlistServlet,28,0,0
+1779573488332,3,6. POST Aggiungi a Wishlist-1,200,,Parameterized Thread Group 1-30,text,true,,9750,180,48,48,http://webapp:8080/landingpage,3,0,0
+1779573488388,4,7. GET Ricerca Prodotto,200,,Parameterized Thread Group 1-22,text,true,,2958,192,48,48,http://webapp:8080//RicercaServlet?val=test,4,0,0
+1779573488379,31,6. POST Aggiungi a Wishlist,200,,Parameterized Thread Group 1-40,text,true,,9895,465,48,48,http://webapp:8080/landingpage,28,0,0
+1779573488379,28,6. POST Aggiungi a Wishlist-0,302,,Parameterized Thread Group 1-40,,true,,145,285,48,48,http://webapp:8080//WishlistServlet,28,0,0
+1779573488407,3,6. POST Aggiungi a Wishlist-1,200,,Parameterized Thread Group 1-40,text,true,,9750,180,48,48,http://webapp:8080/landingpage,3,0,0
+1779573488513,32,6. POST Aggiungi a Wishlist,200,,Parameterized Thread Group 1-41,text,true,,9895,465,48,48,http://webapp:8080/landingpage,29,0,0
+1779573488513,29,6. POST Aggiungi a Wishlist-0,302,,Parameterized Thread Group 1-41,,true,,145,285,48,48,http://webapp:8080//WishlistServlet,29,0,0
+1779573488542,3,6. POST Aggiungi a Wishlist-1,200,,Parameterized Thread Group 1-41,text,true,,9750,180,48,48,http://webapp:8080/landingpage,3,0,0
+1779573488554,3,7. GET Ricerca Prodotto,200,,Parameterized Thread Group 1-20,text,true,,2958,192,48,48,http://webapp:8080//RicercaServlet?val=test,3,0,0
+1779573488577,4,7. GET Ricerca Prodotto,200,,Parameterized Thread Group 1-17,text,true,,2958,192,48,48,http://webapp:8080//RicercaServlet?val=test,4,0,0
+1779573488605,3,7. GET Ricerca Prodotto,200,,Parameterized Thread Group 1-6,text,true,,2958,192,48,48,http://webapp:8080//RicercaServlet?val=test,3,0,0
+1779573488609,23,5. GET Prodotto Specifico,200,,Parameterized Thread Group 1-46,text,true,,8627,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=3,23,0,0
+1779573488598,35,6. POST Aggiungi a Wishlist,200,,Parameterized Thread Group 1-5,text,true,,9895,465,48,48,http://webapp:8080/landingpage,31,0,0
+1779573488598,31,6. POST Aggiungi a Wishlist-0,302,,Parameterized Thread Group 1-5,,true,,145,285,48,48,http://webapp:8080//WishlistServlet,31,0,0
+1779573488630,3,6. POST Aggiungi a Wishlist-1,200,,Parameterized Thread Group 1-5,text,true,,9750,180,48,48,http://webapp:8080/landingpage,3,0,0
+1779573488633,3,7. GET Ricerca Prodotto,200,,Parameterized Thread Group 1-9,text,true,,2958,192,48,48,http://webapp:8080//RicercaServlet?val=test,3,0,0
+1779573488676,31,6. POST Aggiungi a Wishlist,200,,Parameterized Thread Group 1-19,text,true,,9895,465,48,48,http://webapp:8080/landingpage,27,0,0
+1779573488676,27,6. POST Aggiungi a Wishlist-0,302,,Parameterized Thread Group 1-19,,true,,145,285,48,48,http://webapp:8080//WishlistServlet,27,0,0
+1779573488703,4,6. POST Aggiungi a Wishlist-1,200,,Parameterized Thread Group 1-19,text,true,,9750,180,48,48,http://webapp:8080/landingpage,4,0,0
+1779573488704,33,6. POST Aggiungi a Wishlist,200,,Parameterized Thread Group 1-39,text,true,,9895,465,48,48,http://webapp:8080/landingpage,29,0,0
+1779573488704,29,6. POST Aggiungi a Wishlist-0,302,,Parameterized Thread Group 1-39,,true,,145,285,48,48,http://webapp:8080//WishlistServlet,29,0,0
+1779573488733,4,6. POST Aggiungi a Wishlist-1,200,,Parameterized Thread Group 1-39,text,true,,9750,180,48,48,http://webapp:8080/landingpage,4,0,0
+1779573488804,19,5. GET Prodotto Specifico,200,,Parameterized Thread Group 1-47,text,true,,8627,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=3,19,0,0
+1779573488835,4,7. GET Ricerca Prodotto,200,,Parameterized Thread Group 1-24,text,true,,2958,192,48,48,http://webapp:8080//RicercaServlet?val=test,4,0,0
+1779573488850,33,6. POST Aggiungi a Wishlist,200,,Parameterized Thread Group 1-29,text,true,,9895,465,48,48,http://webapp:8080/landingpage,29,0,0
+1779573488850,29,6. POST Aggiungi a Wishlist-0,302,,Parameterized Thread Group 1-29,,true,,145,285,48,48,http://webapp:8080//WishlistServlet,29,0,0
+1779573488880,3,6. POST Aggiungi a Wishlist-1,200,,Parameterized Thread Group 1-29,text,true,,9750,180,48,48,http://webapp:8080/landingpage,3,0,0
+1779573488883,20,5. GET Prodotto Specifico,200,,Parameterized Thread Group 1-42,text,true,,8627,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=3,20,0,0
+1779573488913,3,7. GET Ricerca Prodotto,200,,Parameterized Thread Group 1-7,text,true,,2958,192,48,48,http://webapp:8080//RicercaServlet?val=test,3,0,0
+1779573489008,4,7. GET Ricerca Prodotto,200,,Parameterized Thread Group 1-10,text,true,,2958,192,48,48,http://webapp:8080//RicercaServlet?val=test,4,0,0
+1779573489020,36,6. POST Aggiungi a Wishlist,200,,Parameterized Thread Group 1-44,text,true,,9895,465,48,48,http://webapp:8080/landingpage,33,0,0
+1779573489020,33,6. POST Aggiungi a Wishlist-0,302,,Parameterized Thread Group 1-44,,true,,145,285,48,48,http://webapp:8080//WishlistServlet,33,0,0
+1779573489053,3,6. POST Aggiungi a Wishlist-1,200,,Parameterized Thread Group 1-44,text,true,,9750,180,48,48,http://webapp:8080/landingpage,3,0,0
+1779573489060,3,7. GET Ricerca Prodotto,200,,Parameterized Thread Group 1-14,text,true,,2958,192,48,48,http://webapp:8080//RicercaServlet?val=test,3,0,0
+1779573489059,25,5. GET Prodotto Specifico,200,,Parameterized Thread Group 1-43,text,true,,8627,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=3,25,0,0
+1779573489061,23,5. GET Prodotto Specifico,200,,Parameterized Thread Group 1-48,text,true,,8627,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=3,23,0,0
+1779573489123,4,7. GET Ricerca Prodotto,200,,Parameterized Thread Group 1-11,text,true,,2958,192,48,48,http://webapp:8080//RicercaServlet?val=test,4,0,0
+1779573489168,3,7. GET Ricerca Prodotto,200,,Parameterized Thread Group 1-2,text,true,,2958,192,48,48,http://webapp:8080//RicercaServlet?val=test,3,0,0
+1779573489207,47,6. POST Aggiungi a Wishlist,200,,Parameterized Thread Group 1-21,text,true,,9895,465,48,48,http://webapp:8080/landingpage,43,0,0
+1779573489207,43,6. POST Aggiungi a Wishlist-0,302,,Parameterized Thread Group 1-21,,true,,145,285,48,48,http://webapp:8080//WishlistServlet,43,0,0
+1779573489251,3,6. POST Aggiungi a Wishlist-1,200,,Parameterized Thread Group 1-21,text,true,,9750,180,48,48,http://webapp:8080/landingpage,3,0,0
+1779573489214,42,6. POST Aggiungi a Wishlist,200,,Parameterized Thread Group 1-33,text,true,,9895,465,48,48,http://webapp:8080/landingpage,39,0,0
+1779573489214,39,6. POST Aggiungi a Wishlist-0,302,,Parameterized Thread Group 1-33,,true,,145,285,48,48,http://webapp:8080//WishlistServlet,39,0,0
+1779573489253,3,6. POST Aggiungi a Wishlist-1,200,,Parameterized Thread Group 1-33,text,true,,9750,180,48,48,http://webapp:8080/landingpage,3,0,0
+1779573489268,39,6. POST Aggiungi a Wishlist,200,,Parameterized Thread Group 1-37,text,true,,9895,465,48,48,http://webapp:8080/landingpage,35,0,0
+1779573489268,35,6. POST Aggiungi a Wishlist-0,302,,Parameterized Thread Group 1-37,,true,,145,285,48,48,http://webapp:8080//WishlistServlet,35,0,0
+1779573489303,4,6. POST Aggiungi a Wishlist-1,200,,Parameterized Thread Group 1-37,text,true,,9750,180,48,48,http://webapp:8080/landingpage,4,0,0
+1779573489311,38,6. POST Aggiungi a Wishlist,200,,Parameterized Thread Group 1-32,text,true,,9895,465,48,48,http://webapp:8080/landingpage,33,0,0
+1779573489311,33,6. POST Aggiungi a Wishlist-0,302,,Parameterized Thread Group 1-32,,true,,145,285,48,48,http://webapp:8080//WishlistServlet,33,0,0
+1779573489344,5,6. POST Aggiungi a Wishlist-1,200,,Parameterized Thread Group 1-32,text,true,,9750,180,48,48,http://webapp:8080/landingpage,4,0,0
+1779573489384,3,7. GET Ricerca Prodotto,200,,Parameterized Thread Group 1-12,text,true,,2958,192,48,48,http://webapp:8080//RicercaServlet?val=test,3,0,0
+1779573489436,4,7. GET Ricerca Prodotto,200,,Parameterized Thread Group 1-16,text,true,,2958,192,48,48,http://webapp:8080//RicercaServlet?val=test,4,0,0
+1779573489457,8,7. GET Ricerca Prodotto,200,,Parameterized Thread Group 1-18,text,true,,2958,192,48,48,http://webapp:8080//RicercaServlet?val=test,8,0,0
+1779573489464,6,7. GET Ricerca Prodotto,200,,Parameterized Thread Group 1-8,text,true,,2958,192,48,48,http://webapp:8080//RicercaServlet?val=test,6,0,0
+1779573489449,53,6. POST Aggiungi a Wishlist,200,,Parameterized Thread Group 1-38,text,true,,9895,465,48,48,http://webapp:8080/landingpage,41,0,0
+1779573489449,41,6. POST Aggiungi a Wishlist-0,302,,Parameterized Thread Group 1-38,,true,,145,285,48,48,http://webapp:8080//WishlistServlet,41,0,0
+1779573489490,12,6. POST Aggiungi a Wishlist-1,200,,Parameterized Thread Group 1-38,text,true,,9750,180,48,48,http://webapp:8080/landingpage,12,0,0
+1779573489532,15,7. GET Ricerca Prodotto,200,,Parameterized Thread Group 1-28,text,true,,2958,192,48,48,http://webapp:8080//RicercaServlet?val=test,15,0,0
+1779573489565,4,7. GET Ricerca Prodotto,200,,Parameterized Thread Group 1-36,text,true,,2958,192,48,48,http://webapp:8080//RicercaServlet?val=test,4,0,0
+1779573489522,57,6. POST Aggiungi a Wishlist,200,,Parameterized Thread Group 1-34,text,true,,9895,465,48,48,http://webapp:8080/landingpage,54,0,0
+1779573489522,54,6. POST Aggiungi a Wishlist-0,302,,Parameterized Thread Group 1-34,,true,,145,285,48,48,http://webapp:8080//WishlistServlet,54,0,0
+1779573489576,3,6. POST Aggiungi a Wishlist-1,200,,Parameterized Thread Group 1-34,text,true,,9750,180,48,48,http://webapp:8080/landingpage,3,0,0
+1779573489548,39,6. POST Aggiungi a Wishlist,200,,Parameterized Thread Group 1-45,text,true,,9895,465,48,48,http://webapp:8080/landingpage,36,0,0
+1779573489548,36,6. POST Aggiungi a Wishlist-0,302,,Parameterized Thread Group 1-45,,true,,145,285,48,48,http://webapp:8080//WishlistServlet,36,0,0
+1779573489584,3,6. POST Aggiungi a Wishlist-1,200,,Parameterized Thread Group 1-45,text,true,,9750,180,48,48,http://webapp:8080/landingpage,3,0,0
+1779573489585,3,7. GET Ricerca Prodotto,200,,Parameterized Thread Group 1-13,text,true,,2958,192,48,48,http://webapp:8080//RicercaServlet?val=test,3,0,0
+1779573489579,39,6. POST Aggiungi a Wishlist,200,,Parameterized Thread Group 1-27,text,true,,9895,465,48,48,http://webapp:8080/landingpage,35,0,0
+1779573489579,35,6. POST Aggiungi a Wishlist-0,302,,Parameterized Thread Group 1-27,,true,,145,285,48,48,http://webapp:8080//WishlistServlet,35,0,0
+1779573489614,4,6. POST Aggiungi a Wishlist-1,200,,Parameterized Thread Group 1-27,text,true,,9750,180,48,48,http://webapp:8080/landingpage,4,0,0
+1779573489617,47,6. POST Aggiungi a Wishlist,200,,Parameterized Thread Group 1-35,text,true,,9895,465,48,48,http://webapp:8080/landingpage,43,0,0
+1779573489617,43,6. POST Aggiungi a Wishlist-0,302,,Parameterized Thread Group 1-35,,true,,145,285,48,48,http://webapp:8080//WishlistServlet,43,0,0
+1779573489660,4,6. POST Aggiungi a Wishlist-1,200,,Parameterized Thread Group 1-35,text,true,,9750,180,48,48,http://webapp:8080/landingpage,4,0,0
+1779573489672,4,7. GET Ricerca Prodotto,200,,Parameterized Thread Group 1-15,text,true,,2958,192,48,48,http://webapp:8080//RicercaServlet?val=test,4,0,0
+1779573489770,16,7. GET Ricerca Prodotto,200,,Parameterized Thread Group 1-5,text,true,,2958,192,48,48,http://webapp:8080//RicercaServlet?val=test,16,0,0
+1779573489857,49,7. GET Ricerca Prodotto,200,,Parameterized Thread Group 1-39,text,true,,2958,192,48,48,http://webapp:8080//RicercaServlet?val=test,49,0,0
+1779573489853,54,7. GET Ricerca Prodotto,200,,Parameterized Thread Group 1-25,text,true,,2958,192,48,48,http://webapp:8080//RicercaServlet?val=test,54,0,0
+1779573489809,100,7. GET Ricerca Prodotto,200,,Parameterized Thread Group 1-30,text,true,,2958,192,48,48,http://webapp:8080//RicercaServlet?val=test,100,0,0
+1779573489845,64,7. GET Ricerca Prodotto,200,,Parameterized Thread Group 1-40,text,true,,2958,192,48,48,http://webapp:8080//RicercaServlet?val=test,64,0,0
+1779573489884,28,7. GET Ricerca Prodotto,200,,Parameterized Thread Group 1-26,text,true,,2958,192,48,48,http://webapp:8080//RicercaServlet?val=test,27,0,0
+1779573489898,16,7. GET Ricerca Prodotto,200,,Parameterized Thread Group 1-31,text,true,,2958,192,48,48,http://webapp:8080//RicercaServlet?val=test,15,0,0
+1779573489919,6,7. GET Ricerca Prodotto,200,,Parameterized Thread Group 1-41,text,true,,2958,192,48,48,http://webapp:8080//RicercaServlet?val=test,6,0,0
+1779573489842,140,6. POST Aggiungi a Wishlist,200,,Parameterized Thread Group 1-47,text,true,,9895,465,48,48,http://webapp:8080/landingpage,132,0,0
+1779573489842,132,6. POST Aggiungi a Wishlist-0,302,,Parameterized Thread Group 1-47,,true,,145,285,48,48,http://webapp:8080//WishlistServlet,132,0,0
+1779573489974,8,6. POST Aggiungi a Wishlist-1,200,,Parameterized Thread Group 1-47,text,true,,9750,180,48,48,http://webapp:8080/landingpage,8,0,0
+1779573490132,10,7. GET Ricerca Prodotto,200,,Parameterized Thread Group 1-29,text,true,,2958,192,48,48,http://webapp:8080//RicercaServlet?val=test,10,0,0
+1779573490287,16,7. GET Ricerca Prodotto,200,,Parameterized Thread Group 1-19,text,true,,2958,192,48,48,http://webapp:8080//RicercaServlet?val=test,16,0,0
+1779573490269,80,6. POST Aggiungi a Wishlist,200,,Parameterized Thread Group 1-42,text,true,,9895,465,48,48,http://webapp:8080/landingpage,65,0,0
+1779573490269,65,6. POST Aggiungi a Wishlist-0,302,,Parameterized Thread Group 1-42,,true,,145,285,48,48,http://webapp:8080//WishlistServlet,65,0,0
+1779573490334,15,6. POST Aggiungi a Wishlist-1,200,,Parameterized Thread Group 1-42,text,true,,9750,180,48,48,http://webapp:8080/landingpage,15,0,0
+1779573490353,9,7. GET Ricerca Prodotto,200,,Parameterized Thread Group 1-33,text,true,,2958,192,48,48,http://webapp:8080//RicercaServlet?val=test,9,0,0
+1779573490408,14,7. GET Ricerca Prodotto,200,,Parameterized Thread Group 1-21,text,true,,2958,192,48,48,http://webapp:8080//RicercaServlet?val=test,14,0,0
+1779573490519,15,7. GET Ricerca Prodotto,200,,Parameterized Thread Group 1-44,text,true,,2958,192,48,48,http://webapp:8080//RicercaServlet?val=test,15,0,0
+1779573490589,20,7. GET Ricerca Prodotto,200,,Parameterized Thread Group 1-32,text,true,,2958,192,48,48,http://webapp:8080//RicercaServlet?val=test,19,0,0
+1779573490509,100,6. POST Aggiungi a Wishlist,200,,Parameterized Thread Group 1-46,text,true,,9895,465,48,48,http://webapp:8080/landingpage,95,0,0
+1779573490509,95,6. POST Aggiungi a Wishlist-0,302,,Parameterized Thread Group 1-46,,true,,145,285,48,48,http://webapp:8080//WishlistServlet,95,0,0
+1779573490604,5,6. POST Aggiungi a Wishlist-1,200,,Parameterized Thread Group 1-46,text,true,,9750,180,48,48,http://webapp:8080/landingpage,5,0,0
+1779573490875,78,7. GET Ricerca Prodotto,200,,Parameterized Thread Group 1-27,text,true,,2958,192,48,48,http://webapp:8080//RicercaServlet?val=test,78,0,0
+1779573490788,215,6. POST Aggiungi a Wishlist,200,,Parameterized Thread Group 1-43,text,true,,9895,465,48,48,http://webapp:8080/landingpage,200,0,0
+1779573490788,200,6. POST Aggiungi a Wishlist-0,302,,Parameterized Thread Group 1-43,,true,,145,285,48,48,http://webapp:8080//WishlistServlet,200,0,0
+1779573490988,15,6. POST Aggiungi a Wishlist-1,200,,Parameterized Thread Group 1-43,text,true,,9750,180,48,48,http://webapp:8080/landingpage,14,0,0
+1779573491036,203,7. GET Ricerca Prodotto,200,,Parameterized Thread Group 1-38,text,true,,2958,192,48,48,http://webapp:8080//RicercaServlet?val=test,203,0,0
+1779573491023,219,6. POST Aggiungi a Wishlist,200,,Parameterized Thread Group 1-48,text,true,,9895,465,48,48,http://webapp:8080/landingpage,213,0,0
+1779573491023,213,6. POST Aggiungi a Wishlist-0,302,,Parameterized Thread Group 1-48,,true,,145,285,48,48,http://webapp:8080//WishlistServlet,213,0,0
+1779573491236,6,6. POST Aggiungi a Wishlist-1,200,,Parameterized Thread Group 1-48,text,true,,9750,180,48,48,http://webapp:8080/landingpage,6,0,0
+1779573491243,4,7. GET Ricerca Prodotto,200,,Parameterized Thread Group 1-37,text,true,,2958,192,48,48,http://webapp:8080//RicercaServlet?val=test,4,0,0
+1779573488960,3613,8. GET Prodotto Cercato,200,,Parameterized Thread Group 1-3,text,true,,33885347,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=5,2163,0,0
+1779573491406,2023,7. GET Ricerca Prodotto,200,,Parameterized Thread Group 1-35,text,true,,2958,192,48,48,http://webapp:8080//RicercaServlet?val=test,2023,0,0
+1779573491536,2368,7. GET Ricerca Prodotto,200,,Parameterized Thread Group 1-34,text,true,,2958,192,48,48,http://webapp:8080//RicercaServlet?val=test,2368,0,0
+1779573491482,2440,7. GET Ricerca Prodotto,200,,Parameterized Thread Group 1-45,text,true,,2958,192,48,48,http://webapp:8080//RicercaServlet?val=test,2440,0,0
+1779573491733,2751,7. GET Ricerca Prodotto,200,,Parameterized Thread Group 1-42,text,true,,2958,192,48,48,http://webapp:8080//RicercaServlet?val=test,2751,0,0
+1779573491800,2719,7. GET Ricerca Prodotto,200,,Parameterized Thread Group 1-47,text,true,,2958,192,48,48,http://webapp:8080//RicercaServlet?val=test,2719,0,0
+1779573489433,5441,8. GET Prodotto Cercato,200,,Parameterized Thread Group 1-23,text,true,,33885347,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=5,3061,0,0
+1779573489676,5871,8. GET Prodotto Cercato,200,,Parameterized Thread Group 1-20,text,true,,33885347,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=5,3753,0,0
+1779573492319,3238,7. GET Ricerca Prodotto,200,,Parameterized Thread Group 1-43,text,true,,2958,192,48,48,http://webapp:8080//RicercaServlet?val=test,3238,0,0
+1779573489787,6068,8. GET Prodotto Cercato,200,,Parameterized Thread Group 1-1,text,true,,33885347,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=5,4121,0,0
+1779573489729,6600,8. GET Prodotto Cercato,200,,Parameterized Thread Group 1-4,text,true,,33885347,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=5,4786,0,0
+1779573489718,6658,8. GET Prodotto Cercato,200,,Parameterized Thread Group 1-22,text,true,,33885347,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=5,4773,0,0
+1779573492565,4295,7. GET Ricerca Prodotto,200,,Parameterized Thread Group 1-48,text,true,,2958,192,48,48,http://webapp:8080//RicercaServlet?val=test,4295,0,0
+1779573492609,4255,7. GET Ricerca Prodotto,200,,Parameterized Thread Group 1-46,text,true,,2958,192,48,48,http://webapp:8080//RicercaServlet?val=test,4255,0,0
+1779573489933,8276,8. GET Prodotto Cercato,200,,Parameterized Thread Group 1-6,text,true,,33885347,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=5,5617,0,0
+1779573490125,8710,8. GET Prodotto Cercato,200,,Parameterized Thread Group 1-9,text,true,,33885347,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=5,6173,0,0
+1779573490068,8945,8. GET Prodotto Cercato,200,,Parameterized Thread Group 1-17,text,true,,33885347,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=5,6789,0,0
+1779573490355,9684,8. GET Prodotto Cercato,200,,Parameterized Thread Group 1-24,text,true,,33885347,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=5,7164,0,0
+1779573490390,10216,8. GET Prodotto Cercato,200,,Parameterized Thread Group 1-7,text,true,,33885347,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=5,7799,0,0
+1779573500815,12037,9. POST Confronta Prodotti,Non HTTP response code: org.apache.http.NoHttpResponseException,Non HTTP response message: webapp:8080 failed to respond,Parameterized Thread Group 1-9,text,false,,2054,0,48,48,http://webapp:8080//ConfrontaServlet,0,0,0
+1779573497369,15484,9. POST Confronta Prodotti,Non HTTP response code: org.apache.http.NoHttpResponseException,Non HTTP response message: webapp:8080 failed to respond,Parameterized Thread Group 1-4,text,false,,2054,0,48,48,http://webapp:8080//ConfrontaServlet,0,0,0
+1779573496211,16642,8. GET Prodotto Cercato,Non HTTP response code: org.apache.http.NoHttpResponseException,Non HTTP response message: webapp:8080 failed to respond,Parameterized Thread Group 1-42,text,false,,2054,0,48,48,http://webapp:8080//ProdottoServlet?prodotto=5,0,0,0
+1779573491761,21104,8. GET Prodotto Cercato,Non HTTP response code: org.apache.http.NoHttpResponseException,Non HTTP response message: webapp:8080 failed to respond,Parameterized Thread Group 1-19,text,false,,2054,0,48,48,http://webapp:8080//ProdottoServlet?prodotto=5,0,0,0
+1779573490814,22425,8. GET Prodotto Cercato,200,,Parameterized Thread Group 1-8,text,true,,22757925,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=5,8075,0,0
+1779573491595,21365,8. GET Prodotto Cercato,Non HTTP response code: org.apache.http.NoHttpResponseException,Non HTTP response message: webapp:8080 failed to respond,Parameterized Thread Group 1-30,text,false,,2054,0,48,48,http://webapp:8080//ProdottoServlet?prodotto=5,0,0,0
+1779573496610,17632,8. GET Prodotto Cercato,200,,Parameterized Thread Group 1-43,text,true,,8085,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=5,17632,0,0
+1779573496691,20480,9. POST Confronta Prodotti,200,,Parameterized Thread Group 1-20,text,true,,8916,293,48,48,http://webapp:8080//ConfrontaServlet,20475,0,0
+1779573490910,26467,8. GET Prodotto Cercato,200,,Parameterized Thread Group 1-12,text,true,,33885347,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=5,7927,0,0
+1779573491164,28561,8. GET Prodotto Cercato,200,,Parameterized Thread Group 1-5,text,true,,33885347,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=5,8875,0,0
+1779573490890,28665,8. GET Prodotto Cercato,200,,Parameterized Thread Group 1-11,text,true,,33885347,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=5,8587,0,0
+1779573497120,20049,9. POST Confronta Prodotti,500,,Parameterized Thread Group 1-1,text,false,,571,293,48,48,http://webapp:8080//ConfrontaServlet,20049,0,0
+1779573500745,16426,9. POST Confronta Prodotti,500,,Parameterized Thread Group 1-17,text,false,,571,293,48,48,http://webapp:8080//ConfrontaServlet,16425,0,0
+1779573490716,29075,8. GET Prodotto Cercato,200,,Parameterized Thread Group 1-14,text,true,,33885347,195,48,48,http://webapp:8080//ProdottoServlet?prodotto=5,8772,0,0
+1779573497858,19311,9. POST Confronta Prodotti,500,,Parameterized Thread Group 1-22,text,false,,571,293,48,48,http://webapp:8080//ConfrontaServlet,19311,0,0
+1779573501422,15707,9. POST Confronta Prodotti,500,,Parameterized Thread Group 1-24,text,false,,571,293,48,48,http://webapp:8080//ConfrontaServlet,15707,0,0
+1779573490976,29001,8. GET Prodotto Cercato,200,,Parameterized Thread Group 1-26,text,true,,33885347,195,44,44,http://webapp:8080//ProdottoServlet?prodotto=5,7996,0,0
+1779573490644,29869,8. GET Prodotto Cercato,200,,Parameterized Thread Group 1-36,text,true,,33885347,195,44,44,http://webapp:8080//ProdottoServlet?prodotto=5,8977,0,0
+1779573490685,30289,8. GET Prodotto Cercato,200,,Parameterized Thread Group 1-28,text,true,,33885347,195,44,44,http://webapp:8080//ProdottoServlet?prodotto=5,9336,0,0
+1779573490803,30180,8. GET Prodotto Cercato,200,,Parameterized Thread Group 1-15,text,true,,33885347,195,44,44,http://webapp:8080//ProdottoServlet?prodotto=5,9241,0,0
+1779573490799,30732,8. GET Prodotto Cercato,200,,Parameterized Thread Group 1-2,text,true,,33885347,195,44,44,http://webapp:8080//ProdottoServlet?prodotto=5,9222,0,0
+1779573491318,32913,8. GET Prodotto Cercato,200,,Parameterized Thread Group 1-29,text,true,,33885347,195,44,44,http://webapp:8080//ProdottoServlet?prodotto=5,22923,0,0
+1779573517124,12136,10. POST Aggiungi a Carrello,500,,Parameterized Thread Group 1-4,text,false,,571,298,44,44,http://webapp:8080//AggiungiCarrelloServlet,12136,0,1719
+1779573517169,12461,9. POST Confronta Prodotti,200,,Parameterized Thread Group 1-8,text,true,,10308,293,44,44,http://webapp:8080//ConfrontaServlet,12461,0,0
+1779573520964,10163,10. POST Aggiungi a Carrello,500,,Parameterized Thread Group 1-24,text,false,,571,298,44,44,http://webapp:8080//AggiungiCarrelloServlet,10162,0,1
+1779573520749,10378,9. POST Confronta Prodotti,500,,Parameterized Thread Group 1-5,text,false,,571,293,44,44,http://webapp:8080//ConfrontaServlet,10377,0,0
+1779573530982,145,11. POST Edit Carrello,400,,Parameterized Thread Group 1-4,text,false,,969,303,44,44,http://webapp:8080//EditCarrello,145,0,1
+1779573521266,10288,10. POST Aggiungi a Carrello,500,,Parameterized Thread Group 1-22,text,false,,571,298,44,44,http://webapp:8080//AggiungiCarrelloServlet,10288,0,2
+1779573521242,10312,9. POST Confronta Prodotti,500,,Parameterized Thread Group 1-14,text,false,,571,293,44,44,http://webapp:8080//ConfrontaServlet,10312,0,0
+1779573521159,10396,10. POST Aggiungi a Carrello,500,,Parameterized Thread Group 1-1,text,false,,571,298,44,44,http://webapp:8080//AggiungiCarrelloServlet,10396,0,1
+1779573522101,10262,9. POST Confronta Prodotti,500,,Parameterized Thread Group 1-36,text,false,,571,293,44,44,http://webapp:8080//ConfrontaServlet,10262,0,0
+1779573521669,10694,10. POST Aggiungi a Carrello,500,,Parameterized Thread Group 1-17,text,false,,571,298,44,44,http://webapp:8080//AggiungiCarrelloServlet,10694,0,1
+1779573521620,10743,9. POST Confronta Prodotti,500,,Parameterized Thread Group 1-11,text,false,,571,293,44,44,http://webapp:8080//ConfrontaServlet,10743,0,0
+1779573522047,10318,9. POST Confronta Prodotti,500,,Parameterized Thread Group 1-15,text,false,,571,293,44,44,http://webapp:8080//ConfrontaServlet,10318,0,0
+1779573521615,11163,9. POST Confronta Prodotti,500,,Parameterized Thread Group 1-26,text,false,,571,293,44,44,http://webapp:8080//ConfrontaServlet,11163,0,0
+1779573532723,55,11. POST Edit Carrello,400,,Parameterized Thread Group 1-22,text,false,,969,303,44,44,http://webapp:8080//EditCarrello,55,0,1
+1779573522911,10269,9. POST Confronta Prodotti,500,,Parameterized Thread Group 1-28,text,false,,571,293,44,44,http://webapp:8080//ConfrontaServlet,10269,0,0
+1779573522732,10448,9. POST Confronta Prodotti,500,,Parameterized Thread Group 1-2,text,false,,571,293,44,44,http://webapp:8080//ConfrontaServlet,10448,0,0
+1779573532852,327,11. POST Edit Carrello,400,,Parameterized Thread Group 1-24,text,false,,969,303,44,44,http://webapp:8080//EditCarrello,327,0,1
+1779573533276,280,11. POST Edit Carrello,400,,Parameterized Thread Group 1-1,text,false,,969,303,44,44,http://webapp:8080//EditCarrello,280,0,1
+1779573533418,136,11. POST Edit Carrello,400,,Parameterized Thread Group 1-17,text,false,,969,303,44,44,http://webapp:8080//EditCarrello,136,0,1
+1779573526022,11218,9. POST Confronta Prodotti,500,,Parameterized Thread Group 1-29,text,false,,571,293,44,44,http://webapp:8080//ConfrontaServlet,11218,0,0
+1779573496101,43257,9. POST Confronta Prodotti,Non HTTP response code: org.apache.http.NoHttpResponseException,Non HTTP response message: webapp:8080 failed to respond,Parameterized Thread Group 1-23,text,false,,2054,0,44,44,http://webapp:8080//ConfrontaServlet,0,0,0
+1779573500176,39183,9. POST Confronta Prodotti,Non HTTP response code: org.apache.http.NoHttpResponseException,Non HTTP response message: webapp:8080 failed to respond,Parameterized Thread Group 1-6,text,false,,2054,0,44,44,http://webapp:8080//ConfrontaServlet,0,0,0
+1779573491840,47519,8. GET Prodotto Cercato,Non HTTP response code: org.apache.http.NoHttpResponseException,Non HTTP response message: webapp:8080 failed to respond,Parameterized Thread Group 1-31,text,false,,2054,0,44,44,http://webapp:8080//ProdottoServlet?prodotto=5,0,0,0
+1779573492438,46921,8. GET Prodotto Cercato,Non HTTP response code: org.apache.http.NoHttpResponseException,Non HTTP response message: webapp:8080 failed to respond,Parameterized Thread Group 1-27,text,false,,2054,0,44,44,http://webapp:8080//ProdottoServlet?prodotto=5,0,0,0
+1779573501983,37377,9. POST Confronta Prodotti,Non HTTP response code: org.apache.http.NoHttpResponseException,Non HTTP response message: webapp:8080 failed to respond,Parameterized Thread Group 1-7,text,false,,2054,0,44,44,http://webapp:8080//ConfrontaServlet,0,0,0
+1779573494968,44391,8. GET Prodotto Cercato,Non HTTP response code: org.apache.http.NoHttpResponseException,Non HTTP response message: webapp:8080 failed to respond,Parameterized Thread Group 1-45,text,false,,2054,0,44,44,http://webapp:8080//ProdottoServlet?prodotto=5,0,0,0
+1779573491684,47675,8. GET Prodotto Cercato,Non HTTP response code: org.apache.http.NoHttpResponseException,Non HTTP response message: webapp:8080 failed to respond,Parameterized Thread Group 1-25,text,false,,2054,0,44,44,http://webapp:8080//ProdottoServlet?prodotto=5,0,0,0
+1779573532692,7924,12. POST Check Out,200,,Parameterized Thread Group 1-4,text,true,,3470,487,44,44,http://webapp:8080/carrello.jsp,87,0,2
+1779573532692,87,12. POST Check Out-0,302,,Parameterized Thread Group 1-4,,true,,146,306,44,44,http://webapp:8080//CheckOutServlet,87,0,2
+1779573532779,7837,12. POST Check Out-1,200,,Parameterized Thread Group 1-4,text,true,,3324,181,44,44,http://webapp:8080/carrello.jsp,7837,0,0
+1779573535325,5289,12. POST Check Out,200,,Parameterized Thread Group 1-17,text,true,,3470,487,44,44,http://webapp:8080/carrello.jsp,815,0,1
+1779573535325,815,12. POST Check Out-0,302,,Parameterized Thread Group 1-17,,true,,146,306,44,44,http://webapp:8080//CheckOutServlet,815,0,1
+1779573536141,4473,12. POST Check Out-1,200,,Parameterized Thread Group 1-17,text,true,,3324,181,44,44,http://webapp:8080/carrello.jsp,4473,0,0
+1779573534125,6837,12. POST Check Out,200,,Parameterized Thread Group 1-22,text,true,,3470,487,44,44,http://webapp:8080/carrello.jsp,570,0,1
+1779573534125,570,12. POST Check Out-0,302,,Parameterized Thread Group 1-22,,true,,146,306,44,44,http://webapp:8080//CheckOutServlet,570,0,1
+1779573534695,6267,12. POST Check Out-1,200,,Parameterized Thread Group 1-22,text,true,,3324,181,44,44,http://webapp:8080/carrello.jsp,6267,0,0
+1779573534294,6667,12. POST Check Out,200,,Parameterized Thread Group 1-24,text,true,,3470,487,44,44,http://webapp:8080/carrello.jsp,401,0,1
+1779573534294,401,12. POST Check Out-0,302,,Parameterized Thread Group 1-24,,true,,146,306,44,44,http://webapp:8080//CheckOutServlet,401,0,1
+1779573534695,6266,12. POST Check Out-1,200,,Parameterized Thread Group 1-24,text,true,,3324,181,44,44,http://webapp:8080/carrello.jsp,6266,0,0
+1779573535223,5739,12. POST Check Out,200,,Parameterized Thread Group 1-1,text,true,,3470,487,44,44,http://webapp:8080/carrello.jsp,918,0,1
+1779573535223,918,12. POST Check Out-0,302,,Parameterized Thread Group 1-1,,true,,146,306,44,44,http://webapp:8080//CheckOutServlet,918,0,1
+1779573536141,4821,12. POST Check Out-1,200,,Parameterized Thread Group 1-1,text,true,,3324,181,44,44,http://webapp:8080/carrello.jsp,4821,0,0
+1779573518512,22472,10. POST Aggiungi a Carrello,200,,Parameterized Thread Group 1-20,text,true,,3999,298,44,44,http://webapp:8080//AggiungiCarrelloServlet,22472,0,0
+1779573491328,50041,8. GET Prodotto Cercato,200,,Parameterized Thread Group 1-41,text,true,,33885347,195,44,44,http://webapp:8080//ProdottoServlet?prodotto=5,34019,0,0
+1779573542362,76,11. POST Edit Carrello,200,,Parameterized Thread Group 1-20,,true,,121,303,44,44,http://webapp:8080//EditCarrello,76,0,5
+1779573494540,48168,9. POST Confronta Prodotti,200,,Parameterized Thread Group 1-3,text,true,,8916,293,44,44,http://webapp:8080//ConfrontaServlet,48168,0,0
+1779573491351,52060,8. GET Prodotto Cercato,200,,Parameterized Thread Group 1-18,text,true,,33885347,195,44,44,http://webapp:8080//ProdottoServlet?prodotto=5,50006,0,0
+1779573491467,51946,8. GET Prodotto Cercato,200,,Parameterized Thread Group 1-40,text,true,,33885347,195,44,44,http://webapp:8080//ProdottoServlet?prodotto=5,49890,0,0
+1779573491636,51869,8. GET Prodotto Cercato,200,,Parameterized Thread Group 1-44,text,true,,33885347,195,44,44,http://webapp:8080//ProdottoServlet?prodotto=5,49721,0,0
+1779573492095,51434,8. GET Prodotto Cercato,200,,Parameterized Thread Group 1-21,text,true,,33885347,195,44,44,http://webapp:8080//ProdottoServlet?prodotto=5,49905,0,0
+1779573497881,45743,8. GET Prodotto Cercato,200,,Parameterized Thread Group 1-46,text,true,,33885347,195,44,44,http://webapp:8080//ProdottoServlet?prodotto=5,44613,0,0
+1779573492599,51081,8. GET Prodotto Cercato,200,,Parameterized Thread Group 1-38,text,true,,33885347,195,44,44,http://webapp:8080//ProdottoServlet?prodotto=5,49305,0,0
+1779573491413,52810,8. GET Prodotto Cercato,200,,Parameterized Thread Group 1-33,text,true,,33885347,195,44,44,http://webapp:8080//ProdottoServlet?prodotto=5,50574,0,0
+1779573498428,45980,8. GET Prodotto Cercato,200,,Parameterized Thread Group 1-48,text,true,,33885347,195,44,44,http://webapp:8080//ProdottoServlet?prodotto=5,43588,0,0
+1779573495709,49122,8. GET Prodotto Cercato,200,,Parameterized Thread Group 1-47,text,true,,33885347,195,44,44,http://webapp:8080//ProdottoServlet?prodotto=5,46773,0,0
+1779573495508,49406,8. GET Prodotto Cercato,200,,Parameterized Thread Group 1-34,text,true,,33885347,195,44,44,http://webapp:8080//ProdottoServlet?prodotto=5,47185,0,0
+1779573494903,50528,8. GET Prodotto Cercato,200,,Parameterized Thread Group 1-35,text,true,,33885347,195,44,44,http://webapp:8080//ProdottoServlet?prodotto=5,47975,0,0
+1779573492270,53229,8. GET Prodotto Cercato,200,,Parameterized Thread Group 1-37,text,true,,33885347,195,44,44,http://webapp:8080//ProdottoServlet?prodotto=5,50608,0,0
+1779573492544,53551,8. GET Prodotto Cercato,200,,Parameterized Thread Group 1-32,text,true,,33885347,195,44,44,http://webapp:8080//ProdottoServlet?prodotto=5,50330,0,0
+1779573542870,10831,9. POST Confronta Prodotti,500,,Parameterized Thread Group 1-41,text,false,,571,293,44,44,http://webapp:8080//ConfrontaServlet,10830,0,2
+1779573542874,11203,13. POST Inserisci Recensione,500,,Parameterized Thread Group 1-22,text,false,,571,366,44,44,http://webapp:8080//RecensioniServlet/aggiungiRecensione,11203,0,0
+1779573540452,14309,9. POST Confronta Prodotti,200,,Parameterized Thread Group 1-25,text,true,,10308,293,44,44,http://webapp:8080//ConfrontaServlet,14309,0,1
+1779573544745,10018,9. POST Confronta Prodotti,500,,Parameterized Thread Group 1-21,text,false,,571,293,44,44,http://webapp:8080//ConfrontaServlet,10018,0,1
+1779573540951,13812,9. POST Confronta Prodotti,200,,Parameterized Thread Group 1-45,text,true,,10308,293,44,44,http://webapp:8080//ConfrontaServlet,13812,0,2
+1779573544415,10348,12. POST Check Out,500,,Parameterized Thread Group 1-20,text,false,,571,306,44,44,http://webapp:8080//CheckOutServlet,10348,0,0
+1779573544768,10686,9. POST Confronta Prodotti,500,,Parameterized Thread Group 1-38,text,false,,571,293,44,44,http://webapp:8080//ConfrontaServlet,10685,0,2
+1779573545017,10437,9. POST Confronta Prodotti,500,,Parameterized Thread Group 1-18,text,false,,571,293,44,44,http://webapp:8080//ConfrontaServlet,10437,0,2
+1779573545233,10221,9. POST Confronta Prodotti,500,,Parameterized Thread Group 1-44,text,false,,571,293,44,44,http://webapp:8080//ConfrontaServlet,10221,0,1
+1779573545126,10328,9. POST Confronta Prodotti,500,,Parameterized Thread Group 1-46,text,false,,571,293,44,44,http://webapp:8080//ConfrontaServlet,10328,0,1
+1779573545559,11010,9. POST Confronta Prodotti,500,,Parameterized Thread Group 1-48,text,false,,571,293,44,44,http://webapp:8080//ConfrontaServlet,11010,0,1
+1779573545868,10701,9. POST Confronta Prodotti,500,,Parameterized Thread Group 1-33,text,false,,571,293,44,44,http://webapp:8080//ConfrontaServlet,10701,0,2
+1779573546280,10290,9. POST Confronta Prodotti,500,,Parameterized Thread Group 1-47,text,false,,571,293,44,44,http://webapp:8080//ConfrontaServlet,10290,0,1
+1779573546513,10057,9. POST Confronta Prodotti,500,,Parameterized Thread Group 1-37,text,false,,571,293,44,44,http://webapp:8080//ConfrontaServlet,10057,0,1
+1779573546548,10022,9. POST Confronta Prodotti,500,,Parameterized Thread Group 1-34,text,false,,571,293,44,44,http://webapp:8080//ConfrontaServlet,10022,0,1
+1779573547740,11363,9. POST Confronta Prodotti,500,,Parameterized Thread Group 1-32,text,false,,571,293,44,44,http://webapp:8080//ConfrontaServlet,11363,0,3
+1779573547073,12030,9. POST Confronta Prodotti,500,,Parameterized Thread Group 1-35,text,false,,571,293,44,44,http://webapp:8080//ConfrontaServlet,12030,0,2
+1779573517125,43877,10. POST Aggiungi a Carrello,Non HTTP response code: org.apache.http.NoHttpResponseException,Non HTTP response message: webapp:8080 failed to respond,Parameterized Thread Group 1-9,text,false,,2054,0,44,44,http://webapp:8080//AggiungiCarrelloServlet,0,0,1391
+1779573555357,5650,14. GET Logout,200,,Parameterized Thread Group 1-22,text,true,,9942,362,44,44,http://webapp:8080/landingpage,1212,0,1
+1779573555357,1212,14. GET Logout-0,302,,Parameterized Thread Group 1-22,,true,,145,182,44,44,http://webapp:8080//logoutServlet,1212,0,1
+1779573556569,4438,14. GET Logout-1,200,,Parameterized Thread Group 1-22,text,true,,9797,180,44,44,http://webapp:8080/landingpage,4438,0,0
+1779573519227,41782,9. POST Confronta Prodotti,Non HTTP response code: org.apache.http.NoHttpResponseException,Non HTTP response message: webapp:8080 failed to respond,Parameterized Thread Group 1-12,text,false,,2054,0,44,44,http://webapp:8080//ConfrontaServlet,0,0,0
+1779573542518,18485,13. POST Inserisci Recensione,Non HTTP response code: org.apache.http.NoHttpResponseException,Non HTTP response message: webapp:8080 failed to respond,Parameterized Thread Group 1-24,text,false,,2054,0,44,44,http://webapp:8080//RecensioniServlet/aggiungiRecensione,0,0,0
+1779573517124,43881,9. POST Confronta Prodotti,Non HTTP response code: org.apache.http.NoHttpResponseException,Non HTTP response message: webapp:8080 failed to respond,Parameterized Thread Group 1-30,text,false,,2054,0,44,44,http://webapp:8080//ConfrontaServlet,0,0,1392
+1779573534352,26651,10. POST Aggiungi a Carrello,Non HTTP response code: org.apache.http.NoHttpResponseException,Non HTTP response message: webapp:8080 failed to respond,Parameterized Thread Group 1-36,text,false,,2054,0,44,44,http://webapp:8080//AggiungiCarrelloServlet,0,0,1
+1779573542505,18496,13. POST Inserisci Recensione,Non HTTP response code: org.apache.http.NoHttpResponseException,Non HTTP response message: webapp:8080 failed to respond,Parameterized Thread Group 1-1,text,false,,2054,0,44,44,http://webapp:8080//RecensioniServlet/aggiungiRecensione,0,0,0
+1779573534639,27165,10. POST Aggiungi a Carrello,200,,Parameterized Thread Group 1-26,text,true,,3999,298,44,44,http://webapp:8080//AggiungiCarrelloServlet,27165,0,1
+1779573534004,27837,10. POST Aggiungi a Carrello,200,,Parameterized Thread Group 1-11,text,true,,3999,298,44,44,http://webapp:8080//AggiungiCarrelloServlet,27837,0,1
+1779573562228,106,11. POST Edit Carrello,400,,Parameterized Thread Group 1-36,text,false,,969,303,44,44,http://webapp:8080//EditCarrello,105,0,2
+1779573534753,27582,10. POST Aggiungi a Carrello,200,,Parameterized Thread Group 1-2,text,true,,3999,298,44,44,http://webapp:8080//AggiungiCarrelloServlet,27582,0,1
+1779573533497,28846,10. POST Aggiungi a Carrello,200,,Parameterized Thread Group 1-14,text,true,,3999,298,44,44,http://webapp:8080//AggiungiCarrelloServlet,28846,0,1
+1779573532895,29545,10. POST Aggiungi a Carrello,200,,Parameterized Thread Group 1-5,text,true,,3999,298,44,44,http://webapp:8080//AggiungiCarrelloServlet,29545,0,1
+1779573531450,30995,10. POST Aggiungi a Carrello,200,,Parameterized Thread Group 1-8,text,true,,3999,298,44,44,http://webapp:8080//AggiungiCarrelloServlet,30995,0,0
+1779573514252,48684,9. POST Confronta Prodotti,200,,Parameterized Thread Group 1-19,text,true,,7428,293,44,44,http://webapp:8080//ConfrontaServlet,48684,0,4262
+1779573562910,25,11. POST Edit Carrello,400,,Parameterized Thread Group 1-9,text,false,,969,303,44,44,http://webapp:8080//EditCarrello,25,0,1
+1779573538879,24127,10. POST Aggiungi a Carrello,200,,Parameterized Thread Group 1-29,text,true,,3999,298,44,44,http://webapp:8080//AggiungiCarrelloServlet,24127,0,1
+1779573563040,462,11. POST Edit Carrello,200,,Parameterized Thread Group 1-26,,true,,121,303,44,44,http://webapp:8080//EditCarrello,462,0,0
+1779573563582,34,11. POST Edit Carrello,200,,Parameterized Thread Group 1-2,,true,,121,303,44,44,http://webapp:8080//EditCarrello,34,0,0
+1779573563596,31,11. POST Edit Carrello,200,,Parameterized Thread Group 1-11,,true,,121,303,44,44,http://webapp:8080//EditCarrello,31,0,0
+1779573564040,93,11. POST Edit Carrello,200,,Parameterized Thread Group 1-14,,true,,121,303,44,44,http://webapp:8080//EditCarrello,93,0,0
+1779573541366,22770,10. POST Aggiungi a Carrello,200,,Parameterized Thread Group 1-6,text,true,,3999,298,44,44,http://webapp:8080//AggiungiCarrelloServlet,22770,0,1
+1779573564022,112,12. POST Check Out,200,,Parameterized Thread Group 1-36,text,true,,3470,487,44,44,http://webapp:8080/carrello.jsp,111,0,1
+1779573564022,111,12. POST Check Out-0,302,,Parameterized Thread Group 1-36,,true,,146,306,44,44,http://webapp:8080//CheckOutServlet,111,0,1
+1779573564133,1,12. POST Check Out-1,200,,Parameterized Thread Group 1-36,text,true,,3324,181,44,44,http://webapp:8080/carrello.jsp,1,0,0
+1779573562248,1890,15. POST Login,200,,Parameterized Thread Group 1-22,text,true,,2084,312,44,44,http://webapp:8080//LoginServlet,1890,0,0
+1779573517124,47029,9. POST Confronta Prodotti,200,,Parameterized Thread Group 1-42,text,true,,7428,293,44,44,http://webapp:8080//ConfrontaServlet,47029,0,1392
+1779573534553,29604,10. POST Aggiungi a Carrello,200,,Parameterized Thread Group 1-28,text,true,,3999,298,44,44,http://webapp:8080//AggiungiCarrelloServlet,29604,0,1
+1779573564155,2,11. POST Edit Carrello,200,,Parameterized Thread Group 1-5,,true,,121,303,44,44,http://webapp:8080//EditCarrello,2,0,0
+1779573564301,312,11. POST Edit Carrello,200,,Parameterized Thread Group 1-8,,true,,121,303,44,44,http://webapp:8080//EditCarrello,312,0,1
+1779573564267,349,11. POST Edit Carrello,200,,Parameterized Thread Group 1-29,,true,,121,303,44,44,http://webapp:8080//EditCarrello,349,0,0
+1779573540540,24117,10. POST Aggiungi a Carrello,200,,Parameterized Thread Group 1-7,text,true,,3999,298,44,44,http://webapp:8080//AggiungiCarrelloServlet,24117,0,2
+1779573562776,1885,14. GET Logout,200,,Parameterized Thread Group 1-24,text,true,,9942,362,44,44,http://webapp:8080/landingpage,100,0,2
+1779573562776,100,14. GET Logout-0,302,,Parameterized Thread Group 1-24,,true,,145,182,44,44,http://webapp:8080//logoutServlet,100,0,2
+1779573562877,1784,14. GET Logout-1,200,,Parameterized Thread Group 1-24,text,true,,9797,180,44,44,http://webapp:8080/landingpage,1784,0,0
+1779573562684,2009,14. GET Logout,200,,Parameterized Thread Group 1-1,text,true,,9942,362,44,44,http://webapp:8080/landingpage,192,0,1
+1779573562684,192,14. GET Logout-0,302,,Parameterized Thread Group 1-1,,true,,145,182,44,44,http://webapp:8080//logoutServlet,192,0,1
+1779573562877,1816,14. GET Logout-1,200,,Parameterized Thread Group 1-1,text,true,,9797,180,44,44,http://webapp:8080/landingpage,1815,0,0
+1779573564724,425,12. POST Check Out,200,,Parameterized Thread Group 1-9,text,true,,3470,487,44,44,http://webapp:8080/carrello.jsp,423,0,1
+1779573564724,423,12. POST Check Out-0,302,,Parameterized Thread Group 1-9,,true,,146,306,44,44,http://webapp:8080//CheckOutServlet,423,0,1
+1779573565147,2,12. POST Check Out-1,200,,Parameterized Thread Group 1-9,text,true,,3324,181,44,44,http://webapp:8080/carrello.jsp,2,0,0
+1779573540502,24669,10. POST Aggiungi a Carrello,200,,Parameterized Thread Group 1-23,text,true,,3999,298,44,44,http://webapp:8080//AggiungiCarrelloServlet,24669,0,1
+1779573565537,17,11. POST Edit Carrello,200,,Parameterized Thread Group 1-6,,true,,121,303,44,44,http://webapp:8080//EditCarrello,17,0,0
+1779573565634,383,11. POST Edit Carrello,200,,Parameterized Thread Group 1-28,,true,,121,303,44,44,http://webapp:8080//EditCarrello,383,0,0
+1779573566484,367,11. POST Edit Carrello,200,,Parameterized Thread Group 1-7,,true,,121,303,44,44,http://webapp:8080//EditCarrello,367,0,0
+1779573567089,153,11. POST Edit Carrello,200,,Parameterized Thread Group 1-23,,true,,121,303,44,44,http://webapp:8080//EditCarrello,153,0,0
+1779573565422,2201,16. GET Landing Page (Dopo Login),200,,Parameterized Thread Group 1-22,text,true,,9722,180,44,44,http://webapp:8080//landingpage,2201,0,0
+1779573543712,32082,10. POST Aggiungi a Carrello,Non HTTP response code: org.apache.http.NoHttpResponseException,Non HTTP response message: webapp:8080 failed to respond,Parameterized Thread Group 1-3,text,false,,2054,0,44,44,http://webapp:8080//AggiungiCarrelloServlet,0,0,2
+1779573542366,33428,13. POST Inserisci Recensione,Non HTTP response code: org.apache.http.NoHttpResponseException,Non HTTP response message: webapp:8080 failed to respond,Parameterized Thread Group 1-17,text,false,,2054,0,44,44,http://webapp:8080//RecensioniServlet/aggiungiRecensione,0,0,0
+1779573562999,12816,10. POST Aggiungi a Carrello,200,,Parameterized Thread Group 1-12,text,true,,3999,298,44,44,http://webapp:8080//AggiungiCarrelloServlet,12816,0,2
+1779573557587,18233,10. POST Aggiungi a Carrello,200,,Parameterized Thread Group 1-48,text,true,,3999,298,44,44,http://webapp:8080//AggiungiCarrelloServlet,18233,0,1
+1779573542094,33708,13. POST Inserisci Recensione,500,,Parameterized Thread Group 1-4,text,false,,571,366,44,44,http://webapp:8080//RecensioniServlet/aggiungiRecensione,33708,0,0
+1779573565215,10583,12. POST Check Out,500,,Parameterized Thread Group 1-2,text,false,,571,306,44,44,http://webapp:8080//CheckOutServlet,10583,0,0
+1779573565360,10435,12. POST Check Out,500,,Parameterized Thread Group 1-26,text,false,,571,306,44,44,http://webapp:8080//CheckOutServlet,10435,0,0
+1779573565301,10493,12. POST Check Out,500,,Parameterized Thread Group 1-5,text,false,,571,306,44,44,http://webapp:8080//CheckOutServlet,10493,0,0
+1779573565560,10245,10. POST Aggiungi a Carrello,500,,Parameterized Thread Group 1-42,text,false,,571,298,44,44,http://webapp:8080//AggiungiCarrelloServlet,10245,0,0
+1779573541102,34706,9. POST Confronta Prodotti,Non HTTP response code: org.apache.http.NoHttpResponseException,Non HTTP response message: webapp:8080 failed to respond,Parameterized Thread Group 1-31,text,false,,2054,0,44,44,http://webapp:8080//ConfrontaServlet,0,0,0
+1779573555958,21122,13. POST Inserisci Recensione,Non HTTP response code: org.apache.http.NoHttpResponseException,Non HTTP response message: webapp:8080 failed to respond,Parameterized Thread Group 1-20,text,false,,2054,0,44,44,http://webapp:8080//RecensioniServlet/aggiungiRecensione,0,0,1
+1779573565927,11163,15. POST Login,200,,Parameterized Thread Group 1-24,text,true,,2084,312,44,44,http://webapp:8080//LoginServlet,11163,0,0
+1779573560387,16706,10. POST Aggiungi a Carrello,200,,Parameterized Thread Group 1-32,text,true,,3999,298,44,44,http://webapp:8080//AggiungiCarrelloServlet,16706,0,2
+1779573566235,10855,15. POST Login,200,,Parameterized Thread Group 1-1,text,true,,2084,312,44,44,http://webapp:8080//LoginServlet,10855,0,0
+1779573576814,277,11. POST Edit Carrello,200,,Parameterized Thread Group 1-12,,true,,121,303,44,44,http://webapp:8080//EditCarrello,277,0,0
+1779573577410,320,11. POST Edit Carrello,200,,Parameterized Thread Group 1-48,,true,,121,303,44,44,http://webapp:8080//EditCarrello,320,0,0
+1779573577318,412,11. POST Edit Carrello,400,,Parameterized Thread Group 1-42,text,false,,969,303,44,44,http://webapp:8080//EditCarrello,412,0,1
+1779573577661,72,11. POST Edit Carrello,400,,Parameterized Thread Group 1-3,text,false,,969,303,44,44,http://webapp:8080//EditCarrello,72,0,2
+1779573564878,12867,12. POST Check Out,200,,Parameterized Thread Group 1-11,text,true,,9895,486,44,44,http://webapp:8080/landingpage,12284,0,0
+1779573564878,12284,12. POST Check Out-0,302,,Parameterized Thread Group 1-11,,true,,145,306,44,44,http://webapp:8080//CheckOutServlet,12284,0,0
+1779573577163,582,12. POST Check Out-1,200,,Parameterized Thread Group 1-11,text,true,,9750,180,44,44,http://webapp:8080/landingpage,571,0,0
+1779573579064,79,11. POST Edit Carrello,200,,Parameterized Thread Group 1-32,,true,,121,303,44,44,http://webapp:8080//EditCarrello,79,0,0
+1779573578740,405,12. POST Check Out,200,,Parameterized Thread Group 1-42,text,true,,3470,487,44,44,http://webapp:8080/carrello.jsp,403,0,1
+1779573578740,403,12. POST Check Out-0,302,,Parameterized Thread Group 1-42,,true,,146,306,44,44,http://webapp:8080//CheckOutServlet,403,0,1
+1779573579144,1,12. POST Check Out-1,200,,Parameterized Thread Group 1-42,text,true,,3324,181,44,44,http://webapp:8080/carrello.jsp,1,0,0
+1779573579511,35,12. POST Check Out,200,,Parameterized Thread Group 1-3,text,true,,3470,487,44,44,http://webapp:8080/carrello.jsp,33,0,1
+1779573579511,33,12. POST Check Out-0,302,,Parameterized Thread Group 1-3,,true,,146,306,44,44,http://webapp:8080//CheckOutServlet,33,0,1
+1779573579544,2,12. POST Check Out-1,200,,Parameterized Thread Group 1-3,text,true,,3324,181,44,44,http://webapp:8080/carrello.jsp,2,0,0
+1779573577427,11787,10. POST Aggiungi a Carrello,500,,Parameterized Thread Group 1-31,text,false,,571,298,44,44,http://webapp:8080//AggiungiCarrelloServlet,11787,0,1
+1779573567160,22053,12. POST Check Out,500,,Parameterized Thread Group 1-6,text,false,,571,306,44,44,http://webapp:8080//CheckOutServlet,22053,0,0
+1779573577728,11486,13. POST Inserisci Recensione,500,,Parameterized Thread Group 1-26,text,false,,571,366,44,44,http://webapp:8080//RecensioniServlet/aggiungiRecensione,11486,0,1
+1779573568899,20315,12. POST Check Out,500,,Parameterized Thread Group 1-23,text,false,,571,306,44,44,http://webapp:8080//CheckOutServlet,20315,0,0
+1779573578356,10858,16. GET Landing Page (Dopo Login),500,,Parameterized Thread Group 1-24,text,false,,571,180,44,44,http://webapp:8080//landingpage,10858,0,0
+1779573578732,10483,12. POST Check Out,500,,Parameterized Thread Group 1-48,text,false,,571,306,44,44,http://webapp:8080//CheckOutServlet,10482,0,0
+1779573566258,23999,12. POST Check Out,200,,Parameterized Thread Group 1-29,text,true,,9895,486,44,44,http://webapp:8080/landingpage,10935,0,0
+1779573566258,10935,12. POST Check Out-0,302,,Parameterized Thread Group 1-29,,true,,145,306,44,44,http://webapp:8080//CheckOutServlet,10935,0,0
+1779573577199,13058,12. POST Check Out-1,200,,Parameterized Thread Group 1-29,text,true,,9750,180,44,44,http://webapp:8080/landingpage,13058,0,0
+1779573567417,22839,12. POST Check Out,Non HTTP response code: org.apache.http.NoHttpResponseException,Non HTTP response message: webapp:8080 failed to respond,Parameterized Thread Group 1-28,text,false,,2054,0,44,44,http://webapp:8080//CheckOutServlet,0,0,0
+1779573577382,12875,14. GET Logout,200,,Parameterized Thread Group 1-17,text,true,,9942,362,44,44,http://webapp:8080/landingpage,348,0,1
+1779573577382,348,14. GET Logout-0,302,,Parameterized Thread Group 1-17,,true,,145,182,44,44,http://webapp:8080//logoutServlet,348,0,1
+1779573578689,11567,14. GET Logout,200,,Parameterized Thread Group 1-20,text,true,,9942,362,44,44,http://webapp:8080/landingpage,19,0,3
+1779573578689,19,14. GET Logout-0,302,,Parameterized Thread Group 1-20,,true,,145,182,44,44,http://webapp:8080//logoutServlet,19,0,3
+1779573578708,11548,14. GET Logout-1,200,,Parameterized Thread Group 1-20,text,true,,9797,180,44,44,http://webapp:8080/landingpage,11548,0,0
+1779573577730,12527,14. GET Logout-1,200,,Parameterized Thread Group 1-17,text,true,,9797,180,44,44,http://webapp:8080/landingpage,12527,0,0
+1779573565189,25068,12. POST Check Out,200,,Parameterized Thread Group 1-14,text,true,,9895,486,44,44,http://webapp:8080/landingpage,12049,0,0
+1779573565189,12049,12. POST Check Out-0,302,,Parameterized Thread Group 1-14,,true,,145,306,44,44,http://webapp:8080//CheckOutServlet,12049,0,0
+1779573577239,13018,12. POST Check Out-1,200,,Parameterized Thread Group 1-14,text,true,,9750,180,44,44,http://webapp:8080/landingpage,13018,0,0
+1779573578210,12048,16. GET Landing Page (Dopo Login),200,,Parameterized Thread Group 1-1,text,true,,9722,180,44,44,http://webapp:8080//landingpage,12048,0,0
+1779573556625,33635,10. POST Aggiungi a Carrello,Non HTTP response code: org.apache.http.NoHttpResponseException,Non HTTP response message: webapp:8080 failed to respond,Parameterized Thread Group 1-18,text,false,,2054,0,44,44,http://webapp:8080//AggiungiCarrelloServlet,0,0,1
+1779573566408,23849,13. POST Inserisci Recensione,Non HTTP response code: org.apache.http.NoHttpResponseException,Non HTTP response message: webapp:8080 failed to respond,Parameterized Thread Group 1-9,text,false,,2054,0,44,44,http://webapp:8080//RecensioniServlet/aggiungiRecensione,0,0,0
+1779573577436,12827,14. GET Logout,500,,Parameterized Thread Group 1-4,text,false,,791,362,44,44,http://webapp:8080/landingpage,297,0,0
+1779573577436,297,14. GET Logout-0,302,,Parameterized Thread Group 1-4,,true,,145,182,44,44,http://webapp:8080//logoutServlet,297,0,0
+1779573577733,12530,14. GET Logout-1,500,,Parameterized Thread Group 1-4,text,false,,646,180,44,44,http://webapp:8080/landingpage,12529,0,0
+1779573558250,32022,10. POST Aggiungi a Carrello,Non HTTP response code: org.apache.http.NoHttpResponseException,Non HTTP response message: webapp:8080 failed to respond,Parameterized Thread Group 1-33,text,false,,2054,0,44,44,http://webapp:8080//AggiungiCarrelloServlet,0,0,1
+1779573590228,46,11. POST Edit Carrello,400,,Parameterized Thread Group 1-31,text,false,,969,303,44,44,http://webapp:8080//EditCarrello,46,0,1
+1779573557811,33474,10. POST Aggiungi a Carrello,Non HTTP response code: org.apache.http.NoHttpResponseException,Non HTTP response message: webapp:8080 failed to respond,Parameterized Thread Group 1-37,text,false,,2054,0,44,44,http://webapp:8080//AggiungiCarrelloServlet,0,0,1
+1779573569075,22218,1. POST Registrazione,200,,Parameterized Thread Group 1-22,text,true,,9895,1702,44,44,http://webapp:8080/landingpage,22207,0,0
+1779573569075,22207,1. POST Registrazione-0,302,,Parameterized Thread Group 1-22,,true,,145,1522,44,44,http://webapp:8080//RegistrazioneServlet,22207,0,0
+1779573591283,10,1. POST Registrazione-1,200,,Parameterized Thread Group 1-22,text,true,,9750,180,44,44,http://webapp:8080/landingpage,9,0,0
+1779573590550,745,14. GET Logout,200,,Parameterized Thread Group 1-26,text,true,,9942,362,44,44,http://webapp:8080/landingpage,740,0,1
+1779573590550,740,14. GET Logout-0,302,,Parameterized Thread Group 1-26,,true,,145,182,44,44,http://webapp:8080//logoutServlet,740,0,1
+1779573591290,5,14. GET Logout-1,200,,Parameterized Thread Group 1-26,text,true,,9797,180,44,44,http://webapp:8080/landingpage,4,0,0
+1779573591366,435,11. POST Edit Carrello,400,,Parameterized Thread Group 1-33,text,false,,969,303,44,44,http://webapp:8080//EditCarrello,435,0,1
+1779573591769,32,11. POST Edit Carrello,400,,Parameterized Thread Group 1-18,text,false,,969,303,44,44,http://webapp:8080//EditCarrello,32,0,2
+1779573591571,234,12. POST Check Out,200,,Parameterized Thread Group 1-31,text,true,,3470,487,44,44,http://webapp:8080/carrello.jsp,229,0,1
+1779573591571,229,12. POST Check Out-0,302,,Parameterized Thread Group 1-31,,true,,146,306,44,44,http://webapp:8080//CheckOutServlet,229,0,1
+1779573591802,3,12. POST Check Out-1,200,,Parameterized Thread Group 1-31,text,true,,3324,181,44,44,http://webapp:8080/carrello.jsp,3,0,0
+1779573592514,180,11. POST Edit Carrello,400,,Parameterized Thread Group 1-37,text,false,,969,303,44,44,http://webapp:8080//EditCarrello,180,0,1
+1779573593333,114,12. POST Check Out,200,,Parameterized Thread Group 1-33,text,true,,3470,487,44,44,http://webapp:8080/carrello.jsp,114,0,1
+1779573593333,114,12. POST Check Out-0,302,,Parameterized Thread Group 1-33,,true,,146,306,44,44,http://webapp:8080//CheckOutServlet,114,0,1
+1779573593444,2,12. POST Check Out-1,200,,Parameterized Thread Group 1-33,text,true,,3324,181,44,44,http://webapp:8080/carrello.jsp,2,0,0
+1779573593082,816,12. POST Check Out,200,,Parameterized Thread Group 1-18,text,true,,3470,487,44,44,http://webapp:8080/carrello.jsp,365,0,1
+1779573593082,365,12. POST Check Out-0,302,,Parameterized Thread Group 1-18,,true,,146,306,44,44,http://webapp:8080//CheckOutServlet,365,0,1
+1779573593444,454,12. POST Check Out-1,200,,Parameterized Thread Group 1-18,text,true,,3324,181,44,44,http://webapp:8080/carrello.jsp,454,0,0
+1779573593904,753,12. POST Check Out,200,,Parameterized Thread Group 1-37,text,true,,3470,487,44,44,http://webapp:8080/carrello.jsp,373,0,2
+1779573593904,373,12. POST Check Out-0,302,,Parameterized Thread Group 1-37,,true,,146,306,44,44,http://webapp:8080//CheckOutServlet,373,0,2
+1779573594277,380,12. POST Check Out-1,200,,Parameterized Thread Group 1-37,text,true,,3324,181,44,44,http://webapp:8080/carrello.jsp,380,0,0
+1779573556284,45891,10. POST Aggiungi a Carrello,Non HTTP response code: org.apache.http.NoHttpResponseException,Non HTTP response message: webapp:8080 failed to respond,Parameterized Thread Group 1-45,text,false,,2054,0,44,44,http://webapp:8080//AggiungiCarrelloServlet,0,0,0
+1779573591783,10391,15. POST Login,500,,Parameterized Thread Group 1-4,text,false,,571,312,44,44,http://webapp:8080//LoginServlet,10391,0,2
+1779573591798,10378,13. POST Inserisci Recensione,500,,Parameterized Thread Group 1-28,text,false,,571,366,42,42,http://webapp:8080//RecensioniServlet/aggiungiRecensione,10378,0,0
+1779573593063,9113,2. GET Landing Page,200,,Parameterized Thread Group 1-22,text,true,,9750,180,42,42,http://webapp:8080//landingpage,9113,0,0
+1779573578207,23970,12. POST Check Out,200,,Parameterized Thread Group 1-12,text,true,,9895,486,42,42,http://webapp:8080/landingpage,13107,0,0
+1779573578207,13107,12. POST Check Out-0,302,,Parameterized Thread Group 1-12,,true,,145,306,42,42,http://webapp:8080//CheckOutServlet,13107,0,0
+1779573591314,10863,12. POST Check Out-1,200,,Parameterized Thread Group 1-12,text,true,,9750,180,42,42,http://webapp:8080/landingpage,10863,0,0
+1779573591842,10336,15. POST Login,500,,Parameterized Thread Group 1-17,text,false,,571,312,39,39,http://webapp:8080//LoginServlet,10335,0,0
+1779573591649,10532,14. GET Logout,500,,Parameterized Thread Group 1-9,text,false,,791,362,38,38,http://webapp:8080/landingpage,152,0,1
+1779573591649,152,14. GET Logout-0,302,,Parameterized Thread Group 1-9,,true,,145,182,38,38,http://webapp:8080//logoutServlet,152,0,1
+1779573591801,10380,14. GET Logout-1,500,,Parameterized Thread Group 1-9,text,false,,646,180,38,38,http://webapp:8080/landingpage,10380,0,0
+1779573581047,21134,12. POST Check Out,500,,Parameterized Thread Group 1-32,text,false,,716,486,38,38,http://webapp:8080/landingpage,10753,0,0
+1779573581047,10753,12. POST Check Out-0,302,,Parameterized Thread Group 1-32,,true,,145,306,38,38,http://webapp:8080//CheckOutServlet,10753,0,0
+1779573591801,10380,12. POST Check Out-1,500,,Parameterized Thread Group 1-32,text,false,,571,180,38,38,http://webapp:8080/landingpage,10378,0,0
+1779573591771,10414,13. POST Inserisci Recensione,500,,Parameterized Thread Group 1-29,text,false,,571,366,37,37,http://webapp:8080//RecensioniServlet/aggiungiRecensione,10414,0,0
+1779573556452,45735,10. POST Aggiungi a Carrello,Non HTTP response code: org.apache.http.NoHttpResponseException,Non HTTP response message: webapp:8080 failed to respond,Parameterized Thread Group 1-25,text,false,,2054,0,37,37,http://webapp:8080//AggiungiCarrelloServlet,0,0,0
+1779573560758,41429,10. POST Aggiungi a Carrello,Non HTTP response code: org.apache.http.NoHttpResponseException,Non HTTP response message: webapp:8080 failed to respond,Parameterized Thread Group 1-35,text,false,,2054,0,37,37,http://webapp:8080//AggiungiCarrelloServlet,0,0,2
+1779573580980,21204,13. POST Inserisci Recensione,Non HTTP response code: org.apache.http.NoHttpResponseException,Non HTTP response message: webapp:8080 failed to respond,Parameterized Thread Group 1-42,text,false,,2054,0,37,37,http://webapp:8080//RecensioniServlet/aggiungiRecensione,0,0,0
+1779573556346,46840,10. POST Aggiungi a Carrello,Non HTTP response code: org.apache.http.NoHttpResponseException,Non HTTP response message: webapp:8080 failed to respond,Parameterized Thread Group 1-21,text,false,,2054,0,32,32,http://webapp:8080//AggiungiCarrelloServlet,0,0,1
+1779573558512,44675,10. POST Aggiungi a Carrello,Non HTTP response code: org.apache.http.NoHttpResponseException,Non HTTP response message: webapp:8080 failed to respond,Parameterized Thread Group 1-34,text,false,,2054,0,32,32,http://webapp:8080//AggiungiCarrelloServlet,0,0,1
+1779573557121,46067,10. POST Aggiungi a Carrello,Non HTTP response code: org.apache.http.NoHttpResponseException,Non HTTP response message: webapp:8080 failed to respond,Parameterized Thread Group 1-46,text,false,,2054,0,31,31,http://webapp:8080//AggiungiCarrelloServlet,0,0,1
+1779573591740,11449,13. POST Inserisci Recensione,500,,Parameterized Thread Group 1-14,text,false,,571,366,29,29,http://webapp:8080//RecensioniServlet/aggiungiRecensione,11449,0,0
+1779573591764,11425,15. POST Login,500,,Parameterized Thread Group 1-20,text,false,,571,312,29,29,http://webapp:8080//LoginServlet,11425,0,0
+1779573592621,10570,15. POST Login,200,,Parameterized Thread Group 1-26,text,true,,2084,312,27,27,http://webapp:8080//LoginServlet,10570,0,0
+1779573590901,12354,13. POST Inserisci Recensione,200,,Parameterized Thread Group 1-48,,true,,121,366,26,26,http://webapp:8080//RecensioniServlet/aggiungiRecensione,12354,0,1
+1779573577426,25833,13. POST Inserisci Recensione,200,,Parameterized Thread Group 1-5,,true,,121,366,25,25,http://webapp:8080//RecensioniServlet/aggiungiRecensione,25833,0,1
+1779573590841,12445,13. POST Inserisci Recensione,200,,Parameterized Thread Group 1-6,,true,,121,366,24,24,http://webapp:8080//RecensioniServlet/aggiungiRecensione,12445,0,1
+1779573590681,12662,1. POST Registrazione,200,,Parameterized Thread Group 1-24,text,true,,9895,1726,23,23,http://webapp:8080/landingpage,12622,0,3
+1779573590681,12622,1. POST Registrazione-0,302,,Parameterized Thread Group 1-24,,true,,145,1546,23,23,http://webapp:8080//RegistrazioneServlet,12622,0,3
+1779573603301,42,1. POST Registrazione-1,200,,Parameterized Thread Group 1-24,text,true,,9750,180,23,23,http://webapp:8080/landingpage,42,0,0
+1779573592252,11130,1. POST Registrazione,200,,Parameterized Thread Group 1-1,text,true,,9895,1710,22,22,http://webapp:8080/landingpage,11129,0,0
+1779573592252,11129,1. POST Registrazione-0,302,,Parameterized Thread Group 1-1,,true,,145,1530,22,22,http://webapp:8080//RegistrazioneServlet,11129,0,0
+1779573603379,3,1. POST Registrazione-1,200,,Parameterized Thread Group 1-1,text,true,,9750,180,22,22,http://webapp:8080/landingpage,3,0,0
+1779573541353,62278,9. POST Confronta Prodotti,200,,Parameterized Thread Group 1-27,text,true,,8916,293,21,21,http://webapp:8080//ConfrontaServlet,62278,0,1
+1779573595874,20583,13. POST Inserisci Recensione,Non HTTP response code: org.apache.http.NoHttpResponseException,Non HTTP response message: webapp:8080 failed to respond,Parameterized Thread Group 1-18,text,false,,2054,0,20,20,http://webapp:8080//RecensioniServlet/aggiungiRecensione,0,0,0
+1779573557963,58499,10. POST Aggiungi a Carrello,Non HTTP response code: org.apache.http.NoHttpResponseException,Non HTTP response message: webapp:8080 failed to respond,Parameterized Thread Group 1-47,text,false,,2054,0,20,20,http://webapp:8080//AggiungiCarrelloServlet,0,0,1
+1779573555465,60997,10. POST Aggiungi a Carrello,Non HTTP response code: org.apache.http.NoHttpResponseException,Non HTTP response message: webapp:8080 failed to respond,Parameterized Thread Group 1-41,text,false,,2054,0,20,20,http://webapp:8080//AggiungiCarrelloServlet,0,0,1
+1779573544420,72042,9. POST Confronta Prodotti,Non HTTP response code: org.apache.http.NoHttpResponseException,Non HTTP response message: webapp:8080 failed to respond,Parameterized Thread Group 1-40,text,false,,2054,0,20,20,http://webapp:8080//ConfrontaServlet,0,0,1
+1779573565172,51288,13. POST Inserisci Recensione,Non HTTP response code: org.apache.http.NoHttpResponseException,Non HTTP response message: webapp:8080 failed to respond,Parameterized Thread Group 1-36,text,false,,2054,0,20,20,http://webapp:8080//RecensioniServlet/aggiungiRecensione,0,0,0
+1779573556841,60678,10. POST Aggiungi a Carrello,Non HTTP response code: org.apache.http.NoHttpResponseException,Non HTTP response message: webapp:8080 failed to respond,Parameterized Thread Group 1-38,text,false,,2054,0,15,15,http://webapp:8080//AggiungiCarrelloServlet,0,0,1
+1779573562089,55430,10. POST Aggiungi a Carrello,Non HTTP response code: org.apache.http.NoHttpResponseException,Non HTTP response message: webapp:8080 failed to respond,Parameterized Thread Group 1-30,text,false,,2054,0,15,15,http://webapp:8080//AggiungiCarrelloServlet,0,0,2
+1779573557403,60254,10. POST Aggiungi a Carrello,200,,Parameterized Thread Group 1-44,text,true,,3999,298,13,13,http://webapp:8080//AggiungiCarrelloServlet,60254,0,1
+1779573564455,53255,10. POST Aggiungi a Carrello,200,,Parameterized Thread Group 1-19,text,true,,3999,298,12,12,http://webapp:8080//AggiungiCarrelloServlet,53255,0,0
+1779573577017,40801,13. POST Inserisci Recensione,200,,Parameterized Thread Group 1-2,,true,,121,366,11,11,http://webapp:8080//RecensioniServlet/aggiungiRecensione,40801,0,1
+1779573581461,36445,13. POST Inserisci Recensione,200,,Parameterized Thread Group 1-3,,true,,121,366,10,10,http://webapp:8080//RecensioniServlet/aggiungiRecensione,36445,0,0
+1779573590656,27291,13. POST Inserisci Recensione,200,,Parameterized Thread Group 1-23,,true,,121,366,9,9,http://webapp:8080//RecensioniServlet/aggiungiRecensione,27291,0,2
+1779573579391,38567,13. POST Inserisci Recensione,200,,Parameterized Thread Group 1-11,,true,,121,366,8,8,http://webapp:8080//RecensioniServlet/aggiungiRecensione,38567,0,0
+1779573596344,21682,13. POST Inserisci Recensione,200,,Parameterized Thread Group 1-37,,true,,121,366,7,7,http://webapp:8080//RecensioniServlet/aggiungiRecensione,21682,0,0
+1779573595236,22806,13. POST Inserisci Recensione,200,,Parameterized Thread Group 1-33,,true,,121,366,6,6,http://webapp:8080//RecensioniServlet/aggiungiRecensione,22806,0,0
+1779573517168,300102,9. POST Confronta Prodotti,Non HTTP response code: java.net.SocketTimeoutException,Non HTTP response message: Read timed out,Parameterized Thread Group 1-43,text,false,,2570,0,5,5,http://webapp:8080//ConfrontaServlet,0,0,0
+1779573534223,300102,10. POST Aggiungi a Carrello,Non HTTP response code: java.net.SocketTimeoutException,Non HTTP response message: Read timed out,Parameterized Thread Group 1-15,text,false,,2570,0,4,4,http://webapp:8080//AggiungiCarrelloServlet,0,0,1
+1779573566563,300082,12. POST Check Out,Non HTTP response code: java.net.SocketTimeoutException,Non HTTP response message: Read timed out,Parameterized Thread Group 1-8,text,false,,2570,0,3,3,http://webapp:8080//CheckOutServlet,0,0,0
+1779573568492,300060,12. POST Check Out,Non HTTP response code: java.net.SocketTimeoutException,Non HTTP response message: Read timed out,Parameterized Thread Group 1-7,text,false,,2570,0,2,2,http://webapp:8080//CheckOutServlet,0,0,0
+1779573592937,300102,13. POST Inserisci Recensione,Non HTTP response code: java.net.SocketTimeoutException,Non HTTP response message: Read timed out,Parameterized Thread Group 1-31,text,false,,2570,0,1,1,http://webapp:8080//RecensioniServlet/aggiungiRecensione,0,0,0

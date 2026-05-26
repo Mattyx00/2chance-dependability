@@ -1,0 +1,21 @@
+=== Analisi Energetica per Singolo Servlet ===
+Elaborazione file: C:\Users\aldom\Desktop\Projects\University of Salerno\2chance-dependability\src\jmeter\energibridge_logs\log_soak_energy_2026_05_23_18_45_45.csv
+File JTL correlato: C:\Users\aldom\Desktop\Projects\University of Salerno\2chance-dependability\src\jmeter\jmeter_logs\log_soak_2026_05_23_18_45_45.jtl
+===========================================================================================================================================================
+Servlet                      | Requests | Avg Resp Time (ms) | CPU Energy (J) | Avg Power (W) | Core Energy (J) | Avg CPU (%)  | Peak CPU (%) | Avg RAM (GB) | Peak RAM (GB)
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+ProdottoServlet              | 12427    | 391.49             | 39849.44       | 8.50          | 1410.60         | 41.82        | 100.00       | 26.37        | 27.53       
+ConfrontaServlet             | 4137     | 900.64             | 25258.73       | 7.40          | 745.66          | 43.55        | 100.00       | 26.36        | 27.54       
+RecensioniServlet            | 4134     | 907.42             | 25210.45       | 7.32          | 841.16          | 43.27        | 100.00       | 26.40        | 27.53       
+AggiungiCarrelloServlet      | 4136     | 886.23             | 24879.05       | 7.40          | 873.30          | 43.41        | 100.00       | 26.38        | 27.55       
+RegistrazioneServlet         | 12438    | 72.45              | 12183.41       | 10.22         | 505.79          | 39.17        | 100.00       | 26.37        | 27.53       
+CheckOutServlet              | 12405    | 30.58              | 9701.52        | 10.15         | 517.03          | 38.81        | 99.79        | 26.40        | 27.52       
+WishlistServlet              | 12426    | 22.28              | 9370.43        | 10.25         | 381.58          | 38.89        | 99.83        | 26.35        | 27.53       
+logoutServlet                | 12396    | 3.13               | 8289.46        | 10.26         | 372.32          | 38.16        | 99.88        | 26.41        | 27.52       
+landingpage                  | 8276     | 3.80               | 8020.15        | 5.27          | 423.24          | 37.76        | 100.00       | 26.39        | 27.54       
+LoginServlet                 | 4131     | 29.99              | 4600.05        | 5.15          | 205.41          | 38.48        | 100.00       | 26.41        | 27.54       
+ProdottiPerCategoriaServlet  | 4146     | 3.79               | 4056.03        | 5.01          | 218.67          | 38.17        | 98.90        | 26.35        | 27.53       
+UtenteServlet                | 4146     | 3.97               | 4030.79        | 5.01          | 212.55          | 38.01        | 99.88        | 26.36        | 27.53       
+EditCarrello                 | 4136     | 2.50               | 4027.76        | 5.06          | 251.97          | 37.93        | 99.79        | 26.39        | 27.53       
+===========================================================================================================================================================
+Analisi di unita completata con successo.
