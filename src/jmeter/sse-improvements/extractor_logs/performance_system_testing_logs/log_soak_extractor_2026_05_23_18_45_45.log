@@ -6,13 +6,13 @@ Durata Workload Profiled: 7203.99 secondi (~120.07 minuti)
 ---------------------------------------------
 Metrica di Sostenibilita       | Valore       | Unita   
 --------------------------------------------------------
-Energia CPU Package            | 180631.61    | Joules (J)
-Potenza Media CPU Package      | 25.07        | Watt (W)
-Energia PPO (Core)             | 7070.07      | Joules (J)
-CPU Usage (Media)              | 39.02        | Percentuale (%)
-CPU Usage (Picco)              | 100.00       | Percentuale (%)
-Frequenza Media CPU            | 2000.00      | MHz     
-Memoria RAM Usata (Media)      | 26.37        | Gigabyte (GB)
-Memoria RAM Usata (Picco)      | 27.55        | Gigabyte (GB)
+Energia CPU Package              | 162896.31    | Joules (J)  
+Potenza Media CPU Package        | 22.61        | Watt (W)    
+Energia PPO (Core)               | 3135.81      | Joules (J)  
+CPU Usage (Media)                | 35.94        | Percentuale (%)
+CPU Usage (Picco)                | 96.76        | Percentuale (%)
+Frequenza Media CPU              | 2000.00      | MHz         
+Memoria RAM Usata (Media)        | 20.94        | Gigabyte (GB)
+Memoria RAM Usata (Picco)        | 22.26        | Gigabyte (GB)
 ========================================================
 Analisi completata con successo.

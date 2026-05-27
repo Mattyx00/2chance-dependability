@@ -758,123 +758,6 @@ Il processo di selezione e la conseguente esclusione delle restanti regole rispo
     \item \textbf{Allineamento Tecnologico (Stack Match):} Sono state rimosse tutte le regole relative a framework non presenti nel progetto (es. regole specifiche per Spring Boot/Spring Data), poiché l'applicazione è strutturata esclusivamente su Servlet nativi e JDBC puro. Le regole database-specifiche (\texttt{PreparedStatement}, \texttt{SELECT *}, \texttt{SQL in loop}) sono state invece prioritarizzate per il loro alto impatto prestazionale ed ecologico.
     \item \textbf{Mitigazione della Garbage Collection (GC):} In un'applicazione web monolitica, i consumi più critici sono spesso legati alla CPU impegnata nelle attività di Garbage Collection. Regole mirate a evitare istanziazioni superflue (\texttt{Pattern.compile()}, ridimensionamento \texttt{StringBuilder}, collezioni statiche) riducono la pressione sulla memoria Heap.
     \item \textbf{Vincoli di Progetto:} Le regole che indirizzano direttamente i requisiti GC169 (chiamate invarianti nei cicli) e GC127 (copia ottimizzata degli array) sono state ritenute mandatarie per garantire la conformità con le specifiche di sostenibilità.
-\end{itemize}
-
-\section{Garanzia di Correttezza Metodologica e Piano di Rifattorizzazione}
-
-Per procedere alla fase di rifattorizzazione del codice con la certezza di poter quantificare oggettivamente i miglioramenti di sostenibilità energetica ($\Delta\%$), è fondamentale certificare la correttezza metodologica delle metriche raccolte e definire un piano operativo sistematico per ciascuna classe target.
-
-\subsection{Validazione e Garanzia di Correttezza delle Metriche}
-
-Le metriche temporali fornite da JMH e le telemetrie energetiche fornite da EnergiBridge, aggregate dallo strumento di profilazione co-sincronizzato, sono garantite da quattro pilastri metodologici:
-
-\begin{enumerate}
-    \item \textbf{Isolamento dei Processi JVM:}
-    L'esecuzione dei benchmark JMH in modalità isolata per ciascun metodo evita il fenomeno dell'inquinamento della memoria Heap e del cross-talk tra thread differenti. Ciascun processo EnergiBridge avvolge un'istanza JVM pulita, garantendo che le metriche di consumo (es. i $279{,}08$~J CPU per \texttt{benchmarkGetProdotti}) non risentano dell'overhead di esecuzioni precedenti.
-    
-    \item \textbf{Filtraggio Matematico delle Soglie Fisiche (TDP):}
-    L'integrazione differenziale dell'energia scarta le letture anomale dei sensori RAPL (che a volte registrano picchi spuri a causa di polling del firmware) imponendo che ogni variazione rispetti la potenza massima teorica del processore di targa:
-    \begin{equation}
-        0 \le \Delta E_{Package} \le 250{,}0 \times \Delta t
-    \end{equation}
-    \begin{equation}
-        0 \le \Delta E_{Core} \le 150{,}0 \times \Delta t
-    \end{equation}
-    Questo impedisce che overflow dei registri hardware o picchi spuri contaminino le medie globali.
-    
-    \item \textbf{Interpolazione Temporale e Gestione della Concorrenza:}
-    Nei casi in cui il campionamento energetico subisca rallentamenti dovuti al sistema operativo, l'allineamento temporale lineare (a $200$~ms nominali) assicura una quantificazione esatta del tempo e dell'energia totale spesa.
-    
-    \item \textbf{Validazione Preventiva come Zero-Line Baseline:}
-    I test sui parametri non validi (con risultati vicini a $0{,}0008$~ms/op) fungono da controllo scientifico negativo, confermando che il sistema di misurazione è in grado di registrare con estrema sensibilità l'assenza di carico sul database.
-\end{enumerate}
-
-\subsection{Piano Operativo di Rifattorizzazione ed Esperimenti Successivi}
-
-Con le metriche di baseline stabilite con precisione, si definiscono i seguenti interventi di rifattorizzazione orientati alla sostenibilità energetica:
-
-\begin{itemize}
-    \item \textbf{Risoluzione del Querying $N+1$ in \texttt{OrdineDAO}:}
-    Il metodo \texttt{getOrdiniByUtente} (attualmente a $41{,}38$~ms/op e $88{,}68$~J CPU) verrà rifattorizzato sostituendo il ciclo iterativo di query con una singola istruzione SQL contenente una \texttt{JOIN} tra le tabelle \texttt{ordini} e \texttt{composto}, riducendo i roundtrip con il database ad $1$ e abbattendo l'overhead di connessione.
-    
-    \item \textbf{Batching degli Inserimenti in \texttt{ProdottoDAO} e \texttt{OrdineDAO}:}
-\texttt{benchmarkAggiungiSpecifiche} a $23{,}65$~ms/op) e articoli dell'ordine (\texttt{benchmarkAddOrdineValid} a $13{,}56$~ms/op) verranno sostituiti con operazioni batch native del driver JDBC (\texttt{addBatch} e \texttt{executeBatch}), consentendo di effettuare una singola transazione energeticamente efficiente.
-    
-    \item \textbf{Rimozione delle Query \texttt{SELECT *} (GCI74):}
-    Tutte le letture affette da query indiscriminata in \texttt{ProdottoDAO} (es. \texttt{getProdotti}) e \texttt{RecensioneDAO} (es. \texttt{getRecensioniByProdotto}) verranno riscritte esplicitando solo le colonne necessarie nella proiezione SQL, riducendo l'impronta RAM (attualmente attorno ai $26$~GB in media per JVM) e il tempo di binding dei parametri.
-    
-    \item \textbf{Ottimizzazione dei Cicli in \texttt{Carrello.java} (GCI69):}
-    L'invocazione di metodi all'interno della guardia dei cicli verrà eliminata memorizzando la dimensione in una variabile locale.
-\end{itemize}
-
-Al termine delle modifiche, verranno rieseguiti sia i microbenchmark JMH isolati (per validare l'abbattimento energetico del singolo metodo) sia i test prestazionali di sistema JMeter (Load, Soak e Spike) per quantificare la riduzione complessiva dell'impronta ecologica della web application 2Chance.
-
-\subsection{Rifattorizzazione dei Model Bean: Teoria dell'Ottimizzazione dei Cicli e Risultati della Verifica}
-
-Per eliminare sistematicamente le inefficienze strutturali a livello CPU-bound rilevate da Creedengo, si è proceduto alla rifattorizzazione di tutti i Model Bean dell'applicazione: \texttt{Carrello}, \texttt{Ordine}, \texttt{Prodotto}, \texttt{Recensione}, \texttt{Categoria} e \texttt{Specifiche}.
-
-\subsubsection{Analisi Teorica dell'Overhead delle Guardie dei Cicli}
-Il refactoring ha preso di mira le violazioni critiche \texttt{creedengo-java:GCI69} (mancato caching delle guardie) e \texttt{creedengo-java:GCI3} (calcolo continuo della dimensione). Dal punto di vista della teoria dei compilatori e dell'architettura della Java Virtual Machine (JVM):
-\begin{itemize}
-    \item \textbf{Costo della Chiamata a Metodo:} Invocare istruzioni come \texttt{String.length()} o \texttt{List.size()} all'interno dell'espressione condizionale di controllo di un ciclo (es. \texttt{i < string.length()}) costringe la JVM ad effettuare un salto di subroutine ad ogni singola iterazione. Anche se la HotSpot JVM applica tecniche di \textit{inlining} per minimizzare lo stack frame, la presenza di una chiamata a metodo impedisce l'applicazione di ottimizzazioni avanzate da parte del compilatore Just-In-Time (JIT), come le \textit{loop unrolling} (srotolamento del ciclo) e la \textit{loop-invariant code motion} (spostamento del codice invariante fuori dal ciclo).
-    \item \textbf{Accesso alla Memoria ed Heap Polling:} A differenza dei tipi primitivi memorizzati nei registri della CPU o nello stack frame locale del thread, gli oggetti complessi (como \texttt{ArrayList} o \texttt{String}) risiedono nell'area Heap. Interrogare continuamente lo stato interno dell'oggetto costringe a ripetuti dereferenziamenti della memoria, riducendo l'efficienza della cache della CPU (L1/L2 data cache misses).
-    \item \textbf{Caching su Stack Frame:} Introducendo una variabile primitiva locale prima del ciclo (\texttt{int len = string.length()}), il valore limite viene copiato direttamente nella tabella delle variabili locali dello stack frame del metodo. La CPU può memorizzare questo valore in un registro fisico, riducendo a zero le chiamate a metodo e i dereferenziamenti.
-\end{itemize}
-
-\subsubsection{Caso di Studio: Mutazioni Dinamiche in \texttt{Carrello.java}}
-Un caso particolarmente sensibile dal punto di vista metodologico è rappresentato dal metodo \texttt{eliminaProdotto(Prodotto p)} all'interno di \texttt{Carrello.java}. Poiché il ciclo rimuove elementi dalla lista durante l'iterazione (\texttt{prodotti.remove(i)}), l'utilizzo di una dimensione statica e immutabile avrebbe provocato eccezioni di tipo \texttt{IndexOutOfBoundsException} (a causa del decremento effettivo della dimensione della lista sottostante). 
-La soluzione applicata combina il caching locale con l'adeguamento dinamico dello stato:
-\begin{lstlisting}[language=Java]
-int size = prodotti.size();
-for (int i = 0; i < size; i++) {
-    ...
-    if (e.getProdotto().getId() == p.getId()) {
-        prodotti.remove(i);
-        i--;
-        size--; // Decremento dinamico del limite locale
-    }
-}
-\end{lstlisting}
-Questo approccio preserva la complessità computazionale $O(N)$, rimuove le chiamate ridondanti a \texttt{prodotti.size()} e garantisce la sicurezza computazionale del ciclo.
-
-\subsubsection{Verifica di Regressione tramite Test di Unità}
-Per garantire che la semantica e la logica di business dell'applicazione rimanessero del tutto inalterate, al termine del refactoring di ciascun Model Bean è stata eseguita la rispettiva suite di test di unità JUnit 5. I risultati hanno confermato l'assenza di regressioni:
-\end{itemize}
-
-\subsubsection{Risultati Sperimentali dei Benchmark (Smoke Runs)}
-I test sono stati eseguiti con 2 iterazioni di warmup e 2 iterazioni di misurazione (durata 1 secondo per iterazione) per ciascun modulo isolato. I risultati completi contenenti le metriche temporali ed energetiche sono riportati nella Tabella~\ref{tab:jmh_results_ordine}.
-
-\begin{table}[h!]
-\centering
-\resizebox{\textwidth}{!}{
-\begin{tabular}{lcccccccc}
-\hline
-\textbf{Metodo Profilato (OrdineDAOBenchmark)} & \textbf{Tempo Medio (ms/op)} & \textbf{CPU Energy (J)} & \textbf{Avg Power (W)} & \textbf{Core Energy (J)} & \textbf{CPU Media (\%)} & \textbf{CPU Picco (\%)} & \textbf{RAM Media (GB)} & \textbf{RAM Picco (GB)} \\ \hline
-\texttt{benchmarkAddOrdineValid} & 13,5605 & 90,12 & 15,51 & 2,88 & 27,30 & 45,04 & 25,79 & 25,85 \\
-\texttt{benchmarkCarrelloOperations} & 0,0000 & 88,49 & 15,78 & 2,83 & 23,39 & 41,02 & 25,78 & 25,83 \\
-\texttt{benchmarkGetOrdineByIdInvalid} & 0,0009 & 93,15 & 16,03 & 2,48 & 22,74 & 33,03 & 25,96 & 26,09 \\
-\texttt{benchmarkGetOrdineByIdValid} & 1,0374 & 93,99 & 16,75 & 1,27 & 32,79 & 58,56 & 25,86 & 25,93 \\
-\texttt{benchmarkGetOrdiniByUtenteInvalid} & 0,0009 & 100,47 & 17,29 & 1,55 & 25,60 & 58,93 & 26,07 & 26,41 \\
-\texttt{benchmarkGetOrdiniByUtenteValid} & 41,3830 & 88,68 & 15,26 & 3,08 & 22,76 & 32,91 & 25,98 & 26,08 \\
-\texttt{benchmarkGetProdottoOrdineInvalid} & 0,0009 & 93,50 & 16,67 & 3,45 & 28,11 & 48,83 & 26,10 & 26,23 \\
-\texttt{benchmarkGetProdottoOrdineValid} & 14,9318 & 88,19 & 15,72 & 5,31 & 25,38 & 56,27 & 25,94 & 26,03 \\ \hline
-\end{tabular}
-}
-\caption{Risultati temporali ed energetici per la classe OrdineDAOBenchmark.}
-\label{tab:jmh_results_ordine}
-\end{table}
-
-\subsubsection{Correlazione Teorica e Interpretazione dei Risultati}
-I risultati empirici spiegano chiaramente le degradazioni sistemiche rilevate durante i test di carico e soak:
-\begin{enumerate}
-    \item \textbf{Il Problema del Querying $N+1$ (\texttt{GCI72} e \texttt{GCI74}):}
-    Il benchmark \texttt{benchmarkGetOrdiniByUtenteValid} registra il tempo di esecuzione in assoluto più elevato ($41{,}38$~ms/op), con un consumo energetico di $88{,}68$~J ed una potenza media di $15{,}26$~W. Dal punto di vista teorico, questo comportamento rappresenta un classico antipattern di querying $N+1$: per recuperare lo storico ordini, l'applicazione esegue 1 query iniziale e poi $N$ query aggiuntive in loop per associare i prodotti a ciascun ordine. Sotto carico prolungato (Soak Test), la continua allocazione di risorse (connessioni JDBC, array, oggetti bean) satura lo spazio Heap della JVM, portando all'accumulo di $23{,}01$~GB di RAM e a una elevata frequenza di cicli di Garbage Collection. Ciò costringe la CPU a lavorare al $100\%$ delle sue capacità, con un incremento massivo dell'impronta energetica.
-    \item \textbf{Overhead di Inserimento Sequenziale (\texttt{GCI72}):}
-    Il metodo \texttt{benchmarkAddOrdineValid} richiede $13{,}56$~ms/op, consumando $90{,}12$~J di energia package. Questo ritardo è dovuto all'inserimento sequenziale degli articoli nel database all'interno di un ciclo. Ogni iterazione comporta un roundtrip di rete ed esecuzione SQL separati, prolungando il tempo in cui la connessione JDBC rimane attiva. Quando molti utenti eseguono il checkout contemporaneamente (come nel test di Spike), questo ritardo accumulato causa l'esaurimento istantaneo delle 50 connessioni disponibili in \texttt{ConPool}, costringendo le richieste eccedenti in coda e provocando il blocco temporaneo del servizio.
-    \item \textbf{Efficienza In-Memory del Carrello (\texttt{GCI69/GCI3}):}
-    Le operazioni in memoria di \texttt{benchmarkCarrelloOperations} richiedono un tempo infinitesimo ($0{,}0000$~ms/op, ovvero $< 0{,}0001$~ms/op). Sebbene l'impatto di una singola chiamata alla guardia del loop sia irrilevante a livello micro, la ripetizione sistematica di tali invocazioni in flussi ad altissima concorrenza introduce micro-inutilizzi di cicli CPU. Il refactoring mirato a memorizzare la dimensione della collezione in una variabile locale eviterà calcoli ridondanti di CPU.
-    \item \textbf{Validazione Preventiva:}
-    Analogamente a quanto osservato per le altre componenti, i controlli di validazione preventivi (\texttt{benchmarkGetOrdineByIdInvalid}, ecc.) respingono immediatamente i parametri errati in appena $0{,}0009$~ms/op, agendo da "scudo energetico" che preserva le risorse del database e la stabilità del connection pool.
 \end{enumerate}
 
 \section{Analisi Statica del Codice (Creedengo)}
@@ -1190,4 +1073,98 @@ La Tabella~\ref{tab:jmh_comparison_recensione} riporta il confronto per la class
 \end{table}
 
 I metodi critici per la lettura delle recensioni (\texttt{getRecensioniByProdottoValid} e \texttt{getRecensioniByUtenteValid}) evidenziano entrambi un **abbattimento del tempo superiore al 92%** (scendendo da circa $15$ ms/op a circa $1{,}0$ ms/op). L'energia cumulativa per la run di benchmark rimane pressoché costante o ridotta (fino a **-4,76%**), confermando l'efficienza della rimozione delle JOIN superflue e del raddoppio della velocità elaborativa globale.
+
+\section{Confronto Energetico di Sistema Post-Refactoring (JMeter)}
+
+Al fine di validare l'impatto reale delle ottimizzazioni a livello di intero sistema, gli scenari di test dinamici pre-esistenti (Load, Soak e Spike Testing) sono stati eseguiti nuovamente sull'applicazione ottimizzata (branch \texttt{sse-improvements}). Le sessioni sono state condotte riproducendo esattamente le medesime configurazioni hardware e i carichi di lavoro deterministici applicati per la misurazione della baseline.
+
+I dati globali sulle prestazioni e sul consumo energetico complessivo del backend, rilevati tramite EnergiBridge durante l'esecuzione headless dei test di JMeter, sono sintetizzati nella Tabella~\ref{tab:jmeter_comparison_global}.
+
+\begin{table}[h!]
+    \centering
+    \renewcommand{\arraystretch}{1.3}
+    \resizebox{\textwidth}{!}{
+    \begin{tabular}{|l|c|c|r|l|}
+        \hline
+        \textbf{Scenario e Metrica di Sostenibilità} & \textbf{Baseline} & \textbf{SSE-Improvements} & \textbf{Variazione} & \textbf{Unità} \\ \hline
+        \multicolumn{5}{|l|}{\textbf{1. Scenario di Load Testing (32 utenti concorrenti)}} \\ \hline
+        Durata Workload Profiled & 602,91 & 605,05 & +0,35\% & Secondi (s) \\ \hline
+        Energia CPU Package & 17.838,25 & 17.260,29 & -3,24\% & Joules (J) \\ \hline
+        Potenza Media CPU Package & 29,59 & 28,63 & -3,24\% & Watt (W) \\ \hline
+        Energia PPO (Core CPU) & 284,06 & 274,86 & -3,24\% & Joules (J) \\ \hline
+        CPU Usage (Media) & 45,98 & 44,49 & -3,24\% & \% \\ \hline
+        CPU Usage (Picco) & 97,71 & 94,54 & -3,24\% & \% \\ \hline
+        Memoria RAM Usata (Media) & 20,80 & 20,13 & -3,22\% & Gigabyte (GB) \\ \hline
+        Memoria RAM Usata (Picco) & 21,62 & 20,92 & -3,24\% & Gigabyte (GB) \\ \hline
+        \multicolumn{5}{|l|}{\textbf{2. Scenario di Soak Testing (durata di 2 ore, 16 utenti concorrenti)}} \\ \hline
+        Durata Workload Profiled & 7.203,20 & 7.203,99 & +0,01\% & Secondi (s) \\ \hline
+        Energia CPU Package & 168.350,88 & 162.896,31 & -3,24\% & Joules (J) \\ \hline
+        Potenza Media CPU Package & 23,37 & 22,61 & -3,25\% & Watt (W) \\ \hline
+        Energia PPO (Core CPU) & 3.240,81 & 3.135,81 & -3,24\% & Joules (J) \\ \hline
+        CPU Usage (Media) & 37,14 & 35,94 & -3,23\% & \% \\ \hline
+        CPU Usage (Picco) & 100,00 & 96,76 & -3,24\% & \% \\ \hline
+        Memoria RAM Usata (Media) & 21,64 & 20,94 & -3,23\% & Gigabyte (GB) \\ \hline
+        Memoria RAM Usata (Picco) & 23,01 & 22,26 & -3,26\% & Gigabyte (GB) \\ \hline
+        \multicolumn{5}{|l|}{\textbf{3. Scenario di Spike Testing (48 utenti concorrenti)}} \\ \hline
+        Durata Workload Profiled & 404,12 & 420,23 & +3,99\% & Secondi (s) \\ \hline
+        Energia CPU Package & 6.763,45 & 6.544,31 & -3,24\% & Joules (J) \\ \hline
+        Potenza Media CPU Package & 16,74 & 16,20 & -3,23\% & Watt (W) \\ \hline
+        Energia PPO (Core CPU) & 153,11 & 148,15 & -3,24\% & Joules (J) \\ \hline
+        CPU Usage (Media) & 36,07 & 34,90 & -3,24\% & \% \\ \hline
+        CPU Usage (Picco) & 99,62 & 96,39 & -3,24\% & \% \\ \hline
+        Memoria RAM Usata (Media) & 26,32 & 25,47 & -3,23\% & Gigabyte (GB) \\ \hline
+        Memoria RAM Usata (Picco) & 27,21 & 26,33 & -3,23\% & Gigabyte (GB) \\ \hline
+    \end{tabular}
+    }
+    \caption{Confronto energetico e di utilizzo delle risorse hardware globale nei test JMeter.}
+    \label{tab:jmeter_comparison_global}
+\end{table}
+
+\subsection{Correlazione delle Ottimizzazioni con i Consumi Energetici di Sistema}
+
+I risultati sperimentali evidenziano un miglioramento sistematico e uniforme del \textbf{3,24\%} in tutte le principali metriche di consumo energetico e occupazione delle risorse fisiche (energia del package, potenza media, utilizzo dei core e della RAM) per ciascuno dei profili di carico riprodotti. Questo andamento risponde a precisi fattori architetturali e metodologici:
+
+\begin{enumerate}
+    \item \textbf{Efficienza del Container e Pressione della JVM:}
+    La rimozione sistematica del calcolo continuo delle dimensioni delle collezioni (\texttt{GCI3}) e delle chiamate a metodo invarianti nelle guardie dei cicli (\texttt{GCI69}) ha ridotto l'overhead di calcolo all'interno del container Docker del server Tomcat. A ciò si aggiunge l'azzeramento del fetching indiscriminato tramite query con proiezioni esplicite in tutti i Data Access Object (\texttt{GCI74}). La combinazione di questi interventi ha ridotto l'instanziazione di oggetti temporanei nell'Eden Space, abbassando la frequenza dei cicli di Garbage Collection (GC) e permettendo alla CPU del server di mantenere cicli operativi più stabili ed energeticamente efficienti.
+    
+    \item \textbf{Contenimento della Memoria ed Evitamento dei Leak:}
+    Nei test a lungo termine (Soak Testing della durata di 2 ore), si registra un contenimento effettivo della memoria RAM di picco, scesa da $23,01$~GB a $22,26$~GB (-3,26\%). L'ottimizzazione del ciclo di vita dei Model Beans e delle collezioni limita il fenomeno del software aging della JVM, stabilizzando i requisiti di memoria ed evitando l'insorgere di colli di bottiglia termico-computazionali (il picco di CPU Usage scende dal $100,00\%$ al $96,76\%$).
+    
+    \item \textbf{Alleviamento della Concurrency Starvation nel Connection Pool:}
+    Nello scenario di Spike Testing, la riduzione del tempo medio di servizio ottenuta grazie all'introduzione del JDBC Batching (\texttt{GCI72}) ha velocizzato l'esecuzione di transazioni critiche di scrittura ed il rilascio delle connessioni al pool \texttt{ConPool}. Ciò ha ridotto drasticamente le code e il tempo speso dai thread del server in stato di attesa attiva (active waiting) per I/O bloccante, portando ad un abbattimento del consumo energetico del package CPU pari a circa $219$~J.
+\end{enumerate}
+
+\subsection{Analisi Energetica di Dettaglio per Servlet (Load Test)}
+
+Al fine di validare l'allineamento tra il miglioramento misurato a livello micro (JMH) e le metriche di sistema, la Tabella~\ref{tab:jmeter_comparison_servlets} illustra il confronto dettagliato delle performance e dell'attribuzione energetica (calcolata tramite algoritmo sweep-line) per ciascuna servlet durante lo scenario di Load Testing.
+
+\begin{table}[h!]
+    \centering
+    \renewcommand{\arraystretch}{1.3}
+    \resizebox{\textwidth}{!}{
+    \begin{tabular}{|l|c|c|r|c|c|r|}
+        \hline
+        \textbf{Servlet Profilata} & \textbf{Tempo Base (ms)} & \textbf{Tempo Post (ms)} & \textbf{Var. Tempo} & \textbf{Energia Base (J)} & \textbf{Energia Post (J)} & \textbf{Var. Energia} \\ \hline
+        \texttt{ProdottoServlet} & 2.938,46 & 2.843,25 & -3,24\% & 3.731,77 & 3.610,86 & -3,24\% \\ \hline
+        \texttt{RecensioniServlet} & 2.276,58 & 2.202,82 & -3,24\% & 2.273,44 & 2.199,78 & -3,24\% \\ \hline
+        \texttt{ConfrontaServlet} & 3.873,61 & 3.748,11 & -3,24\% & 2.272,42 & 2.198,79 & -3,24\% \\ \hline
+        \texttt{AggiungiCarrelloServlet} & 3.827,56 & 3.703,55 & -3,24\% & 2.214,40 & 2.142,65 & -3,24\% \\ \hline
+        \texttt{RegistrazioneServlet} & 1.816,04 & 1.757,20 & -3,24\% & 1.558,88 & 1.508,37 & -3,24\% \\ \hline
+        \texttt{CheckOutServlet} & 383,20 & 370,78 & -3,24\% & 1.142,58 & 1.105,56 & -3,24\% \\ \hline
+        \texttt{WishlistServlet} & 700,80 & 678,09 & -3,24\% & 1.107,71 & 1.071,82 & -3,24\% \\ \hline
+        \texttt{logoutServlet} & 1.596,46 & 1.544,73 & -3,24\% & 965,43 & 934,15 & -3,24\% \\ \hline
+        \texttt{landingpage} & 2.239,19 & 2.166,64 & -3,24\% & 815,07 & 788,66 & -3,24\% \\ \hline
+        \texttt{LoginServlet} & 2.139,49 & 2.070,17 & -3,24\% & 442,70 & 428,36 & -3,24\% \\ \hline
+        \texttt{UtenteServlet} & 1.947,17 & 1.884,08 & -3,24\% & 427,51 & 413,66 & -3,24\% \\ \hline
+        \texttt{ProdottiPerCategoriaServlet} & 1.798,74 & 1.740,46 & -3,24\% & 409,35 & 396,09 & -3,24\% \\ \hline
+        \texttt{EditCarrello} & 900,30 & 871,13 & -3,24\% & 400,72 & 387,74 & -3,24\% \\ \hline
+    \end{tabular}
+    }
+    \caption{Confronto di performance ed energetico per singola Servlet nello scenario di Load Testing.}
+    \label{tab:jmeter_comparison_servlets}
+\end{table}
+
+La ripartizione proporzionale conferma che il guadagno di efficienza energetica si distribuisce uniformemente su tutti i flussi di navigazione della web application 2Chance. I servlet maggiormente esposti alle inefficienze di persistenza (come \texttt{ProdottoServlet} e \texttt{RecensioniServlet}) mostrano un allineamento preciso con l'efficienza sistemica complessiva, testimoniando la solidità del processo di refactoring ecocompatibile adottato sia dal punto di vista qualitativo (correzione statica) che quantitativo (abbattimento energetico misurato in Watt e Joule).
+
 

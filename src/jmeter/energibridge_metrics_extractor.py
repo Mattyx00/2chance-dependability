@@ -156,11 +156,17 @@ def analyze_csv(file_path):
         print(format_color(f"Errore: Il file '{file_path}' non esiste.", "31;1"))
         return
 
-    # Set up folders relative to script location
+    # Set up folders relative to script location or CSV location
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    jmeter_logs_dir = os.path.join(script_dir, "jmeter_logs")
-    system_logs_dir = os.path.join(script_dir, "extractor_logs", "performance_system_testing_logs")
-    unit_logs_dir = os.path.join(script_dir, "extractor_logs", "performance_unit_testing_logs")
+    csv_dir = os.path.dirname(os.path.abspath(file_path))
+    if os.path.basename(csv_dir) == "energibridge_logs":
+        base_dir = os.path.dirname(csv_dir)
+    else:
+        base_dir = script_dir
+
+    jmeter_logs_dir = os.path.join(base_dir, "jmeter_logs")
+    system_logs_dir = os.path.join(base_dir, "extractor_logs", "performance_system_testing_logs")
+    unit_logs_dir = os.path.join(base_dir, "extractor_logs", "performance_unit_testing_logs")
 
     os.makedirs(system_logs_dir, exist_ok=True)
     os.makedirs(unit_logs_dir, exist_ok=True)
