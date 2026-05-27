@@ -4,12 +4,40 @@ import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletResponseWrapper;
 import java.io.IOException;
 
 @WebFilter(filterName = "CachingFilter", urlPatterns = "/*")
 public class CachingFilter implements Filter {
 
     private static final long MAX_AGE_SECONDS = 604800L; // 1 week
+
+    private static class CacheControlResponseWrapper extends HttpServletResponseWrapper {
+        private final long maxAge;
+
+        public CacheControlResponseWrapper(HttpServletResponse response, long maxAge) {
+            super(response);
+            this.maxAge = maxAge;
+        }
+
+        @Override
+        public void setHeader(String name, String value) {
+            if ("Cache-Control".equalsIgnoreCase(name)) {
+                super.setHeader(name, "public, max-age=" + maxAge);
+            } else {
+                super.setHeader(name, value);
+            }
+        }
+
+        @Override
+        public void addHeader(String name, String value) {
+            if ("Cache-Control".equalsIgnoreCase(name)) {
+                super.setHeader(name, "public, max-age=" + maxAge);
+            } else {
+                super.addHeader(name, value);
+            }
+        }
+    }
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -23,17 +51,15 @@ public class CachingFilter implements Filter {
         HttpServletResponse httpResponse = (HttpServletResponse) response;
         String requestURI = httpRequest.getRequestURI();
 
-        // Check if request is for static resources
         if (isStaticResource(requestURI)) {
-            // Set Cache-Control: public, max-age=604800
-            httpResponse.setHeader("Cache-Control", "public, max-age=" + MAX_AGE_SECONDS);
-            // Set Expires header
-            httpResponse.setDateHeader("Expires", System.currentTimeMillis() + (MAX_AGE_SECONDS * 1000L));
-            // Add CORS header for anonymous crossorigin requests
-            httpResponse.setHeader("Access-Control-Allow-Origin", "*");
+            CacheControlResponseWrapper wrappedResponse = new CacheControlResponseWrapper(httpResponse, MAX_AGE_SECONDS);
+            wrappedResponse.setHeader("Cache-Control", "public, max-age=" + MAX_AGE_SECONDS);
+            wrappedResponse.setDateHeader("Expires", System.currentTimeMillis() + (MAX_AGE_SECONDS * 1000L));
+            wrappedResponse.setHeader("Access-Control-Allow-Origin", "*");
+            chain.doFilter(request, wrappedResponse);
+        } else {
+            chain.doFilter(request, response);
         }
-
-        chain.doFilter(request, response);
     }
 
     @Override

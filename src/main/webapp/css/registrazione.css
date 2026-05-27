@@ -31,8 +31,8 @@ body{
 }
 
 #logo{
-    height: 6vh;
-    max-height: 6vh;
+    width: 250px;
+    height: 177px;
     margin-top: 10px;
 }
 

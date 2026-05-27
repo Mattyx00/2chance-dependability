@@ -10,7 +10,6 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.zip.GZIPOutputStream;
 
-@WebFilter(filterName = "CompressionFilter", urlPatterns = "/*")
 public class CompressionFilter implements Filter {
 
     @Override
@@ -46,21 +45,23 @@ public class CompressionFilter implements Filter {
         String contextPath = request.getContextPath();
         String path = uri.substring(contextPath.length()).toLowerCase();
 
-        // Skip FileServlet images path
-        if (path.startsWith("/img/")) {
-            return false;
-        }
-
-        // Typically compress text-based and extensionless paths (servlets)
-        return path.endsWith("landingpage") ||
-               path.endsWith(".jsp") ||
-               path.endsWith(".css") ||
-               path.endsWith(".js") ||
-               path.endsWith(".html") ||
-               path.endsWith(".ico") ||
-               path.endsWith(".json") ||
-               path.endsWith(".svg") ||
-               !path.contains(".");
+        // Skip already-compressed binary formats — compressing them again wastes CPU
+        // and can actually increase their size.
+        return !path.startsWith("/img/") &&
+               !path.endsWith(".jpg") &&
+               !path.endsWith(".jpeg") &&
+               !path.endsWith(".png") &&
+               !path.endsWith(".gif") &&
+               !path.endsWith(".webp") &&
+               !path.endsWith(".avif") &&
+               !path.endsWith(".woff") &&
+               !path.endsWith(".woff2") &&
+               !path.endsWith(".otf") &&
+               !path.endsWith(".ttf") &&
+               !path.endsWith(".zip") &&
+               !path.endsWith(".gz") &&
+               !path.endsWith(".mp4") &&
+               !path.endsWith(".mp3");
     }
 
     private static class GzipResponseWrapper extends HttpServletResponseWrapper {

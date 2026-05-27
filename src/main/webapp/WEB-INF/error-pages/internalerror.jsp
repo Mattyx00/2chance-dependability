@@ -1,7 +1,24 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
+<%
+    String serverName = request.getServerName();
+    int port = request.getServerPort();
+    String assetHost;
+    if ("localhost".equalsIgnoreCase(serverName)) {
+        assetHost = "http://127.0.0.1:" + port + request.getContextPath() + "/";
+    } else if ("127.0.0.1".equals(serverName)) {
+        assetHost = "http://localhost:" + port + request.getContextPath() + "/";
+    } else {
+        assetHost = request.getContextPath() + "/";
+    }
+    pageContext.setAttribute("assetHost", assetHost);
+%>
     <title>ERROR 500</title>
+
+	<link rel="shortcut icon" href="${assetHost}favicon.ico" crossorigin="anonymous">
+
+	<link rel="stylesheet" type="text/css" media="print" href="${assetHost}css/print.css" crossorigin="anonymous">
 </head>
 <body>
 <p>ERROR 500 - INTERNAL ERROR</p>

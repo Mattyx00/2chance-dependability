@@ -1,0 +1,64 @@
+================================================================================
+                      GREEN IT - ECOINDEX ANALYSIS REPORT
+                       (REGISTRATION PAGE - REGISTRAZIONE.JSP)
+================================================================================
+
+GLOBAL METRICS:
+--------------------------------------------------------------------------------
+Metric                              | Value
+--------------------------------------------------------------------------------
+EcoIndex Grade                      | A
+EcoIndex Score                      | 94.79
+Water Consumption (cl)              | 1.66
+Greenhouse Gases Emission (gCO2e)   | 1.10
+Request Number                      | 10
+Page Size (KB)                      | 35 (125)
+DOM Size                            | 28
+--------------------------------------------------------------------------------
+
+BEST PRACTICES:
+--------------------------------------------------------------------------------
+Best Practice                       | Status  | Details / Notes
+--------------------------------------------------------------------------------
+Add expires or cache-control headers| PASSED  | 8 / 8 resources cached
+Compress ressources (>= 95%)        | PASSED  | 100% resources compressed
+Limit the number of domains (<6)    | PASSED  | 4 domain(s) found
+Don't resize image in browser       | FAILED  | 1 image(s) resized in browser found (see details below)
+Externalize css and js              | FAILED  | 1 inline stylesheet(s) and inline javascript(s) found
+Avoid HTTP request errors           | PASSED  | 0 HTTP error(s)
+Limit the number of HTTP requests   | PASSED  | 10 HTTP request(s) (<=40)
+Do not download unecessary image    | PASSED  | 0 image(s) downloaded but not displayed
+Minified cs and js                  | N/A     | Analyse not supported by this browser
+No cookie for static ressources     | PASSED  | No cookie
+Avoid redirect                      | PASSED  | 0 redirect
+Optimize bitmap images              | PASSED  | No bitmap image to optimize
+Optimize svg images                 | N/A     | Analyse not supported by this browser
+Provide print stylesheet            | PASSED  | 1 print StyleSheet(s) found
+Do not use standarts social button  | PASSED  | No standart social network button found
+Limit Stylesheet files (<=10)       | PASSED  | Not more that 7 stylesheets found
+Use HTTP/2 instead of HTTP/1        | FAILED  | 8/10 resources using HTTP/1 (see details below)
+Use Standard Fonts                  | PASSED  | No custom fonts found
+--------------------------------------------------------------------------------
+
+================================================================================
+                          DETAILED ANALYSIS OF FAILURES
+================================================================================
+
+1. Don't resize image in browser (1 image(s) resized in browser found):
+   - http://localhost:8080/img/logocolorato.png
+     * Note: Typically resized or scaled in mobile viewports or audit environments.
+
+2. Use HTTP/2 instead of HTTP/1 (8/10 resources using HTTP/1):
+   - http://localhost:8080/registrazione.jsp
+   - http://localhost:8080/css/registrazione.css
+   - http://localhost:8080/css/general.css
+   - http://localhost:8080/functions/registrazione.js
+   - http://localhost:8080/functions/general.js
+   - http://localhost:8080/img/logocolorato.png
+   - http://localhost:8080/css/print.css
+   - http://localhost:8080/favicon.ico
+
+   * Note: This is an environmental restriction on localhost.
+     HTTP/2 negotiation requires a secure connection (TLS/HTTPS). In a production
+     environment, this is terminated via a reverse proxy.
+================================================================================

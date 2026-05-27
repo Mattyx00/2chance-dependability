@@ -35,11 +35,10 @@
 
 
 .immagineProdottoCarrello{
-    height: 12vh;
-    max-height: 13vh;
-    max-width: 12vw;
+    height: 49px;
+    width: auto;
     border: 2px solid #F08354;
-    padding: 15px;
+    padding: 5px;
 }
 
 .infoProdottoCarrello{
@@ -97,10 +96,9 @@
     }
 
     .immagineProdottoCarrello{
-        height: 8vh;
-        max-height: 8vh;
-        max-width: 40vw;
-        padding: 10px;
+        height: 49px;
+        width: auto;
+        padding: 5px;
     }
 
     .infoProdottoCarrello{

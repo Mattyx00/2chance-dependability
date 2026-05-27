@@ -128,9 +128,9 @@ public class FileServlet extends HttpServlet {
             // object.
             File file = new File(basePath, URLDecoder.decode(requestedFile, StandardCharsets.UTF_8.name()));
 
-            // Check if file actually exists in filesystem.
-            if (!file.exists()) {
-                // Do your thing if the file appears to be non-existing.
+            // Check if file actually exists and is not a directory.
+            if (!file.exists() || file.isDirectory()) {
+                // Do your thing if the file appears to be non-existing or is a directory.
                 // Throw an exception, or send 404, or show default/warning page, or just ignore
                 // it.
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);

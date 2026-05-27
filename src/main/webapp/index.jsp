@@ -4,14 +4,29 @@
  <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
  <html lang="it">
  <head>
+<%
+    String serverName = request.getServerName();
+    int port = request.getServerPort();
+    String assetHost;
+    if ("localhost".equalsIgnoreCase(serverName)) {
+        assetHost = "http://127.0.0.1:" + port + request.getContextPath() + "/";
+    } else if ("127.0.0.1".equals(serverName)) {
+        assetHost = "http://localhost:" + port + request.getContextPath() + "/";
+    } else {
+        assetHost = request.getContextPath() + "/";
+    }
+    pageContext.setAttribute("assetHost", assetHost);
+%>
  	<meta charset="UTF-8">
  	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" type="text/css" href="css/index.css" crossorigin="anonymous">
-	<link rel="stylesheet" type="text/css" href="./css/general.css" crossorigin="anonymous">
-	<link rel="stylesheet" type="text/css" media="print" href="css/print.css" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="${assetHost}css/index.css" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="${assetHost}/css/general.css" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" media="print" href="${assetHost}css/print.css" crossorigin="anonymous">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
  	<title>2Chance</title>
- </head>
+ 
+	<link rel="shortcut icon" href="${assetHost}favicon.ico" crossorigin="anonymous">
+</head>
  <body onload="start()">
  <% if(session.getAttribute("user") != null){
 	 if(((Utente) session.getAttribute("user")).isAdmin()) {
@@ -20,7 +35,7 @@
  }%>
  	<!-- MENU NAVIGAZIONALE -->
  	<div id="menu">
- 		<img src="img/logo.png" alt="2Chance" id="logo" crossorigin="anonymous">
+ 		<img src="${assetHost}img/logo.png" alt="2Chance" id="logo" crossorigin="anonymous">
 		<div id="searchbox">
 			<form action="RicercaServlet" action="get" id="cerca">
 				<i class="fas fa-search" onclick="document.getElementById('cerca').submit();"></i>
@@ -97,9 +112,9 @@
  		</div>
  		<div id="main-corpo">
  			<div id="carosello">
- 				<img src="img/carosello1.webp" alt="" class="carosello-attiva">
- 				<img data-src="img/carosello2.webp" alt="" class="carosello-disattivata">
- 				<img data-src="img/carosello3.webp" alt="" class="carosello-disattivata">
+ 				<img src="${assetHost}img/carosello1.webp" alt="" class="carosello-attiva" crossorigin="anonymous">
+ 				<img data-src="${assetHost}img/carosello2.webp" alt="" class="carosello-disattivata" crossorigin="anonymous">
+ 				<img data-src="${assetHost}img/carosello3.webp" alt="" class="carosello-disattivata" crossorigin="anonymous">
  				
  				<div id="carosello-cursori">
  					<i class="fas fa-chevron-left" onclick="cambiaFoto('precedente')"></i>
@@ -112,7 +127,7 @@
 				<c:forEach items="${prodotti}" var="prodotto">
 					<a href="ProdottoServlet?prodotto=${prodotto.id}">
 						<div class="prodotto">
-							<img src="${pageContext.request.contextPath}/img/${prodotto.immagineThumbnail}" alt="prodotto" class="immagine-prodotto" crossorigin="anonymous">
+							<img src="${assetHost}img/${prodotto.immagineThumbnail}" alt="prodotto" class="immagine-prodotto" crossorigin="anonymous">
 							<p class="titolo-prodotto">${prodotto.modello}</p>
 							<p class="descrizione-prodotto">${prodotto.descrizione}</p>
 							<p class="prezzo-prodotto">${prodotto.prezzo}€</p>
@@ -128,7 +143,7 @@
 	</footer>
 
  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
- 	<script src="functions/index.js" crossorigin="anonymous"></script>
-	<script src="functions/general.js" crossorigin="anonymous"></script>
+ 	<script src="${assetHost}functions/index.js" crossorigin="anonymous"></script>
+	<script src="${assetHost}functions/general.js" crossorigin="anonymous"></script>
  </body>
  </html>

@@ -1,0 +1,66 @@
+================================================================================
+                      GREEN IT - ECOINDEX ANALYSIS REPORT
+                           (USER PAGE - PAGINAUTENTE.JSP)
+================================================================================
+
+GLOBAL METRICS:
+--------------------------------------------------------------------------------
+Metric                              | Value
+--------------------------------------------------------------------------------
+EcoIndex Grade                      | A
+EcoIndex Score                      | 89.64
+Water Consumption (cl)              | 1.81
+Greenhouse Gases Emission (gCO2e)   | 1.21
+Request Number                      | 15
+Page Size (KB)                      | 171 (293)
+DOM Size                            | 83
+--------------------------------------------------------------------------------
+
+BEST PRACTICES:
+--------------------------------------------------------------------------------
+Best Practice                       | Status  | Details / Notes
+--------------------------------------------------------------------------------
+Add expires or cache-control headers| PASSED  | 12 / 12 resources cached
+Compress ressources (>= 95%)        | PASSED  | 100% resources compressed
+Limit the number of domains (<6)    | PASSED  | 4 domain(s) found
+Don't resize image in browser       | PASSED  | 0 image(s) resized in browser found
+Externalize css and js              | PASSED  | No inline stylesheet or inline javascript found
+Avoid HTTP request errors           | FAILED  | 1 HTTP error(s) (see details below)
+Limit the number of HTTP requests   | PASSED  | 15 HTTP request(s) (<=40)
+Do not download unecessary image    | PASSED  | 0 image(s) downloaded but not displayed
+Minified cs and js                  | N/A     | Analyse not supported by this browser
+No cookie for static ressources     | PASSED  | No cookie
+Avoid redirect                      | PASSED  | 0 redirect
+Optimize bitmap images              | PASSED  | No bitmap image to optimize
+Optimize svg images                 | N/A     | Analyse not supported by this browser
+Provide print stylesheet            | PASSED  | 1 print StyleSheet(s) found
+Do not use standarts social button  | PASSED  | No standart social network button found
+Limit Stylesheet files (<=10)       | PASSED  | Not more that 7 stylesheets found
+Use HTTP/2 instead of HTTP/1        | FAILED  | 11/15 resources using HTTP/1 (see details below)
+Use Standard Fonts                  | PASSED  | No custom fonts found
+--------------------------------------------------------------------------------
+
+================================================================================
+                          DETAILED ANALYSIS OF FAILURES
+================================================================================
+
+1. Avoid HTTP request errors (1 HTTP error(s)):
+   - 500 http://localhost:8080/img/
+     * Note: Occurs when requesting the directory `/img/` directly without specifying an image filename.
+
+2. Use HTTP/2 instead of HTTP/1 (11/15 resources using HTTP/1):
+   - http://localhost:8080/paginaUtente.jsp
+   - http://localhost:8080/css/paginaUtente.css
+   - http://localhost:8080/css/general.css
+   - http://localhost:8080/functions/paginaUtente.js
+   - http://localhost:8080/functions/general.js
+   - http://localhost:8080/img/logo.png
+   - http://localhost:8080/css/print.css
+   - http://localhost:8080/favicon.ico
+   - http://localhost:8080/font/LEMONMILK-Medium.otf
+   - Resources associated with the user profile image or dynamic requests.
+
+   * Note: This is an environmental restriction on localhost.
+     HTTP/2 negotiation requires a secure connection (TLS/HTTPS). In a production
+     environment, this is terminated via a reverse proxy.
+================================================================================

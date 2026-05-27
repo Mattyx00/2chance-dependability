@@ -30,6 +30,9 @@ COPY --from=build /app/target/2chance-1.0-SNAPSHOT.war /usr/local/tomcat/webapps
 # The 'COPY' command in the final stage uses the build context by default unless --from is specified.
 COPY upload /usr/local/tomcat/upload
 
+# Copy custom server.xml with connector-level GZIP compression enabled
+COPY src/main/docker/server.xml /usr/local/tomcat/conf/server.xml
+
 # Expose port 8080
 EXPOSE 8080
 

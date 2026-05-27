@@ -1,0 +1,8 @@
+Date;Url;Request number;Size(kb);Dom size;Greenhouse Gases Emission (gCO2e);Water consumption;ecoIndex;Grade
+27/05/2026 16:10:37;"http://localhost:8080/ProdottiPerCategoriaServlet?val=iPad";13;61;57;1.15;1.73;92.35;A
+27/05/2026 16:09:55;"http://localhost:8080/ProdottoServlet?prodotto=13";14;181;108;1.22;1.83;88.97;A
+27/05/2026 15:58:58;"http://localhost:8080/carrello.jsp";9;35;51;1.13;1.69;93.55;A
+27/05/2026 15:58:02;"http://localhost:8080/login.jsp";10;90;24;1.11;1.66;94.68;A
+27/05/2026 15:53:12;"http://localhost:8080/chiSiamo.jsp";13;170;54;1.16;1.74;92.01;A
+27/05/2026 15:52:57;"http://localhost:8080/paginaUtente.jsp";15;171;83;1.21;1.81;89.64;A
+27/05/2026 15:22:29;"http://localhost:8080/landingpage";21;211;118;1.25;1.88;87.40;A

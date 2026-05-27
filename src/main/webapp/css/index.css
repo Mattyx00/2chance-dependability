@@ -170,7 +170,8 @@
 
 @media only screen and (max-width: 1050px) {
 	.immagine-prodotto{
-		height: 4vh;
+		height: 49px;
+		width: auto;
 	}
 
 	.titolo-prodotto{
@@ -201,7 +202,8 @@
 
 
 	.immagine-prodotto{
-		height: 3.5vh;
+		height: 49px;
+		width: auto;
 	}
 
 	.titolo-prodotto{
@@ -268,7 +270,8 @@
 	}
 
 	.immagine-prodotto{
-		height: 10vh;
+		height: 49px;
+		width: auto;
 	}
 
 	.titolo-prodotto{

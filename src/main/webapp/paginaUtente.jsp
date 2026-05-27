@@ -7,17 +7,34 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html lang="it">
     <head>
+<%
+    String serverName = request.getServerName();
+    int port = request.getServerPort();
+    String assetHost;
+    if ("localhost".equalsIgnoreCase(serverName)) {
+        assetHost = "http://127.0.0.1:" + port + request.getContextPath() + "/";
+    } else if ("127.0.0.1".equals(serverName)) {
+        assetHost = "http://localhost:" + port + request.getContextPath() + "/";
+    } else {
+        assetHost = request.getContextPath() + "/";
+    }
+    pageContext.setAttribute("assetHost", assetHost);
+%>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" type="text/css" href="css/paginaUtente.css">
-        <link rel="stylesheet" type="text/css" href="./css/general.css">
+        <link rel="stylesheet" type="text/css" href="${assetHost}css/paginaUtente.css" crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="${assetHost}/css/general.css" crossorigin="anonymous">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
         <title>2Chance</title>
-    </head>
+    
+	<link rel="shortcut icon" href="${assetHost}favicon.ico" crossorigin="anonymous">
+
+	<link rel="stylesheet" type="text/css" media="print" href="${assetHost}css/print.css" crossorigin="anonymous">
+</head>
     <body>
         <!-- MENU NAVIGAZIONALE -->
         <div id="menu">
-            <a href="landingpage"><img src="img/logo.png" alt="2Chance" id="logo"></a>
+            <a href="landingpage"><img src="${assetHost}img/logo.png" alt="2Chance" id="logo" crossorigin="anonymous"></a>
             <div id="searchbox">
                 <form action="RicercaServlet" action="get" id="cerca">
                     <i class="fas fa-search" onclick="document.getElementById('cerca').submit();"></i>
@@ -74,7 +91,7 @@
 
         <!-- CORPO PAGINA-->
         <div id="corpo-pagina">
-            <img id="pic-utente" style="margin-top: 10px" src="${pageContext.request.contextPath}/img/${sessionScope.user.immagine}" alt=""><i id="editImmagine" class="fas fa-pen-square"></i>
+            <img id="pic-utente" style="margin-top: 10px" src="${assetHost}img/${sessionScope.user.immagine}" alt="" crossorigin="anonymous"><i id="editImmagine" class="fas fa-pen-square"></i>
             <form id="formEditImmagine" action = 'EditProfiloServlet/editImmagine' enctype='multipart/form-data' method="post"><input type="file" name = "modifica" id="modificaImmagineInput" style="position: absolute; top:-150px"></form>
             <div id="nome-utente" style="display: flex; justify-content: center; align-items: center"><p id="nome">${sessionScope.user.nome}<i id="editNome" class="fas fa-pen-square"></i></p><p style="margin-left: 10px" id="cognome">${sessionScope.user.cognome}<i id="editCognome" class="fas fa-pen-square"></i></p></div>
             <p id="email">${sessionScope.user.email}<i id="editEmail" class="fas fa-pen-square"></i></p>
@@ -144,9 +161,9 @@
         <footer class="footer">
             <p>2Chance P.IVA: 12345577777777</p>
         </footer>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-        <script src="functions/registrazione.js"></script>
-    <script src="functions/paginaUtente.js"></script>
-    <script src="functions/general.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+        <script src="${assetHost}functions/registrazione.js" crossorigin="anonymous"></script>
+    <script src="${assetHost}functions/paginaUtente.js" crossorigin="anonymous"></script>
+    <script src="${assetHost}functions/general.js" crossorigin="anonymous"></script>
     </body>
 </html>

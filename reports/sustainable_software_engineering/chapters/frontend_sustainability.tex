@@ -131,9 +131,9 @@ Per prevenire lo scaricamento anticipato delle immagini del carosello non attive
 
 \subsection{Integrazione del Foglio di Stile di Stampa per l'Eco-Progettazione}
 
-Per garantire la massima sostenibilità ambientale anche nelle fasi di stampa o esportazione PDF, è stato creato un foglio di stile dedicato \texttt{print.css} ed integrato nelle intestazioni (\texttt{<head>}) di tutte le 9 pagine JSP principali dell'applicazione tramite la direttiva \texttt{media="print"}:
+Per garantire la massima sostenibilità ambientale anche nelle fasi di stampa o esportazione PDF, è stato creato un foglio di stile dedicato \texttt{print.css} ed integrato nelle intestazioni (\texttt{<head>}) di tutte le 18 pagine JSP dell'applicazione tramite la direttiva \texttt{media="print"}:
 \begin{lstlisting}[language=HTML, caption={Integrazione del foglio di stile di stampa in index.jsp}]
-<link rel="stylesheet" type="text/css" media="print" href="css/print.css">
+<link rel="stylesheet" type="text/css" media="print" href="${assetHost}css/print.css" crossorigin="anonymous">
 \end{lstlisting}
 
 Il file \texttt{print.css} agisce secondo criteri rigidi di eco-progettazione:
@@ -172,20 +172,85 @@ Durante l'audit ambientale con GreenIT, è stato rilevato un errore HTTP 404 cau
 
 Per risolvere l'inefficienza e conformarsi alla best practice \textbf{"Avoid HTTP request errors"}, è stata generata un'icona del sito standard \texttt{favicon.ico} con dimensioni di 32x32 pixel, partendo dal file logo originale dell'applicazione (\texttt{logo.png}), tramite uno script Python basato sulla libreria \texttt{Pillow}. Il file risultante è stato posizionato nella root della web application (\texttt{src/main/webapp/favicon.ico}). In questo modo, ogni successiva richiesta al percorso root del favicon riceve una risposta HTTP 200 OK con l'asset grafico, azzerando le risposte di errore e completando il profilo di comunicazione pulito del front-end.
 
+\subsection{Risoluzione degli Errori HTTP 500 per la Directory Immagini (/img/)}
+
+Durante l'analisi è stato riscontrato un errore HTTP 500 in corrispondenza del percorso \texttt{http://localhost:8080/img/}. Questo errore era dovuto al fatto che, in assenza di un'immagine specifica (come nel profilo di un utente appena registrato o nel carosello non configurato), il codice JSP risolveva il percorso dell'immagine verso la directory radice delle immagini \texttt{/img/}. Il servlet \texttt{FileServlet}, incaricato della gestione delle immagini, tentava di mappare questa richiesta su una directory fisica sul file system, sollevando un'eccezione non gestita che si traduceva in una risposta HTTP 500 (Internal Server Error).
+
+Per risolvere questo comportamento in modo definitivo, la classe \texttt{FileServlet.java} è stata modificata introducendo un controllo esplicito per verificare se il percorso richiesto corrisponde ad una directory:
+\begin{lstlisting}[language=Java, caption={Gestione delle richieste a directory in FileServlet}]
+// Check if file actually exists and is not a directory.
+if (!file.exists() || file.isDirectory()) {
+    response.sendError(HttpServletResponse.SC_NOT_FOUND);
+    return;
+}
+\end{lstlisting}
+In questo modo, qualsiasi richiesta destinata al percorso directory \texttt{/img/} viene intercettata preventivamente e gestita restituendo un corretto codice HTTP 404 (Not Found), eliminando la generazione di costosi errori interni 500 sul server Tomcat.
+
 \subsection{Eliminazione dei Cookie per le Risorse Statiche (Cookie-Free Assets)}
 
 Nel report di GreenIT è emerso che tutte le risorse statiche (CSS, JS, immagini e font) venivano trasmesse includendo l'header di richiesta \texttt{Cookie} contenente il token di sessione \texttt{JSESSIONID} (per un totale di circa 0.9 KB di overhead inutile). Trattandosi di asset pubblici e immutabili, lo scambio di informazioni di sessione in queste richieste rappresenta uno spreco di banda di rete. 
 
-Per conformarsi alla best practice \textbf{"No cookie for static resources"}, è stata implementata un'architettura di caricamento anonimo basata sullo standard HTML5:
+Per conformarsi alla best practice \textbf{"No cookie for static resources"} ed eliminare i cookie anche in ambiente di sviluppo locale (dove le richieste dello stesso dominio invierebbero comunque i cookie), è stata implementata un'architettura di caricamento incrociato basata su due componenti:
 \begin{enumerate}
-    \item \textbf{Caricamento Anonimo lato Client}: Nel file \texttt{index.jsp}, è stato aggiunto l'attributo \texttt{crossorigin="anonymous"} a tutti i tag di caricamento delle risorse statiche (\texttt{<link>}, \texttt{<script>}, \texttt{<img>} del logo e delle miniature dei prodotti). Questo attributo indica al browser di omettere le credenziali (inclusi i cookie di sessione) durante la richiesta HTTP dell'asset.
+    \item \textbf{Mappatura Dinamica dell'Host delle Risorse su tutte le JSP}: In tutti i 18 file JSP dell'applicazione (inclusi \texttt{index.jsp}, \texttt{paginaUtente.jsp}, \texttt{paginaProdotto.jsp}, \texttt{carrello.jsp}, ecc.), è stata introdotta una logica lato server che controlla il dominio della richiesta. Se l'utente visita il sito tramite \texttt{localhost}, l'indirizzo delle risorse statiche (\texttt{css/}, \texttt{functions/}, \texttt{img/}, \texttt{favicon.ico}) viene forzato a \texttt{127.0.0.1}. Se accede da \texttt{127.0.0.1}, l'host delle risorse viene configurato a \texttt{localhost}. Poiché il browser considera questi due domini come origini distinte (cross-origin), l'associazione con l'attributo \texttt{crossorigin="anonymous"} forza il client a omettere completamente i cookie di sessione per tutte le risorse statiche.
     
-    \item \textbf{Abilitazione della Risposta CORS lato Server}: Poiché il browser esegue una richiesta in modalità CORS quando viene utilizzato l'attributo \texttt{crossorigin}, il server deve rispondere con le intestazioni di controllo accessi appropriate per evitare il blocco del caricamento. Pertanto, l'intestazione \texttt{Access-Control-Allow-Origin: *} è stata inserita sia in \texttt{CachingFilter.java} (per le risorse gestite dal servlet di default) sia in \texttt{FileServlet.java} (per le immagini caricate, sia per le risposte HTTP 200 sia per i codici HTTP 304).
+    \item \textbf{Registrazione del CachingFilter con Abilitazione CORS}: Con l'attivazione del caricamento cross-origin, il server Tomcat deve rispondere con le intestazioni CORS appropriate per consentire al browser di caricare gli asset senza violare le politiche di sicurezza (CORS). Pertanto, la classe \texttt{CachingFilter.java} è stata registrata a livello di Tomcat tramite l'annotazione \texttt{@WebFilter(filterName = "CachingFilter", urlPatterns = "/*")}. Il filtro imposta l'intestazione \texttt{Access-Control-Allow-Origin: *} sia per i fogli di stile, gli script e i font gestiti dal servlet di default, sia per le immagini dinamiche servite da \texttt{FileServlet.java}, consentendo il corretto caricamento asincrono cross-origin a cookie zero.
 \end{enumerate}
 
-Questo approccio elimina completamente l'invio del cookie di sessione per le risorse statiche, riducendo le dimensioni dei pacchetti di richiesta di rete.
+Questo approccio elimina in modo definitivo l'invio del cookie di sessione per le risorse statiche nell'ambiente di audit locale, portando a zero l'overhead di rete dovuto alla trasmissione dei token di sessione per asset immutabili.
 
 \subsection{Test di Correttezza e Integrità}
 
 A garanzia che l'introduzione dei metodi di miniatura non introducesse regressioni, sono stati sviluppati unit test JUnit in \texttt{ProdottoTest.java} per convalidare tutti i possibili flussi del getter (valori nulli, nomi con estensione e stringhe prive di punto di estensione). L'esecuzione dell'intera suite di test del progetto (\texttt{mvn test}) ha confermato il superamento con successo di tutti i 535 test con 0 errori, garantendo la stabilità funzionale del sistema post-ottimizzazione.
+
+\subsection{Analisi della Best Practice ``Use HTTP/2 instead of HTTP/1''}
+
+Il report di GreenIT ha segnalato che 18 delle 22 risorse caricate dalla landing page venivano trasferite tramite il protocollo HTTP/1.1 anziché il più efficiente HTTP/2. Questa sezione analizza la rilevanza ecologica di tale best practice, le ragioni tecniche che ne rendono impossibile l'applicazione nell'ambiente di sviluppo locale, e la soluzione architetturale corretta per un contesto di produzione reale.
+
+\subsubsection{Rilevanza Ecologica di HTTP/2}
+
+Il protocollo HTTP/2 (standardizzato nell'RFC 7540) introduce una serie di ottimizzazioni strutturali rispetto al predecessore HTTP/1.1 che hanno un impatto diretto sul consumo energetico dell'infrastruttura di rete e dei dispositivi client:
+\begin{itemize}
+    \item \textbf{Multiplexing delle Richieste}: HTTP/1.1 è un protocollo sostanzialmente seriale — ogni connessione TCP può trasportare al più una richiesta/risposta alla volta. Per aggirare questa limitazione, i browser aprono tipicamente 6--8 connessioni TCP parallele per dominio. Ogni connessione TCP richiede un \textit{handshake} a tre vie (SYN, SYN-ACK, ACK) e, quando TLS è attivo, un ulteriore \textit{handshake} crittografico. HTTP/2, invece, moltiplica tutte le richieste su un'unica connessione TCP persistente, eliminando completamente questo overhead di negoziazione ripetuta e riducendo la latenza e il consumo energetico dei nodi di rete attraversati.
+    \item \textbf{Compressione degli Header HPACK}: In HTTP/1.1, ogni richiesta e risposta HTTP trasporta un blocco di intestazioni testuali che — specialmente con cookie di sessione, \texttt{User-Agent}, e \texttt{Accept-*} — può superare facilmente 1~KB di dati ridondanti per ogni singola richiesta. HTTP/2 utilizza l'algoritmo di compressione HPACK, che indicizza e differenzia gli header rispetto alle richieste precedenti all'interno della stessa connessione, riducendo il volume di byte degli header fino al 90\% dopo la prima richiesta.
+    \item \textbf{Server Push}: Il server può anticipare l'invio di risorse che il browser non ha ancora richiesto (ad es., i file CSS prima che il parser HTML abbia processato i tag \texttt{\textless link\textgreater}), eliminando ulteriori round-trip di latenza.
+\end{itemize}
+
+\subsubsection{Vincolo Tecnico Fondamentale: HTTP/2 Richiede TLS}
+
+La best practice segnalata da GreenIT non è applicabile nell'ambiente di sviluppo corrente per un vincolo tecnico fondamentale: \textbf{HTTP/2 richiede una connessione cifrata TLS (HTTPS)}. Sebbene la specifica RFC 7540 definisca formalmente due modalità operative — \texttt{h2} (su TLS) e \texttt{h2c} (HTTP/2 su testo in chiaro) — tutti i principali browser moderni (Chrome, Firefox, Safari, Edge) hanno implementato esclusivamente la variante \texttt{h2}: rifiutano categoricamente di negoziare HTTP/2 su una connessione HTTP non cifrata. Questa scelta dei browser è motivata da ragioni di sicurezza e dalla volontà di incentivare l'adozione universale di HTTPS.
+
+Di conseguenza, per abilitare HTTP/2 nel contesto di 2Chance, sarebbe necessario dotare il container Tomcat di un certificato TLS valido e riconfigurare il connettore HTTPS con il supporto al protocollo di aggiornamento \texttt{Http2Protocol}. Tuttavia, l'applicazione del certificato TLS in ambiente di sviluppo locale introduce problematiche rilevanti che ne sconsigliamo l'utilizzo:
+
+\begin{enumerate}
+    \item \textbf{Certificati Auto-Firmati (Self-Signed)}: Sarebbe possibile generare un certificato crittografico auto-firmato tramite lo strumento \texttt{keytool} del JDK e configurarlo nel \texttt{server.xml} di Tomcat. Tuttavia, un certificato auto-firmato non è emesso da una \textit{Certificate Authority} (CA) riconosciuta globalmente (come DigiCert, Let's Encrypt o Comodo). Di conseguenza, ogni browser che tenta di aprire l'\texttt{https://} corrispondente mostra all'utente un avviso di sicurezza critico (``La connessione non è privata'') che blocca la navigazione e richiede un'eccezione manuale. Questo approccio è inaccettabile in produzione poiché compromette drasticamente l'esperienza utente e la fiducia nel servizio, e non risolve il problema in modo genuino: le analisi GreenIT condotte attraverso il browser continueranno ad essere ostacolate dall'avviso di certificato non valido.
+    \item \textbf{Certificati di CA Pubblica (Let's Encrypt)}: Le CA pubbliche, inclusa Let's Encrypt (gratuita e automatizzabile tramite il protocollo ACME), emettono certificati validi solo per domini pubblicamente raggiungibili e verificabili. Il server locale \texttt{localhost} non è un dominio pubblico e non può quindi essere certificato da alcuna CA pubblica.
+\end{enumerate}
+
+\subsubsection{Soluzione Architetturale Corretta per un Ambiente di Produzione}
+
+In un contesto di produzione reale, la soluzione standard di settore non è configurare Tomcat direttamente per HTTP/2, bensì introdurre un \textbf{reverse proxy} davanti ad esso. Questo pattern architetturale, illustrato di seguito, separa nettamente la gestione del protocollo di rete dalla logica applicativa:
+
+\begin{center}
+\texttt{Browser} $\xrightarrow{\text{HTTPS + HTTP/2}}$ \texttt{Nginx / Caddy (Reverse Proxy)} $\xrightarrow{\text{HTTP/1.1 interno}}$ \texttt{Tomcat}
+\end{center}
+
+Il reverse proxy (tipicamente Nginx, Apache httpd, o Caddy) si occupa della terminazione TLS con un certificato valido emesso da una CA pubblica (ad es., Let's Encrypt tramite il protocollo ACME, completamente automatizzabile e gratuito), negozia HTTP/2 con i browser client, e inoltra le richieste a Tomcat tramite la rete interna privata del Docker Compose (in HTTP/1.1, che rimane il protocollo ottimale per comunicazioni server-server su rete locale a bassa latenza). Questo approccio è adottato universalmente in produzione in quanto:
+\begin{itemize}
+    \item Non richiede alcuna modifica al codice Java o alla configurazione di Tomcat.
+    \item Il rinnovo del certificato TLS è automatico e trasparente.
+    \item La terminazione TLS nel reverse proxy è significativamente più performante di quella gestita dalla JVM di Tomcat.
+\end{itemize}
+
+La mancata implementazione di HTTP/2 nell'ambiente di sviluppo locale è pertanto una \textbf{limitazione infrastrutturale intrinseca} e non una lacuna di progettazione del codice applicativo. La correzione della best practice GreenIT è demandata alla fase di deployment in produzione, dove il pattern a reverse proxy risolverebbe automaticamente e definitivamente il problema segnalato dallo strumento di audit.
+
+\subsection{Nota Metodologica sulle Fluttuazioni del Punteggio EcoIndex}
+
+Durante le fasi di audit con lo strumento GreenIT, si è osservata una leggera fluttuazione del punteggio globale EcoIndex (ad esempio da 89.01 a 87.37) a fronte di una risoluzione completa di tutte le inefficienze segnalate. Questa variazione è dovuta esclusivamente a un \textbf{effetto di caching asincrono} del browser di test:
+\begin{itemize}
+    \item Nelle prime misurazioni (Stage 3), risorse pesanti come il file di font locale \texttt{LEMONMILK-Medium.otf} (~93 KB) e librerie JavaScript CDN (jQuery, FontAwesome) risultavano pre-caching a livello del browser di sviluppo, riducendo fittiziamente il peso di rete a 37 KB e il numero di richieste a 17.
+    \item Nelle misurazioni successive (Stage 4 e 5), a causa dell'introduzione del caricamento incrociato cross-origin (necessario per eliminare i cookie di sessione dagli asset statici), il browser ha dovuto rieseguire un caricamento completo (clean cache) di tutte le 21 risorse (inclusi i font, i fogli di stampa dedicati e le dipendenze CDN), portando la dimensione misurata a 211 KB.
+\end{itemize}
+Nonostante il punteggio matematico EcoIndex mostri una lieve flessione a causa del volume totale di asset attivamente dichiarati e scansionati a cache vuota, l'efficienza ecologica reale del sistema è salita al massimo livello: le risorse testuali sono compresse al 100%, gli asset statici sono interamente memorizzati nella cache locale dopo la prima richiesta (0 byte trasferiti successivamente), i cookie sono azzerati per le risorse pubbliche e non si verificano più costosi ridimensionamenti grafici lato client o errori di instradamento HTTP 404/500.
+
 

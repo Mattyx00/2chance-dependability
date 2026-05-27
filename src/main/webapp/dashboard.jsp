@@ -5,21 +5,38 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html lang="it">
 <head>
+<%
+    String serverName = request.getServerName();
+    int port = request.getServerPort();
+    String assetHost;
+    if ("localhost".equalsIgnoreCase(serverName)) {
+        assetHost = "http://127.0.0.1:" + port + request.getContextPath() + "/";
+    } else if ("127.0.0.1".equals(serverName)) {
+        assetHost = "http://localhost:" + port + request.getContextPath() + "/";
+    } else {
+        assetHost = request.getContextPath() + "/";
+    }
+    pageContext.setAttribute("assetHost", assetHost);
+%>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="./css/index.css">
-    <link rel="stylesheet" type="text/css" href="./css/general.css">
-    <link rel="stylesheet" type="text/css" href="./css/dashboard.css">
+    <link rel="stylesheet" type="text/css" href="${assetHost}/css/index.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="${assetHost}/css/general.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="${assetHost}/css/dashboard.css" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <!---DATATABLE E BOOTSTRAP -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap5.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/css/bootstrap.min.css">
-    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
-    <script src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap5.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap5.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-    <script src="https://cdn.datatables.net/buttons/1.7.1/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.7.1/js/dataTables.buttons.min.js" crossorigin="anonymous"></script>
     <title>2Chance</title>
+
+	<link rel="shortcut icon" href="${assetHost}favicon.ico" crossorigin="anonymous">
+
+	<link rel="stylesheet" type="text/css" media="print" href="${assetHost}css/print.css" crossorigin="anonymous">
 </head>
 <body>
 <%Utente u = (Utente) session.getAttribute("user");
@@ -29,7 +46,7 @@
 %>
 <!-- MENU NAVIGAZIONALE -->
 <div id="menu">
-    <img src="img/logo.png" alt="2Chance" id="logo">
+    <img src="${assetHost}img/logo.png" alt="2Chance" id="logo" crossorigin="anonymous">
     <div id="searchbox">
         <form action="RicercaServlet" action="get" id="cerca">
             <i class="fas fa-search" onclick="document.getElementById('cerca').submit();"></i>
@@ -178,9 +195,9 @@
     <p>2Chance P.IVA: 12345577777777</p>
 </footer>
 
-<script src="functions/index.js"></script>
-<script src="functions/general.js"></script>
-<script src="functions/dashboard.js"></script>
+<script src="${assetHost}functions/index.js" crossorigin="anonymous"></script>
+<script src="${assetHost}functions/general.js" crossorigin="anonymous"></script>
+<script src="${assetHost}functions/dashboard.js" crossorigin="anonymous"></script>
 
 
 </body>

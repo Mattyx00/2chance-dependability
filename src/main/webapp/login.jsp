@@ -4,17 +4,32 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html lang="it">
 <head>
+<%
+    String serverName = request.getServerName();
+    int port = request.getServerPort();
+    String assetHost;
+    if ("localhost".equalsIgnoreCase(serverName)) {
+        assetHost = "http://127.0.0.1:" + port + request.getContextPath() + "/";
+    } else if ("127.0.0.1".equals(serverName)) {
+        assetHost = "http://localhost:" + port + request.getContextPath() + "/";
+    } else {
+        assetHost = request.getContextPath() + "/";
+    }
+    pageContext.setAttribute("assetHost", assetHost);
+%>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="./css/login.css">
-    <link rel="stylesheet" type="text/css" media="print" href="css/print.css">
+    <link rel="stylesheet" type="text/css" href="${assetHost}/css/login.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" media="print" href="${assetHost}css/print.css" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <title>2Chance</title>
+
+	<link rel="shortcut icon" href="${assetHost}favicon.ico" crossorigin="anonymous">
 </head>
 <body style="background-image: radial-gradient(circle, rgb(255,177,142) 0%, rgb(240,131,84) 100%);">
 
 <div id="login-body">
-    <a href="landingpage"><img src="img/logocolorato.png" alt="" id="logo"></a>
+    <a href="landingpage"><img src="${assetHost}img/logocolorato.png" alt="" id="logo" crossorigin="anonymous"></a>
     <!-- QUI VANNO TUTTI GLI ERRORI -->
     <c:forEach items="${errori}" var="errore">
         <p class="error">${errore}</p>
@@ -31,9 +46,9 @@
     <p>2Chance P.IVA: 12345577777777</p>
 </footer>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="./functions/login.js"></script>
-<script src="./functions/general.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+<script src="${assetHost}/functions/login.js" crossorigin="anonymous"></script>
+<script src="${assetHost}/functions/general.js" crossorigin="anonymous"></script>
 <style>
     .footer{
         color: white;

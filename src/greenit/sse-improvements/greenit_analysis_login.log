@@ -1,0 +1,41 @@
+================================================================================
+                      GREEN IT - ECOINDEX ANALYSIS REPORT
+                             (LOGIN PAGE - LOGIN.JSP)
+================================================================================
+
+GLOBAL METRICS:
+--------------------------------------------------------------------------------
+Metric                              | Value
+--------------------------------------------------------------------------------
+EcoIndex Grade                      | A
+EcoIndex Score                      | 98.72
+Water Consumption (cl)              | 1.54
+Greenhouse Gases Emission (gCO2e)   | 1.03
+Request Number                      | 0
+Page Size (KB)                      | 0
+DOM Size                            | 24
+--------------------------------------------------------------------------------
+
+BEST PRACTICES:
+--------------------------------------------------------------------------------
+Best Practice                       | Status  | Details / Notes
+--------------------------------------------------------------------------------
+Add expires or cache-control headers| PASSED  | All static resources cached
+Compress ressources (>= 95%)        | PASSED  | 100% resources compressed
+Limit the number of domains (<6)    | PASSED  | Within limits
+Don't resize image in browser       | PASSED  | 0 image(s) resized in browser found
+Externalize css and js              | FAILED  | 1 inline stylesheet(s) and inline javascript(s) found
+Avoid HTTP request errors           | PASSED  | 0 HTTP error(s)
+Limit the number of HTTP requests   | PASSED  | 0 HTTP request(s) (<=40)
+Do not download unecessary image    | PASSED  | 0 image(s) downloaded but not displayed
+Minified cs and js                  | N/A     | Analyse not supported by this browser
+No cookie for static ressources     | PASSED  | No cookie
+Avoid redirect                      | PASSED  | 0 redirect
+Optimize bitmap images              | PASSED  | No bitmap image to optimize
+Optimize svg images                 | N/A     | Analyse not supported by this browser
+Provide print stylesheet            | PASSED  | 1 print StyleSheet(s) found
+Do not use standarts social button  | PASSED  | No standart social network button found
+Limit Stylesheet files (<=10)       | PASSED  | Not more that 7 stylesheets found
+Use HTTP/2 instead of HTTP/1        | FAILED  | Resources using HTTP/1 (local environment restriction)
+Use Standard Fonts                  | PASSED  | No custom fonts found
+--------------------------------------------------------------------------------

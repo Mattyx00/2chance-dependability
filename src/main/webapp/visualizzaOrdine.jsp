@@ -5,18 +5,35 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html lang="it">
 <head>
+<%
+    String serverName = request.getServerName();
+    int port = request.getServerPort();
+    String assetHost;
+    if ("localhost".equalsIgnoreCase(serverName)) {
+        assetHost = "http://127.0.0.1:" + port + request.getContextPath() + "/";
+    } else if ("127.0.0.1".equals(serverName)) {
+        assetHost = "http://localhost:" + port + request.getContextPath() + "/";
+    } else {
+        assetHost = request.getContextPath() + "/";
+    }
+    pageContext.setAttribute("assetHost", assetHost);
+%>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="css/carrello.css">
-    <link rel="stylesheet" type="text/css" href="css/visualizzaOrdine.css">
-    <link rel="stylesheet" type="text/css" href="./css/general.css">
+    <link rel="stylesheet" type="text/css" href="${assetHost}css/carrello.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="${assetHost}css/visualizzaOrdine.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="${assetHost}/css/general.css" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <title>Visualizza ordine - 2Chance</title>
+
+	<link rel="shortcut icon" href="${assetHost}favicon.ico" crossorigin="anonymous">
+
+	<link rel="stylesheet" type="text/css" media="print" href="${assetHost}css/print.css" crossorigin="anonymous">
 </head>
 <body>
 <!-- MENU NAVIGAZIONALE -->
 <div id="menu">
-    <a href="landingpage"><img src="img/logo.png" alt="2Chance" id="logo"></a>
+    <a href="landingpage"><img src="${assetHost}img/logo.png" alt="2Chance" id="logo" crossorigin="anonymous"></a>
     <div id="navigazione">
         <c:choose>
             <c:when test="${sessionScope.user!= null}">
@@ -76,7 +93,7 @@
             request.setAttribute("index", cod);%>
         <c:forEach items="${sessionScope.user.ordini[requestScope.index].carrello.prodotti}" var="prodotto">
             <div class="prodottoCarrello">
-                <img src="${pageContext.request.contextPath}/img/${prodotto.prodotto.immagineThumbnail}" alt="" class="immagineProdottoCarrello">
+                <img src="${assetHost}img/${prodotto.prodotto.immagineThumbnail}" alt="" class="immagineProdottoCarrello" crossorigin="anonymous">
                 <a href="ProdottoServlet?prodotto=${prodotto.prodotto.id}">
                     <div class="infoProdottoCarrello">
                         <p class="nomeProdottoCarrello">${prodotto.prodotto.marca} ${prodotto.prodotto.modello}</p>
@@ -92,10 +109,10 @@
 </div>
 <!-- FINE CORPO PAGINA-->
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="functions/carrello.js"></script>
-<script src="functions/visualizzaOrdine.js"></script>
-<script src="functions/general.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+<script src="${assetHost}functions/carrello.js" crossorigin="anonymous"></script>
+<script src="${assetHost}functions/visualizzaOrdine.js" crossorigin="anonymous"></script>
+<script src="${assetHost}functions/general.js" crossorigin="anonymous"></script>
 
 </body>
 </html>

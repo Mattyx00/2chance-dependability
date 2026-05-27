@@ -3,18 +3,33 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html lang="it">
 <head>
+<%
+    String serverName = request.getServerName();
+    int port = request.getServerPort();
+    String assetHost;
+    if ("localhost".equalsIgnoreCase(serverName)) {
+        assetHost = "http://127.0.0.1:" + port + request.getContextPath() + "/";
+    } else if ("127.0.0.1".equals(serverName)) {
+        assetHost = "http://localhost:" + port + request.getContextPath() + "/";
+    } else {
+        assetHost = request.getContextPath() + "/";
+    }
+    pageContext.setAttribute("assetHost", assetHost);
+%>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="css/general.css">
-    <link rel="stylesheet" type="text/css" href="css/product.css">
-    <link rel="stylesheet" type="text/css" media="print" href="css/print.css">
+    <link rel="stylesheet" type="text/css" href="${assetHost}css/general.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="${assetHost}css/product.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" media="print" href="${assetHost}css/print.css" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <title>2Chance</title>
+
+	<link rel="shortcut icon" href="${assetHost}favicon.ico" crossorigin="anonymous">
 </head>
 <body onload="start()">
 <!-- MENU NAVIGAZIONALE -->
 <div id="menu">
-    <a href="landingpage"><img src="img/logo.png" alt="2Chance" id="logo"></a>
+    <a href="landingpage"><img src="${assetHost}img/logo.png" alt="2Chance" id="logo" crossorigin="anonymous"></a>
     <div id="searchbox">
         <form action="RicercaServlet" action="get" id="cerca">
             <i class="fas fa-search" onclick="document.getElementById('cerca').submit();"></i>
@@ -75,7 +90,7 @@
     <c:forEach items="${prodotti}" var="prodotto">
         <a href="ProdottoServlet?prodotto=${prodotto.id}">
             <div class="prodotto">
-                <img src="${pageContext.request.contextPath}/img/${prodotto.immagineThumbnail}" alt="prodotto" class="immagine-prodotto">
+                <img src="${assetHost}img/${prodotto.immagineThumbnail}" alt="prodotto" class="immagine-prodotto" crossorigin="anonymous">
                 <p class="titolo-prodotto">${prodotto.modello}</p>
                 <p class="descrizione-prodotto">${prodotto.descrizione}</p>
                 <p class="prezzo-prodotto">${prodotto.prezzo}€</p>
@@ -85,8 +100,8 @@
 </div>
 <!-- FINE CORPO PAGINA-->
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="functions/general.js"></script>
-<script src="functions/product.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+<script src="${assetHost}functions/general.js" crossorigin="anonymous"></script>
+<script src="${assetHost}functions/product.js" crossorigin="anonymous"></script>
 </body>
 </html>

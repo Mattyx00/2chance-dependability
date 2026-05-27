@@ -1,0 +1,71 @@
+================================================================================
+                      GREEN IT - ECOINDEX ANALYSIS REPORT
+                                  (STAGE 5)
+================================================================================
+
+GLOBAL METRICS:
+--------------------------------------------------------------------------------
+Metric                              | Value
+--------------------------------------------------------------------------------
+EcoIndex Grade                      | A
+EcoIndex Score                      | 87.37
+Water Consumption (cl)              | 1.88
+Greenhouse Gases Emission (gCO2e)   | 1.25
+Request Number                      | 21
+Page Size (KB)                      | 211 (334)
+DOM Size                            | 119
+--------------------------------------------------------------------------------
+
+BEST PRACTICES:
+--------------------------------------------------------------------------------
+Best Practice                       | Status  | Details / Notes
+--------------------------------------------------------------------------------
+Add expires or cache-control headers| PASSED  | 15 / 15 resources cached
+Compress ressources (>= 95%)        | PASSED  | 100% resources compressed
+Limit the number of domains (<6)    | PASSED  | 4 domain(s) found
+Don't resize image in browser       | PASSED  | 0 image(s) resized in browser found
+Externalize css and js              | PASSED  | No inline stylesheet or inline javascript found
+Avoid HTTP request errors           | PASSED  | 0 HTTP error(s)
+Limit the number of HTTP requests   | PASSED  | 21 HTTP request(s) (<=40)
+Do not download unecessary image    | PASSED  | 0 image(s) downloaded but not displayed
+Minified cs and js                  | N/A     | Analyse not supported by this browser
+No cookie for static ressources     | PASSED  | No cookie (CORS dynamic host bypass)
+Avoid redirect                      | PASSED  | 0 redirect
+Optimize bitmap images              | PASSED  | No bitmap image to optimize
+Optimize svg images                 | N/A     | Analyse not supported by this browser
+Provide print stylesheet            | PASSED  | 1 print StyleSheet(s) found
+Do not use standarts social button  | PASSED  | No standart social network button found
+Limit Stylesheet files (<=10)       | PASSED  | Not more that 7 stylesheets found
+Use HTTP/2 instead of HTTP/1        | FAILED  | 17/21 resources using HTTP/1 (see details below)
+Use Standard Fonts                  | PASSED  | No custom fonts found
+--------------------------------------------------------------------------------
+
+================================================================================
+                          DETAILED ANALYSIS OF FAILURES
+================================================================================
+
+1. Use HTTP/2 instead of HTTP/1 (17/21 resources using HTTP/1):
+   - http://localhost:8080/landingpage
+   - http://localhost:8080/css/index.css
+   - http://localhost:8080/css/general.css
+   - http://localhost:8080/functions/index.js
+   - http://localhost:8080/functions/general.js
+   - http://localhost:8080/img/logo.png
+   - http://localhost:8080/img/ipad8_thumb.jpg
+   - http://localhost:8080/img/mackbookpro16_thumb.jpg
+   - http://localhost:8080/img/iphone11_thumb.jpg
+   - http://localhost:8080/img/macbook-pro-2019_thumb.jpg
+   - http://localhost:8080/css/print.css
+   - http://localhost:8080/favicon.ico
+   - http://localhost:8080/img/carosello1.webp
+   - http://localhost:8080/img/iphone13promax_thumb.webp
+   - http://localhost:8080/img/ipadmini6_thumb.avif
+   - http://localhost:8080/img/iphone13_thumb.avif
+   - http://localhost:8080/font/LEMONMILK-Medium.otf
+
+   * Note: This is an environmental restriction on localhost.
+     HTTP/2 negotiation requires a secure connection (TLS/HTTPS). In a production
+     environment, this is handled via a reverse proxy (e.g., Nginx, Caddy, or Cloudflare) 
+     terminating TLS with a CA-issued certificate, rendering direct HTTPS configuration on 
+     the servlet engine unnecessary for development.
+================================================================================
