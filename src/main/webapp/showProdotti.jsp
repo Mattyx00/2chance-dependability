@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="css/general.css">
     <link rel="stylesheet" type="text/css" href="css/product.css">
+    <link rel="stylesheet" type="text/css" media="print" href="css/print.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <title>2Chance</title>
 </head>
@@ -74,7 +75,7 @@
     <c:forEach items="${prodotti}" var="prodotto">
         <a href="ProdottoServlet?prodotto=${prodotto.id}">
             <div class="prodotto">
-                <img src="${pageContext.request.contextPath}/img/${prodotto.immagine}" alt="prodotto" class="immagine-prodotto">
+                <img src="${pageContext.request.contextPath}/img/${prodotto.immagineThumbnail}" alt="prodotto" class="immagine-prodotto">
                 <p class="titolo-prodotto">${prodotto.modello}</p>
                 <p class="descrizione-prodotto">${prodotto.descrizione}</p>
                 <p class="prezzo-prodotto">${prodotto.prezzo}€</p>

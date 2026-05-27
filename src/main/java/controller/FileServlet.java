@@ -152,7 +152,9 @@ public class FileServlet extends HttpServlet {
             if (ifNoneMatch != null && matches(ifNoneMatch, eTag)) {
                 response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
                 response.setHeader("ETag", eTag); // Required in 304.
+                response.setHeader("Cache-Control", "public, max-age=604800");
                 response.setDateHeader("Expires", expires); // Postpone cache with 1 week.
+                response.setHeader("Access-Control-Allow-Origin", "*");
                 return;
             }
 
@@ -163,7 +165,9 @@ public class FileServlet extends HttpServlet {
             if (ifNoneMatch == null && ifModifiedSince != -1 && ifModifiedSince + 1000 > lastModified) {
                 response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
                 response.setHeader("ETag", eTag); // Required in 304.
+                response.setHeader("Cache-Control", "public, max-age=604800");
                 response.setDateHeader("Expires", expires); // Postpone cache with 1 week.
+                response.setHeader("Access-Control-Allow-Origin", "*");
                 return;
             }
 
@@ -289,7 +293,9 @@ public class FileServlet extends HttpServlet {
             response.setHeader("Accept-Ranges", "bytes");
             response.setHeader("ETag", eTag);
             response.setDateHeader("Last-Modified", lastModified);
+            response.setHeader("Cache-Control", "public, max-age=604800");
             response.setDateHeader("Expires", expires);
+            response.setHeader("Access-Control-Allow-Origin", "*");
 
             // Send requested file (part(s)) to client
             // ------------------------------------------------

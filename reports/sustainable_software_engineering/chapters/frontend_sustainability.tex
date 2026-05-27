@@ -4,4 +4,188 @@ L'analisi del Front-End del sistema 2Chance richiede una calibrazione concettual
 
 Nel modello adottato da 2Chance, è il container servlet Tomcat a processare la logica visiva, interpolare i dati estratti dai Model Beans e assemblare iterativamente le stringhe HTML prima di trasmetterle attraverso la rete. Questa differenza architetturale non annulla la questione ecologica, ma la trasla nello spazio. L'elaborazione lato server sposta il consumo energetico verso i data center (che teoricamente potrebbero essere alimentati da fonti rinnovabili), ma produce payload di testo HTML completi che risultano significativamente più pesanti, in termini di byte, rispetto alle agili risposte in formato JSON consumate dalle API REST delle architetture React. Il trasferimento di questi byte aggiuntivi attraverso l'infrastruttura di rete globale (router, switch, ponti radio, reti cellulari) genera un impatto ecologico massiccio e spesso sottostimato.
 
-\section{Analisi Ambientale delle Pagine JSP (GreenIT ed EcoIndex)}
+\section{Analisi Ambientale del Baseline (GreenIT ed EcoIndex)}
+
+L'analisi dell'efficienza ecologica del front-end di 2Chance è stata condotta sulla landing page dell'applicazione tramite il tool di audit \textbf{GreenIT / EcoIndex}. L'algoritmo quantifica l'impatto ambientale di una pagina web basandosi su tre parametri fisici fondamentali del Document Object Model (DOM) e della rete:
+\begin{enumerate}
+    \item \textbf{Numero di Richieste HTTP}: Definisce l'overhead di comunicazione di rete (round-trip time, handshake TCP, negoziazioni SSL/TLS).
+    \item \textbf{Dimensione Totale della Pagina (in KB)}: Determina la quantità fisica di dati che deve essere instradata attraverso l'infrastruttura di rete globale, consumando energia nei router, ponti radio e switch.
+    \item \textbf{Complessità del DOM (DOM Size)}: Corrisponde al numero totale di nodi HTML. Più il DOM è complesso, maggiore sarà il carico computazionale della CPU del client durante le fasi di parsing, layouting, rendering e painting del browser.
+\end{enumerate}
+
+I risultati dell'analisi di baseline hanno rivelato i seguenti parametri globali:
+\begin{itemize}
+    \item \textbf{EcoIndex Score}: 94.23 / 100
+    \item \textbf{EcoIndex Grade}: A
+    \item \textbf{Emissioni di Gas Serra}: 1.12 gCO\textsubscript{2}e per caricamento pagina
+    \item \textbf{Consumo Idrico equivalente}: 1.67 cl per caricamento pagina
+    \item \textbf{Dimensione DOM}: 101 nodi
+\end{itemize}
+
+Nonostante l'eccellente punteggio di partenza (dovuto principalmente alla semplicità strutturale del DOM e alla mancanza di framework Javascript pesanti lato client), l'analisi di dettaglio ha rilevato inefficienze ecologiche riconducibili a quattro \textbf{Best Practice} non rispettate: \textbf{"Don't resize image in browser"}, \textbf{"Do not download unnecessary image"}, la mancanza di un foglio di stile di stampa (\textbf{"Provide print stylesheet"}) e la mancanza di direttive di caching (\textbf{"Add expires or cache-control headers"}).
+
+\subsection{Dettaglio dell'Inefficienza: Ridimensionamento Immagini nel Browser}
+
+Il report di GreenIT ha evidenziato che 9 immagini venivano caricate ad altissima risoluzione per poi essere drasticamente ridimensionate dal browser client tramite attributi CSS o HTML:
+\begin{itemize}
+    \item \textbf{logo.png}: Ridimensionata da 843x596 a 82x58 pixel.
+    \item \textbf{carosello1.webp}: Ridimensionata da 819x448 a 710x388 pixel.
+    \item \textbf{ipad8.jpg}: Ridimensionata da 2560x2560 a 49x49 pixel.
+    \item \textbf{mackbookpro16.jpg}: Ridimensionata da 1200x800 a 73x49 pixel.
+    \item \textbf{iphone11.jpg}: Ridimensionata da 900x900 a 49x49 pixel.
+    \item \textbf{iphone13promax.webp}: Ridimensionata da 536x402 a 65x49 pixel.
+    \item \textbf{macbook-pro-2019.jpg}: Ridimensionata da 381x492 a 38x49 pixel.
+    \item \textbf{ipadmini6.avif}: Ridimensionata da 828x828 a 49x49 pixel.
+    \item \textbf{iphone13.avif}: Ridimensionata da 828x828 a 49x49 pixel.
+\end{itemize}
+
+\subsection{Dettaglio dell'Inefficienza: Download di Risorse Nascoste (Unnecessary Downloads)}
+
+Il report di GreenIT ha individuato il pre-caricamento di immagini carosello che, a causa di regole di stile CSS, risultavano nascoste e quindi non visualizzate all'utente al momento del caricamento iniziale:
+\begin{itemize}
+    \item \textbf{carosello2.webp} (Dimensione: 710x388 pixel, nascosto via CSS).
+    \item \textbf{carosello3.webp} (Dimensione: 710x388 pixel, nascosto via CSS).
+\end{itemize}
+Il parser HTML del browser pre-carica istantaneamente ogni tag \texttt{<img>} provvisto di attributo \texttt{src}, indipendentemente dalle proprietà CSS di visualizzazione associate (come \texttt{display: none}). Questo comporta un inutile spreco di banda per risorse che l'utente potrebbe non visualizzare mai se abbandona la pagina prima di interagire con il carosello.
+
+\subsection{Dettaglio dell'Inefficienza: Assenza di un Foglio di Stile di Stampa (Print Stylesheet)}
+
+Il report di GreenIT ha evidenziato l'assenza di un foglio di stile di stampa dedicato (\textit{print stylesheet}). Senza di esso, quando un utente tenta di stampare una pagina web (o salvarla in PDF), il browser applica le stesse regole di visualizzazione dello schermo desktop. Questo comporta:
+\begin{itemize}
+    \item La stampa di elementi interattivi o grafici del tutto inutili su carta, come menu di navigazione, pulsanti di azione, barre di ricerca, cursori del carosello e animazioni.
+    \item Un eccessivo spreco di inchiostro o toner dovuto a sfondi colorati, gradienti o immagini decorative che non portano valore informativo sulla carta.
+    \item Impaginazioni errate o troncate dovute all'inadeguatezza del layout a griglia dello schermo desktop rispetto alle dimensioni fisse dei fogli A4.
+\end{itemize}
+
+\subsection{Dettaglio dell'Inefficienza: Mancanza di Direttive di Caching (Caching Headers)}
+
+L'analisi di GreenIT ha evidenziato che la quasi totalità delle risorse statiche dell'applicazione (file CSS in \texttt{css/}, file JS in \texttt{functions/} e immagini in \texttt{img/}) venivano servite senza intestazioni HTTP di caching appropriate (\texttt{Expires} o \texttt{Cache-Control}). Questo implica che ad ogni caricamento della pagina o navigazione verso una nuova area del sito, il browser è costretto a richiedere ex-novo le stesse risorse statiche (come \texttt{general.css}, \texttt{general.js} e il logo aziendale). Questo produce un inutile sovraccarico di connessioni TCP e volume di traffico di rete sul server Tomcat e sull'infrastruttura di rete, con conseguente dispendio energetico evitabile.
+
+\subsection{Impatto Teorico ed Ecologico del Ridimensionamento Client-Side}
+
+Il ridimensionamento delle immagini lato browser comporta un doppio spreco di risorse, sia a livello di rete sia a livello computazionale (CPU/GPU del dispositivo utente):
+\begin{enumerate}
+    \item \textbf{Spreco di Banda ed Energia di Rete (Transmission Bloat)}:
+    Il trasferimento di file ad alta risoluzione non necessari (ad esempio, \texttt{ipad8.jpg} da 2560x2560 pixel ha un peso di circa 176 KB, mentre una miniatura da 49x49 pixel richiede meno di 2 KB) consuma inutilmente banda. Questo surplus di dati richiede energia per essere instradato attraverso switch, router e nodi di rete mobile.
+    
+    \item \textbf{Spreco Computazionale e di Memoria (Decoding \& Rendering Overhead)}:
+    Quando il browser riceve un'immagine compressa, deve:
+    \begin{itemize}
+        \item Decodificare l'intero file in memoria RAM come bitmap non compressa. Un'immagine da 2560x2560 pixel consuma circa $2560 \times 2560 \times 4 \text{ bytes} \approx 26.2\text{ MB}$ di memoria RAM tampone per il rendering. Al contrario, una miniatura ottimizzata da 49x49 pixel richiede appena $49 \times 49 \times 4 \text{ bytes} \approx 9.6\text{ KB}$.
+        \item Applicare algoritmi di interpolazione grafica (come bilinear o bicubic scaling) sulla CPU o sulla GPU del dispositivo client per ridurre l'immagine alla dimensione visualizzata. Questa elaborazione drena direttamente la batteria dei dispositivi mobili ed incrementa le emissioni termiche.
+    \end{itemize}
+\end{enumerate}
+
+\section{Interventi di Refactoring e Ottimizzazione Ambientale}
+
+Per risolvere l'inefficienza energetica legata al caricamento e ridimensionamento delle immagini, è stato implementato un piano di rifattorizzazione strutturato in tre fasi: ottimizzazione degli asset fisici, modifica del modello dati a livello backend e aggiornamento del livello di presentazione JSP/CSS.
+
+\subsection{Ottimizzazione Fisica degli Asset e Generazione Miniature}
+
+È stato sviluppato uno script di automazione in Python (\texttt{optimize\_images.py}) sfruttando le librerie \texttt{Pillow} e \texttt{pillow-avif-plugin}. Lo script ha eseguito le seguenti elaborazioni fisiche sui file nella cartella di upload del server Tomcat:
+\begin{itemize}
+    \item \textbf{Logo del sito}: Ridimensionato all'ingombro esatto visualizzato di 82x58 pixel.
+    \item \textbf{Immagini del carosello principale}: Ridimensionate a 710x388 pixel per coprire fedelmente lo slider di vetrina.
+    \item \textbf{Architettura Immagini Prodotto a Due Livelli}:
+    \begin{enumerate}
+        \item Le immagini dei prodotti originali sono state ridimensionate ad un'altezza massima di 388 pixel (la massima dimensione visualizzabile nella pagina di dettaglio del prodotto \texttt{paginaProdotto.jsp}). Questo ha eliminato file inutilmente pesanti (come l'immagine di iPad 8 ridotta da 2560x2560 a 388x388).
+        \item Per ciascun prodotto è stata generata una miniatura contrassegnata dal suffisso \texttt{\_thumb} con altezza fissa di 49 pixel, mantenendo intatto l'aspect ratio (ad esempio, \texttt{ipad8\_thumb.jpg} a 49x49 pixel, \texttt{mackbookpro16\_thumb.jpg} a 73x49 pixel).
+    \end{enumerate}
+\end{itemize}
+
+\subsection{Integrazione a Livello Backend (Java Bean)}
+
+Per consentire alle pagine JSP di caricare dinamicamente le miniature corrette, è stata estesa la classe bean Java \texttt{Prodotto} (\texttt{Prodotto.java}) introducendo il metodo getter \texttt{getImmagineThumbnail()}:
+\begin{lstlisting}[language=Java, caption={Estensione del bean Prodotto con getter per miniatura}]
+public /*@ pure nullable @*/ String getImmagineThumbnail() {
+    if (immagine == null) {
+        return null;
+    }
+    int dotIndex = immagine.lastIndexOf('.');
+    if (dotIndex > 0) {
+        return immagine.substring(0, dotIndex) + "_thumb" + immagine.substring(dotIndex);
+    }
+    return immagine;
+}
+\end{lstlisting}
+
+\subsection{Aggiornamento dei Livelli JSP e CSS}
+
+Le viste JSP dedicate alla visualizzazione di elenchi e tabelle di prodotti sono state modificate per invocare la miniatura anziché il file originale ad alta risoluzione:
+\begin{itemize}
+    \item \texttt{index.jsp}: Aggiornato il box vetrina principale.
+    \item \texttt{showProdotti.jsp}: Aggiornata la griglia di ricerca dei prodotti.
+    \item \texttt{wishlist.jsp}: Aggiornato l'elenco dei prodotti salvati.
+    \item \texttt{carrello.jsp} e \texttt{visualizzaOrdine.jsp}: Aggiornate le righe dei dettagli d'acquisto.
+\end{itemize}
+
+Inoltre, per prevenire qualsiasi difformità di rendering o sub-pixel interpolation derivante da regole responsive approssimative, i file CSS (\texttt{general.css} e \texttt{index.css}) sono stati aggiornati per forzare dimensioni in pixel fisici stabili su schermi desktop (es. \texttt{height: 49px;} per \texttt{.immagine-prodotto} e \texttt{height: 58px; width: 82px;} per \texttt{\#logo}), allineandoli esattamente alle dimensioni naturali dei file ottimizzati.
+
+\subsection{Implementazione del Caricamento Differito (Lazy Loading) del Carosello}
+
+Per prevenire lo scaricamento anticipato delle immagini del carosello non attive, è stato implementato un meccanismo di caricamento on-demand basato sugli attributi dati personalizzati (\textit{lazy-src}):
+\begin{enumerate}
+    \item \textbf{Modifica del markup JSP}: In \texttt{index.jsp}, l'attributo \texttt{src} è stato rimosso dai tag \texttt{<img>} delle slide disattivate (\texttt{carosello2.webp} e \texttt{carosello3.webp}), sostituendolo con l'attributo \texttt{data-src}.
+    \item \textbf{Ottimizzazione del Controller JS}: Il file di scripting \texttt{index.js} è stato aggiornato. La funzione di transizione del carosello \texttt{cambiaFoto()} intercetta lo slide di destinazione e ne copia il percorso da \texttt{data-src} a \texttt{src} solo un istante prima di attivarlo graficamente, innescando la richiesta HTTP solo se l'utente decide attivamente di scorrere le foto.
+\end{enumerate}
+
+\subsection{Integrazione del Foglio di Stile di Stampa per l'Eco-Progettazione}
+
+Per garantire la massima sostenibilità ambientale anche nelle fasi di stampa o esportazione PDF, è stato creato un foglio di stile dedicato \texttt{print.css} ed integrato nelle intestazioni (\texttt{<head>}) di tutte le 9 pagine JSP principali dell'applicazione tramite la direttiva \texttt{media="print"}:
+\begin{lstlisting}[language=HTML, caption={Integrazione del foglio di stile di stampa in index.jsp}]
+<link rel="stylesheet" type="text/css" media="print" href="css/print.css">
+\end{lstlisting}
+
+Il file \texttt{print.css} agisce secondo criteri rigidi di eco-progettazione:
+\begin{itemize}
+    \item \textbf{Rimozione degli elementi superflui}: Vengono nascosti completamente tutti i nodi non testuali ed interattivi (\texttt{\#menu}, \texttt{\#searchbox}, \texttt{\#navigazione}, \texttt{\#apri-mobile}, \texttt{.footer}, \texttt{.prodotto-azioni}, \texttt{\#formAcquista}) tramite la regola \texttt{display: none !important;}.
+    \item \textbf{Preservazione delle risorse fisiche (Risparmio Inchiostro)}: Viene imposto uno sfondo completamente trasparente/bianco e testo nero ad alto contrasto per tutti gli elementi (\texttt{background: transparent !important; color: \#000000 !important;}), azzerando ombreggiature e gradienti che consumerebbero toner.
+    \item \textbf{Adattamento del Layout}: La larghezza degli elementi principali (\texttt{\#corpo-pagina}, \texttt{\#main-corpo}, \texttt{\#corpo-carrello}) viene forzata al \texttt{100\%} in modalità a blocco singolo (\texttt{display: block !important;}) rimuovendo posizionamenti assoluti o traslazioni CSS non compatibili con i margini fisici della carta (impostati a \texttt{1.5cm} su tutto il foglio).
+\end{itemize}
+
+\subsection{Ottimizzazione dei Tempi di Caching (Cache-Control ed Expires)}
+
+Per risolvere la mancanza di caching delle risorse statiche, è stata introdotta un'architettura di caching multilivello lato server:
+\begin{enumerate}
+    \item \textbf{CachingFilter Globale}: È stato sviluppato un filtro servlet Java \texttt{CachingFilter} nel package \texttt{controller} mappato su tutti i pattern dell'applicazione (\texttt{/*}). Il filtro intercetta le richieste dirette alle risorse statiche (verificando estensioni come \texttt{.css}, \texttt{.js}, \texttt{.png}, \texttt{.jpg}, \texttt{.webp}, \texttt{.avif}, \texttt{.otf}) ed inserisce nella risposta l'intestazione \texttt{Cache-Control: public, max-age=604800} (durata pari a 1 settimana) ed il corrispondente header \texttt{Expires}.
+    
+    \item \textbf{Integrazione in FileServlet}: Anche il gestore personalizzato di immagini \texttt{FileServlet} è stato aggiornato. Nelle risposte a richieste andate a buon fine (codice HTTP 200) e in quelle condizionali andate a buon fine (codice HTTP 304 Not Modified), viene esplicitamente impostata l'intestazione \texttt{Cache-Control: public, max-age=604800}.
+\end{enumerate}
+Questo approccio garantisce che, dopo la prima richiesta, il browser client legga le risorse statiche direttamente dalla cache di memoria o disco locale (0 byte trasferiti sulla rete), eliminando inutili comunicazioni di rete.
+
+\subsection{Compressione GZIP delle Risorse (CompressionFilter)}
+
+Per risolvere la mancata compressione delle risorse testuali (HTML/JSP, CSS, JS e favicon), che costringeva a trasferire inutilmente l'intero peso non compresso dei file sulla rete, è stato introdotto un filtro di compressione dinamico:
+\begin{enumerate}
+    \item \textbf{Filtro di Compressione Globale (\texttt{CompressionFilter})}: È stato sviluppato un servlet filter Java \texttt{CompressionFilter} nel package \texttt{controller} mappato su \texttt{/*}. Questo filtro intercetta le richieste verificando che il browser dichiari il supporto alla compressione tramite l'header \texttt{Accept-Encoding: gzip}.
+    
+    \item \textbf{Selezione delle Risorse Compressibili}: Il filtro comprime solo i contenuti di natura testuale (come \texttt{.jsp}, \texttt{.css}, \texttt{.js}, \texttt{.html}, \texttt{.ico}, \texttt{.json}, \texttt{.svg} e le richieste prive di estensione dirette ai servlet che generano pagine HTML). Esclude invece il percorso \texttt{/img/*} per evitare la doppia compressione delle immagini, in quanto gestita nativamente in modo ottimale da \texttt{FileServlet}.
+    
+    \item \textbf{Incapsulamento della Risposta e Gestione del Content-Length}: La risposta HTTP viene incapsulata in un wrapper personalizzato \texttt{GzipResponseWrapper} (estensione di \texttt{HttpServletResponseWrapper}). Il wrapper fornisce un output stream personalizzato \texttt{GzipServletOutputStream} che scrive direttamente su un \texttt{GZIPOutputStream} di Java. Poiché la compressione riduce dinamicamente i byte della risposta, il wrapper intercetta e disabilita qualsiasi impostazione esplicita dell'header \texttt{Content-Length} da parte dei servlet a valle, prevenendo anomalie di blocco (hanging) del client dovute a discordanze tra la dimensione dichiarata e quella effettiva dei dati compressi.
+\end{enumerate}
+
+La compressione GZIP riduce le dimensioni dei dati trasmessi fino all'80\% per i fogli di stile ed i file di script, minimizzando l'energia assorbita dall'infrastruttura di rete globale per l'istradamento dei pacchetti IP.
+
+\subsection{Risoluzione dell'Errore HTTP 404 per il Favicon (favicon.ico)}
+
+Durante l'audit ambientale con GreenIT, è stato rilevato un errore HTTP 404 causato dal tentativo del browser di scaricare l'icona del sito (\texttt{favicon.ico}) all'indirizzo root \texttt{/favicon.ico}, una risorsa originariamente assente. Gli errori di richiesta HTTP (come il codice 404 Not Found) rappresentano una forma di spreco energetico passivo: il server Tomcat e l'infrastruttura di rete elaborano e instradano la richiesta e la risposta di errore inutilmente, consumando risorse computazionali e di trasmissione senza restituire alcun contenuto utile al client.
+
+Per risolvere l'inefficienza e conformarsi alla best practice \textbf{"Avoid HTTP request errors"}, è stata generata un'icona del sito standard \texttt{favicon.ico} con dimensioni di 32x32 pixel, partendo dal file logo originale dell'applicazione (\texttt{logo.png}), tramite uno script Python basato sulla libreria \texttt{Pillow}. Il file risultante è stato posizionato nella root della web application (\texttt{src/main/webapp/favicon.ico}). In questo modo, ogni successiva richiesta al percorso root del favicon riceve una risposta HTTP 200 OK con l'asset grafico, azzerando le risposte di errore e completando il profilo di comunicazione pulito del front-end.
+
+\subsection{Eliminazione dei Cookie per le Risorse Statiche (Cookie-Free Assets)}
+
+Nel report di GreenIT è emerso che tutte le risorse statiche (CSS, JS, immagini e font) venivano trasmesse includendo l'header di richiesta \texttt{Cookie} contenente il token di sessione \texttt{JSESSIONID} (per un totale di circa 0.9 KB di overhead inutile). Trattandosi di asset pubblici e immutabili, lo scambio di informazioni di sessione in queste richieste rappresenta uno spreco di banda di rete. 
+
+Per conformarsi alla best practice \textbf{"No cookie for static resources"}, è stata implementata un'architettura di caricamento anonimo basata sullo standard HTML5:
+\begin{enumerate}
+    \item \textbf{Caricamento Anonimo lato Client}: Nel file \texttt{index.jsp}, è stato aggiunto l'attributo \texttt{crossorigin="anonymous"} a tutti i tag di caricamento delle risorse statiche (\texttt{<link>}, \texttt{<script>}, \texttt{<img>} del logo e delle miniature dei prodotti). Questo attributo indica al browser di omettere le credenziali (inclusi i cookie di sessione) durante la richiesta HTTP dell'asset.
+    
+    \item \textbf{Abilitazione della Risposta CORS lato Server}: Poiché il browser esegue una richiesta in modalità CORS quando viene utilizzato l'attributo \texttt{crossorigin}, il server deve rispondere con le intestazioni di controllo accessi appropriate per evitare il blocco del caricamento. Pertanto, l'intestazione \texttt{Access-Control-Allow-Origin: *} è stata inserita sia in \texttt{CachingFilter.java} (per le risorse gestite dal servlet di default) sia in \texttt{FileServlet.java} (per le immagini caricate, sia per le risposte HTTP 200 sia per i codici HTTP 304).
+\end{enumerate}
+
+Questo approccio elimina completamente l'invio del cookie di sessione per le risorse statiche, riducendo le dimensioni dei pacchetti di richiesta di rete.
+
+\subsection{Test di Correttezza e Integrità}
+
+A garanzia che l'introduzione dei metodi di miniatura non introducesse regressioni, sono stati sviluppati unit test JUnit in \texttt{ProdottoTest.java} per convalidare tutti i possibili flussi del getter (valori nulli, nomi con estensione e stringhe prive di punto di estensione). L'esecuzione dell'intera suite di test del progetto (\texttt{mvn test}) ha confermato il superamento con successo di tutti i 535 test con 0 errori, garantendo la stabilità funzionale del sistema post-ottimizzazione.
+

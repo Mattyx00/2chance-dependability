@@ -25,7 +25,8 @@ body{
 }
 
 #logo{
-    height: 6vh;
+    height: 58px;
+    width: 82px;
     cursor: pointer;
 }
 

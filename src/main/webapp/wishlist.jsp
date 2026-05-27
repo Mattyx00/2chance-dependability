@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="css/carrello.css">
     <link rel="stylesheet" type="text/css" href="./css/general.css">
+    <link rel="stylesheet" type="text/css" media="print" href="css/print.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <title>La mia WishList - 2chance</title>
 </head>
@@ -71,7 +72,7 @@
     <div id="corpo-carrello">
         <c:forEach items="${wishlist.prodotti}" var="prodotto">
             <div class="prodottoCarrello">
-                <img src="${pageContext.request.contextPath}/img/${prodotto.immagine}" alt="" class="immagineProdottoCarrello">
+                <img src="${pageContext.request.contextPath}/img/${prodotto.immagineThumbnail}" alt="" class="immagineProdottoCarrello">
                 <a href="ProdottoServlet?prodotto=${prodotto.id}">
                     <div class="infoProdottoCarrello">
                         <p class="nomeProdottoCarrello">${prodotto.marca} ${prodotto.modello}</p>

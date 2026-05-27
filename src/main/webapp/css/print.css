@@ -1,0 +1,74 @@
+/* Print Stylesheet for 2Chance - Optimizes page for black-and-white printing and saves ink */
+
+@media print {
+    /* Hide navigation bar, search bar, icons, and footers */
+    #menu,
+    #searchbox,
+    #navigazione,
+    #navigazione-mobile,
+    #apri-mobile,
+    #carosello-cursori,
+    .footer,
+    .prodotto-azioni,
+    #editImmagine,
+    #nuovarecensione,
+    .eliminaProdottoCarrello,
+    #stelle,
+    #formAcquista {
+        display: none !important;
+    }
+
+    /* Force light backgrounds and dark text to conserve ink */
+    * {
+        background: transparent !important;
+        color: #000000 !important;
+        box-shadow: none !important;
+        text-shadow: none !important;
+    }
+
+    body {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 1.5cm !important;
+        font-size: 12pt !important;
+        line-height: 1.5 !important;
+        background-color: #ffffff !important;
+    }
+
+    /* Page structure adjustments */
+    #corpo-pagina,
+    #main-corpo,
+    #prodotti-vetrina,
+    #prodotto,
+    #prodotto-info,
+    #info-box,
+    #corpo-carrello {
+        width: 100% !important;
+        height: auto !important;
+        position: static !important;
+        display: block !important;
+        transform: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        box-shadow: none !important;
+        border: none !important;
+    }
+
+    /* Image adjustments */
+    img {
+        max-width: 100% !important;
+        page-break-inside: avoid !important;
+    }
+
+    /* Link formatting: show URL next to links */
+    a[href]:after {
+        content: " (" attr(href) ")";
+        font-size: 9pt !important;
+        color: #555555 !important;
+    }
+
+    a[href^="#"]:after,
+    a[href^="javascript:"]:after {
+        content: "" !important;
+    }
+}

@@ -1,0 +1,128 @@
+================================================================================
+                      GREEN IT - ECOINDEX ANALYSIS REPORT
+                                  (STAGE 2)
+================================================================================
+
+GLOBAL METRICS:
+--------------------------------------------------------------------------------
+Metric                              | Value
+--------------------------------------------------------------------------------
+EcoIndex Grade                      | A
+EcoIndex Score                      | 87.06
+Water Consumption (cl)              | 1.89
+Greenhouse Gases Emission (gCO2e)   | 1.26
+Request Number                      | 22
+Page Size (KB)                      | 352 (450)
+DOM Size                            | 101
+--------------------------------------------------------------------------------
+
+BEST PRACTICES:
+--------------------------------------------------------------------------------
+Best Practice                       | Status  | Details / Notes
+--------------------------------------------------------------------------------
+Add expires or cache-control headers| FAILED  | 4 / 13 resources cached (see details below)
+Compress ressources (>= 95%)        | FAILED  | 88.1% resources compressed (see details below)
+Limit the number of domains (<6)    | PASSED  | 3 domain(s) found
+Don't resize image in browser       | FAILED  | 9 image(s) resized in browser (see details below)
+Externalize css and js              | PASSED  | No inline stylesheet or inline javascript found
+Avoid HTTP request errors           | FAILED  | 1 HTTP error(s) (see details below)
+Limit the number of HTTP requests   | PASSED  | 22 HTTP request(s) (<=40)
+Do not download unecessary image    | FAILED  | 2 image(s) downloaded but not displayed (see below)
+Minified cs and js                  | N/A     | Analyse not supported by this browser
+No cookie for static ressources     | FAILED  | 9 static ressource(s) with cookie (see below)
+Avoid redirect                      | PASSED  | 0 redirect
+Optimize bitmap images              | PASSED  | No bitmap image to optimize
+Optimize svg images                 | N/A     | Analyse not supported by this browser
+Provide print stylesheet            | FAILED  | No print stylesheet found
+Do not use standarts social button  | PASSED  | No standart social network button found
+Limit Stylesheet files (<=10)       | PASSED  | Not more that 7 stylesheets found
+Use HTTP/2 instead of HTTP/1        | FAILED  | 18/22 resources using HTTP/1 (see details below)
+Use Standard Fonts                  | PASSED  | No custom fonts found
+--------------------------------------------------------------------------------
+
+================================================================================
+                         DETAILED ANALYSIS OF FAILURES
+================================================================================
+
+1. Add expires or cache-control headers (4 / 13 resources cached):
+   - http://localhost:8080/css/general.css (no Expires or Cache-Control header)
+   - http://localhost:8080/css/index.css (no Expires or Cache-Control header)
+   - http://localhost:8080/functions/index.js (no Expires or Cache-Control header)
+   - http://localhost:8080/functions/general.js (no Expires or Cache-Control header)
+   - http://localhost:8080/img/logo.png (no Expires or Cache-Control header)
+   - http://localhost:8080/img/ipad8.jpg (no Expires or Cache-Control header)
+   - http://localhost:8080/img/mackbookpro16.jpg (no Expires or Cache-Control header)
+   - http://localhost:8080/img/iphone11.jpg (no Expires or Cache-Control header)
+   - http://localhost:8080/img/macbook-pro-2019.jpg (no Expires or Cache-Control header)
+
+2. Compress ressources (>= 95%):
+   - 88.1% resources compressed
+   - Not compressed:
+     - http://localhost:8080/landingpage (9.5KB)
+     - http://localhost:8080/css/general.css (4KB)
+     - http://localhost:8080/css/index.css (4.6KB)
+     - http://localhost:8080/functions/index.js (1.2KB)
+     - http://localhost:8080/functions/general.js (0.4KB)
+     - http://localhost:8080/favicon.ico (0.4KB)
+
+3. Don't resize image in browser (9 images found):
+   - http://localhost:8080/img/logo.png
+     Resized from 82x58 to 2x1
+   - http://localhost:8080/img/carosello1.webp
+     Resized from 710x388 to 18x10
+   - http://localhost:8080/img/ipad8.jpg
+     Resized from 388x388 to 1x1
+   - http://localhost:8080/img/mackbookpro16.jpg
+     Resized from 582x388 to 2x1
+   - http://localhost:8080/img/iphone11.jpg
+     Resized from 388x388 to 1x1
+   - http://localhost:8080/img/iphone13promax.webp
+     Resized from 517x388 to 2x1
+   - http://localhost:8080/img/macbook-pro-2019.jpg
+     Resized from 300x388 to 1x1
+   - http://localhost:8080/img/ipadmini6.avif
+     Resized from 388x388 to 1x1
+   - http://localhost:8080/img/iphone13.avif
+     Resized from 388x388 to 1x1
+
+4. Avoid HTTP request errors (1 HTTP error):
+   - 404 http://localhost:8080/favicon.ico
+
+5. Do not download unecessary image (2 images found):
+   - http://localhost:8080/img/carosello2.webp (710x388, is not displayed)
+   - http://localhost:8080/img/carosello3.webp (710x388, is not displayed)
+
+6. No cookie for static ressources (9 static resources with cookies, total of 0.9KB):
+   - http://localhost:8080/css/general.css
+   - http://localhost:8080/css/index.css
+   - http://localhost:8080/functions/index.js
+   - http://localhost:8080/functions/general.js
+   - http://localhost:8080/img/logo.png
+   - http://localhost:8080/img/ipad8.jpg
+   - http://localhost:8080/img/mackbookpro16.jpg
+   - http://localhost:8080/img/iphone11.jpg
+   - http://localhost:8080/img/macbook-pro-2019.jpg
+
+7. Provide print stylesheet:
+   - No print stylesheet found
+
+8. Use HTTP/2 instead of HTTP/1 (18/22 resources using HTTP/1):
+   - http://localhost:8080/landingpage
+   - http://localhost:8080/css/general.css
+   - http://localhost:8080/css/index.css
+   - http://localhost:8080/functions/index.js
+   - http://localhost:8080/functions/general.js
+   - http://localhost:8080/img/logo.png
+   - http://localhost:8080/img/carosello1.webp
+   - http://localhost:8080/img/carosello2.webp
+   - http://localhost:8080/img/carosello3.webp
+   - http://localhost:8080/img/ipad8.jpg
+   - http://localhost:8080/img/mackbookpro16.jpg
+   - http://localhost:8080/img/iphone11.jpg
+   - http://localhost:8080/img/iphone13promax.webp
+   - http://localhost:8080/img/macbook-pro-2019.jpg
+   - http://localhost:8080/img/ipadmini6.avif
+   - http://localhost:8080/img/iphone13.avif
+   - http://localhost:8080/font/LEMONMILK-Medium.otf
+   - http://localhost:8080/favicon.ico
+================================================================================

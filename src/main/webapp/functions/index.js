@@ -43,7 +43,12 @@ function cambiaFoto(foto){
 		}
 	}
 
-	$(`#carosello img`).eq(foto_attuale).removeClass("carosello-disattivata");
-	$(`#carosello img`).eq(foto_attuale).addClass("carosello-attiva");
+	let nextImg = $(`#carosello img`).eq(foto_attuale);
+	let dataSrc = nextImg.attr("data-src");
+	if (dataSrc && !nextImg.attr("src")) {
+		nextImg.attr("src", dataSrc);
+	}
+	nextImg.removeClass("carosello-disattivata");
+	nextImg.addClass("carosello-attiva");
 
 }

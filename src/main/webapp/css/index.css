@@ -76,7 +76,8 @@
 }
 
 #carosello img{
-	height: 40vh;
+	height: 388px;
+	width: 710px;
     margin: 0;
     padding: 0;
 }
@@ -140,7 +141,8 @@
 }
 
 .immagine-prodotto{
-	height: 5vh;
+	height: 49px;
+	width: auto;
 	margin-top: 2px;
 }
 

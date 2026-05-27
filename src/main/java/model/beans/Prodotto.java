@@ -212,6 +212,20 @@ public class Prodotto {
     }
 
     /*@
+      @ ensures immagine == null ==> \result == null;
+      @*/
+    public /*@ pure nullable @*/ String getImmagineThumbnail() {
+        if (immagine == null) {
+            return null;
+        }
+        int dotIndex = immagine.lastIndexOf('.');
+        if (dotIndex > 0) {
+            return immagine.substring(0, dotIndex) + "_thumb" + immagine.substring(dotIndex);
+        }
+        return immagine;
+    }
+
+    /*@
       @ ensures \result == descrizione;
       @*/
     public /*@ pure nullable @*/ String getDescrizione() {

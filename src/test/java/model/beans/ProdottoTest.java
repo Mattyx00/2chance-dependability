@@ -370,4 +370,36 @@ class ProdottoTest {
         // Assert
         assertEquals(validImage, product.getImmagine());
     }
+
+    // --- getImmagineThumbnail ---
+
+    @Test
+    @DisplayName("shouldReturnNullWhenImmagineIsNull")
+    void shouldReturnNullWhenImmagineIsNull() {
+        // Act
+        product.setImmagine(null);
+
+        // Assert
+        assertNull(product.getImmagineThumbnail());
+    }
+
+    @Test
+    @DisplayName("shouldReturnThumbnailNameWhenImmagineHasExtension")
+    void shouldReturnThumbnailNameWhenImmagineHasExtension() {
+        // Arrange
+        product.setImmagine("ipad8.jpg");
+
+        // Act & Assert
+        assertEquals("ipad8_thumb.jpg", product.getImmagineThumbnail());
+    }
+
+    @Test
+    @DisplayName("shouldReturnOriginalNameWhenImmagineHasNoExtension")
+    void shouldReturnOriginalNameWhenImmagineHasNoExtension() {
+        // Arrange
+        product.setImmagine("ipad8");
+
+        // Act & Assert
+        assertEquals("ipad8", product.getImmagineThumbnail());
+    }
 }

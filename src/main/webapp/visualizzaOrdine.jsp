@@ -76,7 +76,7 @@
             request.setAttribute("index", cod);%>
         <c:forEach items="${sessionScope.user.ordini[requestScope.index].carrello.prodotti}" var="prodotto">
             <div class="prodottoCarrello">
-                <img src="${pageContext.request.contextPath}/img/${prodotto.prodotto.immagine}" alt="" class="immagineProdottoCarrello">
+                <img src="${pageContext.request.contextPath}/img/${prodotto.prodotto.immagineThumbnail}" alt="" class="immagineProdottoCarrello">
                 <a href="ProdottoServlet?prodotto=${prodotto.prodotto.id}">
                     <div class="infoProdottoCarrello">
                         <p class="nomeProdottoCarrello">${prodotto.prodotto.marca} ${prodotto.prodotto.modello}</p>
