@@ -10,7 +10,7 @@ import java.io.IOException;
 @WebFilter(filterName = "CachingFilter", urlPatterns = "/*")
 public class CachingFilter implements Filter {
 
-    private static final long MAX_AGE_SECONDS = 604800L; // 1 week
+    private static final long MAX_AGE_SECONDS = 31536000L; // 1 year
 
     private static class CacheControlResponseWrapper extends HttpServletResponseWrapper {
         private final long maxAge;
@@ -23,7 +23,7 @@ public class CachingFilter implements Filter {
         @Override
         public void setHeader(String name, String value) {
             if ("Cache-Control".equalsIgnoreCase(name)) {
-                super.setHeader(name, "public, max-age=" + maxAge);
+                super.setHeader(name, "public, max-age=" + maxAge + ", immutable");
             } else {
                 super.setHeader(name, value);
             }
@@ -32,7 +32,7 @@ public class CachingFilter implements Filter {
         @Override
         public void addHeader(String name, String value) {
             if ("Cache-Control".equalsIgnoreCase(name)) {
-                super.setHeader(name, "public, max-age=" + maxAge);
+                super.setHeader(name, "public, max-age=" + maxAge + ", immutable");
             } else {
                 super.addHeader(name, value);
             }
@@ -53,7 +53,7 @@ public class CachingFilter implements Filter {
 
         if (isStaticResource(requestURI)) {
             CacheControlResponseWrapper wrappedResponse = new CacheControlResponseWrapper(httpResponse, MAX_AGE_SECONDS);
-            wrappedResponse.setHeader("Cache-Control", "public, max-age=" + MAX_AGE_SECONDS);
+            wrappedResponse.setHeader("Cache-Control", "public, max-age=" + MAX_AGE_SECONDS + ", immutable");
             wrappedResponse.setDateHeader("Expires", System.currentTimeMillis() + (MAX_AGE_SECONDS * 1000L));
             wrappedResponse.setHeader("Access-Control-Allow-Origin", "*");
             chain.doFilter(request, wrappedResponse);

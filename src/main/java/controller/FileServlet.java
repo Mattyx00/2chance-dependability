@@ -23,7 +23,7 @@ public class FileServlet extends HttpServlet {
     // ----------------------------------------------------------------------------------
 
     private static final int DEFAULT_BUFFER_SIZE = 10240; // ..bytes = 10KB.
-    private static final long DEFAULT_EXPIRE_TIME = 604800000L; // ..ms = 1 week.
+    private static final long DEFAULT_EXPIRE_TIME = 31536000000L; // ..ms = 1 year.
     private static final String MULTIPART_BOUNDARY = "MULTIPART_BYTERANGES";
 
     // Properties
@@ -152,8 +152,8 @@ public class FileServlet extends HttpServlet {
             if (ifNoneMatch != null && matches(ifNoneMatch, eTag)) {
                 response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
                 response.setHeader("ETag", eTag); // Required in 304.
-                response.setHeader("Cache-Control", "public, max-age=604800");
-                response.setDateHeader("Expires", expires); // Postpone cache with 1 week.
+                response.setHeader("Cache-Control", "public, max-age=31536000, immutable");
+                response.setDateHeader("Expires", expires); // Postpone cache with 1 year.
                 response.setHeader("Access-Control-Allow-Origin", "*");
                 return;
             }
@@ -165,8 +165,8 @@ public class FileServlet extends HttpServlet {
             if (ifNoneMatch == null && ifModifiedSince != -1 && ifModifiedSince + 1000 > lastModified) {
                 response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
                 response.setHeader("ETag", eTag); // Required in 304.
-                response.setHeader("Cache-Control", "public, max-age=604800");
-                response.setDateHeader("Expires", expires); // Postpone cache with 1 week.
+                response.setHeader("Cache-Control", "public, max-age=31536000, immutable");
+                response.setDateHeader("Expires", expires); // Postpone cache with 1 year.
                 response.setHeader("Access-Control-Allow-Origin", "*");
                 return;
             }
@@ -293,7 +293,7 @@ public class FileServlet extends HttpServlet {
             response.setHeader("Accept-Ranges", "bytes");
             response.setHeader("ETag", eTag);
             response.setDateHeader("Last-Modified", lastModified);
-            response.setHeader("Cache-Control", "public, max-age=604800");
+            response.setHeader("Cache-Control", "public, max-age=31536000, immutable");
             response.setDateHeader("Expires", expires);
             response.setHeader("Access-Control-Allow-Origin", "*");
 

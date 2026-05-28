@@ -89,12 +89,12 @@
 <div id="prodotti">
     <c:forEach items="${prodotti}" var="prodotto">
         <a href="ProdottoServlet?prodotto=${prodotto.id}">
-            <div class="prodotto">
-                <img src="${assetHost}img/${prodotto.immagineThumbnail}" alt="prodotto" class="immagine-prodotto" crossorigin="anonymous">
-                <p class="titolo-prodotto">${prodotto.modello}</p>
+            <article class="prodotto">
+                <img src="${assetHost}img/${prodotto.immagineThumbnail}" alt="prodotto" class="immagine-prodotto" loading="lazy" crossorigin="anonymous">
+                <h3 class="titolo-prodotto">${prodotto.modello}</h3>
                 <p class="descrizione-prodotto">${prodotto.descrizione}</p>
                 <p class="prezzo-prodotto">${prodotto.prezzo}€</p>
-            </div>
+            </article>
         </a>
     </c:forEach>
 </div>
