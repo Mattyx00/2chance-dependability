@@ -13,6 +13,14 @@ L'analisi dell'efficienza ecologica del front-end di 2Chance è stata condotta s
     \item \textbf{Complessità del DOM (DOM Size)}: Corrisponde al numero totale di nodi HTML. Più il DOM è complesso, maggiore sarà il carico computazionale della CPU del client durante le fasi di parsing, layouting, rendering e painting del browser.
 \end{enumerate}
 
+\subsection{Metodologia di Valutazione: Contesto Reale (GreenIT-Analysis) vs Contesto Laboratorio (EcoIndex)}
+
+Per orientare le attività di ottimizzazione, è fondamentale definire la distinzione metodologica tra i due contesti di analisi:
+\begin{itemize}
+    \item \textbf{GreenIT-Analysis (Il Contesto Inquinato/Reale)}: Opera nel contesto nativo del browser in uso (influenzato da cache attiva, ad-blocker e dimensioni specifiche della finestra). Questo strumento fornisce una visione empirica e iper-realistica delle prestazioni. Deve essere utilizzato esclusivamente per scorrere la lista delle regole di dettaglio (\textit{Best Practices}) e raggiungere il traguardo operativo del \textit{"100\% rules passed"}, ignorando il punteggio numerico di EcoIndex mostrato in alto, che risulta falsato dal contesto locale dell'utente.
+    \item \textbf{EcoIndex (Il Contesto Asettico/Laboratorio)}: Consiste nell'istanziare uno scenario controllato su un browser headless Chrome. Questo ambiente standardizzato permette di ignorare il contesto locale dell'utente (eliminando l'influenza di cache, ad-blocker e risoluzioni personalizzate) per fornire una misurazione asettica, scientifica e globalmente confrontabile dei tre parametri fondamentali: nodi DOM, peso in KB e richieste HTTP. Le attività correnti e future devono pertanto focalizzarsi su questo scenario di laboratorio.
+\end{itemize}
+
 I risultati dell'analisi di baseline hanno rivelato i seguenti parametri globali:
 \begin{itemize}
     \item \textbf{EcoIndex Score}: 94.23 / 100
@@ -243,6 +251,62 @@ Il reverse proxy (tipicamente Nginx, Apache httpd, o Caddy) si occupa della term
 \end{itemize}
 
 La mancata implementazione di HTTP/2 nell'ambiente di sviluppo locale è pertanto una \textbf{limitazione infrastrutturale intrinseca} e non una lacuna di progettazione del codice applicativo. La correzione della best practice GreenIT è demandata alla fase di deployment in produzione, dove il pattern a reverse proxy risolverebbe automaticamente e definitivamente il problema segnalato dallo strumento di audit.
+
+\section{Bypass dell'Autenticazione nei Test Ambientali (Test Mode Session Injector)}
+
+Nel condurre l'analisi ambientale con lo strumento headless EcoIndex CLI, è emersa una problematica metodologica rilevante: quando il browser headless tenta di accedere a risorse riservate ad utenti autenticati (quali \texttt{carrello.jsp}, \texttt{paginaUtente.jsp}, \texttt{wishlist.jsp} o la stessa \texttt{dashboard.jsp} dell'amministratore), il server Tomcat rileva l'assenza di un cookie di sessione valido (\texttt{JSESSIONID}) e risponde immediatamente con un reindirizzamento HTTP 302 verso la pagina \texttt{login.jsp}. Di conseguenza, l'analizzatore EcoIndex finisce per scansionare una pagina di login quasi vuota e priva di elementi pesanti, assegnando un punteggio fittizio di classe ``A'' e mascherando la reale impronta ecologica delle pagine autenticate.
+
+Per risolvere questo problema salvaguardando la sicurezza dell'ambiente di produzione, è stato implementato un meccanismo architetturale di iniezione di sessione temporaneo per i test, strutturato come segue:
+
+\begin{enumerate}
+    \item \textbf{Configurazione dell'Ambiente}: È stata introdotta la variabile d'ambiente \texttt{ECO\_TEST\_MODE=true} all'interno dei file di configurazione dei servizi web:
+    \begin{itemize}
+        \item \texttt{docker-compose.yml}
+        \item \texttt{docker-compose-hub.yml}
+    \end{itemize}
+    In questo modo, la modalità di test viene attivata esclusivamente negli ambienti containerizzati isolati adibiti alle misurazioni.
+
+    \item \textbf{Filtro di Iniezione Sessione (\texttt{SessionInjectionFilter})}: È stato sviluppato un servlet filter Java (\texttt{SessionInjectionFilter.java}) registrato a livello globale tramite l'annotazione \texttt{@WebFilter(filterName = "SessionInjectionFilter", urlPatterns = "/*")}. Il filtro opera nel modo seguente:
+    \begin{itemize}
+        \item Verifica se la modalità test è abilitata leggendo la proprietà \texttt{System.getenv("ECO\_TEST\_MODE")}.
+        \item Se attiva, e se il client non presenta una sessione valida, il filtro crea una sessione al volo tramite \texttt{request.getSession()} e vi inserisce un bean \texttt{Utente} mock popopolato con dati fittizi e privilegi amministrativi (\texttt{admin = true}).
+        \item Inietta inoltre un bean \texttt{Carrello} mock popolato con un prodotto di prova (\texttt{ProdottoCarrello}), garantendo che le viste del carrello contengano elementi effettivi e pesanti per l'audit prestazionale.
+    \end{itemize}
+\end{enumerate}
+
+Grazie a questo approccio, ogni richiesta effettuata dal crawler EcoIndex alle pagine riservate viene servita da Tomcat con la sessione pre-autenticata, permettendo la scansione dell'HTML completo.
+
+\subsection{Risultati dell'Analisi EcoIndex Completa}
+
+Sfruttando il connettore di sessione, è stata eseguita una scansione asettica non interattiva di tutte le 16 pagine JSP del sistema. Di seguito vengono riportati i dati completi misurati (estratti dal report di output \texttt{results.csv}):
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{|l|c|c|c|c|c|}
+\hline
+\textbf{Pagina / URL} & \textbf{Dimensione (KB)} & \textbf{Nodi DOM} & \textbf{Richieste} & \textbf{EcoIndex Grade} & \textbf{Score} \\ \hline
+\texttt{login.jsp} & 63.406 & 24 & 8 & A & 95.0 \\ \hline
+\texttt{registrazione.jsp} & 63.815 & 28 & 9 & A & 95.0 \\ \hline
+\texttt{visualizzaOrdineAdmin.jsp} & 51.769 & 8 & 17 & A & 95.0 \\ \hline
+\texttt{modificaProdotto.jsp} & 52.891 & 8 & 17 & A & 95.0 \\ \hline
+\texttt{visualizzaOrdine.jsp} & 142.792 & 46 & 13 & A & 93.0 \\ \hline
+\texttt{wishlist.jsp} & 142.344 & 45 & 12 & A & 93.0 \\ \hline
+\texttt{carrello.jsp} & 142.629 & 59 & 12 & A & 92.0 \\ \hline
+\texttt{chiSiamo.jsp} & 143.223 & 54 & 11 & A & 92.0 \\ \hline
+\texttt{categorie.jsp} & 142.220 & 68 & 11 & A & 91.0 \\ \hline
+\texttt{paginaUtente.jsp} & 143.258 & 83 & 12 & A & 90.0 \\ \hline
+\texttt{paginaProdotto.jsp} & 144.270 & 102 & 12 & A & 90.0 \\ \hline
+\texttt{aggiuntaProdotto.jsp} & 142.571 & 88 & 12 & A & 90.0 \\ \hline
+\texttt{confronta.jsp} & 141.135 & 91 & 11 & A & 90.0 \\ \hline
+\texttt{showProdotti.jsp} & 179.743 & 87 & 19 & A & 89.0 \\ \hline
+\texttt{dashboard.jsp} & 284.075 & 107 & 18 & A & 88.0 \\ \hline
+\texttt{index.jsp} & 284.304 & 107 & 19 & A & 88.0 \\ \hline
+\end{tabular}
+\caption{Report prestazionale EcoIndex esteso a tutte le pagine JSP con sessione iniettata.}
+\label{tab:ecoindex_jsp}
+\end{table}
+
+I dati dimostrano che tutte le pagine ottimizzate mantengono stabilmente la classe di efficienza ecologica \textbf{Grade A}, con punteggi EcoIndex compresi tra 88.0 e 95.0, anche a fronte della complessità visiva delle pagine riservate autenticate.
 
 \subsection{Nota Metodologica sulle Fluttuazioni del Punteggio EcoIndex}
 
