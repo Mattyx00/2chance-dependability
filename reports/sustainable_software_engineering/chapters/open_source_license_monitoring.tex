@@ -239,3 +239,82 @@ Tutti i risultati grezzi dell'analisi FOSSA e della catalogazione delle licenze 
     \item \texttt{licenses.xml}: metadati strutturati delle licenze per tutte le 23 dipendenze, generati dal \texttt{license-maven-plugin}.
     \item \texttt{licenses/}: directory contenente i testi integrali delle 8 licenze uniche scaricate automaticamente.
 \end{itemize}
+
+\subsection{Interventi Correttivi Applicati}
+
+A seguito dell'analisi FOSSA, sono stati applicati due interventi correttivi al file \texttt{pom.xml} che migliorano significativamente il profilo di rischio legale del progetto senza alterare in alcun modo le funzionalità dell'applicazione. Entrambi gli interventi consistono nella modifica dello scope Maven di dipendenze utilizzate esclusivamente durante le fasi di sviluppo e testing.
+
+\subsubsection{Modifica dello Scope di \texttt{jmh-core} (compile $\rightarrow$ test)}
+
+La libreria Java Microbenchmark Harness (\texttt{org.openjdk.jmh:jmh-core:1.37}), rilasciata sotto licenza \textbf{GPLv2 con Classpath Exception}, era erroneamente dichiarata con scope \texttt{compile}, causandone l'inclusione nel pacchetto WAR distribuito. Un'analisi esaustiva del codice sorgente ha confermato che le importazioni di JMH (\texttt{import org.openjdk.jmh.annotations.*} e \texttt{import org.openjdk.jmh.infra.Blackhole}) sono presenti \textbf{esclusivamente} nei file di benchmark situati nella directory \texttt{src/jmh/java/} e in nessun file della directory principale \texttt{src/main/java/}. La modifica dello scope a \texttt{test} elimina la libreria e le sue dipendenze transitive (\texttt{jopt-simple}, \texttt{commons-math3}) dal WAR distribuito, rimuovendo completamente la licenza GPLv2 + CE dall'artefatto finale.
+
+\begin{lstlisting}[language=XML, caption={Modifica dello scope di jmh-core nel pom.xml}, label={lst:jmh_fix}]
+<!-- PRIMA (scope implicito = compile) -->
+<dependency>
+    <groupId>org.openjdk.jmh</groupId>
+    <artifactId>jmh-core</artifactId>
+    <version>${jmh.version}</version>
+</dependency>
+
+<!-- DOPO (scope esplicito = test) -->
+<dependency>
+    <groupId>org.openjdk.jmh</groupId>
+    <artifactId>jmh-core</artifactId>
+    <version>${jmh.version}</version>
+    <scope>test</scope>
+</dependency>
+\end{lstlisting}
+
+\subsubsection{Modifica dello Scope di \texttt{pitest-parent} (compile $\rightarrow$ test)}
+
+La dipendenza \texttt{org.pitest:pitest-parent:1.1.10}, dichiarata come dipendenza POM senza scope esplicito (defaultando a \texttt{compile}), è utilizzata unicamente come supporto al plugin di mutation testing \texttt{pitest-maven}, già correttamente configurato nel profilo Maven \texttt{pitest}. Un'analisi del codice sorgente ha confermato che \textbf{nessun file Java} del progetto importa classi dal namespace \texttt{org.pitest}. La modifica dello scope a \texttt{test} è pertanto priva di rischi funzionali.
+
+\subsection{Impatto degli Interventi Correttivi}
+
+La Tabella~\ref{tab:risk_comparison} confronta il profilo di rischio legale del progetto 2Chance prima e dopo gli interventi correttivi applicati.
+
+\begin{table}[h]
+    \centering
+    \renewcommand{\arraystretch}{1.4}
+    \begin{tabular}{l c c}
+        \toprule
+        \textbf{Livello di Rischio} & \textbf{Prima} & \textbf{Dopo} \\
+        \midrule
+        Critico (GPL/AGPL pura) & 0 & 0 \\
+        Medio (Copyleft + Eccezione, nel WAR) & 2 & \textbf{1} \\
+        Basso (Scope provided/test) & 2 & \textbf{4} \\
+        Nessuno (Permissiva / Non distribuito) & 22 & 21 \\
+        \bottomrule
+    \end{tabular}
+    \caption{Confronto del profilo di rischio legale prima e dopo gli interventi correttivi.}
+    \label{tab:risk_comparison}
+\end{table}
+
+L'intervento più significativo riguarda la rimozione di \texttt{jmh-core} dallo scope \texttt{compile}: questa singola modifica ha eliminato la libreria GPLv2 + CE e le sue due dipendenze transitive (\texttt{jopt-simple} e \texttt{commons-math3}) dal pacchetto WAR distribuito. L'unica dipendenza copyleft che rimane nello scope \texttt{compile} è il connettore MySQL (\texttt{mysql-connector-j}), la cui Universal FOSS Exception garantisce la piena compatibilità con l'ecosistema di licenze FOSS del progetto.
+
+Il risultato complessivo è una riduzione del 50\% delle dipendenze a rischio medio distribuite nel WAR (da 2 a 1), senza alcuna alterazione delle funzionalità del sistema. Il progetto compila correttamente e tutti i test esistenti rimangono operativi.
+
+\subsection{Automazione degli Obblighi di Attribuzione}
+
+Per soddisfare pienamente il secondo obiettivo di conformità legale (Automazione Assoluta degli Obblighi di Attribuzione), si è provveduto a configurare e lanciare il plugin Maven dedicato alla gestione delle licenze per generare i documenti richiesti per la distribuzione del software. 
+
+Sono stati prodotti due artefatti chiave all'interno della directory \texttt{src/fossa/}:
+\begin{itemize}
+    \item \textbf{\texttt{THIRD-PARTY-NOTICES.txt}}: File di testo contenente l'elenco completo di tutte le dipendenze di terze parti, con la rispettiva classificazione della licenza e il testo integrale del copyright e dei termini di licenza per ciascuna di esse. Questo file è pronto per essere incluso nella directory di distribuzione dell'applicazione per adempiere agli obblighi legali di attribuzione delle licenze permissive (quali Apache 2.0, MIT, BSD).
+    \item \textbf{\texttt{third-party-report.html}}: Un report visuale in formato HTML che offre un'interfaccia interattiva per navigare l'inventario delle dipendenze e i relativi dettagli legali.
+\end{itemize}
+
+L'adozione di questa pipeline automatizzata garantisce che ad ogni build di rilascio, la documentazione sulle licenze venga rigenerata coerentemente con le dipendenze effettivamente introdotte o aggiornate nel \texttt{pom.xml}, sollevando il team di sviluppo da controlli manuali inclini all'errore umano e garantendo la conformità legale al 100\% in modo continuo.
+
+\subsection{Generazione della Software Bill of Materials (SBOM)}
+
+Al fine di garantire la trasparenza della catena di approvvigionamento del software (\textit{software supply chain}) ed adempiere alle moderne richieste di conformità legale (quali l'ISO/IEC 5230 dell'OpenChain Project o i requisiti in materia di cybersecurity per i bandi governativi), è stata automatizzata la generazione della \textbf{Software Bill of Materials (SBOM)} per l'applicazione 2Chance.
+
+L'operazione è stata implementata integrando e lanciando il plugin Maven ufficiale per lo standard \textbf{CycloneDX} (uno standard industriale leader per la specifica di SBOM). Sono stati generati con successo due formati dello stesso documento all'interno della directory \texttt{src/fossa/}:
+\begin{itemize}
+    \item \textbf{\texttt{sbom.json}}: La distinta base completa in formato JSON (CycloneDX v1.4), strutturata per essere analizzata in automatico da strumenti di vulnerability management o Dependency-Track.
+    \item \textbf{\texttt{sbom.xml}}: Lo stesso report in formato XML, per la massima compatibilità e integrazione con altri parser aziendali standard.
+\end{itemize}
+
+Questi file descrivono in modo univoco e strutturato ciascun componente software incluso nel build, specificando per ognuno di essi: identificativi univoci (Package URL - \textit{purl}), versione precisa, hash SHA-1/SHA-256 del binario e la classificazione delle licenze applicate. Questo consente ai clienti e agli auditor di effettuare controlli rapidi sulla sicurezza e sulla conformità delle licenze distribuite.
+
