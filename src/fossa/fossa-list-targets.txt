@@ -1,0 +1,35 @@
+﻿fossa.exe : [WARN] fossa list-targets does not apply any filtering, you may see projects which are not present in the 
+final analysis.
+At line:1 char:8
++ $out = & "C:\Users\aldom\AppData\Local\fossa-cli\fossa.exe" list-targ ...
++        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ([WARN] fossa li...final analysis.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+[ 25 Waiting / 11 Running / 1 Completed ]
+[ 17 Waiting / 19 Running / 1 Completed ]
+[ 16 Waiting / 20 Running / 1 Completed ]
+[ 14 Waiting / 20 Running / 3 Completed ]
+[ 9 Waiting / 20 Running / 8 Completed ]
+[ 8 Waiting / 20 Running / 9 Completed ]
+[ 2 Waiting / 20 Running / 15 Completed ]
+[ 0 Waiting / 19 Running / 18 Completed ]
+[ 0 Waiting / 18 Running / 19 Completed ]
+[ 0 Waiting / 17 Running / 20 Completed ]
+[ 0 Waiting / 16 Running / 21 Completed ]
+[ 0 Waiting / 16 Running / 22 Completed ]
+Found project: maven@.\
+Found target: maven@.\:groupId:2chance
+[ 0 Waiting / 15 Running / 23 Completed ]
+[ 0 Waiting / 14 Running / 24 Completed ]
+[ 0 Waiting / 13 Running / 25 Completed ]
+[ 0 Waiting / 11 Running / 27 Completed ]
+[ 0 Waiting / 10 Running / 28 Completed ]
+[ 0 Waiting / 9 Running / 29 Completed ]
+[ 0 Waiting / 8 Running / 30 Completed ]
+[ 0 Waiting / 7 Running / 31 Completed ]
+[ 0 Waiting / 6 Running / 32 Completed ]
+[ 0 Waiting / 5 Running / 33 Completed ]
+[ 0 Waiting / 4 Running / 34 Completed ]
+[ 0 Waiting / 2 Running / 36 Completed ]
+[ 0 Waiting / 1 Running / 37 Completed ]

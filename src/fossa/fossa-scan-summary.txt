@@ -1,0 +1,136 @@
+
+Scan Summary
+------------
+fossa-cli version 3.17.8 (revision e21170d20446 compiled with ghc-9.8)
+fossa endpoint server version: N/A
+
+1 projects scanned;  0 skipped,  1 succeeded,  0 failed,  4 analysis warnings
+
+* maven project in "C:\\Users\\aldom\\Desktop\\Projects\\University of Salerno\\2chance-dependability\\": succeeded with 4 warnings
+-
+maven project in "C:\\Users\\aldom\\Desktop\\Projects\\University of Salerno\\2chance-dependability\\": succeeded with 4 warnings
+
+  Warn: Could not analyze edges between dependencies.
+
+  Warn: Could not analyze deep dependencies.
+
+    Warn: unable to select best binary to analyze project: none passed validation
+    Context: Failed to install maven plugin for analysis
+    Context: Failed to install maven plugin for analysis
+    Traceback:
+      - Evaluate command: mvn
+      - Command override supported, but not specified
+      - Make analysis command from CandidateAnalysisCommands {candidateCmdNames = "mvn" :| [], candidateCmdArgs = ["-v"], candidateOverrideKind = Just MavenType}
+      - Installing plugin
+      - Plugin analysis
+      - Dynamic Analysis
+      - Maven
+      - Project Analysis: MavenProjectType
+    Warn: unable to select best binary to analyze project: none passed validationTraceback:
+      - Evaluate command: mvn
+      - Command override supported, but not specified
+      - Make analysis command from CandidateAnalysisCommands {candidateCmdNames = "mvn" :| [], candidateCmdArgs = ["-v"], candidateOverrideKind = Just MavenType}
+      - Build maven command
+      - Dynamic analysis
+      - Dynamic Analysis
+      - Maven
+      - Project Analysis: MavenProjectType
+    Warn: unable to select best binary to analyze project: none passed validationTraceback:
+      - Evaluate command: mvn
+      - Command override supported, but not specified
+      - Make analysis command from CandidateAnalysisCommands {candidateCmdNames = "mvn" :| [], candidateCmdArgs = ["-v"], candidateOverrideKind = Just MavenType}
+      - Installing plugin
+      - Legacy Plugin analysis
+      - Dynamic Analysis
+      - Maven
+      - Project Analysis: MavenProjectType
+  Warn: Command: `mvn` not suitable
+  Running with args: `-v` resulted in a non-zero exit code
+
+    Warn: Command execution failed
+      Attempted to run the command 'mvn -v'
+      inside the working directory 'C:\Users\aldom\Desktop\Projects\University of Salerno\2chance-dependability\',
+      but failed, because the command exited with code '1'.
+
+      Often, this kind of error is caused by the project not being ready to build;
+      please ensure that the project at 'C:\Users\aldom\Desktop\Projects\University of Salerno\2chance-dependability\'
+      builds successfully before running fossa.
+
+      The logs for the command are listed below.
+      They will likely provide guidance on how to resolve this error.
+      Command did not write a standard log.
+
+      Command error log:
+        mvn: startProcess: does not exist (No such file or directory)
+    Support: If you believe this to be a defect, please report a bug to FOSSA support at https://support.fossa.com
+
+    Traceback:
+      - Running command 'mvn'
+      - Evaluate command: mvn
+      - Command override supported, but not specified
+      - Make analysis command from CandidateAnalysisCommands {candidateCmdNames = "mvn" :| [], candidateCmdArgs = ["-v"], candidateOverrideKind = Just MavenType}
+      - Installing plugin
+      - Legacy Plugin analysis
+      - Dynamic Analysis
+      - Maven
+      - Project Analysis: MavenProjectType
+  Warn: Command: `mvn` not suitable
+  Running with args: `-v` resulted in a non-zero exit code
+
+    Warn: Command execution failed
+      Attempted to run the command 'mvn -v'
+      inside the working directory 'C:\Users\aldom\Desktop\Projects\University of Salerno\2chance-dependability\',
+      but failed, because the command exited with code '1'.
+
+      Often, this kind of error is caused by the project not being ready to build;
+      please ensure that the project at 'C:\Users\aldom\Desktop\Projects\University of Salerno\2chance-dependability\'
+      builds successfully before running fossa.
+
+      The logs for the command are listed below.
+      They will likely provide guidance on how to resolve this error.
+      Command did not write a standard log.
+
+      Command error log:
+        mvn: startProcess: does not exist (No such file or directory)
+    Support: If you believe this to be a defect, please report a bug to FOSSA support at https://support.fossa.com
+
+    Traceback:
+      - Running command 'mvn'
+      - Evaluate command: mvn
+      - Command override supported, but not specified
+      - Make analysis command from CandidateAnalysisCommands {candidateCmdNames = "mvn" :| [], candidateCmdArgs = ["-v"], candidateOverrideKind = Just MavenType}
+      - Build maven command
+      - Dynamic analysis
+      - Dynamic Analysis
+      - Maven
+      - Project Analysis: MavenProjectType
+  Warn: Command: `mvn` not suitable
+  Running with args: `-v` resulted in a non-zero exit code
+
+    Warn: Command execution failed
+      Attempted to run the command 'mvn -v'
+      inside the working directory 'C:\Users\aldom\Desktop\Projects\University of Salerno\2chance-dependability\',
+      but failed, because the command exited with code '1'.
+
+      Often, this kind of error is caused by the project not being ready to build;
+      please ensure that the project at 'C:\Users\aldom\Desktop\Projects\University of Salerno\2chance-dependability\'
+      builds successfully before running fossa.
+
+      The logs for the command are listed below.
+      They will likely provide guidance on how to resolve this error.
+      Command did not write a standard log.
+
+      Command error log:
+        mvn: startProcess: does not exist (No such file or directory)
+    Support: If you believe this to be a defect, please report a bug to FOSSA support at https://support.fossa.com
+
+    Traceback:
+      - Running command 'mvn'
+      - Evaluate command: mvn
+      - Command override supported, but not specified
+      - Make analysis command from CandidateAnalysisCommands {candidateCmdNames = "mvn" :| [], candidateCmdArgs = ["-v"], candidateOverrideKind = Just MavenType}
+      - Installing plugin
+      - Plugin analysis
+      - Dynamic Analysis
+      - Maven
+      - Project Analysis: MavenProjectType
