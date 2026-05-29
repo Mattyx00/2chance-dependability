@@ -1,15 +1,16 @@
-
 function loadInfoOrdine(jsonOrdine){
     jsonOrdine = jsonOrdine.prodotti;
     console.log(jsonOrdine);
-    for(i=0; i<jsonOrdine.length; i++){
+    let container = document.getElementById("corpo-carrello");
+    if (!container) return;
+    for(let i=0; i<jsonOrdine.length; i++){
         let id=jsonOrdine[i].id, marca=jsonOrdine[i].marca, modello=jsonOrdine[i].modello, prezzo=jsonOrdine[i].prezzo, quantita=jsonOrdine[i].quantita;
-        let prodottoCarrello = `<div class="prodottoCarrello"> <a href=ProdottoServlet?prodotto=${id}> <div class="infoProdottoCarrello"> <p class="nomeProdottoCarrello">${marca} ${modello}</p>  </div> </a> <p class="prezzoProdottoCarrello">${prezzo}€</p><p>Quantita: ${quantita}</p> </div>`;
-        $("#corpo-carrello").append(prodottoCarrello);
+        let prodottoCarrello = `<div class="prodottoCarrello"> <a href="ProdottoServlet?prodotto=${id}" class="infoProdottoCarrello" style="text-decoration: none; color: inherit;"> <p class="nomeProdottoCarrello">${marca} ${modello}</p> </a> <p class="prezzoProdottoCarrello">${prezzo}€</p><p>Quantita: ${quantita}</p> </div>`;
+        container.insertAdjacentHTML('beforeend', prodottoCarrello);
     }
 }
 
-$(document).ready(function (){
+document.addEventListener("DOMContentLoaded", function (){
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const id_ordine = urlParams.get('ordine');
@@ -27,4 +28,4 @@ $(document).ready(function (){
     let url = "AdminServlet/infoOrdine?idOrdine="+id_ordine;
     xhttp.open("GET", url, true);
     xhttp.send();
-});
+});

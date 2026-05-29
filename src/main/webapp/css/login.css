@@ -11,6 +11,7 @@
 }
 
 body{
+    background-image: radial-gradient(circle, rgb(255,177,142) 0%, rgb(240,131,84) 100%);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -99,4 +100,25 @@ body{
     #login-body{
         width: 90vw;
     }
+}
+
+.footer{
+    color: white;
+    background-color: #F08354;
+    height: 2vh;
+    text-align: center;
+    width: 100%;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 10px;
+    z-index: 1000;
+}
+
+.footer p{
+    margin: 0;
+    padding: 0;
 }

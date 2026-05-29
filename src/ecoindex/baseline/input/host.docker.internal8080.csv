@@ -1,0 +1,2 @@
+http://host.docker.internal:8080/visualizzaOrdineAdmin.jsp?idOrdine=1&cod=0
+http://host.docker.internal:8080/modificaProdotto.jsp?prodotto=100

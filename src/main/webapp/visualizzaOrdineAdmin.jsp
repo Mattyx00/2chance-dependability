@@ -86,15 +86,13 @@
 <!-- CORPO PAGINA-->
 
 <div id="corpo-pagina">
-    <br><h2>Ordine</h2>
+    <h2>Ordine</h2>
     <div id="corpo-carrello">
     </div>
 
 </div>
 <!-- FINE CORPO PAGINA-->
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
-<script src="${assetHost}functions/carrello.js" crossorigin="anonymous"></script>
 <script src="${assetHost}functions/visualizzaOrdineAdmin.js" crossorigin="anonymous"></script>
 <script src="${assetHost}functions/general.js" crossorigin="anonymous"></script>
 

@@ -132,7 +132,6 @@
     </table>
 </div>
 <!-- FINE CORPO PAGINA-->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
 <script src="${assetHost}functions/aggiungiProdotto.js" crossorigin="anonymous"></script>
 <script src="${assetHost}functions/general.js" crossorigin="anonymous"></script>
 </body>

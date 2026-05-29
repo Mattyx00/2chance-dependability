@@ -86,7 +86,7 @@
 <!-- CORPO PAGINA-->
 
 <div id="corpo-pagina">
-    <br><h2>Ordine</h2>
+    <h2>Ordine</h2>
     <div id="corpo-carrello">
 
         <%int cod = Integer.parseInt(request.getParameter("cod"));
@@ -94,11 +94,9 @@
         <c:forEach items="${sessionScope.user.ordini[requestScope.index].carrello.prodotti}" var="prodotto">
             <div class="prodottoCarrello">
                 <img src="${assetHost}img/${prodotto.prodotto.immagineThumbnail}" alt="" class="immagineProdottoCarrello" crossorigin="anonymous">
-                <a href="ProdottoServlet?prodotto=${prodotto.prodotto.id}">
-                    <div class="infoProdottoCarrello">
-                        <p class="nomeProdottoCarrello">${prodotto.prodotto.marca} ${prodotto.prodotto.modello}</p>
-                        <p class="prezzoProdottoCarrello">${prodotto.prodotto.prezzo}€</p>
-                    </div>
+                <a href="ProdottoServlet?prodotto=${prodotto.prodotto.id}" class="infoProdottoCarrello" style="text-decoration: none; color: inherit;">
+                    <p class="nomeProdottoCarrello">${prodotto.prodotto.marca} ${prodotto.prodotto.modello}</p>
+                    <p class="prezzoProdottoCarrello">${prodotto.prodotto.prezzo}€</p>
                 </a>
                 <p>Quantita: ${prodotto.quantita}</p>
             </div>
@@ -109,9 +107,6 @@
 </div>
 <!-- FINE CORPO PAGINA-->
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
-<script src="${assetHost}functions/carrello.js" crossorigin="anonymous"></script>
-<script src="${assetHost}functions/visualizzaOrdine.js" crossorigin="anonymous"></script>
 <script src="${assetHost}functions/general.js" crossorigin="anonymous"></script>
 
 </body>

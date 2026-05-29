@@ -19,7 +19,6 @@
 %>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="${assetHost}css/index.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="${assetHost}/css/general.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" media="print" href="${assetHost}css/print.css" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
@@ -27,7 +26,7 @@
 
 	<link rel="shortcut icon" href="${assetHost}favicon.ico" crossorigin="anonymous">
 </head>
-<body onload="start()">
+<body>
 <!-- MENU NAVIGAZIONALE -->
 <div id="menu">
     <a href="index.jsp"><img src="${assetHost}img/logo.png" alt="2Chance" id="logo" crossorigin="anonymous"></a>
@@ -88,17 +87,11 @@
 
 <!-- CORPO PAGINA-->
 <div id="corpo-pagina">
-    <p>
-        Siamo nati nel 2013, e da allora operiamo nel settore dell’economia circolare dei prodotti hi-tech con passione e competenza, avendo servito complessivamente oltre 150.000 clienti e ricevuto oltre 10.700 recensioni certificate con un indice di soddisfazione della clientela pari al 92%. Siamo stati inoltre i primi ad introdurre il concetto di iPhone Ricondizionato in Italia e i primi nel nostro settore ad essere quotati in Borsa, nell'ottobre 2020. Commercializziamo i nostri Smartphone Ricondizionati in Italia attraverso il nostro sito e-commerce 2Chance.tel e una catena in espansione di 5 negozi: a Milano, 2 a Roma, Bologna e Salerno.        <br><br>
-        <br>Il cuore della nostra azienda batte sia a Milano, dove abbiamo la sede legale e operativa, che nella provincia di Salerno, dove sono presenti il laboratorio di refurbishment, il magazzino ed il customer care.
-        E' proprio nella provincia di Salerno, che ogni giorno i nostri tecnici si prendono cura dei vostri smartphone, riportandoli al perfetto funzionamento, pronti per iniziare una seconda vita.
-        Ogni iPhone attraversa un'accurato processo di ricondizionamento in 5 fasi che inizia dai test hardware e software e finisce con la completa igienizzazione prima dell'inscatolamento. Secondo necessità, i device passano poi al reparto riparazioni dove vengono sostituite tutte le componenti usurate o non più funzionanti.<br><br>
-        E' la cura dei dettagli e un cospicuo numero di test (ben 37!) che rendono gli iPhone Ricondizionati in Italia da 2Chance affidabili, sicuri e garantiti 12 mesi. 2Chance significa Ricondizionato con passione in Italia!
-        Nei nostri negozi di Milano, Roma, Bologna e Salerno puoi trovare una vasta gamma di iPhone Ricondizionati, iPad Ricondizionati, Mac Ricondizionati.
-        I nostri ragazzi potranno assisterti nella scelta dello smartphone ideale per le tue esigenze e potranno illustrarti la gamma di servizi che puoi abbinare al tuo smartphone ricondizionato. Ad esempio l'assicurazione contro furto e danni, la nostra library di corsi online dedicati al mondo iPhone e Mac e molto altro.
-        Nei nostri negozi puoi anche vendere il tuo iPhone usato oppure permutarlo, ottenendo così uno sconto immediato sul prezzo di acquisto di un nuovo smartphone ricondizionato.
-
-    </p>
+    <div id="testo-chi-siamo">
+        <p>Siamo nati nel 2013, e da allora operiamo nel settore dell’economia circolare dei prodotti hi-tech con passione e competenza, avendo servito complessivamente oltre 150.000 clienti e ricevuto oltre 10.700 recensioni certificate con un indice di soddisfazione della clientela pari al 92%. Siamo stati inoltre i primi ad introdurre il concetto di iPhone Ricondizionato in Italia e i primi nel nostro settore ad essere quotati in Borsa, nell'ottobre 2020. Commercializziamo i nostri Smartphone Ricondizionati in Italia attraverso il nostro sito e-commerce 2Chance.tel e una catena in espansione di 5 negozi: a Milano, 2 a Roma, Bologna e Salerno.</p>
+        <p>Il cuore della nostra azienda batte sia a Milano, dove abbiamo la sede legale e operativa, che nella provincia di Salerno, dove sono presenti il laboratorio di refurbishment, il magazzino ed il customer care. E' proprio nella provincia di Salerno, che ogni giorno i nostri tecnici si prendono cura dei vostri smartphone, riportandoli al perfetto funzionamento, pronti per iniziare una seconda vita. Ogni iPhone attraversa un'accurato processo di ricondizionamento in 5 fasi che inizia dai test hardware e software e finisce con la completa igienizzazione prima dell'inscatolamento. Secondo necessità, i device passano poi al reparto riparazioni dove vengono sostituite tutte le componenti usurate o non più funzionanti.</p>
+        <p>E' la cura dei dettagli e un cospicuo numero di test (ben 37!) che rendono gli iPhone Ricondizionati in Italia da 2Chance affidabili, sicuri e garantiti 12 mesi. 2Chance significa Ricondizionato con passione in Italia! Nei nostri negozi di Milano, Roma, Bologna e Salerno puoi trovare una vasta gamma di iPhone Ricondizionati, iPad Ricondizionati, Mac Ricondizionati. I nostri ragazzi potranno assisterti nella scelta dello smartphone ideale per le tuoi esigenze e potranno illustrarti la gamma di servizi che puoi abbinare al tuo smartphone ricondizionato. Ad esempio l'assicurazione contro furto e danni, la nostra library di corsi online dedicati al mondo iPhone e Mac e molto altro. Nei nostri negozi puoi anche vendere il tuo iPhone usato oppure permutarlo, ottenendo così uno sconto immediato sul prezzo di acquisto di un nuovo smartphone ricondizionato.</p>
+    </div>
 </div>
 <!-- FINE CORPO PAGINA-->
 <footer class="footer">
@@ -106,27 +99,35 @@
 </footer>
 
 <style>
-    #corpo-pagina p{
+    #corpo-pagina {
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        height: calc(92vh - 2px) !important;
+        width: 100vw !important;
+    }
+
+    #corpo-pagina p {
         width: 80vw;
         font-size: 14px;
         font-family: LemonMilk;
+        margin-bottom: 15px;
+        text-align: justify;
     }
 
     @media only screen and (max-width: 700px) {
-        #corpo-pagina{
-            flex-direction: column;
-            justify-content: flex-start;
+        #corpo-pagina {
+            flex-direction: column !important;
+            justify-content: flex-start !important;
         }
 
-        #corpo-pagina p{
+        #corpo-pagina p {
             margin-top: 15px;
             font-size: 12px;
         }
     }
 </style>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
-<script src="${assetHost}functions/index.js" crossorigin="anonymous"></script>
 <script src="${assetHost}functions/general.js" crossorigin="anonymous"></script>
 </body>
 </html>

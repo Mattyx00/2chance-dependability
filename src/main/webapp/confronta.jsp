@@ -91,7 +91,7 @@
 
 <div id="corpo-pagina">
     <div class="prodotto">
-        <a href="ProdottoServlet?prodotto=${confronto1.id}"><div class="nomeprodotto">${confronto1.marca} ${confronto1.modello}</div></a>
+        <a href="ProdottoServlet?prodotto=${confronto1.id}" class="nomeprodotto" style="text-decoration: none;">${confronto1.marca} ${confronto1.modello}</a>
         <div class="scheda-tecnica">
             <table>
                 <tr>
@@ -160,7 +160,7 @@
         </div>
     </div>
     <div class="prodotto">
-        <a href="ProdottoServlet?prodotto=${confronto2.id}"><div class="nomeprodotto">${confronto2.marca} ${confronto2.modello}</div></a>
+        <a href="ProdottoServlet?prodotto=${confronto2.id}" class="nomeprodotto" style="text-decoration: none;">${confronto2.marca} ${confronto2.modello}</a>
         <div class="scheda-tecnica">
             <table>
                 <tr>
@@ -228,12 +228,9 @@
             </table>
         </div>
     </div>
-    </div>
 </div>
 <!-- FINE CORPO PAGINA-->
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
-<script src="${assetHost}functions/confronta.js" crossorigin="anonymous"></script>
 <script src="${assetHost}functions/general.js" crossorigin="anonymous"></script>
 
 </body>

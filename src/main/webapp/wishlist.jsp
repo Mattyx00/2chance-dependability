@@ -30,7 +30,7 @@
 <body>
 <!-- MENU NAVIGAZIONALE -->
 <div id="menu">
-    <a href="landingpage"><img src="${assetHost}img/logo.png" alt="2chance" id="logo" crossorigin="anonymous"></a>
+    <a href="landingpage"><img src="${assetHost}img/logo.png" alt="2chance" id="logo" width="82" height="58" crossorigin="anonymous"></a>
     <div id="navigazione">
         <c:choose>
             <c:when test="${sessionScope.user!= null}">
@@ -83,16 +83,14 @@
 <!-- CORPO PAGINA-->
 
 <div id="corpo-pagina">
-    <br><h2>LA MIA WISHLIST</h2>
+    <h2>LA MIA WISHLIST</h2>
     <div id="corpo-carrello">
         <c:forEach items="${wishlist.prodotti}" var="prodotto">
             <div class="prodottoCarrello">
-                <img src="${assetHost}img/${prodotto.immagineThumbnail}" alt="" class="immagineProdottoCarrello" crossorigin="anonymous">
-                <a href="ProdottoServlet?prodotto=${prodotto.id}">
-                    <div class="infoProdottoCarrello">
-                        <p class="nomeProdottoCarrello">${prodotto.marca} ${prodotto.modello}</p>
-                        <p class="prezzoProdottoCarrello">${prodotto.prezzo}€</p>
-                    </div>
+                <img src="${assetHost}img/${prodotto.immagineThumbnail}" alt="" class="immagineProdottoCarrello" loading="lazy" crossorigin="anonymous">
+                <a href="ProdottoServlet?prodotto=${prodotto.id}" class="infoProdottoCarrello">
+                    <p class="nomeProdottoCarrello">${prodotto.marca} ${prodotto.modello}</p>
+                    <p class="prezzoProdottoCarrello">${prodotto.prezzo}€</p>
                 </a>
                 <i class="fas fa-trash-alt eliminaProdottoCarrello" onclick="eliminaProdottoWishList(${prodotto.id}, ${sessionScope.user.id})"></i>
             </div>
@@ -102,8 +100,6 @@
 </div>
 <!-- FINE CORPO PAGINA-->
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
-<script src="${assetHost}functions/carrello.js" crossorigin="anonymous"></script>
 <script src="${assetHost}functions/wishlist.js" crossorigin="anonymous"></script>
 <script src="${assetHost}functions/general.js" crossorigin="anonymous"></script>
 

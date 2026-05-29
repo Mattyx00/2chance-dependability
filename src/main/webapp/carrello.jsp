@@ -92,18 +92,16 @@
         <c:forEach items="${sessionScope.carrello.prodotti}" var="prodotto">
             <div class="prodottoCarrello">
                 <img src="${assetHost}img/${prodotto.prodotto.immagineThumbnail}" alt="" class="immagineProdottoCarrello" crossorigin="anonymous">
-                <a href="ProdottoServlet?prodotto=${prodotto.prodotto.id}">
-                <div class="infoProdottoCarrello">
+                <a href="ProdottoServlet?prodotto=${prodotto.prodotto.id}" class="infoProdottoCarrello" style="text-decoration: none; color: inherit;">
                     <p class="nomeProdottoCarrello">${prodotto.prodotto.marca} ${prodotto.prodotto.modello}</p>
                     <p class="prezzoProdottoCarrello">${prodotto.prodotto.prezzo}€</p>
-                </div>
                 </a>
                 <input prodotto="${prodotto.prodotto.id} "type="number" class="quantitaProdottoCarrello" min="1" step="1" value="${prodotto.quantita}">
                 <i class="fas fa-trash-alt eliminaProdottoCarrello" onclick="eliminaProdotto(${prodotto.prodotto.id})"></i>
             </div>
         </c:forEach>
     </div>
-    <form action = CheckOutServlet id="formAcquista" onsubmit="acquista()">
+    <form action="CheckOutServlet" id="formAcquista" onsubmit="acquista(event)">
         <input type="hidden" id="indirizzo" value="" name="indirizzo">
         <input type="submit" value="ACQUISTA" id ="acquistaCarrello">
     </form>
@@ -114,7 +112,6 @@
 <footer class="footer">
     <p>2Chance P.IVA: 12345577777777</p>
 </footer>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
 <script src="${assetHost}functions/carrello.js" crossorigin="anonymous"></script>
 <script src="${assetHost}functions/general.js" crossorigin="anonymous"></script>
 

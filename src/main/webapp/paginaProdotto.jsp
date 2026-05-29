@@ -95,20 +95,14 @@
         <div id="prodotto-info">
             <p id="prodotto-nome">${prodotto.marca} ${prodotto.modello}</p>
             <p id="prodotto-prezzo">${prodotto.prezzo}€</p>
-            <a href="AggiungiCarrelloServlet?prodotto=${prodotto.id}&quantita=1">
-                <div class="prodotto-azioni">
-                    <p>AGGIUNGI AL CARRELLO<i class="fas fa-shopping-cart"></i></p>
-                </div>
+            <a href="AggiungiCarrelloServlet?prodotto=${prodotto.id}&quantita=1" class="prodotto-azioni">
+                AGGIUNGI AL CARRELLO<i class="fas fa-shopping-cart"></i>
             </a>
-            <a href="WishlistServlet?cod=1&prodotto=${prodotto.id}">
-                <div class="prodotto-azioni">
-                    <p>AGGIUNGI ALLA WISHLIST<i class="fas fa-star"></i></p>
-                </div>
+            <a href="WishlistServlet?cod=1&prodotto=${prodotto.id}" class="prodotto-azioni">
+                AGGIUNGI ALLA WISHLIST<i class="fas fa-star"></i>
             </a>
-            <a href="#" onclick="confronta(${prodotto.id})">
-                <div class="prodotto-azioni">
-                    <p>CONFRONTA<i class="fas fa-not-equal"></i></p>
-                </div>
+            <a href="#" onclick="confronta(${prodotto.id})" class="prodotto-azioni">
+                CONFRONTA<i class="fas fa-not-equal"></i>
             </a>
         </div>
     </div>
@@ -198,9 +192,6 @@
         <button onclick="aggiungiRecensione(${prodotto.id})" style="background-color: #F08354; color: white; padding: 3px; cursor: pointer; border: none">Invia</button>
     </div>
 </div>
-<!-- FINE CORPO PAGINA-->
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
 <script src="${assetHost}functions/prodottoInfo.js" crossorigin="anonymous"></script>
 <script src="${assetHost}functions/general.js" crossorigin="anonymous"></script>
 </body>

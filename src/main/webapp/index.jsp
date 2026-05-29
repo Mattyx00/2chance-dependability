@@ -94,27 +94,20 @@
  	<!-- CORPO PAGINA-->
  	<div id="corpo-pagina">
  		<div id="menu-categorie">
- 			<table>
- 				<thead>
- 					<tr>
- 						<td>CATALOGO</td>
- 					</tr>
- 				</thead>
- 				<tbody>
+			<nav>
+				<h3>CATALOGO</h3>
+				<ul>
 					<c:forEach items="${categorie}" var="cat">
-						<tr>
-							<td><a href="ProdottiPerCategoriaServlet?val=${cat.nomeCategoria}">${cat.nomeCategoria}<i class="fas fa-sort-down"></i></a></td>
-						</tr>
+						<li><a href="ProdottiPerCategoriaServlet?val=${cat.nomeCategoria}">${cat.nomeCategoria}<i class="fas fa-sort-down"></i></a></li>
 					</c:forEach>
-
- 				</tbody>
- 			</table>
+				</ul>
+			</nav>
  		</div>
  		<div id="main-corpo">
  			<div id="carosello">
- 				<img src="${assetHost}img/carosello1.webp" alt="" class="carosello-attiva" crossorigin="anonymous">
- 				<img data-src="${assetHost}img/carosello2.webp" alt="" class="carosello-disattivata" crossorigin="anonymous">
- 				<img data-src="${assetHost}img/carosello3.webp" alt="" class="carosello-disattivata" crossorigin="anonymous">
+ 				<img src="${assetHost}img/carosello1.webp" alt="Carosello 1" class="carosello-attiva" width="710" height="388" crossorigin="anonymous">
+ 				<img data-src="${assetHost}img/carosello2.webp" alt="Carosello 2" class="carosello-disattivata" width="710" height="388" crossorigin="anonymous">
+ 				<img data-src="${assetHost}img/carosello3.webp" alt="Carosello 3" class="carosello-disattivata" width="710" height="388" crossorigin="anonymous">
  				
  				<div id="carosello-cursori">
  					<i class="fas fa-chevron-left" onclick="cambiaFoto('precedente')"></i>
@@ -126,12 +119,12 @@
 
 				<c:forEach items="${prodotti}" var="prodotto">
 					<a href="ProdottoServlet?prodotto=${prodotto.id}">
-						<div class="prodotto">
-							<img src="${assetHost}img/${prodotto.immagineThumbnail}" alt="prodotto" class="immagine-prodotto" crossorigin="anonymous">
-							<p class="titolo-prodotto">${prodotto.modello}</p>
+						<article class="prodotto">
+							<img src="${assetHost}img/${prodotto.immagineThumbnail}" alt="prodotto" class="immagine-prodotto" loading="lazy" crossorigin="anonymous">
+							<h3 class="titolo-prodotto">${prodotto.modello}</h3>
 							<p class="descrizione-prodotto">${prodotto.descrizione}</p>
 							<p class="prezzo-prodotto">${prodotto.prezzo}€</p>
-						</div>
+						</article>
 					</a>
 				</c:forEach>
  			</div>

@@ -10,6 +10,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.zip.GZIPOutputStream;
 
+@WebFilter(filterName = "CompressionFilter", urlPatterns = "/*")
 public class CompressionFilter implements Filter {
 
     @Override

@@ -93,7 +93,7 @@
         <div id="corpo-pagina">
             <img id="pic-utente" style="margin-top: 10px" src="${assetHost}img/${sessionScope.user.immagine}" alt="" crossorigin="anonymous"><i id="editImmagine" class="fas fa-pen-square"></i>
             <form id="formEditImmagine" action = 'EditProfiloServlet/editImmagine' enctype='multipart/form-data' method="post"><input type="file" name = "modifica" id="modificaImmagineInput" style="position: absolute; top:-150px"></form>
-            <div id="nome-utente" style="display: flex; justify-content: center; align-items: center"><p id="nome">${sessionScope.user.nome}<i id="editNome" class="fas fa-pen-square"></i></p><p style="margin-left: 10px" id="cognome">${sessionScope.user.cognome}<i id="editCognome" class="fas fa-pen-square"></i></p></div>
+            <p id="nome-completo">${sessionScope.user.nome}<i id="editNome" class="fas fa-pen-square"></i> <span style="margin-left: 10px">${sessionScope.user.cognome}</span><i id="editCognome" class="fas fa-pen-square"></i></p>
             <p id="email">${sessionScope.user.email}<i id="editEmail" class="fas fa-pen-square"></i></p>
             <p id="telefono">${sessionScope.user.telefono}<i id="editTelefono" class="fas fa-pen-square"></i></p>
             <!-- <form action = EditProfiloServlet/editImmagine enctype='multipart/form-data' method="post"><input type="file" name = "modifica"><input type="submit"></form></p> -->
@@ -129,7 +129,7 @@
                     </tbody>
                 </table>
             </div>
-           <br>
+
             RECENSIONI
 
             <div id="recensioni">
@@ -161,8 +161,6 @@
         <footer class="footer">
             <p>2Chance P.IVA: 12345577777777</p>
         </footer>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
-        <script src="${assetHost}functions/registrazione.js" crossorigin="anonymous"></script>
     <script src="${assetHost}functions/paginaUtente.js" crossorigin="anonymous"></script>
     <script src="${assetHost}functions/general.js" crossorigin="anonymous"></script>
     </body>

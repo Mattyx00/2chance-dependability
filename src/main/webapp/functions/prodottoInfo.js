@@ -1,8 +1,17 @@
 function show_box(info, element){
-    $("#descrizione, #scheda-tecnica, #recensioni").removeClass("info-box-elemento-selezionato");
-    $("#"+info).addClass("info-box-elemento-selezionato");
-    $(".pulsante-controlli").removeClass("pulsante-controlli-selezionato");
-    $(element).addClass("pulsante-controlli-selezionato");
+    document.querySelectorAll("#descrizione, #scheda-tecnica, #recensioni").forEach(function(el) {
+        el.classList.remove("info-box-elemento-selezionato");
+    });
+    let target = document.getElementById(info);
+    if (target) {
+        target.classList.add("info-box-elemento-selezionato");
+    }
+    document.querySelectorAll(".pulsante-controlli").forEach(function(el) {
+        el.classList.remove("pulsante-controlli-selezionato");
+    });
+    if (element) {
+        element.classList.add("pulsante-controlli-selezionato");
+    }
 }
 
 function redirectConfronto(){
@@ -32,16 +41,24 @@ function confronta(idProdotto){
 
 let star = 1;
 
-$("#stelle > i").click(function() {
-    star = $(this).index() + 1;
-    $(this).prevAll().addClass('yellow')
-    $(this).addClass('yellow')
-    $(this).nextAll().removeClass('yellow')
+document.addEventListener("DOMContentLoaded", function() {
+    let stars = document.querySelectorAll("#stelle > i");
+    stars.forEach(function(s, index) {
+        s.addEventListener("click", function() {
+            star = index + 1;
+            stars.forEach(function(item, idx) {
+                if (idx <= index) {
+                    item.classList.add("yellow");
+                } else {
+                    item.classList.remove("yellow");
+                }
+            });
+        });
+    });
 });
 
-
 function aggiungiRecensione(idProdotto){
-    let testo_recensione = $("#testo").val();
+    let testo_recensione = document.getElementById("testo").value;
     let valutazione = star;
 
     let xhttp = new XMLHttpRequest();
@@ -54,9 +71,7 @@ function aggiungiRecensione(idProdotto){
             window.location.href = "login.jsp";
         }
     };
-    let url = "RecensioniServlet/aggiungiRecensione?testo="+testo_recensione+"&valutazione="+valutazione+"&idProdotto="+idProdotto;
+    let url = "RecensioniServlet/aggiungiRecensione?testo="+encodeURIComponent(testo_recensione)+"&valutazione="+valutazione+"&idProdotto="+idProdotto;
     xhttp.open("GET", url, true);
     xhttp.send();
-
-
-}
+}
