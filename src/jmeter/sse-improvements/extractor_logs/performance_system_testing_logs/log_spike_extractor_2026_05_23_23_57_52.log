@@ -1,18 +1,18 @@
 
 === Analisi Energetica di EnergiBridge ===
-Elaborazione file: C:\Users\aldom\Desktop\Projects\University of Salerno\2chance-dependability\src\jmeter\energibridge_logs\log_spike_energy_2026_05_23_23_57_52.csv
+Elaborazione file: C:\Users\aldom\Desktop\Projects\University of Salerno\2chance-dependability\src\jmeter\sse-improvements\energibridge_logs\log_spike_energy_2026_05_23_23_57_52.csv
 =============================================
-Durata Workload Profiled: 420.23 secondi (~7.00 minuti)
+Durata Workload Profiled: 404.12 secondi (~6.74 minuti)
 ---------------------------------------------
 Metrica di Sostenibilita       | Valore       | Unita   
 --------------------------------------------------------
-Energia CPU Package              | 6544.31      | Joules (J)  
-Potenza Media CPU Package        | 16.20        | Watt (W)    
-Energia PPO (Core)               | 148.15       | Joules (J)  
-CPU Usage (Media)                | 34.90        | Percentuale (%)
-CPU Usage (Picco)                | 96.39        | Percentuale (%)
-Frequenza Media CPU              | 2000.00      | MHz         
-Memoria RAM Usata (Media)        | 25.47        | Gigabyte (GB)
-Memoria RAM Usata (Picco)        | 26.33        | Gigabyte (GB)
+Energia CPU Package            | 6549.98      | Joules (J)
+Potenza Media CPU Package      | 16.22        | Watt (W)
+Energia PPO (Core)             | 148.13       | Joules (J)
+CPU Usage (Media)              | 34.86        | Percentuale (%)
+CPU Usage (Picco)              | 96.40        | Percentuale (%)
+Frequenza Media CPU            | 2000.00      | MHz     
+Memoria RAM Usata (Media)      | 25.47        | Gigabyte (GB)
+Memoria RAM Usata (Picco)      | 26.32        | Gigabyte (GB)
 ========================================================
 Analisi completata con successo.

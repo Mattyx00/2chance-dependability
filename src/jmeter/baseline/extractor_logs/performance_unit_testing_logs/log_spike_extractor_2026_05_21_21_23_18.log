@@ -1,6 +1,6 @@
 === Analisi Energetica per Singolo Servlet ===
-Elaborazione file: .\src\jmeter\energibridge_logs\log_spike_energy_2026_05_21_21_23_18.csv
-File JTL correlato: C:\Users\aldom\Desktop\Projects\University of Salerno\2chance-dependability\src\jmeter\jmeter_logs\log_spike_2026_05_21_21_23_18.jtl
+Elaborazione file: C:\Users\aldom\Desktop\Projects\University of Salerno\2chance-dependability\src\jmeter\baseline\energibridge_logs\log_spike_energy_2026_05_21_21_23_18.csv
+File JTL correlato: C:\Users\aldom\Desktop\Projects\University of Salerno\2chance-dependability\src\jmeter\baseline\jmeter_logs\log_spike_2026_05_21_21_23_18.jtl
 ===========================================================================================================================================================
 Servlet                      | Requests | Avg Resp Time (ms) | CPU Energy (J) | Avg Power (W) | Core Energy (J) | Avg CPU (%)  | Peak CPU (%) | Avg RAM (GB) | Peak RAM (GB)
 -----------------------------------------------------------------------------------------------------------------------------------------------------------

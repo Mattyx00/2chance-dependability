@@ -200,10 +200,10 @@ Qualora alcune righe del file CSV presentino marcature temporali mancanti o inco
 \subsubsection{Filtrazione del Rumore dei Sensori RAPL}
 I sensori fisici basati su Intel/AMD RAPL (\textit{Running Average Power Limit}) o registri equivalenti possono essere soggetti a rumore hardware, caratterizzato da oscillazioni fittizie e repentine nei valori assoluti di energia (ad esempio, salti istantanei da decine a migliaia di Joule). Se calcolato tramite semplice differenza tra l'ultimo e il primo valore registrato ($E_{end} - E_{start}$), il consumo totale risulterebbe pesantemente sovrastimato o falsato.
 
-Per risolvere questo problema, lo script implementa un filtro di soglia basato sulla potenza fisica teorica massima del processore. Per ogni coppia di record consecutivi $k-1$ e $k$, viene calcolato l'intervallo temporale $\Delta t = (T_k - T_{k-1})/1000$ (in secondi) e la differenza di energia letta dai sensori $\Delta E = E_k - E_{k-1}$. La differenza viene considerata valida solo se rispetta le seguenti restrizioni fisiche:
+Per risolvere questo problema, lo script implementa un filtro di soglia basato sulla potenza fisica teorica massima del processore (AMD Ryzen AI 9 HX 370). Per ogni coppia di record consecutivi $k-1$ e $k$, viene calcolato l'intervallo temporale $\Delta t = (T_k - T_{k-1})/1000$ (in secondi) e la differenza di energia letta dai sensori $\Delta E = E_k - E_{k-1}$. La differenza viene considerata valida solo se rispetta le seguenti restrizioni fisiche, derivate dalle specifiche dell'architettura (cTDP Max di 54W):
 \begin{itemize}
-    \item \textbf{Package CPU Energy:} $0 \le \Delta E_{CPU} \le 250.0 \times \Delta t$. Una variazione superiore a 250~W per frazione di secondo viene scartata (impostata a 0) in quanto fisicamente impossibile per la CPU di riferimento.
-    \item \textbf{Core CPU Energy (PPO):} $0 \le \Delta E_{Core} \le 150.0 \times \Delta t$. Variazioni superiori a 150~W sui singoli core elaborativi vengono analogamente filtrate.
+    \item \textbf{Package CPU Energy:} $0 \le \Delta E_{CPU} \le 55.0 \times \Delta t$. Una variazione superiore a 55~W per frazione di secondo (valore del cTDP Max più 1W di tolleranza) viene scartata (impostata a 0) in quanto fisicamente impossibile per l'intero SoC.
+    \item \textbf{Core CPU Energy (PPO):} $0 \le \Delta E_{Core} \le 45.0 \times \Delta t$. Variazioni superiori a 45~W sui singoli core elaborativi (stimato all'80\% del budget energetico del package) vengono analogamente filtrate.
 \end{itemize}
 Questo approccio consente di accumulare solo i contributi reali di consumo energetico, neutralizzando i picchi spuri e rendendo le misurazioni stabili e confrontabili.
 

@@ -268,16 +268,16 @@ def analyze_csv(file_path):
             if delta_t > 0:
                 rec['delta_t'] = delta_t
                 
-                # CPU Energy Delta with Noise Filtering (< 250 W)
+                # CPU Energy Delta with Noise Filtering (< 55 W)
                 if rec['cpu_energy'] is not None and prev_rec['cpu_energy'] is not None:
                     diff_cpu = rec['cpu_energy'] - prev_rec['cpu_energy']
-                    if 0 <= diff_cpu <= 250.0 * delta_t:
+                    if 0 <= diff_cpu <= 55.0 * delta_t:
                         rec['delta_E_CPU'] = diff_cpu
                         
-                # Core Energy Delta with Noise Filtering (< 150 W)
+                # Core Energy Delta with Noise Filtering (< 45 W)
                 if rec['core_energy'] is not None and prev_rec['core_energy'] is not None:
                     diff_core = rec['core_energy'] - prev_rec['core_energy']
-                    if 0 <= diff_core <= 150.0 * delta_t:
+                    if 0 <= diff_core <= 45.0 * delta_t:
                         rec['delta_E_Core'] = diff_core
 
     # Calculate Global metrics

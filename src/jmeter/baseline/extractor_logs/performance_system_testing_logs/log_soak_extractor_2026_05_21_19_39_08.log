@@ -1,14 +1,14 @@
 
 === Analisi Energetica di EnergiBridge ===
-Elaborazione file: .\src\jmeter\energibridge_logs\log_soak_energy_2026_05_21_19_39_08.csv
+Elaborazione file: C:\Users\aldom\Desktop\Projects\University of Salerno\2chance-dependability\src\jmeter\baseline\energibridge_logs\log_soak_energy_2026_05_21_19_39_08.csv
 =============================================
 Durata Workload Profiled: 7203.20 secondi (~120.05 minuti)
 ---------------------------------------------
 Metrica di Sostenibilita       | Valore       | Unita   
 --------------------------------------------------------
-Energia CPU Package            | 168350.88    | Joules (J)
-Potenza Media CPU Package      | 23.37        | Watt (W)
-Energia PPO (Core)             | 3240.81      | Joules (J)
+Energia CPU Package            | 168300.46    | Joules (J)
+Potenza Media CPU Package      | 23.36        | Watt (W)
+Energia PPO (Core)             | 2886.16      | Joules (J)
 CPU Usage (Media)              | 37.14        | Percentuale (%)
 CPU Usage (Picco)              | 100.00       | Percentuale (%)
 Frequenza Media CPU            | 2000.00      | MHz     
