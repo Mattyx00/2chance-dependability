@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2026.1.3)  31 MAY 2026 11:41
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2026.1.3)  31 MAY 2026 11:49
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -32,6 +32,74 @@ Package: inputenc 2024/02/08 v1.3d Input encoding file
 (c:/Program Files/texlive/2025/texmf-dist/tex/latex/base/fontenc.sty
 Package: fontenc 2025/07/18 v2.1d Standard LaTeX package
 )
+(c:/Program Files/texlive/2025/texmf-dist/tex/latex/amsmath/amsmath.sty
+Package: amsmath 2025/07/09 v2.17z AMS math features
+\@mathmargin=\skip51
+
+For additional information on amsmath, use the `?' option.
+(c:/Program Files/texlive/2025/texmf-dist/tex/latex/amsmath/amstext.sty
+Package: amstext 2024/11/17 v2.01 AMS text
+
+(c:/Program Files/texlive/2025/texmf-dist/tex/latex/amsmath/amsgen.sty
+File: amsgen.sty 1999/11/30 v2.0 generic functions
+\@emptytoks=\toks19
+\ex@=\dimen149
+))
+(c:/Program Files/texlive/2025/texmf-dist/tex/latex/amsmath/amsbsy.sty
+Package: amsbsy 1999/11/29 v1.2d Bold Symbols
+\pmbraise@=\dimen150
+)
+(c:/Program Files/texlive/2025/texmf-dist/tex/latex/amsmath/amsopn.sty
+Package: amsopn 2022/04/08 v2.04 operator names
+)
+\inf@bad=\count284
+LaTeX Info: Redefining \frac on input line 233.
+\uproot@=\count285
+\leftroot@=\count286
+LaTeX Info: Redefining \overline on input line 398.
+LaTeX Info: Redefining \colon on input line 409.
+\classnum@=\count287
+\DOTSCASE@=\count288
+LaTeX Info: Redefining \ldots on input line 495.
+LaTeX Info: Redefining \dots on input line 498.
+LaTeX Info: Redefining \cdots on input line 619.
+\Mathstrutbox@=\box53
+\strutbox@=\box54
+LaTeX Info: Redefining \big on input line 721.
+LaTeX Info: Redefining \Big on input line 722.
+LaTeX Info: Redefining \bigg on input line 723.
+LaTeX Info: Redefining \Bigg on input line 724.
+\big@size=\dimen151
+LaTeX Font Info:    Redeclaring font encoding OML on input line 742.
+LaTeX Font Info:    Redeclaring font encoding OMS on input line 743.
+\macc@depth=\count289
+LaTeX Info: Redefining \bmod on input line 904.
+LaTeX Info: Redefining \pmod on input line 909.
+LaTeX Info: Redefining \smash on input line 939.
+LaTeX Info: Redefining \relbar on input line 969.
+LaTeX Info: Redefining \Relbar on input line 970.
+\c@MaxMatrixCols=\count290
+\dotsspace@=\muskip17
+\c@parentequation=\count291
+\dspbrk@lvl=\count292
+\tag@help=\toks20
+\row@=\count293
+\column@=\count294
+\maxfields@=\count295
+\andhelp@=\toks21
+\eqnshift@=\dimen152
+\alignsep@=\dimen153
+\tagshift@=\dimen154
+\tagwidth@=\dimen155
+\totwidth@=\dimen156
+\lineht@=\dimen157
+\@envbody=\toks22
+\multlinegap=\skip52
+\multlinetaggap=\skip53
+\mathdisplay@stack=\toks23
+LaTeX Info: Redefining \[ on input line 2950.
+LaTeX Info: Redefining \] on input line 2951.
+)
 (c:/Program Files/texlive/2025/texmf-dist/tex/latex/lipsum/lipsum.sty
 (c:/Program Files/texlive/2025/texmf-dist/tex/latex/l3packages/l3keys2e/l3keys2
 e.sty (c:/Program Files/texlive/2025/texmf-dist/tex/latex/l3kernel/expl3.sty
@@ -40,14 +108,14 @@ Package: expl3 2025-12-29 L3 programming layer (loader)
 (c:/Program Files/texlive/2025/texmf-dist/tex/latex/l3backend/l3backend-pdftex.
 def
 File: l3backend-pdftex.def 2025-10-09 L3 backend support: PDF output (pdfTeX)
-\l__color_backend_stack_int=\count284
+\l__color_backend_stack_int=\count296
 ))
 Package: l3keys2e 2025-10-09 LaTeX2e option processing using LaTeX3 keys
 )
 Package: lipsum 2021-09-20 v2.7 150 paragraphs of Lorem Ipsum dummy text
-\g__lipsum_par_int=\count285
-\l__lipsum_a_int=\count286
-\l__lipsum_b_int=\count287
+\g__lipsum_par_int=\count297
+\l__lipsum_a_int=\count298
+\l__lipsum_b_int=\count299
 
 (c:/Program Files/texlive/2025/texmf-dist/tex/latex/lipsum/lipsum.ltd.tex))
 (c:/Program Files/texlive/2025/texmf-dist/tex/latex/csquotes/csquotes.sty
@@ -55,19 +123,19 @@ Package: csquotes 2024-04-04 v5.2o context-sensitive quotations (JAW)
 
 (c:/Program Files/texlive/2025/texmf-dist/tex/latex/etoolbox/etoolbox.sty
 Package: etoolbox 2025/10/02 v2.5m e-TeX tools for LaTeX (JAW)
-\etb@tempcnta=\count288
+\etb@tempcnta=\count300
 )
 (c:/Program Files/texlive/2025/texmf-dist/tex/latex/graphics/keyval.sty
 Package: keyval 2022/05/29 v1.15 key=value parser (DPC)
-\KV@toks@=\toks19
+\KV@toks@=\toks24
 )
-\csq@reset=\count289
-\csq@gtype=\count290
-\csq@glevel=\count291
-\csq@qlevel=\count292
-\csq@maxlvl=\count293
-\csq@tshold=\count294
-\csq@ltx@everypar=\toks20
+\csq@reset=\count301
+\csq@gtype=\count302
+\csq@glevel=\count303
+\csq@qlevel=\count304
+\csq@maxlvl=\count305
+\csq@tshold=\count306
+\csq@ltx@everypar=\toks25
 
 (c:/Program Files/texlive/2025/texmf-dist/tex/latex/csquotes/csquotes.def
 File: csquotes.def 2024-04-04 v5.2o csquotes generic definitions (JAW)
@@ -122,15 +190,15 @@ Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 (c:/Program Files/texlive/2025/texmf-dist/tex/latex/kvoptions/kvoptions.sty
 Package: kvoptions 2022-06-15 v3.15 Key value format for package options (HO)
 ))
-\c@section@level=\count295
+\c@section@level=\count307
 )
 (c:/Program Files/texlive/2025/texmf-dist/tex/generic/stringenc/stringenc.sty
 Package: stringenc 2019/11/29 v1.12 Convert strings between diff. encodings (HO
 )
 )
-\@linkdim=\dimen149
-\Hy@linkcounter=\count296
-\Hy@pagecounter=\count297
+\@linkdim=\dimen158
+\Hy@linkcounter=\count308
+\Hy@pagecounter=\count309
 
 (c:/Program Files/texlive/2025/texmf-dist/tex/latex/hyperref/pd1enc.def
 File: pd1enc.def 2025-07-12 v7.01o Hyperref: PDFDocEncoding definition (HO)
@@ -140,7 +208,7 @@ Now handling font encoding PD1 ...
 (c:/Program Files/texlive/2025/texmf-dist/tex/generic/intcalc/intcalc.sty
 Package: intcalc 2019/12/15 v1.3 Expandable calculations with integers (HO)
 )
-\Hy@SavedSpaceFactor=\count298
+\Hy@SavedSpaceFactor=\count310
 
 (c:/Program Files/texlive/2025/texmf-dist/tex/latex/hyperref/puenc.def
 File: puenc.def 2025-07-12 v7.01o Hyperref: PDF Unicode definition (HO)
@@ -154,14 +222,14 @@ Package hyperref Info: Plain pages OFF on input line 4210.
 Package hyperref Info: Backreferencing OFF on input line 4215.
 Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
 Package hyperref Info: Bookmarks ON on input line 4462.
-\c@Hy@tempcnt=\count299
+\c@Hy@tempcnt=\count311
 
 (c:/Program Files/texlive/2025/texmf-dist/tex/latex/url/url.sty
-\Urlmuskip=\muskip17
+\Urlmuskip=\muskip18
 Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
 )
 LaTeX Info: Redefining \url on input line 4801.
-\XeTeXLinkMargin=\dimen150
+\XeTeXLinkMargin=\dimen159
 
 (c:/Program Files/texlive/2025/texmf-dist/tex/generic/bitset/bitset.sty
 Package: bitset 2019/12/09 v1.3 Handle bit-vector datatype (HO)
@@ -170,9 +238,9 @@ Package: bitset 2019/12/09 v1.3 Handle bit-vector datatype (HO)
 Package: bigintcalc 2019/12/15 v1.5 Expandable calculations on big integers (HO
 )
 ))
-\Fld@menulength=\count300
-\Field@Width=\dimen151
-\Fld@charsize=\dimen152
+\Fld@menulength=\count312
+\Field@Width=\dimen160
+\Fld@charsize=\dimen161
 Package hyperref Info: Hyper figures OFF on input line 6078.
 Package hyperref Info: Link nesting OFF on input line 6083.
 Package hyperref Info: Hyper index ON on input line 6086.
@@ -180,15 +248,15 @@ Package hyperref Info: backreferencing OFF on input line 6093.
 Package hyperref Info: Link coloring OFF on input line 6098.
 Package hyperref Info: Link coloring with OCG OFF on input line 6103.
 Package hyperref Info: PDF/A mode OFF on input line 6108.
-\Hy@abspage=\count301
-\c@Item=\count302
-\c@Hfootnote=\count303
+\Hy@abspage=\count313
+\c@Item=\count314
+\c@Hfootnote=\count315
 )
 Package hyperref Info: Driver (autodetected): hpdftex.
  (c:/Program Files/texlive/2025/texmf-dist/tex/latex/hyperref/hpdftex.def
 File: hpdftex.def 2025-07-12 v7.01o Hyperref driver for pdfTeX
-\Fld@listcount=\count304
-\c@bookmark@seq@number=\count305
+\Fld@listcount=\count316
+\c@bookmark@seq@number=\count317
 
 (c:/Program Files/texlive/2025/texmf-dist/tex/latex/rerunfilecheck/rerunfileche
 ck.sty
@@ -201,7 +269,7 @@ Package: uniquecounter 2019/12/15 v1.4 Provide unlimited unique counter (HO)
 Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
 84.
 )
-\Hy@SectionHShift=\skip51
+\Hy@SectionHShift=\skip54
 )
 (c:/Program Files/texlive/2025/texmf-dist/tex/latex/graphics/graphicx.sty
 Package: graphicx 2024/12/31 v1.2e Enhanced LaTeX Graphics (DPC,SPQR)
@@ -220,8 +288,8 @@ Package graphics Info: Driver file: pdftex.def on input line 106.
 (c:/Program Files/texlive/2025/texmf-dist/tex/latex/graphics-def/pdftex.def
 File: pdftex.def 2025/09/29 v1.2d Graphics/color driver for pdftex
 ))
-\Gin@req@height=\dimen153
-\Gin@req@width=\dimen154
+\Gin@req@height=\dimen162
+\Gin@req@width=\dimen163
 )
 (c:/Program Files/texlive/2025/texmf-dist/tex/latex/geometry/geometry.sty
 Package: geometry 2020/01/02 v5.9 Page Geometry
@@ -229,41 +297,41 @@ Package: geometry 2020/01/02 v5.9 Page Geometry
 (c:/Program Files/texlive/2025/texmf-dist/tex/generic/iftex/ifvtex.sty
 Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
 )
-\Gm@cnth=\count306
-\Gm@cntv=\count307
-\c@Gm@tempcnt=\count308
-\Gm@bindingoffset=\dimen155
-\Gm@wd@mp=\dimen156
-\Gm@odd@mp=\dimen157
-\Gm@even@mp=\dimen158
-\Gm@layoutwidth=\dimen159
-\Gm@layoutheight=\dimen160
-\Gm@layouthoffset=\dimen161
-\Gm@layoutvoffset=\dimen162
-\Gm@dimlist=\toks21
+\Gm@cnth=\count318
+\Gm@cntv=\count319
+\c@Gm@tempcnt=\count320
+\Gm@bindingoffset=\dimen164
+\Gm@wd@mp=\dimen165
+\Gm@odd@mp=\dimen166
+\Gm@even@mp=\dimen167
+\Gm@layoutwidth=\dimen168
+\Gm@layoutheight=\dimen169
+\Gm@layouthoffset=\dimen170
+\Gm@layoutvoffset=\dimen171
+\Gm@dimlist=\toks26
 )
 (c:/Program Files/texlive/2025/texmf-dist/tex/latex/listings/listings.sty
-\lst@mode=\count309
-\lst@gtempboxa=\box53
-\lst@token=\toks22
-\lst@length=\count310
-\lst@currlwidth=\dimen163
-\lst@column=\count311
-\lst@pos=\count312
-\lst@lostspace=\dimen164
-\lst@width=\dimen165
-\lst@newlines=\count313
-\lst@lineno=\count314
-\lst@maxwidth=\dimen166
+\lst@mode=\count321
+\lst@gtempboxa=\box55
+\lst@token=\toks27
+\lst@length=\count322
+\lst@currlwidth=\dimen172
+\lst@column=\count323
+\lst@pos=\count324
+\lst@lostspace=\dimen173
+\lst@width=\dimen174
+\lst@newlines=\count325
+\lst@lineno=\count326
+\lst@maxwidth=\dimen175
 
 (c:/Program Files/texlive/2025/texmf-dist/tex/latex/listings/lstpatch.sty
 File: lstpatch.sty 2025/11/14 1.11b (Carsten Heinz)
 )
 (c:/Program Files/texlive/2025/texmf-dist/tex/latex/listings/lstmisc.sty
 File: lstmisc.sty 2025/11/14 1.11b (Carsten Heinz)
-\c@lstnumber=\count315
-\lst@skipnumbers=\count316
-\lst@framebox=\box54
+\c@lstnumber=\count327
+\lst@skipnumbers=\count328
+\lst@framebox=\box56
 )
 (c:/Program Files/texlive/2025/texmf-dist/tex/latex/listings/listings.cfg
 File: listings.cfg 2025/11/14 1.11b listings configuration
@@ -297,71 +365,71 @@ Package xcolor Info: Model `wave' substituted by `hsb' on input line 1372.
 )
 (c:/Program Files/texlive/2025/texmf-dist/tex/latex/booktabs/booktabs.sty
 Package: booktabs 2020/01/12 v1.61803398 Publication quality tables
-\heavyrulewidth=\dimen167
-\lightrulewidth=\dimen168
-\cmidrulewidth=\dimen169
-\belowrulesep=\dimen170
-\belowbottomsep=\dimen171
-\aboverulesep=\dimen172
-\abovetopsep=\dimen173
-\cmidrulesep=\dimen174
-\cmidrulekern=\dimen175
-\defaultaddspace=\dimen176
-\@cmidla=\count317
-\@cmidlb=\count318
-\@aboverulesep=\dimen177
-\@belowrulesep=\dimen178
-\@thisruleclass=\count319
-\@lastruleclass=\count320
-\@thisrulewidth=\dimen179
+\heavyrulewidth=\dimen176
+\lightrulewidth=\dimen177
+\cmidrulewidth=\dimen178
+\belowrulesep=\dimen179
+\belowbottomsep=\dimen180
+\aboverulesep=\dimen181
+\abovetopsep=\dimen182
+\cmidrulesep=\dimen183
+\cmidrulekern=\dimen184
+\defaultaddspace=\dimen185
+\@cmidla=\count329
+\@cmidlb=\count330
+\@aboverulesep=\dimen186
+\@belowrulesep=\dimen187
+\@thisruleclass=\count331
+\@lastruleclass=\count332
+\@thisrulewidth=\dimen188
 )
 (c:/Program Files/texlive/2025/texmf-dist/tex/latex/tools/array.sty
 Package: array 2025/09/25 v2.6n Tabular extension package (FMi)
-\col@sep=\dimen180
-\ar@mcellbox=\box55
-\extrarowheight=\dimen181
-\NC@list=\toks23
-\extratabsurround=\skip52
-\backup@length=\skip53
-\ar@cellbox=\box56
+\col@sep=\dimen189
+\ar@mcellbox=\box57
+\extrarowheight=\dimen190
+\NC@list=\toks28
+\extratabsurround=\skip55
+\backup@length=\skip56
+\ar@cellbox=\box58
 )
 (c:/Program Files/texlive/2025/texmf-dist/tex/latex/tools/longtable.sty
 Package: longtable 2025-10-13 v4.24 Multi-page Table package (DPC)
-\LTleft=\skip54
-\LTright=\skip55
-\LTpre=\skip56
-\LTpost=\skip57
-\LTchunksize=\count321
-\LTcapwidth=\dimen182
-\LT@head=\box57
-\LT@firsthead=\box58
-\LT@foot=\box59
-\LT@lastfoot=\box60
-\LT@gbox=\box61
-\LT@cols=\count322
-\LT@rows=\count323
-\c@LT@tables=\count324
-\c@LT@chunks=\count325
-\LT@p@ftn=\toks24
+\LTleft=\skip57
+\LTright=\skip58
+\LTpre=\skip59
+\LTpost=\skip60
+\LTchunksize=\count333
+\LTcapwidth=\dimen191
+\LT@head=\box59
+\LT@firsthead=\box60
+\LT@foot=\box61
+\LT@lastfoot=\box62
+\LT@gbox=\box63
+\LT@cols=\count334
+\LT@rows=\count335
+\c@LT@tables=\count336
+\c@LT@chunks=\count337
+\LT@p@ftn=\toks29
 )
 (c:/Program Files/texlive/2025/texmf-dist/tex/latex/colortbl/colortbl.sty
 Package: colortbl 2024/10/29 v1.0k Color table columns (DPC)
-\everycr=\toks25
-\minrowclearance=\skip58
-\rownum=\count326
+\everycr=\toks30
+\minrowclearance=\skip61
+\rownum=\count338
 )
 (c:/Program Files/texlive/2025/texmf-dist/tex/latex/pgf/frontendlayer/tikz.sty
 (c:/Program Files/texlive/2025/texmf-dist/tex/latex/pgf/basiclayer/pgf.sty
 (c:/Program Files/texlive/2025/texmf-dist/tex/latex/pgf/utilities/pgfrcs.sty
 (c:/Program Files/texlive/2025/texmf-dist/tex/generic/pgf/utilities/pgfutil-com
 mon.tex
-\pgfutil@everybye=\toks26
-\pgfutil@tempdima=\dimen183
-\pgfutil@tempdimb=\dimen184
+\pgfutil@everybye=\toks31
+\pgfutil@tempdima=\dimen192
+\pgfutil@tempdimb=\dimen193
 )
 (c:/Program Files/texlive/2025/texmf-dist/tex/generic/pgf/utilities/pgfutil-lat
 ex.def
-\pgfutil@abb=\box62
+\pgfutil@abb=\box64
 )
 (c:/Program Files/texlive/2025/texmf-dist/tex/generic/pgf/utilities/pgfrcs.code
 .tex (c:/Program Files/texlive/2025/texmf-dist/tex/generic/pgf/pgf.revision.tex
@@ -378,33 +446,33 @@ Package: pgfsys 2025-08-29 v3.1.11a (3.1.11a)
 
 (c:/Program Files/texlive/2025/texmf-dist/tex/generic/pgf/utilities/pgfkeys.cod
 e.tex
-\pgfkeys@pathtoks=\toks27
-\pgfkeys@temptoks=\toks28
+\pgfkeys@pathtoks=\toks32
+\pgfkeys@temptoks=\toks33
 
 (c:/Program Files/texlive/2025/texmf-dist/tex/generic/pgf/utilities/pgfkeyslibr
 aryfiltered.code.tex
-\pgfkeys@tmptoks=\toks29
+\pgfkeys@tmptoks=\toks34
 ))
-\pgf@x=\dimen185
-\pgf@y=\dimen186
-\pgf@xa=\dimen187
-\pgf@ya=\dimen188
-\pgf@xb=\dimen189
-\pgf@yb=\dimen190
-\pgf@xc=\dimen191
-\pgf@yc=\dimen192
-\pgf@xd=\dimen193
-\pgf@yd=\dimen194
+\pgf@x=\dimen194
+\pgf@y=\dimen195
+\pgf@xa=\dimen196
+\pgf@ya=\dimen197
+\pgf@xb=\dimen198
+\pgf@yb=\dimen199
+\pgf@xc=\dimen256
+\pgf@yc=\dimen257
+\pgf@xd=\dimen258
+\pgf@yd=\dimen259
 \w@pgf@writea=\write3
 \r@pgf@reada=\read2
-\c@pgf@counta=\count327
-\c@pgf@countb=\count328
-\c@pgf@countc=\count329
-\c@pgf@countd=\count330
-\t@pgf@toka=\toks30
-\t@pgf@tokb=\toks31
-\t@pgf@tokc=\toks32
-\pgf@sys@id@count=\count331
+\c@pgf@counta=\count339
+\c@pgf@countb=\count340
+\c@pgf@countc=\count341
+\c@pgf@countd=\count342
+\t@pgf@toka=\toks35
+\t@pgf@tokb=\toks36
+\t@pgf@tokc=\toks37
+\pgf@sys@id@count=\count343
 
 (c:/Program Files/texlive/2025/texmf-dist/tex/generic/pgf/systemlayer/pgf.cfg
 File: pgf.cfg 2025-08-29 v3.1.11a (3.1.11a)
@@ -422,8 +490,8 @@ File: pgfsys-common-pdf.def 2025-08-29 v3.1.11a (3.1.11a)
 (c:/Program Files/texlive/2025/texmf-dist/tex/generic/pgf/systemlayer/pgfsyssof
 tpath.code.tex
 File: pgfsyssoftpath.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-\pgfsyssoftpath@smallbuffer@items=\count332
-\pgfsyssoftpath@bigbuffer@items=\count333
+\pgfsyssoftpath@smallbuffer@items=\count344
+\pgfsyssoftpath@bigbuffer@items=\count345
 )
 (c:/Program Files/texlive/2025/texmf-dist/tex/generic/pgf/systemlayer/pgfsyspro
 tocol.code.tex
@@ -439,12 +507,12 @@ Package: pgfcore 2025-08-29 v3.1.11a (3.1.11a)
 .tex)
 (c:/Program Files/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathparser.co
 de.tex
-\pgfmath@dimen=\dimen195
-\pgfmath@count=\count334
-\pgfmath@box=\box63
-\pgfmath@toks=\toks33
-\pgfmath@stack@operand=\toks34
-\pgfmath@stack@operation=\toks35
+\pgfmath@dimen=\dimen260
+\pgfmath@count=\count346
+\pgfmath@box=\box65
+\pgfmath@toks=\toks38
+\pgfmath@stack@operand=\toks39
+\pgfmath@stack@operation=\toks40
 )
 (c:/Program Files/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfunctions
 .code.tex)
@@ -468,59 +536,59 @@ de.tex
 .tex)
 (c:/Program Files/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfmathfloat.cod
 e.tex
-\c@pgfmathroundto@lastzeros=\count335
+\c@pgfmathroundto@lastzeros=\count347
 ))
 (c:/Program Files/texlive/2025/texmf-dist/tex/generic/pgf/math/pgfint.code.tex)
 
 (c:/Program Files/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepoi
 nts.code.tex
 File: pgfcorepoints.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-\pgf@picminx=\dimen196
-\pgf@picmaxx=\dimen197
-\pgf@picminy=\dimen198
-\pgf@picmaxy=\dimen199
-\pgf@pathminx=\dimen256
-\pgf@pathmaxx=\dimen257
-\pgf@pathminy=\dimen258
-\pgf@pathmaxy=\dimen259
-\pgf@xx=\dimen260
-\pgf@xy=\dimen261
-\pgf@yx=\dimen262
-\pgf@yy=\dimen263
-\pgf@zx=\dimen264
-\pgf@zy=\dimen265
+\pgf@picminx=\dimen261
+\pgf@picmaxx=\dimen262
+\pgf@picminy=\dimen263
+\pgf@picmaxy=\dimen264
+\pgf@pathminx=\dimen265
+\pgf@pathmaxx=\dimen266
+\pgf@pathminy=\dimen267
+\pgf@pathmaxy=\dimen268
+\pgf@xx=\dimen269
+\pgf@xy=\dimen270
+\pgf@yx=\dimen271
+\pgf@yy=\dimen272
+\pgf@zx=\dimen273
+\pgf@zy=\dimen274
 )
 (c:/Program Files/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepat
 hconstruct.code.tex
 File: pgfcorepathconstruct.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-\pgf@path@lastx=\dimen266
-\pgf@path@lasty=\dimen267
+\pgf@path@lastx=\dimen275
+\pgf@path@lasty=\dimen276
 )
 (c:/Program Files/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepat
 husage.code.tex
 File: pgfcorepathusage.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-\pgf@shorten@end@additional=\dimen268
-\pgf@shorten@start@additional=\dimen269
+\pgf@shorten@end@additional=\dimen277
+\pgf@shorten@start@additional=\dimen278
 )
 (c:/Program Files/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcoresco
 pes.code.tex
 File: pgfcorescopes.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-\pgfpic=\box64
-\pgf@hbox=\box65
-\pgf@layerbox@main=\box66
-\pgf@picture@serial@count=\count336
+\pgfpic=\box66
+\pgf@hbox=\box67
+\pgf@layerbox@main=\box68
+\pgf@picture@serial@count=\count348
 )
 (c:/Program Files/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcoregra
 phicstate.code.tex
 File: pgfcoregraphicstate.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-\pgflinewidth=\dimen270
+\pgflinewidth=\dimen279
 )
 (c:/Program Files/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcoretra
 nsformations.code.tex
 File: pgfcoretransformations.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-\pgf@pt@x=\dimen271
-\pgf@pt@y=\dimen272
-\pgf@pt@temp=\dimen273
+\pgf@pt@x=\dimen280
+\pgf@pt@y=\dimen281
+\pgf@pt@temp=\dimen282
 )
 (c:/Program Files/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorequi
 ck.code.tex
@@ -537,14 +605,14 @@ File: pgfcorepathprocessing.code.tex 2025-08-29 v3.1.11a (3.1.11a)
 (c:/Program Files/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorearr
 ows.code.tex
 File: pgfcorearrows.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-\pgfarrowsep=\dimen274
+\pgfarrowsep=\dimen283
 )
 (c:/Program Files/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcoresha
 de.code.tex
 File: pgfcoreshade.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-\pgf@max=\dimen275
-\pgf@sys@shading@range@num=\count337
-\pgf@shadingcount=\count338
+\pgf@max=\dimen284
+\pgf@sys@shading@range@num=\count349
+\pgf@shadingcount=\count350
 )
 (c:/Program Files/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreima
 ge.code.tex
@@ -553,7 +621,7 @@ File: pgfcoreimage.code.tex 2025-08-29 v3.1.11a (3.1.11a)
 (c:/Program Files/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreext
 ernal.code.tex
 File: pgfcoreexternal.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-\pgfexternal@startupbox=\box67
+\pgfexternal@startupbox=\box69
 )
 (c:/Program Files/texlive/2025/texmf-dist/tex/generic/pgf/basiclayer/pgfcorelay
 ers.code.tex
@@ -574,7 +642,7 @@ File: pgfcorerdf.code.tex 2025-08-29 v3.1.11a (3.1.11a)
 (c:/Program Files/texlive/2025/texmf-dist/tex/generic/pgf/modules/pgfmoduleshap
 es.code.tex
 File: pgfmoduleshapes.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-\pgfnodeparttextbox=\box68
+\pgfnodeparttextbox=\box70
 )
 (c:/Program Files/texlive/2025/texmf-dist/tex/generic/pgf/modules/pgfmoduleplot
 .code.tex
@@ -583,8 +651,8 @@ File: pgfmoduleplot.code.tex 2025-08-29 v3.1.11a (3.1.11a)
 (c:/Program Files/texlive/2025/texmf-dist/tex/latex/pgf/compatibility/pgfcomp-v
 ersion-0-65.sty
 Package: pgfcomp-version-0-65 2025-08-29 v3.1.11a (3.1.11a)
-\pgf@nodesepstart=\dimen276
-\pgf@nodesepend=\dimen277
+\pgf@nodesepstart=\dimen285
+\pgf@nodesepend=\dimen286
 )
 (c:/Program Files/texlive/2025/texmf-dist/tex/latex/pgf/compatibility/pgfcomp-v
 ersion-1-18.sty
@@ -600,10 +668,10 @@ e.tex))
 (c:/Program Files/texlive/2025/texmf-dist/tex/generic/pgf/utilities/pgffor.code
 .tex
 Package: pgffor 2025-08-29 v3.1.11a (3.1.11a)
-\pgffor@iter=\dimen278
-\pgffor@skip=\dimen279
-\pgffor@stack=\toks36
-\pgffor@toks=\toks37
+\pgffor@iter=\dimen287
+\pgffor@skip=\dimen288
+\pgffor@stack=\toks41
+\pgffor@toks=\toks42
 ))
 (c:/Program Files/texlive/2025/texmf-dist/tex/generic/pgf/frontendlayer/tikz/ti
 kz.code.tex
@@ -612,34 +680,34 @@ Package: tikz 2025-08-29 v3.1.11a (3.1.11a)
 (c:/Program Files/texlive/2025/texmf-dist/tex/generic/pgf/libraries/pgflibraryp
 lothandlers.code.tex
 File: pgflibraryplothandlers.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-\pgf@plot@mark@count=\count339
-\pgfplotmarksize=\dimen280
+\pgf@plot@mark@count=\count351
+\pgfplotmarksize=\dimen289
 )
-\tikz@lastx=\dimen281
-\tikz@lasty=\dimen282
-\tikz@lastxsaved=\dimen283
-\tikz@lastysaved=\dimen284
-\tikz@lastmovetox=\dimen285
-\tikz@lastmovetoy=\dimen286
-\tikzleveldistance=\dimen287
-\tikzsiblingdistance=\dimen288
-\tikz@figbox=\box69
-\tikz@figbox@bg=\box70
-\tikz@tempbox=\box71
-\tikz@tempbox@bg=\box72
-\tikztreelevel=\count340
-\tikznumberofchildren=\count341
-\tikznumberofcurrentchild=\count342
-\tikz@fig@count=\count343
+\tikz@lastx=\dimen290
+\tikz@lasty=\dimen291
+\tikz@lastxsaved=\dimen292
+\tikz@lastysaved=\dimen293
+\tikz@lastmovetox=\dimen294
+\tikz@lastmovetoy=\dimen295
+\tikzleveldistance=\dimen296
+\tikzsiblingdistance=\dimen297
+\tikz@figbox=\box71
+\tikz@figbox@bg=\box72
+\tikz@tempbox=\box73
+\tikz@tempbox@bg=\box74
+\tikztreelevel=\count352
+\tikznumberofchildren=\count353
+\tikznumberofcurrentchild=\count354
+\tikz@fig@count=\count355
 
 (c:/Program Files/texlive/2025/texmf-dist/tex/generic/pgf/modules/pgfmodulematr
 ix.code.tex
 File: pgfmodulematrix.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-\pgfmatrixcurrentrow=\count344
-\pgfmatrixcurrentcolumn=\count345
-\pgf@matrix@numberofcolumns=\count346
+\pgfmatrixcurrentrow=\count356
+\pgfmatrixcurrentcolumn=\count357
+\pgf@matrix@numberofcolumns=\count358
 )
-\tikz@expandcount=\count347
+\tikz@expandcount=\count359
 
 (c:/Program Files/texlive/2025/texmf-dist/tex/generic/pgf/frontendlayer/tikz/li
 braries/tikzlibrarytopaths.code.tex
@@ -649,49 +717,69 @@ File: tikzlibrarytopaths.code.tex 2025-08-29 v3.1.11a (3.1.11a)
 braries/tikzlibrarypositioning.code.tex
 File: tikzlibrarypositioning.code.tex 2025-08-29 v3.1.11a (3.1.11a)
 )
-Package hyperref Info: Option `colorlinks' set `true' on input line 36.
+Package hyperref Info: Option `colorlinks' set `true' on input line 37.
  (./authors.tex)
 Package csquotes Info: Checking for multilingual support...
 Package csquotes Info: ... none found.
 
-No file report_sustainable_software_engineering_project.aux.
+(./report_sustainable_software_engineering_project.aux
+(./chapters/introduction_and_system_baseline.aux)
+(./chapters/software_architectural_overview.aux)
+(./chapters/backend_energy_sustainability.aux
+
+LaTeX Warning: Label `lst:run_sonarqube' multiply defined.
+
+
+LaTeX Warning: Label `lst:copy_plugin' multiply defined.
+
+
+LaTeX Warning: Label `lst:restart_sonarqube' multiply defined.
+
+) (./chapters/frontend_sustainability.aux)
+(./chapters/open_source_license_monitoring.aux)
+(./chapters/community_smells.aux)
+(./chapters/trade_off_analysis_and_conclusions.aux))
 \openout1 = `report_sustainable_software_engineering_project.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 43.
-LaTeX Font Info:    ... okay on input line 43.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 43.
-LaTeX Font Info:    ... okay on input line 43.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 43.
-LaTeX Font Info:    ... okay on input line 43.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 43.
-LaTeX Font Info:    ... okay on input line 43.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 43.
-LaTeX Font Info:    ... okay on input line 43.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 43.
-LaTeX Font Info:    ... okay on input line 43.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 43.
-LaTeX Font Info:    ... okay on input line 43.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 43.
-LaTeX Font Info:    ... okay on input line 43.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 43.
-LaTeX Font Info:    ... okay on input line 43.
-Package hyperref Info: Link coloring ON on input line 43.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 44.
+LaTeX Font Info:    ... okay on input line 44.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 44.
+LaTeX Font Info:    ... okay on input line 44.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 44.
+LaTeX Font Info:    ... okay on input line 44.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 44.
+LaTeX Font Info:    ... okay on input line 44.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 44.
+LaTeX Font Info:    ... okay on input line 44.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 44.
+LaTeX Font Info:    ... okay on input line 44.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 44.
+LaTeX Font Info:    ... okay on input line 44.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 44.
+LaTeX Font Info:    ... okay on input line 44.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 44.
+LaTeX Font Info:    ... okay on input line 44.
+Package hyperref Info: Link coloring ON on input line 44.
+
+(./report_sustainable_software_engineering_project.out)
+(./report_sustainable_software_engineering_project.out)
 \@outlinefile=\write4
 \openout4 = `report_sustainable_software_engineering_project.out'.
 
+
 (c:/Program Files/texlive/2025/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count348
-\scratchdimen=\dimen289
-\scratchbox=\box73
-\nofMPsegments=\count349
-\nofMParguments=\count350
-\everyMPshowfont=\toks38
-\MPscratchCnt=\count351
-\MPscratchDim=\dimen290
-\MPnumerator=\count352
-\makeMPintoPDFobject=\count353
-\everyMPtoPDFconversion=\toks39
+\scratchcounter=\count360
+\scratchdimen=\dimen298
+\scratchbox=\box75
+\nofMPsegments=\count361
+\nofMParguments=\count362
+\everyMPshowfont=\toks43
+\MPscratchCnt=\count363
+\MPscratchDim=\dimen299
+\MPnumerator=\count364
+\makeMPintoPDFobject=\count365
+\everyMPtoPDFconversion=\toks44
 )
 (c:/Program Files/texlive/2025/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.
 sty
@@ -738,31 +826,40 @@ e
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-\c@lstlisting=\count354
-Package hyperref Info: Option `pageanchor' set `false' on input line 46.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <14.4> on input line 48.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 48.
+\c@lstlisting=\count366
+Package hyperref Info: Option `pageanchor' set `false' on input line 47.
 [1
 
 {c:/Program Files/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{c:
 /Program Files/texlive/2025/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc
 }]
-Package hyperref Info: Option `pageanchor' set `true' on input line 48.
+Package hyperref Info: Option `pageanchor' set `true' on input line 49.
+ (./report_sustainable_software_engineering_project.toc
+Overfull \hbox (135.25337pt too wide) in paragraph at lines 27--27
+ [][] [][][]\T1/cmr/m/n/12 Automazione, Iso-la-mento e Sin-croniz-zazione dei T
+est (\T1/cmtt/m/n/12 backend_energy_consumption_analysis.ps1\T1/cmr/m/n/12 )[][
+] [][]  
+ []
 
-No file report_sustainable_software_engineering_project.toc.
-\tf@toc=\write5
-\openout5 = `report_sustainable_software_engineering_project.toc'.
+
+Overfull \hbox (164.9017pt too wide) in paragraph at lines 33--33
+ [][] [][][]\T1/cmr/m/n/12 Analisi En-er-get-ica Post-Elaborazione ed Es-trazio
+ne delle Met-riche (\T1/cmtt/m/n/12 energibridge_metrics_extractor.py\T1/cmr/m/
+n/12 )[][] [][]  
+ []
 
 [1
 
-]
+] [2])
+\tf@toc=\write5
+\openout5 = `report_sustainable_software_engineering_project.toc'.
+
+ [3]
 \openout2 = `chapters/introduction_and_system_baseline.aux'.
 
  (./chapters/introduction_and_system_baseline.tex
 Chapter 1.
-) [2
+) [4
 
 
 ]
@@ -780,7 +877,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 16--17
 
  []
 
-[3
+[5
 
 
 
@@ -800,7 +897,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 46--47
 
  []
 
-[4]) [5]
+[6]) [7]
 \openout2 = `chapters/backend_energy_sustainability.aux'.
 
  (./chapters/backend_energy_sustainability.tex
@@ -811,7 +908,7 @@ Overfull \hbox (28.24753pt too wide) in paragraph at lines 7--8
 liv-ello hard-ware, il frame-work metodologico
  []
 
-[6
+[8
 
 
 
@@ -822,16 +919,6 @@ Overfull \hbox (10.25179pt too wide) in paragraph at lines 21--22
 r-getico con un carico pre-visto che l'infrastruttura
  []
 
-
-LaTeX Warning: Reference `tab:metriche_energia' on page 7 undefined on input li
-ne 28.
-
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <12> on input line 33.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 33.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 33.
 
 Underfull \hbox (badness 10000) in paragraph at lines 35--35
 []|\T1/cmr/bx/n/12 Unit‡ di
@@ -882,8 +969,8 @@ et \T1/cmr/m/n/12 ded-i-cate all'amministrazione del sis-tema (\T1/cmtt/m/n/12
 /AdminServlet/*
  []
 
-[7{c:/Program Files/texlive/2025/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t
-s1.enc}] [8]
+[9{c:/Program Files/texlive/2025/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t
+s1.enc}] [10]
 Overfull \hbox (16.09477pt too wide) in paragraph at lines 92--93
 []\T1/cmr/m/n/12 Esplora il cat-a-l-ogo vi-su-al-iz-zando i prodotti per cat-e-
 go-ria (\T1/cmtt/m/n/12 /ProdottiPerCategoriaServlet\T1/cmr/m/n/12 ). 
@@ -902,7 +989,7 @@ un lim-ite mas-simo di 50 con-nes-sioni at-tive (\T1/cmtt/m/n/12 setMaxActive(5
 0)\T1/cmr/m/n/12 ).
  []
 
-[9] [10] [11]
+[11] [12] [13]
 LaTeX Font Info:    Font shape `T1/cmtt/bx/n' in size <14.4> not available
 (Font)              Font shape `T1/cmtt/m/n' tried instead on input line 181.
 
@@ -911,7 +998,7 @@ Overfull \hbox (225.16306pt too wide) in paragraph at lines 181--181
 1/cmtt/m/n/14.4 backend_energy_consumption_analysis.ps1\T1/cmr/bx/n/14.4 ) 
  []
 
-[12] (c:/Program Files/texlive/2025/texmf-dist/tex/latex/listings/lstlang1.sty
+[14] (c:/Program Files/texlive/2025/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2025/11/14 1.11b listings language file
 ) (c:/Program Files/texlive/2025/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2025/11/14 1.11b listings language file
@@ -926,7 +1013,7 @@ Overfull \hbox (16.73529pt too wide) in paragraph at lines 206--207
 [][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
  []
 
-[13]
+[15]
 Overfull \hbox (19.80232pt too wide) in paragraph at lines 219--220
 \T1/cmr/m/n/12 pato sulla con-sole e con-tem-po-ranea-mente per-sis-tito tramit
 e il co-mando \T1/cmtt/m/n/12 Tee-Object \T1/cmr/m/n/12 all'interno
@@ -939,41 +1026,13 @@ Overfull \hbox (105.6221pt too wide) in paragraph at lines 219--220
 _47_24.log\T1/cmr/m/n/12 )
  []
 
-[14] [15]
-! Undefined control sequence.
-l.277         \text
-                   {Share}_{CPU} = \frac{\Delta E_{CPU, k}}{N_{active}}, \qu...
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-l.277 ...elta E_{CPU, k}}{N_{active}}, \quad \text
-                                                  {Share}_{Core} = \frac{\De...
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-
+[16] [17]
 Overfull \hbox (55.88596pt too wide) in paragraph at lines 295--296
 \T1/cmr/m/n/12 per col-orare l'output su con-sole) prima di scri-vere i file ne
 lle di-rec-tory \T1/cmtt/m/n/12 performance_system_testing_logs
  []
 
-[16]
-! Undefined control sequence.
-l.302 ...aseline in Joule per operazione ($J/\text
-                                                  {op}$).
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
+[18]
 LaTeX Font Info:    Font shape `T1/cmtt/bx/n' in size <12> not available
 (Font)              Font shape `T1/cmtt/m/n' tried instead on input line 305.
 
@@ -982,31 +1041,18 @@ Overfull \hbox (28.66968pt too wide) in paragraph at lines 308--309
 ioneDAO.getRecensioniByProdotto(...)
  []
 
-[17]
+[19]
 Overfull \hbox (124.34752pt too wide) in paragraph at lines 327--328
 \T1/cmr/m/n/12 collezioni, il match-ing degli el-e-menti o il cal-colo del to-t
 ale dei prezzi (es. \T1/cmtt/m/n/12 CarrelloService.calcolaTotale()
  []
 
 
-LaTeX Warning: Reference `fig:components_skip' on page 18 undefined on input li
-ne 333.
-
-
 Overfull \hbox (38.89111pt too wide) in paragraph at lines 392--393
  [][] 
  []
 
-! Undefined control sequence.
-l.400 ...i fronti (ad esempio, solo circa $21\text
-                                                  {--}23$~J totali durante i...
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-[18]
+[20]
 Overfull \hbox (10.87083pt too wide) in paragraph at lines 420--420
 []\T1/cmr/bx/n/14.4 Strumento di Pro-fi-lazione En-er-get-ica Co-Sincronizzato:
  Ar-chitet-
@@ -1018,7 +1064,7 @@ Overfull \hbox (0.50569pt too wide) in paragraph at lines 427--429
 DskipTests\T1/cmr/m/n/12 ) e in-ter-ro-gando l'eseguibile
  []
 
-[19]
+[21]
 Overfull \hbox (248.16817pt too wide) in paragraph at lines 437--438
 [][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
 ][][][][][] 
@@ -1030,25 +1076,13 @@ Overfull \hbox (1.98169pt too wide) in paragraph at lines 442--445
 eg-istri en-er-getici hard-ware (In-tel/AMD
  []
 
-[20]
+[22]
 Overfull \hbox (4.01637pt too wide) in paragraph at lines 476--477
 []\T1/cmr/bx/n/12 Azione Con-sigli-ata: \T1/cmr/m/n/12 Creare la classe di benc
 h-mark \T1/cmtt/m/n/12 ProdottoDAOBenchmark \T1/cmr/m/n/12 tramite
  []
 
-[21] [22]
-! Undefined control sequence.
-<recently read> \text 
-                      
-l.529 ...esecuzione per singola operazione ($\text
-                                                  {ms/op}$) ed evidenziare l...
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-
+[23] [24]
 Overfull \hbox (40.82127pt too wide) in paragraph at lines 539--540
 []\T1/cmtt/m/n/12 benchmarkAggiungiSpecifiche\T1/cmr/m/n/12 : Mappa di-ret-ta-m
 ente la vi-o-lazione \T1/cmtt/m/n/12 creedengo-java:GCI72
@@ -1073,25 +1107,6 @@ Overfull \hbox (29.72401pt too wide) in paragraph at lines 547--548
 tt/m/n/12 benchmarkGetRecensioniByUtenteValid\T1/cmr/m/n/12 :
  []
 
-! Undefined control sequence.
-<recently read> \text 
-                      
-l.553 ...se in millisecondi per operazione ($\text
-                                                  {ms/op}$), mentre le metri...
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-
-LaTeX Warning: Reference `tab:jmh_results_prodotto' on page 23 undefined on inp
-ut line 553.
-
-
-LaTeX Warning: Reference `tab:jmh_results_recensione' on page 23 undefined on i
-nput line 553.
-
 
 Overfull \hbox (14.76205pt too wide) in paragraph at lines 553--554
 \T1/cmr/m/n/12 I test sono stati es-e-guiti im-po-stando una con-fig-u-razione 
@@ -1104,24 +1119,14 @@ LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-[23]
-! Undefined control sequence.
-l.608 ...di esecuzione quasi nullo ($0{,}0008\text
-                                                  {--}0{,}0009$~ms/op). Ci√≤...
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-
+[25]
 Overfull \hbox (97.83882pt too wide) in paragraph at lines 607--609
 \T1/cmr/m/n/12 parametri non va-lidi (\T1/cmtt/m/n/12 benchmarkGetProdottoByIdI
 nvalid\T1/cmr/m/n/12 , \T1/cmtt/m/n/12 benchmarkGetRecensioniByProdottoInvalid\
 T1/cmr/m/n/12 )
  []
 
-[24]
+[26]
 Overfull \hbox (6.88605pt too wide) in paragraph at lines 619--621
 []\T1/cmtt/m/n/12 benchmarkGetProdottoOrdineValid\T1/cmr/bx/n/12 : \T1/cmr/m/n/
 12 Mappa la vi-o-lazione \T1/cmtt/m/n/12 creedengo-java:GCI74 \T1/cmr/m/n/12 (\
@@ -1135,11 +1140,7 @@ T1/cmtt/m/n/12 benchmarkGetProdottoOrdineInvalid\T1/cmr/m/n/12 , \T1/cmtt/m/n/1
 2 benchmarkGetOrdiniByUtenteInvalid\T1/cmr/m/n/12 )
  []
 
-
-LaTeX Warning: Reference `tab:jmh_results_ordine' on page 25 undefined on input
- line 630.
-
-[25]
+[27]
 Overfull \hbox (76.9082pt too wide) in paragraph at lines 655--657
 []\T1/cmr/bx/n/12 Il Prob-lema del Query-ing $\OML/cmm/m/it/12 N \OT1/cmr/m/n/1
 2 + 1$ \T1/cmr/bx/n/12 (\T1/cmtt/m/n/12 GCI72 \T1/cmr/bx/n/12 e \T1/cmtt/m/n/12
@@ -1154,7 +1155,7 @@ Overfull \hbox (5.70981pt too wide) in paragraph at lines 657--659
 eValid
  []
 
-[26]
+[28]
 Package hyperref Info: bookmark level for unknown lstlisting defaults to 0 on i
 nput line 677.
 
@@ -1186,7 +1187,7 @@ Overfull \hbox (4.42819pt too wide) in paragraph at lines 707--709
 ioni statiche): \T1/cmr/m/n/12 Le collezioni
  []
 
-[27]
+[29]
 Overfull \hbox (11.15152pt too wide) in paragraph at lines 710--712
 []\T1/cmr/bx/n/12 Avoid us-ing Pat-tern.compile() in a non-static con-text (Evi
 tare Pat-tern.compile()
@@ -1198,97 +1199,37 @@ Overfull \hbox (2.25775pt too wide) in paragraph at lines 728--730
  Pre-pared-State-ment):
  []
 
-[28]
-
-! LaTeX Error: \begin{itemize} on input line 737 ended by \end{enumerate}.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.741 \end{enumerate}
-                     
-Your command was ignored.
-Type  I <command> <return>  to replace it with another command,
-or  <return>  to continue without it.
-
-
-Overfull \hbox (17.91663pt too wide) in paragraph at lines 756--757
-[][][][][][][][][][][][][][][][][][][][][][][][][] 
- []
-
-
-Overfull \hbox (140.05771pt too wide) in paragraph at lines 759--760
-\T1/cmr/m/n/12 deve es-sere scar-i-cato dalla sezione re-lease del repos-i-tory
- uf-fi-ciale GitHub (\T1/cmtt/m/n/12 green-code-initiative/creedengo-java\T1/cm
-r/m/n/12 )
- []
-
-
-Overfull \hbox (229.36682pt too wide) in paragraph at lines 761--762
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
- []
-
-[29]
-Overfull \hbox (38.0354pt too wide) in paragraph at lines 771--772
-\T1/cmr/m/n/12 in-fras-trut-tura, Ë stato pre-dis-posto lo script di au-tomazio
-ne \T1/cmtt/m/n/12 scripts/setup-sonarqube-creedengo.sh\T1/cmr/m/n/12 .
- []
-
-
-Overfull \hbox (4.42819pt too wide) in paragraph at lines 785--787
-[]\T1/cmr/bx/n/12 Avoid us-age of static col-lec-tions (Evitare l'uso di collez
-ioni statiche): \T1/cmr/m/n/12 Le collezioni
- []
-
-
-Overfull \hbox (11.15152pt too wide) in paragraph at lines 788--790
-[]\T1/cmr/bx/n/12 Avoid us-ing Pat-tern.compile() in a non-static con-text (Evi
-tare Pat-tern.compile()
- []
-
 [30]
-Overfull \hbox (2.25775pt too wide) in paragraph at lines 806--808
-[]\T1/cmr/bx/n/12 Use Pre-pared-State-ment in-stead of State-ment (Uti-lizzo di
- Pre-pared-State-ment):
- []
-
-[31]
-
-LaTeX Warning: Reference `tab:creedengo_comparison' on page 32 undefined on inp
-ut line 827.
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 837--837
+Underfull \hbox (badness 10000) in paragraph at lines 759--759
 []|\T1/cmr/m/n/12 Uso di query in-dis-crim-i-nate
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 838--838
+Underfull \hbox (badness 10000) in paragraph at lines 760--760
 []|\T1/cmr/m/n/12 Esecuzione di richi-este SQL
  []
 
 
-Overfull \hbox (152.63206pt too wide) in paragraph at lines 832--841
+Overfull \hbox (152.63206pt too wide) in paragraph at lines 754--763
  [][] 
  []
 
-[32]
-Overfull \hbox (24.81067pt too wide) in paragraph at lines 884--886
+[31] [32]
+Overfull \hbox (24.81067pt too wide) in paragraph at lines 806--808
 []\T1/cmr/bx/n/12 Batching degli In-ser-i-menti in \T1/cmtt/m/n/12 ProdottoDAO 
 \T1/cmr/bx/n/12 e \T1/cmtt/m/n/12 OrdineDAO\T1/cmr/bx/n/12 : \T1/cmtt/m/n/12 be
 nchmarkAggiungiSpecifiche
  []
 
 
-Overfull \hbox (37.43758pt too wide) in paragraph at lines 887--889
+Overfull \hbox (37.43758pt too wide) in paragraph at lines 809--811
 \T1/cmr/m/n/12 crim-i-nata in \T1/cmtt/m/n/12 ProdottoDAO \T1/cmr/m/n/12 (es. \
 T1/cmtt/m/n/12 getProdotti\T1/cmr/m/n/12 ) e \T1/cmtt/m/n/12 RecensioneDAO \T1/
 cmr/m/n/12 (es. \T1/cmtt/m/n/12 getRecensioniByProdotto\T1/cmr/m/n/12 )
  []
 
 
-Overfull \hbox (16.76959pt too wide) in paragraph at lines 890--892
+Overfull \hbox (16.76959pt too wide) in paragraph at lines 812--814
 []\T1/cmr/bx/n/12 Ottimizzazione dei Ci-cli in \T1/cmtt/m/n/12 Carrello.java \T
 1/cmr/bx/n/12 (GCI69): \T1/cmr/m/n/12 L'invocazione di metodi all'interno
  []
@@ -1296,67 +1237,43 @@ Overfull \hbox (16.76959pt too wide) in paragraph at lines 890--892
 [33] (c:/Program Files/texlive/2025/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2025/11/14 1.11b listings language file
 ) [34]
-Overfull \hbox (32.1612pt too wide) in paragraph at lines 944--945
+Overfull \hbox (32.1612pt too wide) in paragraph at lines 866--867
 \T1/cmr/m/n/12 map-ping dei dati avveniva tramite in-dici fisici pro-gres-sivi 
 del Re-sult-Set (es. \T1/cmtt/m/n/12 rs.getString(17)\T1/cmr/m/n/12 ).
  []
 
-[35]
-Overfull \hbox (20.635pt too wide) in paragraph at lines 950--951
+
+Overfull \hbox (20.635pt too wide) in paragraph at lines 872--873
 \T1/cmr/m/n/12 porta un'alternanza con-tinua di stati di cal-colo e di at-tesa 
 I/O (latenza di rete). L'introduzione
  []
 
-[36]
-
-LaTeX Warning: Reference `tab:jmh_comparison_ordine' on page 37 undefined on in
-put line 972.
-
-
-LaTeX Warning: Reference `tab:jmh_comparison_prodotto' on page 37 undefined on 
-input line 999.
-
-
-LaTeX Warning: Reference `tab:jmh_comparison_recensione' on page 37 undefined o
-n input line 1033.
-
+[35]
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-
-Overfull \hbox (111.10936pt too wide) in paragraph at lines 1055--1056
+[36]
+Overfull \hbox (111.10936pt too wide) in paragraph at lines 977--978
 []\T1/cmr/m/n/12 I metodi crit-ici per la let-tura delle re-cen-sioni (\T1/cmtt
 /m/n/12 getRecensioniByProdottoValid \T1/cmr/m/n/12 e \T1/cmtt/m/n/12 getRecens
 ioniByUtenteValid\T1/cmr/m/n/12 )
  []
 
-[37]
-Overfull \hbox (13.03839pt too wide) in paragraph at lines 1057--1057
+
+Overfull \hbox (13.03839pt too wide) in paragraph at lines 979--979
 []\T1/cmr/bx/n/17.28 Confronto En-er-getico di Sis-tema Post-Refactoring (JMe-
  []
 
 
-LaTeX Warning: Reference `tab:jmeter_comparison_global' on page 38 undefined on
- input line 1061.
-
-
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-[38]
-
-LaTeX Warning: Reference `tab:jmeter_comparison_servlets' on page 39 undefined 
-on input line 1120.
-
-
-Overfull \hbox (7.54977pt too wide) in paragraph at lines 1120--1121
-\T1/cmr/m/n/12 riche di sis-tema, la Tabella [] il-lus-tra il con-fronto det-ta
-gliato delle per-for-mance e dell'attribuzione
+[37] [38]
+Overfull \hbox (15.68666pt too wide) in paragraph at lines 1042--1043
+\T1/cmr/m/n/12 riche di sis-tema, la Tabella [][]3.10[][] il-lus-tra il con-fro
+nto det-tagliato delle per-for-mance e dell'attribuzione
  []
 
-
-LaTeX Warning: `!h' float specifier changed to `!ht'.
-
-[39]) [40]
+) [39]
 \openout2 = `chapters/frontend_sustainability.aux'.
 
  (./chapters/frontend_sustainability.tex
@@ -1373,55 +1290,18 @@ Overfull \hbox (4.42194pt too wide) in paragraph at lines 16--16
 lysis)
  []
 
-[41
+[40
 
 
 
 
-] [42]
+] [41]
 Overfull \hbox (11.73662pt too wide) in paragraph at lines 59--59
 []\T1/cmr/bx/n/14.4 Dettaglio dell'Inefficienza: As-senza di un Foglio di Stile
  di Stampa
  []
 
-[43]
-! Undefined control sequence.
-l.82 ...uma circa $2560 \times 2560 \times 4 \text
-                                                  { bytes} \approx 26.2\text...
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-l.82 ...0 \times 4 \text{ bytes} \approx 26.2\text
-                                                  { MB}$ di memoria RAM tamp...
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-l.82 ...chiede appena $49 \times 49 \times 4 \text
-                                                  { bytes} \approx 9.6\text{...
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-l.82 ...49 \times 4 \text{ bytes} \approx 9.6\text
-                                                  { KB}$.
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-
+[42]
 Overfull \hbox (1.60681pt too wide) in paragraph at lines 82--83
 []\T1/cmr/m/n/12 Decodificare l'intero file in memo-ria RAM come bitmap non com
 -pressa. Un'immagine
@@ -1434,7 +1314,7 @@ tt/m/n/12 Prodotto.java\T1/cmr/m/n/12 ) in-tro-ducendo il metodo get-ter \T1/cm
 tt/m/n/12 getImmagineThumbnail()\T1/cmr/m/n/12 : 
  []
 
-[44]
+[43]
 Overfull \hbox (143.60541pt too wide) in paragraph at lines 114--115
 [][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
  []
@@ -1446,7 +1326,7 @@ Overfull \hbox (39.70021pt too wide) in paragraph at lines 136--137
 /12 <h3 class="titolo-prodotto">\T1/cmr/m/n/12 ),
  []
 
-[45]
+[44]
 Overfull \hbox (7.8859pt too wide) in paragraph at lines 156--156
 []\T1/cmr/bx/n/14.4 Integrazione del Foglio di Stile di Stampa per l'Eco-Proget
 tazione 
@@ -1463,20 +1343,20 @@ Overfull \hbox (291.62054pt too wide) in paragraph at lines 160--161
 ][][][][][][] 
  []
 
-[46]
+[45]
 Overfull \hbox (4.00488pt too wide) in paragraph at lines 178--179
 \T1/cmr/m/n/12 statiche di-ret-ta-mente dalla cache di memo-ria o disco lo-cale
  (0 byte trasfer-iti sulla rete), azzerando
  []
 
-[47]
+[46]
 Overfull \hbox (119.93222pt too wide) in paragraph at lines 201--202
 \T1/cmr/m/n/12 Durante l'analisi Ë stato riscon-trato un er-rore HTTP 500 in co
 r-rispon-denza del per-corso \T1/cmtt/m/n/12 http://localhost:8080/img/\T1/cmr/
 m/n/12 .
  []
 
-[48]
+[47]
 Overfull \hbox (18.26067pt too wide) in paragraph at lines 219--220
 \T1/cmr/m/n/12 (\T1/cmtt/m/n/12 css/\T1/cmr/m/n/12 , \T1/cmtt/m/n/12 functions/
 \T1/cmr/m/n/12 , \T1/cmtt/m/n/12 img/\T1/cmr/m/n/12 , \T1/cmtt/m/n/12 favicon.i
@@ -1490,60 +1370,19 @@ Overfull \hbox (50.4585pt too wide) in paragraph at lines 219--220
 on l'attributo \T1/cmtt/m/n/12 crossorigin="anonymous"
  []
 
-[49]
+[48]
 Overfull \hbox (6.68631pt too wide) in paragraph at lines 250--251
 \T1/cmr/m/n/12 tografico auto-firmato tramite lo stru-mento \T1/cmtt/m/n/12 key
 tool \T1/cmr/m/n/12 del JDK e con-fig-u-rarlo nel \T1/cmtt/m/n/12 server.xml
  []
 
-[50]
-! Undefined control sequence.
-<recently read> \xrightarrow 
-                             
-l.259 \texttt{Browser} $\xrightarrow
-                                    {\text{HTTPS + HTTP/2}}$ \texttt{Nginx /...
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-l.259 \texttt{Browser} $\xrightarrow{\text
-                                          {HTTPS + HTTP/2}}$ \texttt{Nginx /...
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<recently read> \xrightarrow 
-                             
-l.259 ...nx / Caddy (Reverse Proxy)} $\xrightarrow
-                                                  {\text{HTTP/1.1 interno}}$...
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-l.259 ...addy (Reverse Proxy)} $\xrightarrow{\text
-                                                  {HTTP/1.1 interno}}$ \text...
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-
+[49]
 Overfull \hbox (47.54138pt too wide) in paragraph at lines 278--279
 []\T1/cmr/bx/n/12 Configurazione dell'Ambiente\T1/cmr/m/n/12 : » stata in-trodo
 tta la vari-abile d'ambiente \T1/cmtt/m/n/12 ECO_TEST_MODE=true
  []
 
-[51]
+[50]
 Overfull \hbox (1.53317pt too wide) in paragraph at lines 285--286
 []\T1/cmr/bx/n/12 Filtro di Iniezione Ses-sione (\T1/cmtt/m/n/12 SessionInjecti
 onFilter\T1/cmr/bx/n/12 )\T1/cmr/m/n/12 : » stato svilup-pato un servlet
@@ -1582,7 +1421,7 @@ Overfull \hbox (121.5333pt too wide) in paragraph at lines 295--347
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-[52] [53]
+[51] [52]
 Overfull \hbox (1.27882pt too wide) in paragraph at lines 368--369
 []\T1/cmr/bx/n/12 dashboard.jsp\T1/cmr/m/n/12 : Nella ver-sione base-line l'ass
 enza di ses-sione at-tiva causava il blocco/crash
@@ -1594,76 +1433,74 @@ Overfull \hbox (81.09973pt too wide) in paragraph at lines 368--369
  all'introduzione del \T1/cmtt/m/n/12 SessionInjectionFilter\T1/cmr/m/n/12 ,
  []
 
-[54]
+[53]
 Overfull \hbox (39.70024pt too wide) in paragraph at lines 390--391
 []\T1/cmr/m/n/12 Nelle prime mis-urazioni (Stage 3), risorse pe-santi come il f
 ile di font lo-cale \T1/cmtt/m/n/12 LEMONMILK-Medium.otf
  []
 
-) [55]
+) [54]
 \openout2 = `chapters/open_source_license_monitoring.aux'.
 
  (./chapters/open_source_license_monitoring.tex
 Chapter 5.
 
-LaTeX Warning: Citation `21' on page 56 undefined on input line 7.
+LaTeX Warning: Citation `21' on page 55 undefined on input line 7.
 
 
-LaTeX Warning: Citation `22' on page 56 undefined on input line 9.
+LaTeX Warning: Citation `22' on page 55 undefined on input line 9.
 
 
-LaTeX Warning: Citation `1' on page 56 undefined on input line 9.
+LaTeX Warning: Citation `1' on page 55 undefined on input line 9.
 
 
-LaTeX Warning: Citation `1' on page 56 undefined on input line 9.
+LaTeX Warning: Citation `1' on page 55 undefined on input line 9.
 
 
-LaTeX Warning: Citation `1' on page 56 undefined on input line 13.
+LaTeX Warning: Citation `1' on page 55 undefined on input line 13.
 
 
-LaTeX Warning: Citation `25' on page 56 undefined on input line 13.
+LaTeX Warning: Citation `25' on page 55 undefined on input line 13.
 
 
-LaTeX Warning: Citation `25' on page 56 undefined on input line 13.
+LaTeX Warning: Citation `25' on page 55 undefined on input line 13.
 
 
-LaTeX Warning: Citation `22' on page 56 undefined on input line 15.
+LaTeX Warning: Citation `22' on page 55 undefined on input line 15.
 
 
-LaTeX Warning: Citation `22' on page 56 undefined on input line 15.
+LaTeX Warning: Citation `22' on page 55 undefined on input line 15.
 
-[56
+[55
 
 
 
 
 ]
 
-LaTeX Warning: Citation `21' on page 57 undefined on input line 18.
+LaTeX Warning: Citation `21' on page 56 undefined on input line 18.
 
 
-LaTeX Warning: Citation `21' on page 57 undefined on input line 18.
+LaTeX Warning: Citation `21' on page 56 undefined on input line 18.
 
 
-LaTeX Warning: Citation `1' on page 57 undefined on input line 18.
+LaTeX Warning: Citation `1' on page 56 undefined on input line 18.
 
 
-LaTeX Warning: Citation `21' on page 57 undefined on input line 20.
+LaTeX Warning: Citation `21' on page 56 undefined on input line 20.
 
 
-LaTeX Warning: Citation `21' on page 57 undefined on input line 20.
+LaTeX Warning: Citation `21' on page 56 undefined on input line 20.
 
 
-LaTeX Warning: Citation `24' on page 57 undefined on input line 22.
+LaTeX Warning: Citation `24' on page 56 undefined on input line 22.
 
 
-LaTeX Warning: Citation `24' on page 57 undefined on input line 22.
+LaTeX Warning: Citation `24' on page 56 undefined on input line 22.
 
 
-LaTeX Warning: Citation `24' on page 57 undefined on input line 22.
+LaTeX Warning: Citation `24' on page 56 undefined on input line 22.
 
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 29.
 
 Overfull \hbox (34.57254pt too wide) in paragraph at lines 29--30
 \T1/cmr/m/n/12 L'analisi Ë stata es-e-guita me-di-ante la CLI uf-fi-ciale di FO
@@ -1680,18 +1517,13 @@ File: lstlang2.sty 2025/11/14 1.11b listings language file
 (c:/Program Files/texlive/2025/texmf-dist/tex/latex/listings/lstlang3.sty
 File: lstlang3.sty 2025/11/14 1.11b listings language file
 )
-[57]
+[56]
 Overfull \hbox (24.29167pt too wide) in paragraph at lines 51--52
 \T1/cmr/m/n/12 mente solo tramite la pi-attaforma cloud --- Ë stato imp-ie-gato
  il plu-gin Maven \T1/cmtt/m/n/12 license-maven-plugin
  []
 
-[58]
-
-LaTeX Warning: Reference `tab:license_inventory' on page 59 undefined on input 
-line 89.
-
-
+[57]
 Underfull \hbox (badness 10000) in paragraph at lines 107--107
 []|\T1/cmtt/m/n/10 commons-io:commons-io
  []
@@ -1816,45 +1648,32 @@ Overfull \hbox (26.13696pt too wide) in paragraph at lines 138--138
 []|\T1/cmtt/m/n/10 org.apiguardian:apiguardian-api
  []
 
-
-Package longtable Warning: Column widths have changed
-(longtable)                in table 5.1 on input line 139.
-
-ignored error: Infinite glue shrinkage found in box being split [59]
-
-LaTeX Warning: Reference `tab:license_distribution' on page 60 undefined on inp
-ut line 143.
-
+ignored error: Infinite glue shrinkage found in box being split [58]
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 
-LaTeX Warning: Citation `21' on page 60 undefined on input line 172.
+LaTeX Warning: Citation `21' on page 59 undefined on input line 172.
 
 
-LaTeX Warning: Citation `21' on page 60 undefined on input line 180.
+LaTeX Warning: Citation `21' on page 59 undefined on input line 180.
+
+[59]
+
+LaTeX Warning: Citation `22' on page 60 undefined on input line 186.
 
 [60]
-
-LaTeX Warning: Citation `22' on page 61 undefined on input line 186.
-
-[61]
-
-LaTeX Warning: Reference `tab:risk_summary' on page 62 undefined on input line 
-200.
-
-
 Underfull \hbox (badness 10000) in paragraph at lines 211--212
 []|\T1/cmtt/m/n/12 jmh-generator-annprocess\T1/cmr/m/n/12 ,
  []
 
 
-LaTeX Warning: Citation `21' on page 62 undefined on input line 226.
+LaTeX Warning: Citation `21' on page 61 undefined on input line 226.
 
 
-LaTeX Warning: Citation `24' on page 62 undefined on input line 228.
+LaTeX Warning: Citation `24' on page 61 undefined on input line 228.
 
-[62]
+[61]
 Overfull \hbox (31.51826pt too wide) in paragraph at lines 249--250
 \T1/cmr/m/n/12 mark sit-uati nella di-rec-tory \T1/cmtt/m/n/12 src/jmh/java/ \T
 1/cmr/m/n/12 e in nes-sun file della di-rec-tory prin-ci-pale \T1/cmtt/m/n/12 s
@@ -1864,60 +1683,28 @@ rc/main/java/\T1/cmr/m/n/12 .
 (c:/Program Files/texlive/2025/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2025/11/14 1.11b listings language file
 )
-[63]
-
-LaTeX Warning: Reference `tab:risk_comparison' on page 64 undefined on input li
-ne 274.
-
-[64]
+[62] [63]
 Overfull \hbox (12.98318pt too wide) in paragraph at lines 315--316
 \T1/cmr/m/n/12 per es-sere anal-iz-zata in au-to-matico da stru-menti di vul-ne
 r-a-bil-ity man-age-ment o Dependency-
  []
 
-) [65]
-\openout2 = `chapters/community_smells.aux'.
-
- (./chapters/community_smells.tex
-Chapter 6.
-
-LaTeX Warning: Citation `30' on page 66 undefined on input line 5.
-
-
-LaTeX Warning: Citation `31' on page 66 undefined on input line 5.
-
-
-Overfull \hbox (47.0506pt too wide) in paragraph at lines 11--11
-[]\T1/cmr/bx/n/17.28 Diagnostica Socio-Tecnica del Team (cs-De-tec-tor e CADOCS
-) 
- []
-
-) [66
-
-
-
-
-]
+) [64]
 \openout2 = `chapters/trade_off_analysis_and_conclusions.aux'.
 
  (./chapters/trade_off_analysis_and_conclusions.tex
-Chapter 7.
-) [67
+Chapter 6.
+) [65
 
 
 
 
-]
-
-Package longtable Warning: Table widths have changed. Rerun LaTeX.
-
-(./report_sustainable_software_engineering_project.aux
+] (./report_sustainable_software_engineering_project.aux
 (./chapters/introduction_and_system_baseline.aux)
 (./chapters/software_architectural_overview.aux)
 (./chapters/backend_energy_sustainability.aux)
 (./chapters/frontend_sustainability.aux)
 (./chapters/open_source_license_monitoring.aux)
-(./chapters/community_smells.aux)
 (./chapters/trade_off_analysis_and_conclusions.aux))
  ***********
 LaTeX2e <2025-11-01>
@@ -1928,7 +1715,7 @@ L3 programming layer <2025-12-29>
 LaTeX Warning: There were undefined references.
 
 
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+LaTeX Warning: There were multiply-defined labels.
 
 
 Package rerunfilecheck Warning: File `report_sustainable_software_engineering_p
@@ -1938,49 +1725,93 @@ roject.out' has changed.
 
 Package rerunfilecheck Info: Checksums for `report_sustainable_software_enginee
 ring_project.out':
-(rerunfilecheck)             Before: <no file>
-(rerunfilecheck)             After:  F2CE8D8D355C92F5E74AE64D5A986E8C;31552.
+(rerunfilecheck)             Before: F2CE8D8D355C92F5E74AE64D5A986E8C;31552
+(rerunfilecheck)             After:  2357231C01399146806507804B0ADCB1;28491.
  ) 
 Here is how much of TeX's memory you used:
- 24007 strings out of 467538
- 441213 string characters out of 5401323
- 1133479 words of memory out of 5000000
- 52025 multiletter control sequences out of 15000+600000
- 648602 words of font info for 78 fonts, out of 8000000 for 9000
+ 24788 strings out of 467538
+ 452302 string characters out of 5401323
+ 1152046 words of memory out of 5000000
+ 52789 multiletter control sequences out of 15000+600000
+ 650720 words of font info for 85 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 84i,11n,94p,1085b,2071s stack positions out of 10000i,1000n,20000p,200000b,200000s
-<c:/Program Files/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmex
-10.pfb><c:/Program Files/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm
-/cmmi12.pfb><c:/Program Files/texlive/2025/texmf-dist/fonts/type1/public/amsfon
-ts/cm/cmmi8.pfb><c:/Program Files/texlive/2025/texmf-dist/fonts/type1/public/am
-sfonts/cm/cmr12.pfb><c:/Program Files/texlive/2025/texmf-dist/fonts/type1/publi
-c/amsfonts/cm/cmr8.pfb><c:/Program Files/texlive/2025/texmf-dist/fonts/type1/pu
-blic/amsfonts/cm/cmsy10.pfb><c:/Program Files/texlive/2025/texmf-dist/fonts/typ
-e1/public/amsfonts/cm/cmsy8.pfb><c:/Program Files/texlive/2025/texmf-dist/fonts
-/type1/public/cm-super/sfbx1000.pfb><c:/Program Files/texlive/2025/texmf-dist/f
-onts/type1/public/cm-super/sfbx1200.pfb><c:/Program Files/texlive/2025/texmf-di
-st/fonts/type1/public/cm-super/sfbx1440.pfb><c:/Program Files/texlive/2025/texm
-f-dist/fonts/type1/public/cm-super/sfbx1728.pfb><c:/Program Files/texlive/2025/
-texmf-dist/fonts/type1/public/cm-super/sfbx2074.pfb><c:/Program Files/texlive/2
-025/texmf-dist/fonts/type1/public/cm-super/sfbx2488.pfb><c:/Program Files/texli
-ve/2025/texmf-dist/fonts/type1/public/cm-super/sfrm0700.pfb><c:/Program Files/t
-exlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm0800.pfb><c:/Program Fil
-es/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb><c:/Program
- Files/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb><c:/Pro
-gram Files/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1440.pfb><c:
-/Program Files/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfsx1095.pfb
-><c:/Program Files/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfti1000
-.pfb><c:/Program Files/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfti
-1200.pfb><c:/Program Files/texlive/2025/texmf-dist/fonts/type1/public/cm-super/
-sftt1000.pfb><c:/Program Files/texlive/2025/texmf-dist/fonts/type1/public/cm-su
-per/sftt1095.pfb><c:/Program Files/texlive/2025/texmf-dist/fonts/type1/public/c
-m-super/sftt1200.pfb><c:/Program Files/texlive/2025/texmf-dist/fonts/type1/publ
-ic/cm-super/sftt1440.pfb>
-Output written on report_sustainable_software_engineering_project.pdf (68 pages
-, 677845 bytes).
+ 84i,12n,94p,1052b,2089s stack positions out of 10000i,1000n,20000p,200000b,200000s
+
+pdfTeX warning (dest): name{chapter.7} has been referenced but does not exist, 
+replaced by a fixed one
+
+
+pdfTeX warning (dest): name{section.6.3} has been referenced but does not exist
+, replaced by a fixed one
+
+
+pdfTeX warning (dest): name{section.6.2} has been referenced but does not exist
+, replaced by a fixed one
+
+
+pdfTeX warning (dest): name{subsection.6.1.1} has been referenced but does not 
+exist, replaced by a fixed one
+
+
+pdfTeX warning (dest): name{section.6.1} has been referenced but does not exist
+, replaced by a fixed one
+
+
+pdfTeX warning (dest): name{subsection.3.6.2} has been referenced but does not 
+exist, replaced by a fixed one
+
+
+pdfTeX warning (dest): name{subsection.3.6.1} has been referenced but does not 
+exist, replaced by a fixed one
+
+
+pdfTeX warning (dest): name{section.3.6} has been referenced but does not exist
+, replaced by a fixed one
+
+
+pdfTeX warning (dest): name{subsection.3.5.5} has been referenced but does not 
+exist, replaced by a fixed one
+
+
+pdfTeX warning (dest): name{subsection.3.5.4} has been referenced but does not 
+exist, replaced by a fixed one
+
+
+pdfTeX warning (dest): name{subsection.3.5.3} has been referenced but does not 
+exist, replaced by a fixed one
+
+<c:/Program Files/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10
+.pfb><c:/Program Files/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/c
+mmi12.pfb><c:/Program Files/texlive/2025/texmf-dist/fonts/type1/public/amsfonts
+/cm/cmmi8.pfb><c:/Program Files/texlive/2025/texmf-dist/fonts/type1/public/amsf
+onts/cm/cmr12.pfb><c:/Program Files/texlive/2025/texmf-dist/fonts/type1/public/
+amsfonts/cm/cmr8.pfb><c:/Program Files/texlive/2025/texmf-dist/fonts/type1/publ
+ic/amsfonts/cm/cmsy10.pfb><c:/Program Files/texlive/2025/texmf-dist/fonts/type1
+/public/amsfonts/cm/cmsy8.pfb><c:/Program Files/texlive/2025/texmf-dist/fonts/t
+ype1/public/cm-super/sfbx1000.pfb><c:/Program Files/texlive/2025/texmf-dist/fon
+ts/type1/public/cm-super/sfbx1200.pfb><c:/Program Files/texlive/2025/texmf-dist
+/fonts/type1/public/cm-super/sfbx1440.pfb><c:/Program Files/texlive/2025/texmf-
+dist/fonts/type1/public/cm-super/sfbx1728.pfb><c:/Program Files/texlive/2025/te
+xmf-dist/fonts/type1/public/cm-super/sfbx2074.pfb><c:/Program Files/texlive/202
+5/texmf-dist/fonts/type1/public/cm-super/sfbx2488.pfb><c:/Program Files/texlive
+/2025/texmf-dist/fonts/type1/public/cm-super/sfrm0700.pfb><c:/Program Files/tex
+live/2025/texmf-dist/fonts/type1/public/cm-super/sfrm0800.pfb><c:/Program Files
+/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb><c:/Program F
+iles/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb><c:/Progr
+am Files/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1440.pfb><c:/P
+rogram Files/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfsx1095.pfb><
+c:/Program Files/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfti1000.p
+fb><c:/Program Files/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfti12
+00.pfb><c:/Program Files/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sf
+tt1000.pfb><c:/Program Files/texlive/2025/texmf-dist/fonts/type1/public/cm-supe
+r/sftt1095.pfb><c:/Program Files/texlive/2025/texmf-dist/fonts/type1/public/cm-
+super/sftt1200.pfb><c:/Program Files/texlive/2025/texmf-dist/fonts/type1/public
+/cm-super/sftt1440.pfb>
+Output written on report_sustainable_software_engineering_project.pdf (66 pages
+, 698173 bytes).
 PDF statistics:
- 939 PDF objects out of 1000 (max. 8388607)
- 808 compressed objects within 9 object streams
- 470 named destinations out of 1000 (max. 500000)
- 13 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 1299 PDF objects out of 1440 (max. 8388607)
+ 1167 compressed objects within 12 object streams
+ 449 named destinations out of 1000 (max. 500000)
+ 741 words of extra memory for PDF output out of 10000 (max. 10000000)
 

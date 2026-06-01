@@ -1,29 +1,37 @@
 \chapter{Sostenibilità Energetica del Back-End}
 
-Il livello Back-End di 2Chance, che orchestra la logica di business, l'interazione con il database relazionale e la manipolazione delle stringhe di interfaccia, rappresenta il motore computazionale primario del sistema e, di conseguenza, il principale vettore di consumo energetico. L'obiettivo di questa fase è triplice: misurare l'assorbimento dinamico di potenza durante l'esecuzione, identificare tramite analisi statica i pattern di codice ecologicamente inefficienti e rifattorizzare le componenti per minimizzare lo spreco di risorse.
+Il Back-End di 2Chance gestisce la logica del sistema, le interrogazioni al database e la gestione delle interfacce. Essendo il componente che compie il maggior sforzo computazionale, è anche quello che consuma più energia. Per ottimizzarlo, il mio lavoro si articola in tre punti: misurare il consumo energetico effettivo durante l'uso, individuare tramite analisi statica le porzioni di codice meno efficienti e procedere al refactoring per ridurre lo spreco di risorse.
 
 \section{Misurazione Dinamica dell'Energia tramite EnergiBridge e JMeter}
 
-Per acquisire metriche empiriche sul consumo energetico a livello hardware, il framework metodologico prevede l'integrazione di EnergiBridge. EnergiBridge è uno strumento di profilazione \textit{cross-platform} all'avanguardia, concepito specificamente per consentire agli ingegneri che utilizzano diversi ecosistemi operativi di essere consapevoli del consumo energetico delle loro applicazioni. La sua caratteristica fondamentale risiede nella capacità di interfacciarsi a basso livello con i sensori hardware di sistema, supportando architetture x86, AMD, Apple ARM (M1/M2/M3),... Questa compatibilità è vitale per il progetto 2Chance, le cui misurazioni verranno condotte su un'architettura AMD Ryzen AI 9.
+Per la raccolta di metriche empiriche sul consumo energetico, il framework metodologico prevede l'integrazione di \textbf{EnergiBridge}. Tale strumento, orientato alla profilazione \textit{cross-platform}, monitora l'impatto energetico delle applicazioni interfacciandosi direttamente con i sensori hardware di architetture quali x86, AMD e Apple Silicon. Questa compatibilità risulta essenziale per il progetto 2Chance, le cui misurazioni saranno effettuate su piattaforma AMD Ryzen AI 9. Lo strumento opera tramite interfaccia a riga di comando, campionando il consumo energetico a intervalli regolari durante l'esecuzione di un processo \textit{target} ed esportando i dati aggregati in formato CSV.
 
 \subsection{Configurazione dell'Ambiente di Profilazione}
 
-Per l'installazione e la configurazione di EnergiBridge in ambiente Windows, è stata predisposta la directory di sistema \texttt{C:\textbackslash Program Files\textbackslash EnergiBridge}.
-Successivamente, è stata prelevata l'ultima \textit{release} stabile (0.0.7) dal repository ufficiale GitHub (\texttt{tdurieux/EnergiBridge}), congiuntamente a \texttt{LibreHardwareMonitor}, un plugin indispensabile per abilitare l'accesso ai registri della CPU su piattaforma Windows.
+Per installare e configurare EnergiBridge su Windows, ho creato la directory di sistema \texttt{C:\textbackslash Program Files\textbackslash EnergiBridge}. Ho quindi scaricato l'ultima versione stabile, la 0.0.7, dal repository ufficiale GitHub (\texttt{tdurieux/EnergiBridge}) e ho integrato \texttt{LibreHardwareMonitor}, un plugin necessario per permettere al software di leggere i dati dai registri della CPU su Windows.
 
 \subsection{Strategia di Monitoraggio e Workload Deterministico}
 
-EnergiBridge opera prevalentemente da riga di comando, campionando i consumi energetici a intervalli di tempo predefiniti durante l'esecuzione di un processo \textit{target} e restituendo i dati aggregati in formato CSV per successive analisi. Poiché EnergiBridge misura l'impatto di un processo in esecuzione, è strettamente necessario generare un carico di lavoro riproducibile, deterministico e continuativo. 
+Al fine di garantire l'attendibilità delle rilevazioni, ho sottoposto il sistema a un carico di lavoro deterministico, riproducibile e costante, permettendo così una correlazione univoca tra le risorse computazionali impiegate e l'energia effettivamente assorbita. A tale scopo, ho utilizzato \textbf{Apache JMeter} per orchestrare simulazioni massive di traffico utente, eseguendo uno script \texttt{.jmx} in modalità \textit{non-GUI}. Questo script definisce il comportamento simultaneo delle azioni effettuate da ogni utente virtuale durante la simulazione, costringendo l'applicazione a reagire a un flusso di carico realistico. La tracciatura sincronizzata di tali eventi, combinata con l'uso del profilatore energetico \textit{EnergiBridge}, rappresenta la base della mia analisi di sostenibilità del sistema. L'architettura concettuale script \texttt{.jmx} è suddivisa dai seguenti componenti:
 
-A tal fine, Apache JMeter viene impiegato per orchestrare simulazioni massive di traffico utente. La strategia combinata prevede lo sviluppo di script JMeter (\texttt{.jmx}) configurati per l'esecuzione in modalità \textit{non-GUI}, simulando il comportamento simultaneo di molteplici utenti. Gli script includono vari scenari di utilizzo:
+\paragraph{Astrazione del Contesto di Rete (Test Plan)}
+Il livello fondamentale del piano di test definisce la configurazione globale della simulazione. Per garantire flessibilità, ho adottato un approccio basato sull'uso intensivo di variabili globali per la gestione delle coordinate di rete, quali l'indirizzo dell'host, la porta e il contesto dell'applicazione. Questa astrazione disaccoppia la logica del test dallo specifico ambiente di esecuzione, consentendo di orientare la simulazione verso ambienti di \textit{staging} o di produzione in modo immediato e senza la necessità di modificare la struttura dello script.
+
+\paragraph{Orchestrazione della Concorrenza (Thread Group)}
+La simulazione del traffico è governata da un gestore della concorrenza che istanzia gli utenti virtuali fino a raggiungere il target predefinito. Per evitare che i thread aggrediscano simultaneamente il sistema generando picchi artificiali e non rappresentativi del traffico organico, ho introdotto un periodo di \textit{ramp-up}. Questo meccanismo distribuisce linearmente le inizializzazioni degli utenti lungo una finestra temporale controllata, portando gradualmente il carico fino al picco desiderato; tale massimo viene poi mantenuto costante per una durata sufficiente a garantire una campionatura delle metriche statisticamente rilevante.
+
+\paragraph{Mantenimento dello Stato e dell'Isolamento (Session Management)}
+Affinché un utente virtuale possa compiere un percorso navigazionale coerente, ho configurato il sistema per emulare il comportamento di un \textit{browser} reale nel mantenimento dello stato. A tale scopo, la simulazione intercetta e conserva i \textit{cookie} di sessione generati dal server (quali il \texttt{JSESSIONID}). Un aspetto cruciale di questa architettura è la garanzia di isolamento tra le iterazioni: ogni volta che un utente virtuale ricomincia il proprio ciclo, il relativo contesto viene azzerato. Questo meccanismo di pulizia assicura che le singole esecuzioni non subiscano interferenze dovute a \textit{cache} o \textit{cookie} persistenti ereditati dai cicli precedenti.
+
+\paragraph{Campionamento delle Interazioni (HTTP Samplers)}
+Il nucleo operativo della simulazione è costituito dagli HTTP Samplers, che replicano fedelmente le richieste HTTP previste dallo \textit{User Journey}. Nel mio framework ho distinto due tipologie primarie di interazioni:
 
 \begin{itemize}
-    \item \textbf{Load Testing}: per valutare il consumo energetico con un carico previsto che l'infrastruttura deve essere in grado di gestire.
-    \item \textbf{Soak Testing}: per osservare l'accumulo di consumo energetico e i \textit{leak} di memoria su un periodo prolungato con un carico lieve previsto che l'infrastruttura deve essere in grado di gestire, un aspetto essenziale in un ambiente basato su Java (JVM).
-    \item \textbf{Spike Testing}: per misurare il picco di assorbimento (misurato in Watt) durante ondate repentine di traffico con un carico superiore a quello che l'infrastruttura è in grado di supportare.
+\item \textbf{Lettura Informativa (GET)}: Operazioni finalizzate al recupero dei dati, tipiche dell'esplorazione del catalogo o della visualizzazione dei profili. Queste richieste impegnano la rete e le risorse computazionali per l'interrogazione del database, senza comportare alterazioni persistenti dello stato.
+\item \textbf{Mutazione di Stato (POST)}: Operazioni transazionali, come la registrazione dell'utente o il checkout. Un dettaglio ingegneristico essenziale che ho implementato in questa fase è l'introduzione dell'entropia. Al fine di evitare violazioni dei vincoli di unicità sul database durante la generazione simultanea del carico, ho configurato l'iniezione di stringhe pseudo-casuali per produrre dinamicamente indirizzi email e parametri univoci, scongiurando così collisioni deterministiche tra i thread.
 \end{itemize}
 
-Durante l'esecuzione di questi scenari tramite JMeter, EnergiBridge registra il comportamento energetico della macchina. Siccome l'obiettivo è fare un refactoring orientato ad una maggiore sostenibilità del software, verranno confrontati i dati raccolti dalle analisi del \textit{branch} di \texttt{baseline}, che rappresenta il sistema prima del refactoring, e il \textit{branch} \texttt{sse-improvements} che rappresenta il sistema dopo il refactoring orientato alla sostenibilità del software. Questo confronto permetterà di quantificare oggettivamente l'impatto del refactoring orientato alla sostenibilità.
+Per valutare l'efficacia del refactoring, il comportamento energetico del sistema viene monitorato tramite \textbf{EnergiBridge} durante l'esecuzione degli scenari di carico orchestrati da \textbf{JMeter}. L'analisi comparativa si articola nel confronto tra i dati rilevati sul \textit{branch} \texttt{baseline} (sistema pre-intervento) e quelli ottenuti sul \textit{branch} \texttt{sse-improvements} (sistema ottimizzato). Tale metodologia consente di quantificare in modo oggettivo la riduzione del consumo energetico derivante dalle strategie di refactoring implementate.
 
 Le metriche chiave estratte ed elaborate dai file CSV di EnergiBridge sono strutturate nella Tabella~\ref{tab:metriche_energia}.
 
@@ -46,9 +54,7 @@ Le metriche chiave estratte ed elaborate dai file CSV di EnergiBridge sono strut
 
 \subsection{Progettazione degli Scenari di Test JMeter}
 
-La strategia di simulazione si focalizza sul sollecitare esclusivamente le \textit{servlet} utilizzate dagli utenti. Questo approccio garantisce che la valutazione delle inefficienze e dei \textit{bottleneck} architetturali avvenga su carichi di lavoro realistici, permettendo di osservare se il sistema presenta degradazioni non lineari (es. esplosioni combinatorie di calcolo o query inefficienti) che peggiorano severamente la sostenibilità sotto stress. 
-
-Sono state deliberatamente omesse le \textit{servlet} dedicate all'amministrazione del sistema (\texttt{/AdminServlet/*} e \texttt{/InitServlet}), in quanto accessibili solo da un'utenza privilegiata molto ristretta e non soggette a traffico massivo o continuativo.
+La strategia di simulazione si focalizza esclusivamente sulle \textit{servlet} destinate agli utenti finali. Tale approccio garantisce che l'individuazione di inefficienze e \textit{bottleneck} architetturali avvenga su carichi di lavoro realistici, permettendo di identificare eventuali degradazioni non lineari, come \textit{esplosioni combinatorie} di calcolo o \textit{query} inefficienti, che comprometterebbero la sostenibilità del sistema sotto stress. Sono state deliberatamente escluse le \textit{servlet} di amministrazione (\texttt{/AdminServlet/*} e \texttt{/InitServlet}), poiché, essendo accessibili a un'utenza privilegiata e numericamente limitata, non risultano soggette a traffico massivo o continuativo.
 
 Di seguito, le \textit{servlet} sottoposte a stress test, categorizzate per area funzionale:
 
@@ -83,7 +89,7 @@ Di seguito, le \textit{servlet} sottoposte a stress test, categorizzate per area
 
 \subsubsection{Simulazione del Flusso Utente (User Journey)}
 
-Per orchestrare simulazioni di \textit{load, spike} e \textit{soak testing} verosimili, è stato modellato un tipico percorso d'uso, o \textit{User Journey}, in grado di sollecitare orizzontalmente l'applicazione. Il flusso utente simulato segue una catena causale sequenziale di interazioni \textit{client-server}:
+Per orchestrare simulazioni di \textit{load, spike, soak testing} verosimili, è stato modellato un tipico percorso d'uso, o \textit{User Journey}, in grado di sollecitare orizzontalmente l'applicazione. Il flusso utente simulato segue una catena causale sequenziale di interazioni \textit{client-server}:
 
 \begin{enumerate}
     \item L'utente si iscrive alla \textit{web application} (\texttt{/RegistrazioneServlet/*}).
@@ -104,17 +110,12 @@ Per orchestrare simulazioni di \textit{load, spike} e \textit{soak testing} vero
     \item Approda nuovamente sulla vetrina principale del portale (\texttt{/landingpage}).
 \end{enumerate}
 
-\subsubsection{Analisi del Collo di Bottiglia sotto Carico Elevato}
-L'applicazione mostra una stabilità ottimale con carichi moderati (fino a 32 utenti concorrenti), mantenendo i tempi di risposta medi al di sotto dello SLA prestabilito di 1200ms. Tuttavia, all'aumentare del carico oltre tale soglia, si innesca un degrado non lineare dei tempi di risposta a causa del queuing infrastrutturale.
-
-Questo comportamento è riconducibile alla saturazione del pool di connessioni del database, gestito dalla classe \texttt{ConPool} con un limite massimo di 50 connessioni attive (\texttt{setMaxActive(50)}). Dal punto di vista teorico, ci si potrebbe attendere che il sistema generi errori non appena il numero di utenti concorrenti supera 50. Tuttavia, l'analisi empirica dello Step-Up mostra che il tasso di errore rimane allo 0.00\% fino a 80 utenti concorrenti. Questo fenomeno si spiega con il fatto che i thread di JMeter non richiedono una connessione al database nello stesso preciso istante temporale, a causa dei tempi di elaborazione della CPU, della latenza di rete e dei passaggi dello User Journey che non effettuano interrogazioni persistenti.
-
-Nonostante questo, quando il carico raggiunge gli 86 utenti concorrenti, la frequenza di richieste simultanee supera stabilmente la capacità del pool (50 connessioni). Di conseguenza, le richieste in eccesso rimangono bloccate in coda in attesa di una connessione libera per un tempo superiore al limite di \texttt{maxWait} (10.000 ms), innescando timeout fisiologici (tasso di errore dell'8.05\% a 86 utenti, che sale al 58.62\% a 92 utenti). Questo collo di bottiglia costringe la CPU del server a uno stato di attesa attiva (\textit{active waiting}) e a ripetute ritrasmissioni, degradando gravemente sia la reattività del servizio che l'efficienza energetica dell'infrastruttura.
-
 \subsection{Definizione delle Soglie di Accettabilità (SLAs) e Dimensionamento dei Test}
 
 \subsubsection{Esperimento di Stress Preventivo: Determinazione del Punto di Rottura (Capacità Nominale $C$)}
-Prima di procedere all'esecuzione formale degli scenari di stress, è stato eseguito un esperimento preventivo di \textit{Step-Up Testing} volto a individuare la capacità massima reale del sistema (\textit{breaking point}) sul laptop di riferimento. Questo scenario incrementale è stato configurato per aumentare costantemente il carico in modo lineare, partendo da 1 utente fino a raggiungere 120 utenti concorrenti nell'arco di 10 minuti (con un incremento costante), monitorando l'andamento dei tempi di risposta in JMeter e lo stato dei container Docker.
+Prima della simulazione formale, ho eseguito un'analisi preliminare, definita \textit{Step-Up Testing}, con l'obiettivo di individuare il limite di tenuta dell'esecuzione dell'applicazione nell'infrastruttura ospitante. Questa valutazione si è resa necessaria per determinare il carico di lavoro ottimale da applicare durante le successive sessioni di \textit{load}, \textit{spike} e \textit{soak testing}. A tale scopo, ho incrementato linearmente il traffico di utenti partendo da $1$ fino a $120$ utenti concorrenti in un intervallo temporale di $10$ minuti, monitorando costantemente le metriche di latenza tramite \textit{JMeter} e la stabilità dei container \textit{Docker}.
+
+Quali sono le prossime fasi della validazione architetturale che intende documentare in seguito a questo test di carico?
 
 L'analisi dei risultati reali dello Step-Up ha evidenziato il seguente comportamento dinamico:
 \begin{itemize}
@@ -122,6 +123,13 @@ L'analisi dei risultati reali dello Step-Up ha evidenziato il seguente comportam
     \item \textbf{Punto di Saturazione e Degradazione (38-80 utenti):} Oltre i 32 utenti, il sistema viola lo SLA di latenza prestabilito. A 38 utenti la latenza media sale a 1480ms (throughput 23.8/s). All'aumentare degli utenti la latenza sale progressivamente, raggiungendo i 2553ms a 80 utenti concorrenti (throughput di 30.1/s), sebbene il tasso di errore rimanga ancora dello 0.00\%.
     \item \textbf{Punto di Rottura ($> 80$ utenti):} A 86 utenti concorrenti si registrano le prime anomalie con un tasso di errore dell'8.05\% (54 fallimenti) e una latenza media di 3347ms. Oltre questa soglia, al raggiungimento dei 92 utenti concorrenti, il tasso di errore sale drasticamente al 58.62\% con una latenza media di 7008ms, fino a concludere il test a 120 utenti con un tasso di errore del 70.60\% e oltre 8.4 secondi di latenza media, a causa della saturazione delle connessioni nel pool (\texttt{maxActive = 50}) e del timeout in coda.
 \end{itemize}
+
+\subsubsection{Analisi del Collo di Bottiglia sotto Carico Elevato}
+Durante lo \textit{Step-Up Testing}, ho osservato che l'applicazione mantiene un'ottima stabilità e tempi di risposta inferiori allo SLA di $1200$ ms fino a $32$ utenti concorrenti. Oltre questa soglia, si innesca un degrado non lineare delle prestazioni causato dalla saturazione del pool di connessioni del database, gestito dalla classe \texttt{ConPool} con un limite massimo di $50$ slot attivi (\texttt{setMaxActive(50)}).
+
+Teoricamente ci si potrebbe attendere l'insorgenza di anomalie non appena il carico supera le $50$ unità concorrenti. Tuttavia, i dati empirici mostrano un tasso di errore dello $0.00\%$ fino a $80$ utenti. Questo scostamento si spiega con il fatto che i thread di \textit{JMeter} non richiedono l'accesso al database in modo perfettamente simultaneo, a causa delle latenze di rete, dei tempi di calcolo della CPU e della presenza di passi dello \textit{User Journey} che non interrogano la persistenza.
+
+Il crollo strutturale si verifica quando il carico raggiunge gli $86$ utenti concorrenti: la frequenza di richieste simultanee supera stabilmente la capacità dei $50$ canali disponibili. Di conseguenza, i job in eccesso accumulati in coda attendono una connessione libera per un tempo superiore al parametro di \texttt{maxWait} ($10.000$ ms), generando inevitabili timeout. Questo fenomeno si traduce in un tasso di errore dell'$8.05\%$ a $86$ utenti, che scatta drasticamente al $58.62\%$ a $92$ utenti. Tale collo di bottiglia costringe la CPU del server a una condizione di \textit{active waiting} e a continue ritrasmissioni, penalizzando gravemente sia la reattività del sistema sia l'efficienza energetica dell'intera infrastruttura hardware.
 
 Sulla base di questo esperimento empirico, la capacità nominale massima gestibile in stabilità ($C$) rispettando lo SLA di latenza per la configurazione attuale è stata impostata a \textbf{32 utenti concorrenti}. Questo valore garantisce che il sistema risponda in tempi accettabili prima che inizi il degrado indotto dal queuing nel connection pool.
 
@@ -154,72 +162,31 @@ Si valuta la robustezza strutturale a fronte di un sovraccarico repentino superi
     \item \textbf{Consumo Energetico (Soglia Green):} Picco di potenza CPU Package fino a $54$ Watt.
 \end{itemize}
 
-\subsection{Configurazione Architetturale dei Test JMeter}
-
-Sebbene Apache JMeter offra una ricca interfaccia grafica per la progettazione e la configurazione dei test, la sua persistenza sottostante si basa su file strutturati che fungono da veri e propri copioni operativi. Trattare questi file da una prospettiva architetturale permette di comprendere a fondo le dinamiche del carico generato per stressare il sistema.
-
-L'architettura concettuale dei test è suddivisa in specifici strati di orchestrazione:
-
-\paragraph{Astrazione del Contesto di Rete (Test Plan)}
-Il livello fondamentale del test definisce la configurazione globale della simulazione. Un paradigma elegante adottato è l'uso intensivo di variabili globali per le coordinate di rete (come indirizzo del server, porta e contesto dell'applicazione). Questa astrazione disaccoppia il test dallo specifico ambiente di esecuzione, garantendo un'elevata flessibilità e rendendo l'adattamento verso ambienti di \textit{staging} o produzione un'operazione immediata e priva di attriti strutturali.
-
-\paragraph{Orchestrazione della Concorrenza (Thread Group)}
-La simulazione del traffico è governata da un gestore della concorrenza che istanzia gli utenti virtuali. In questo scenario, il test è progettato per generare un numero predefinito di utenti concorrenti. Per evitare che tali utenti attacchino simultaneamente il sistema generando picchi irrealistici e non rappresentativi del traffico organico (il cosiddetto fenomeno del \textit{thundering herd}), il sistema introduce un periodo di \textit{ramp-up}. Questo meccanismo distribuisce le inizializzazioni lungo una finestra temporale, portando gradualmente il carico fino al picco desiderato, per poi mantenerlo costante lungo un \textit{plateau} temporale (fase di stress ininterrotto) idoneo a consentire una campionatura energetica statisticamente rilevante.
-
-\paragraph{Mantenimento dello Stato e dell'Isolamento (Session Management)}
-Affinché un utente virtuale possa compiere un percorso navigazionale coerente, è imperativo emulare il comportamento di un \textit{browser} reale nel mantenimento dello stato. A tale scopo, la configurazione intercetta e conserva i \textit{cookie} di sessione generati dal server (es. \texttt{JSESSIONID}). Un aspetto cruciale di questa configurazione è la garanzia di isolamento tra le iterazioni: ogni qualvolta un utente virtuale ricomincia il suo ciclo, il contesto di sessione viene ripulito, assicurando che le singole esecuzioni non subiscano interferenze dovute a \textit{cache} o \textit{cookie} persistenti da cicli precedenti.
-
-\paragraph{Campionamento delle Interazioni (HTTP Samplers)}
-Il nucleo operativo della simulazione è costituito dai campionatori, che replicano fedelmente le richieste HTTP previste dallo \textit{User Journey}. Si distinguono due tipologie primarie di interazioni:
-\begin{itemize}
-    \item \textbf{Lettura Informativa (GET)}: Operazioni idempotenti, tipiche dell'esplorazione del catalogo o della visualizzazione dei profili. Queste richieste caricano la rete e le risorse elaborative per l'interrogazione al database, ma hanno un impatto circoscritto sulle scritture persistenti.
-    \item \textbf{Mutazione di Stato (POST)}: Operazioni transazionali (es. registrazione utente, checkout). Un dettaglio ingegneristico essenziale in queste fasi è l'introduzione dell'entropia. Ad esempio, per evitare eccezioni di unicità sul database quando molteplici utenti tentano la registrazione contemporaneamente, il sistema inietta stringhe pseudo-casuali per generare dinamicamente indirizzi email e parametri univoci, scongiurando collisioni deterministiche.
-\end{itemize}
-
-L'esecuzione sequenziale e parallela di questi blocchi costringe l'applicazione a reagire a un flusso di carico realistico. La tracciatura sincronizzata di tali eventi, accoppiata al profilatore energetico, fornisce il \textit{dataset} primario alla base dell'analisi di sostenibilità del sistema.
-
 \subsection{Automazione, Isolamento e Sincronizzazione dei Test (\texttt{backend\_energy\_consumption\_analysis.ps1})}
 
-Al fine di garantire l'affidabilità scientifica, la riproducibilità e l'assenza di bias sperimentali durante le sessioni di misurazione dinamica del consumo energetico, è stato sviluppato uno script di orchestrazione in PowerShell (\texttt{backend\_energy\_consumption\_analysis.ps1}). Dal punto di vista della metodologia di sperimentazione empirica, le scelte architetturali adottate in questo script rispondono a precisi requisiti teorici:
+Al fine di garantire l'affidabilità scientifica, la riproducibilità e l'assenza di bias sperimentali durante le sessioni di misurazione dinamica del consumo energetico, ho sviluppato uno script di orchestrazione in PowerShell (\texttt{backend_energy_consumption_analysis.ps1}). Dal punto di vista della metodologia di sperimentazione empirica, le scelte architetturali adottate in questo script rispondono a precisi requisiti teorici:
 
 \subsubsection{Isolamento dell'Ambiente e Prevenzione del Software Aging}
-Durante l'esecuzione di test di carico su macchine virtuali o containerizzate in Java (JVM), le prestazioni del sistema possono degradare progressivamente a causa del fenomeno noto come \textit{software aging} (invecchiamento del software). Questo degrado è indotto da:
+Durante l'esecuzione dei test di carico su macchine virtuali e container Java (JVM), ho riscontrato un progressivo degrado delle prestazioni dovuto al fenomeno del \textit{software aging}. Per mitigare questo fattore di distorsione e garantire la riproducibilità dei dati, ho configurato lo script di automazione affinché esegua il riavvio dei container Docker dell'applicazione e del database MySQL prima di ogni sessione sperimentale. Questa procedura consente di azzerare completamente lo stato della memoria Heap della JVM e di chiudere tempestivamente eventuali socket rimasti aperti o transazioni pendenti sul database, ripristinando così le condizioni ambientali ideali per l'esperimento successivo. Questo degrado è indotto da due fattori principali:
+
 \begin{itemize}
-    \item \textbf{Frammentazione della Memoria ed Accumulo di Garbage Collection (GC):} Test consecutivi eseguiti sulla stessa istanza del server Tomcat (container \texttt{webapp}) causano un progressivo accumulo di oggetti nella memoria Heap. Questo costringe la JVM a invocare con frequenza crescente cicli di \textit{Full Garbage Collection}, caratterizzati da pause di tipo \textit{stop-the-world}. Tali pause introducono latenze artificiali e aumentano l'overhead computazionale della CPU, contaminando le metriche di consumo energetico rilevate da EnergiBridge.
-    \item \textbf{Perdite di Connessioni al Database (Connection Leaks):} Sebbene il connection pool sia sintonizzato per rilasciare connessioni inattive, eventuali anomalie applicative o eccezioni non gestite che omettono la chiusura formale delle connessioni JDBC (\texttt{Connection}, \texttt{Statement}, \texttt{ResultSet}) possono causare la saturazione del pool di \texttt{ConPool} (limitato a un massimo di 50 connessioni attive). Quando la capacità massima viene raggiunta, le richieste successive subiscono un ritardo di accodamento pari a \texttt{maxWait} (10.000~ms), sfociando infine in timeout.
+\item \textbf{Frammentazione della Memoria ed Accumulo di Garbage Collection (GC):} Test consecutivi eseguiti sulla stessa istanza del server Tomcat (container \texttt{webapp}) causano un progressivo accumulo di oggetti nella memoria Heap. Questo costringe la JVM a invocare con frequenza crescente cicli di \textit{Full Garbage Collection}, caratterizzati da pause di tipo \textit{stop-the-world}. Tali pause introducono latenze artificiali e aumentano l'overhead computazionale della CPU, contaminando le metriche di consumo energetico rilevate da \textit{EnergiBridge}.
+\item \textbf{Perdite di Connessioni al Database (Connection Leaks):} Sebbene il connection pool sia configurato per rilasciare i canali inattivi, eventuali anomalie applicative o eccezioni non gestite possono omettere la chiusura formale delle risorse JDBC (\texttt{Connection}, \texttt{Statement}, \texttt{ResultSet}), esaurendo i $50$ slot attivi di \texttt{ConPool}. Al raggiungimento di tale capacità massima, le richieste successive subiscono un ritardo di accodamento pari a \texttt{maxWait} ($10.000$ ms), sfociando infine in timeout.
 \end{itemize}
-Per mitigare teoricamente questi fattori di distorsione, lo script esegue la sequenza:
-\begin{lstlisting}[language=bash]
-docker-compose down
-docker-compose up -d
-docker-compose restart webapp mysql-db
-\end{lstlisting}
-Questo flusso garantisce l'azzeramento dello stato della memoria Heap della JVM e la rimozione di qualsiasi socket o transazione pendente sul database MySQL prima di ciascun esperimento.
 
 \subsubsection{Warm-Up del Server e Risoluzione dei Transitori}
 La fase di bootstrap di un'applicazione web in ambiente Java comporta un carico computazionale transitorio molto intenso dovuto a operazioni di classloading, parsing del descrittore di deployment, inizializzazione dei framework interni e pre-popolamento delle connessioni del pool (configurato a una dimensione iniziale di 5 connessioni). Inviare traffico in questa fase comporterebbe un tasso di errore fittizio ed un picco di consumo energetico non correlato alle normali operazioni di business. L'integrazione di una istruzione di attesa (\texttt{Start-Sleep -Seconds 10}) permette al server Tomcat di completare la fase di warm-up e di stabilizzarsi in uno stato di \textit{idle} prima che inizi la profilazione.
 
 \subsubsection{Sincronizzazione della Profilazione ed Esecuzione Headless}
-Dal punto di vista dell'analisi del consumo energetico, la telemetria deve focalizzarsi esclusivamente sulla finestra temporale di esecuzione del carico di lavoro prestabilito. 
-Per questo motivo, EnergiBridge viene invocato come processo wrapper del comando JMeter:
-\begin{lstlisting}[language=bash]
-& "energibridge.exe" -o ... -- docker-compose exec jmeter jmeter -n ...
-\end{lstlisting}
-In questo modo, la raccolta dei dati sul consumo di potenza (in Watt) e sull'uso delle risorse hardware coincide perfettamente con la durata del test pianificato. Inoltre, l'invocazione di JMeter all'interno del container avviene rigorosamente in modalità \textit{non-GUI} (opzione \texttt{-n}). L'avvio dell'interfaccia grafica su un computer host comporterebbe infatti un consumo energetico addizionale e asimmetrico dovuto al rendering Swing della GUI di JMeter, contaminando pesantemente le misurazioni di baseline.
+Per l'analisi del consumo energetico, ho configurato la telemetria affinché si focalizzi esclusivamente sulla finestra temporale di esecuzione del carico di lavoro simulato con JMeter. A tale scopo, utilizzo EnergiBridge come processo wrapper del comando JMeter: in questo modo, la raccolta dei dati sulla potenza (in Watt) e sull'uso delle risorse hardware coincide esattamente con la durata del test. Inoltre, invoco JMeter all'interno del container rigorosamente in modalità \textit{non-GUI} (tramite l'opzione \texttt{-n}). L'avvio dell'interfaccia grafica comporterebbe infatti un consumo energetico addizionale dovuto al rendering di Java Swing, introducendo un fattore di distorsione che contaminerebbe le misurazioni. 
 
-\subsubsection{Separazione delle Preoccupazioni nella Telemetria}
-Lo script organizza in modo distinto la persistenza dei dati generati, incanalando le metriche prestazionali (file log prestazionali \texttt{.jtl} contenenti latenze di rete, tempi di servizio e codici di stato HTTP) all'interno della directory \texttt{jmeter\_logs}, e la telemetria energetica (file \texttt{.csv} registrati da EnergiBridge) nella cartella \texttt{energibridge\_logs}. Questa separazione logica semplifica l'elaborazione dei dati e garantisce l'isolamento tra l'analisi prestazionale classica (rispetto degli SLA) e la quantificazione del consumo ecologico (sostenibilità energetica).
+Inoltre, lo script organizza gli output separando nettamente le metriche prestazionali dalla telemetria energetica. Questa separazione logica semplifica la successiva elaborazione dei dati e isola l'analisi prestazionale classica dal calcolo dell'impatto energetico.
 
-\subsubsection{Orchestrazione Automatizzata e Analisi End-to-End}
-Per ottimizzare il flusso di lavoro ed evitare disallineamenti temporali o errori umani nella fase di post-elaborazione dei dati energetici, l'architettura integra l'intera pipeline sperimentale in un unico script di orchestrazione automatizzato. Invece di richiedere l'avvio manuale di script separati per ciascuna fase (configurazione dell'ambiente, esecuzione del carico, cattura della telemetria ed estrazione dei risultati), il file \texttt{backend\_energy\_consumption\_analysis.ps1} esegue sequenzialmente e in modo autonomo le seguenti operazioni:
-\begin{enumerate}
-    \item \textbf{Setup dell'Ambiente:} Esegue il ciclo di teardown e startup di Docker per azzerare lo stato della JVM e delle connessioni JDBC.
-    \item \textbf{Profilazione Dinamica:} Esegue la sessione di carico JMeter non-GUI con telemetria EnergiBridge attiva.
-    \item \textbf{Post-Elaborazione Automatica:} Al termine del test di carico, lo script invoca automaticamente il modulo Python \texttt{energibridge\_metrics\_extractor.py} passandogli il tracciato CSV appena generato.
-    \item \textbf{Persistenza e Logging Sincronizzato:} L'output dell'estrazione energetica viene stampato sulla console e contemporaneamente persistito tramite il comando \texttt{Tee-Object} all'interno della cartella \texttt{extractor\_logs}. Il file di log energetico (es. \texttt{log\_load\_extractor\_2026\_05\_21\_20\_47\_24.log}) eredita la medesima marcatura temporale (\textit{timestamp}) generata all'inizio del test.
-\end{enumerate}
-
-Questo approccio end-to-end garantisce la riproducibilità scientifica dell'esperimento: ogni sessione di test produce in modo atomico e autocontenuto un set completo di file di output correlati tra loro dallo stesso identico timestamp (file \texttt{.jtl} prestazionale, file \texttt{.csv} di telemetria grezza, file \texttt{.log} di JMeter e file \texttt{.log} dell'estrattore energetico). In questo modo, l'intero ciclo di vita del test e dell'analisi energetica viene gestito da un singolo punto d'ingresso, garantendo coerenza metodologica e riducendo a zero l'overhead manuale.
+\begin{itemize}
+\item \textbf{Metriche Prestazionali (file \texttt{.jtl}):} Generati direttamente da Apache JMeter, questi log registrano i dati specifici dell'esecuzione, tra cui latenze di rete, tempi di risposta, throughput e codici di stato HTTP. Vengono archiviati nella directory \texttt{jmeter_logs} per valutare la conformità con gli SLA.
+\item \textbf{Telemetria Energetica (file \texttt{.csv}):} Registrati dal processo wrapper EnergiBridge, questi dataset catturano il consumo di potenza (espresso in Watt) e l'utilizzo delle risorse hardware durante l'esatta durata del test. Vengono isolati nella cartella \texttt{energibridge_logs} per l'analisi di sostenibilità del software.
+\item \textbf{Log di Esecuzione Standard (file \texttt{.log}):} File di testo contenenti l'output di runtime, gli errori di sistema e le informazioni di debug provenienti sia dal container dell'applicazione sia dal database MySQL, garantendo la completa tracciabilità dell'esperimento.
+\end{itemize}
 
 \subsection{Analisi Energetica Post-Elaborazione ed Estrazione delle Metriche (\texttt{energibridge\_metrics\_extractor.py})}
 
@@ -665,79 +632,6 @@ I risultati empirici spiegano chiaramente le degradazioni sistemiche rilevate du
 \section{Analisi Statica del Codice (Creedengo)}
 
 Per l'Analisi Statica dell'Eco-Design basata su regole (\textit{Rule-Based Eco-Design Static Analysis}), è necessario integrare il codice sorgente locale, un'istanza attiva di SonarQube e il plugin Creedengo. Poiché Creedengo (evoluzione di \textit{ecoCode}) opera come plugin per SonarQube, esso si integra direttamente nella pipeline di Static Application Security Testing (SAST) esistente. Dato che il progetto è containerizzato tramite Docker, l'esecuzione locale di SonarQube in parallelo all'applicazione risulta estremamente efficiente.
-
-Di seguito viene descritta la guida pratica passo-passo per la configurazione, l'esecuzione e l'estrazione delle eco-vulnerabilità rilevate.
-
-\subsection{Configurazione di SonarQube con il Plugin Creedengo}
-
-Prima di procedere alla scansione del codice, è fondamentale assicurarsi che l'ambiente SonarQube disponga del ruleset Java di Creedengo. I passaggi per predisporre l'ambiente prevedono:
-
-\begin{enumerate}
-    \item \textbf{Avvio di SonarQube via Docker:} Se non si dispone di un server SonarQube dedicato, è possibile avviarlo standalone tramite il comando:
-    \begin{lstlisting}[language=bash, caption={Avvio del container SonarQube}, label={lst:run_sonarqube}]
-docker run -d --name sonarqube-sse -p 9000:9000 sonarqube:community
-    \end{lstlisting}
-
-    \item \textbf{Installazione del Plugin Creedengo:} Il plugin Creedengo per Java (in formato \texttt{.jar}) deve essere scaricato dalla sezione release del repository ufficiale GitHub (\texttt{green-code-initiative/creedengo-java}) ed inserito all'interno della cartella delle estensioni di SonarQube. Il trasferimento nel container avviene tramite:
-    \begin{lstlisting}[language=bash, caption={Copia del plugin Creedengo nel container}, label={lst:copy_plugin}]
-docker cp plugin/creedengo-java-plugin-2.1.2.jar sonarqube-sse:/opt/sonarqube/extensions/plugins/
-    \end{lstlisting}
-
-    \item \textbf{Riavvio del Container:} Per forzare il caricamento del plugin ed attivare le nuove regole di eco-design all'interno di SonarQube, si riavvia il container:
-    \begin{lstlisting}[language=bash, caption={Riavvio del container SonarQube}, label={lst:restart_sonarqube}]
-docker restart sonarqube-sse
-    \end{lstlisting}
-\end{enumerate}
-
-\subsection{Automazione del Setup su Nuove Infrastrutture}
-Per agevolare l'installazione e la configurazione di SonarQube con Creedengo su qualsiasi altra infrastruttura, è stato predisposto lo script di automazione \texttt{scripts/setup-sonarqube-creedengo.sh}. Tale script verifica la presenza di Docker, scarica automaticamente la versione desiderata del plugin da GitHub se non presente localmente, avvia il container SonarQube standalone, copia la libreria nella directory corretta del container ed esegue il riavvio del servizio.
-
-\subsection{Selezione delle Regole di Eco-Design}
-Per massimizzare il ritorno ecologico delle attività di refactoring e ridurre il rumore nelle metriche di telemetria statica, sono state selezionate 11 regole fondamentali del ruleset Creedengo Java. Ciascuna regola è stata scelta in base alla sua pertinenza tecnologica con l'architettura MVC di 2Chance (basata su Java Servlets e JDBC/DAO nativi) e all'impatto sulla riduzione del sovraccarico hardware.
-
-Le regole attivate e le relative motivazioni teoriche sono descritte di seguito:
-
-\begin{enumerate}
-    \item \textbf{Avoid getting the size of the collection in the loop (Evitare il calcolo della dimensione delle collezioni nei cicli):}
-    Questa regola rappresenta una variante diretta delle specifiche di progetto relative all'efficienza computazionale (GC169). L'invocazione continua del metodo \texttt{.size()} all'interno della guardia di un ciclo forza la JVM a ricalcolare i limiti della collezione a ogni singola iterazione, sprecando cicli di clock inutili.
-    
-    \item \textbf{Avoid SQL request in loop (Evitare query SQL all'interno di cicli):}
-    L'esecuzione di interrogazioni al database all'interno di cicli iterativi è un fattore altamente inefficiente. Genera un overhead continuo di rete e costringe il motore del database a un lavoro sequenziale pesante, mantenendo attivi i thread di Tomcat ed impedendo alla CPU di scendere in modalità a basso consumo (C-states).
-    
-    \item \textbf{Avoid usage of static collections (Evitare l'uso di collezioni statiche):}
-    Le collezioni statiche persistono per l'intera durata della JVM. Se non gestite in modo impeccabile, possono provocare perdite di memoria striscianti. Sotto stress (es. durante i Soak Test), la saturazione della memoria Heap costringe la JVM a frequenti cicli di Major Garbage Collection, con un consumo energetico molto elevato.
-    
-    \item \textbf{Avoid using Pattern.compile() in a non-static context (Evitare Pattern.compile() in contesto non statico):}
-    La compilazione di espressioni regolari è un'operazione onerosa per la CPU. Compilare ripetutamente lo stesso pattern all'interno dei metodi delle Servlet ad ogni richiesta, anziché memorizzarlo in una costante \texttt{private static final Pattern}, introduce un inutile overhead elaborativo.
-    
-    \item \textbf{Do not call a function when declaring a for-type loop (Non invocare funzioni nella dichiarazione del ciclo for):}
-    Corrisponde al vincolo GC169 (classificato a priorità elevata). Identifica chiamate a funzioni invarianti all'interno dei parametri di inizializzazione o di guardia dei cicli, suggerendo di estrarle in variabili locali ed evitando migliaia di invocazioni ridondanti del medesimo metodo.
-    
-    \item \textbf{Don't use the query SELECT * FROM (Evitare l'uso di SELECT *):}
-    Il recupero indiscriminato di tutte le colonne di una tabella costringe a trasferire byte inutili attraverso la connessione di rete e obbliga la JVM ad allocare oggetti in memoria per campi non utilizzati durante la creazione dei Model Beans.
-    
-    \item \textbf{Free resources (Rilascio delle risorse):}
-    La mancata chiusura manuale dei canali di comunicazione con il database (como \texttt{Connection}, \texttt{Statement} e \texttt{ResultSet}) porta a colli di bottiglia e memory leak. Quando il connection pool esaurisce le risorse, Tomcat deve gestire i thread in attesa attiva, degradando gravemente la stabilità e l'efficienza ecologica del server.
-    
-    \item \textbf{Initialize builder/buffer with the appropriate size (Inizializzazione StringBuilder con dimensione corretta):}
-    Questa regola contrasta l'impatto della mutabilità delle stringhe. Creare uno \texttt{StringBuilder} o uno \texttt{StringBuffer} senza indicare una capacità iniziale obbliga la JVM ad eseguire continui ridimensionamenti e copie degli array di caratteri interni man mano che la stringa si espande.
-    
-    \item \textbf{orElseGet instead of orElse (Utilizzo di orElseGet al posto di orElse):}
-    Nelle strutture di tipo \texttt{Optional}, il metodo \texttt{.orElse(...)} valuta l'espressione di fallback in ogni caso, anche se il valore principale è presente. Utilizzando \texttt{.orElseGet(...)} si sfrutta la \textit{lazy evaluation}, eseguendo il blocco di fallback unicamente se necessario ed eliminando calcoli ridondanti sotto carichi elevati.
-    
-    \item \textbf{Use PreparedStatement instead of Statement (Utilizzo di PreparedStatement):}
-    I \texttt{PreparedStatement} consentono al motore di MySQL di pre-compilare ed ottimizzare la query una sola volta. Reutilizzare query pre-compilate riduce sensibilmente il carico computazionale sull'infrastruttura del database durante l'esecuzione di transazioni concorrenti.
-    
-    \item \textbf{Use System.arraycopy to copy arrays (Utilizzo di System.arraycopy):}
-    Questa regola fa riferimento diretto alla specifica di progetto GC127 (Medium Severity). L'uso di cicli di iterazione manuali per copiare singoli elementi da un array all'altro è altamente inefficiente. La funzione \texttt{System.arraycopy()} si interfaccia direttamente con istruzioni native a basso livello del sistema operativo (scritte in C), garantendo una copia di blocchi di memoria estremamente efficiente.
-\end{enumerate}
-
-\subsection{Razionale della Selezione delle Regole}
-Il processo di selezione e la conseguente esclusione delle restanti regole risponde a tre criteri chiave:
-\begin{itemize}
-    \item \textbf{Allineamento Tecnologico (Stack Match):} Sono state rimosse tutte le regole relative a framework non presenti nel progetto (es. regole specifiche per Spring Boot/Spring Data), poiché l'applicazione è strutturata esclusivamente su Servlet nativi e JDBC puro. Le regole database-specifiche (\texttt{PreparedStatement}, \texttt{SELECT *}, \texttt{SQL in loop}) sono state invece prioritarizzate per il loro alto impatto prestazionale ed ecologico.
-    \item \textbf{Mitigazione della Garbage Collection (GC):} In un'applicazione web monolitica, i consumi più critici sono spesso legati alla CPU impegnata nelle attività di Garbage Collection. Regole mirate a evitare istanziazioni superflue (\texttt{Pattern.compile()}, ridimensionamento \texttt{StringBuilder}, collezioni statiche) riducono la pressione sulla memoria Heap.
-    \item \textbf{Vincoli di Progetto:} Le regole che indirizzano direttamente i requisiti GC169 (chiamate invarianti nei cicli) e GC127 (copia ottimizzata degli array) sono state ritenute mandatarie per garantire la conformità con le specifiche di sostenibilità.
 
 Di seguito viene descritta la guida pratica passo-passo per la configurazione, l'esecuzione e l'estrazione delle eco-vulnerabilità rilevate.
 
