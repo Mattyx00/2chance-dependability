@@ -142,16 +142,16 @@ def parse_eb_csv(csv_path):
             if delta_t > 0:
                 rec['delta_t'] = delta_t
                 
-                # CPU Energy Noise Filter (< 250 W)
+                # CPU Energy Noise Filter (< 55 W)
                 if rec['cpu_energy'] is not None and prev_rec['cpu_energy'] is not None:
                     diff_cpu = rec['cpu_energy'] - prev_rec['cpu_energy']
-                    if 0 <= diff_cpu <= 250.0 * delta_t:
+                    if 0 <= diff_cpu <= 55.0 * delta_t:
                         rec['delta_E_CPU'] = diff_cpu
                         
-                # Core Energy Noise Filter (< 150 W)
+                # Core Energy Noise Filter (< 45 W)
                 if rec['core_energy'] is not None and prev_rec['core_energy'] is not None:
                     diff_core = rec['core_energy'] - prev_rec['core_energy']
-                    if 0 <= diff_core <= 150.0 * delta_t:
+                    if 0 <= diff_core <= 45.0 * delta_t:
                         rec['delta_E_Core'] = diff_core
                         
     duration_sec = sum(rec['delta_t'] for rec in eb_data)

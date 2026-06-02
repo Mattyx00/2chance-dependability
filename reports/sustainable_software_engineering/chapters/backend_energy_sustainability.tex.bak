@@ -240,181 +240,61 @@ Le metriche di utilizzo CPU, frequenza e memoria RAM usata vengono aggregate cal
 
 \section{Analisi Statica del Codice (Creedengo)}
 
-Per l'Analisi Statica dell'Eco-Design basata su regole (\textit{Rule-Based Eco-Design Static Analysis}), è necessario integrare il codice sorgente locale, un'istanza attiva di SonarQube e il plugin Creedengo. Poiché Creedengo (evoluzione di \textit{ecoCode}) opera come plugin per SonarQube, esso si integra direttamente nella pipeline di Static Application Security Testing (SAST) esistente. Dato che il progetto è containerizzato tramite Docker, l'esecuzione locale di SonarQube in parallelo all'applicazione risulta estremamente efficiente.
-
-Di seguito viene descritta la guida pratica passo-passo per la configurazione, l'esecuzione e l'estrazione delle eco-vulnerabilità rilevate.
+Per l'Analisi Statica dell'Eco-Design basata su regole (\textit{Rule-Based Eco-Design Static Analysis}), è necessario integrare il codice sorgente locale, un'istanza attiva di SonarQube e il plugin Creedengo. Poiché Creedengo opera come plugin per SonarQube, esso si integra direttamente nella pipeline di Static Application Security Testing (SAST) esistente. Dato che il progetto è containerizzato tramite Docker, l'esecuzione locale di SonarQube in parallelo all'applicazione risulta estremamente efficiente. Di seguito viene descritta la guida pratica passo-passo per la configurazione, l'esecuzione e l'estrazione delle eco-vulnerabilità rilevate.
 
 \subsection{Configurazione di SonarQube con il Plugin Creedengo}
 
-Prima di procedere alla scansione del codice, è fondamentale assicurarsi che l'ambiente SonarQube disponga del ruleset Java di Creedengo. I passaggi per predisporre l'ambiente prevedono:
-
-\begin{enumerate}
-    \item \textbf{Avvio di SonarQube via Docker:} Se non si dispone di un server SonarQube dedicato, è possibile avviarlo standalone tramite il comando:
-    \begin{lstlisting}[language=bash, caption={Avvio del container SonarQube}, label={lst:run_sonarqube}]
-docker run -d --name sonarqube-sse -p 9000:9000 sonarqube:community
-    \end{lstlisting}
-
-    \item \textbf{Installazione del Plugin Creedengo:} Il plugin Creedengo per Java (in formato \texttt{.jar}) deve essere scaricato dalla sezione release del repository ufficiale GitHub (\texttt{green-code-initiative/creedengo-java}) ed inserito all'interno della cartella delle estensioni di SonarQube. Il trasferimento nel container avviene tramite:
-    \begin{lstlisting}[language=bash, caption={Copia del plugin Creedengo nel container}, label={lst:copy_plugin}]
-docker cp plugin/creedengo-java-plugin-2.1.2.jar sonarqube-sse:/opt/sonarqube/extensions/plugins/
-    \end{lstlisting}
-
-    \item \textbf{Riavvio del Container:} Per forzare il caricamento del plugin ed attivare le nuove regole di eco-design all'interno di SonarQube, si riavvia il container:
-    \begin{lstlisting}[language=bash, caption={Riavvio del container SonarQube}, label={lst:restart_sonarqube}]
-docker restart sonarqube-sse
-    \end{lstlisting}
-\end{enumerate}
-
-\subsection{Automazione del Setup su Nuove Infrastrutture}
-Per agevolare l'installazione e la configurazione di SonarQube con Creedengo su qualsiasi altra infrastruttura, è stato predisposto lo script di automazione \texttt{scripts/setup-sonarqube-creedengo.sh}. Tale script verifica la presenza di Docker, scarica automaticamente la versione desiderata del plugin da GitHub se non presente localmente, avvia il container SonarQube standalone, copia la libreria nella directory corretta del container ed esegue il riavvio del servizio.
+Per agevolare l'installazione e la configurazione di SonarQube con Creedengo su qualsiasi altra infrastruttura, lo script di automazione orchestra l'intero ciclo di deployment dell'ambiente di analisi statica. A livello operativo, il processo inizia con una fase di validazione ambientale per verificare la disponibilità e l'esecuzione del Docker daemon sul sistema host. Successivamente, lo script gestisce l'approvvigionamento del plugin Creedengo per Java: qualora l'archivio precompilato non sia già presente nella directory di lavoro locale, ne esegue il download dinamico interrogando le release del repository GitHub ufficiale. Soddisfatte le dipendenze, il sistema procede al *provisioning* di un'istanza standalone del container SonarQube, esponendo le interfacce di rete necessarie. L'operazione cruciale consiste nell'iniettare la libreria scaricata all'interno del file system isolato del container, trasferendola nel percorso di sistema strettamente riservato alle estensioni. Infine, lo script invia un segnale di riavvio al demone per riavviare il servizio containerizzato; questo passaggio è architettonicamente indispensabile per forzare l'inizializzazione del nuovo componente, permettendo all'engine di SonarQube di caricare il plugin a runtime e di registrare nel database le nuove regole di analisi orientate all'eco-design.
 
 \subsection{Selezione delle Regole di Eco-Design}
-Per massimizzare il ritorno ecologico delle attività di refactoring e ridurre il rumore nelle metriche di telemetria statica, sono state selezionate 11 regole fondamentali del ruleset Creedengo Java. Ciascuna regola è stata scelta in base alla sua pertinenza tecnologica con l'architettura MVC di 2Chance (basata su Java Servlets e JDBC/DAO nativi) e all'impatto sulla riduzione del sovraccarico hardware.
+Per massimizzare il ritorno ecologico delle attività di refactoring e ridurre il rumore nelle metriche di telemetria statica, sono state selezionate inizialmente 11 regole fondamentali del ruleset Creedengo Java. Ciascuna di queste regole è stata scelta in base alla sua pertinenza tecnologica con l'architettura MVC di 2Chance, un'applicazione web monolitica basata esclusivamente su Java Servlets e interazioni dirette con il database tramite pattern JDBC/DAO nativi (senza l'uso di framework pesanti come Spring).
 
-Le regole attivate e le relative motivazioni teoriche sono descritte di seguito:
+Tuttavia, tra tutte le regole configurate, l'analisi di baseline ha restituito violazioni (dettagliate nel log \texttt{src\textbackslash sonarqube-creedengo\textbackslash baseline\textbackslash creedengo\_logs\textbackslash log\_creedengo\_analysis\_2026\_05\_22\_10\_59\_24.md}) afferenti unicamente a 4 specifici anti-pattern strutturali. Di conseguenza, vengono di seguito approfondite esclusivamente le regole realmente coinvolte nelle vulnerabilità riscontrate:
 
 \begin{enumerate}
-    \item \textbf{Avoid getting the size of the collection in the loop (Evitare il calcolo della dimensione delle collezioni nei cicli):}
-    Questa regola rappresenta una variante diretta delle specifiche di progetto relative all'efficienza computazionale (GC169). L'invocazione continua del metodo \texttt{.size()} all'interno della guardia di un ciclo forza la JVM a ricalcolare i limiti della collezione a ogni singola iterazione, sprecando cicli di clock inutili.
+    \item \textbf{Avoid getting the size of the collection in the loop (GCI3):}
+    Questa regola rappresenta una variante diretta delle specifiche di progetto relative all'efficienza computazionale. L'invocazione continua del metodo \texttt{.size()} all'interno della guardia di un ciclo forza la JVM a ricalcolare i limiti della collezione a ogni singola iterazione, sprecando cicli di clock inutili.
     
-    \item \textbf{Avoid SQL request in loop (Evitare query SQL all'interno di cicli):}
+    \item \textbf{Avoid SQL request in loop (GCI72):}
     L'esecuzione di interrogazioni al database all'interno di cicli iterativi è un fattore altamente inefficiente. Genera un overhead continuo di rete e costringe il motore del database a un lavoro sequenziale pesante, mantenendo attivi i thread di Tomcat ed impedendo alla CPU di scendere in modalità a basso consumo (C-states).
     
-    \item \textbf{Avoid usage of static collections (Evitare l'uso di collezioni statiche):}
-    Le collezioni statiche persistono per l'intera durata della JVM. Se non gestite in modo impeccabile, possono provocare perdite di memoria striscianti. Sotto stress (es. durante i Soak Test), la saturazione della memoria Heap costringe la JVM a frequenti cicli di Major Garbage Collection, con un consumo energetico molto elevato.
+    \item \textbf{Do not call a function when declaring a for-type loop (GCI69):}
+    Classificato a priorità elevata, questo fault identifica chiamate a funzioni invarianti all'interno dei parametri di inizializzazione o di guardia dei cicli. Risolvere questo anti-pattern richiede l'estrazione del risultato in variabili locali prima del ciclo, evitando migliaia di invocazioni ridondanti del medesimo metodo.
     
-    \item \textbf{Avoid using Pattern.compile() in a non-static context (Evitare Pattern.compile() in contesto non statico):}
-    La compilazione di espressioni regolari è un'operazione onerosa per la CPU. Compilare ripetutamente lo stesso pattern all'interno dei metodi delle Servlet ad ogni richiesta, anziché memorizzarlo in una costante \texttt{private static final Pattern}, introduce un inutile overhead elaborativo.
-    
-    \item \textbf{Do not call a function when declaring a for-type loop (Non invocare funzioni nella dichiarazione del ciclo for):}
-    Corrisponde al vincolo GC169 (classificato a priorità elevata). Identifica chiamate a funzioni invarianti all'interno dei parametri di inizializzazione o di guardia dei cicli, suggerendo di estrarle in variabili locali ed evitando migliaia di invocazioni ridondanti del medesimo metodo.
-    
-    \item \textbf{Don't use the query SELECT * FROM (Evitare l'uso di SELECT *):}
-    Il recupero indiscriminato di tutte le colonne di una tabella costringe a trasferire byte inutili attraverso la connessione di rete e obbliga la JVM ad allocare oggetti in memoria per campi non utilizzati durante la creazione dei Model Beans.
-    
-    \item \textbf{Free resources (Rilascio delle risorse):}
-    La mancata chiusura manuale dei canali di comunicazione con il database (como \texttt{Connection}, \texttt{Statement} e \texttt{ResultSet}) porta a colli di bottiglia e memory leak. Quando il connection pool esaurisce le risorse, Tomcat deve gestire i thread in attesa attiva, degradando gravemente la stabilità e l'efficienza ecologica del server.
-    
-    \item \textbf{Initialize builder/buffer with the appropriate size (Inizializzazione StringBuilder con dimensione corretta):}
-    Questa regola contrasta l'impatto della mutabilità delle stringhe. Creare uno \texttt{StringBuilder} o uno \texttt{StringBuffer} senza indicare una capacità iniziale obbliga la JVM ad eseguire continui ridimensionamenti e copie degli array di caratteri interni man mano che la stringa si espande.
-    
-    \item \textbf{orElseGet instead of orElse (Utilizzo di orElseGet al posto di orElse):}
-    Nelle strutture di tipo \texttt{Optional}, il metodo \texttt{.orElse(...)} valuta l'espressione di fallback in ogni caso, anche se il valore principale è presente. Utilizzando \texttt{.orElseGet(...)} si sfrutta la \textit{lazy evaluation}, eseguendo il blocco di fallback unicamente se necessario ed eliminando calcoli ridondanti sotto carichi elevati.
-    
-    \item \textbf{Use PreparedStatement instead of Statement (Utilizzo di PreparedStatement):}
-    I \texttt{PreparedStatement} consentono al motore di MySQL di pre-compilare ed ottimizzare la query una sola volta. Reutilizzare query pre-compilate riduce sensibilmente il carico computazionale sull'infrastruttura del database durante l'esecuzione di transazioni concorrenti.
-    
-    \item \textbf{Use System.arraycopy to copy arrays (Utilizzo di System.arraycopy):}
-    Questa regola fa riferimento diretto alla specifica di progetto GC127 (Medium Severity). L'uso di cicli di iterazione manuali per copiare singoli elementi da un array all'altro è altamente inefficiente. La funzione \texttt{System.arraycopy()} si interfaccia direttamente con istruzioni native a basso livello del sistema operativo (scritte in C), garantendo una copia di blocchi di memoria estremamente efficiente.
+    \item \textbf{Don't use the query SELECT * FROM (GCI74):}
+    Il recupero indiscriminato di tutte le colonne di una tabella costringe a trasferire byte inutili attraverso la connessione di rete e obbliga la JVM ad allocare massicciamente oggetti temporanei in memoria per campi non utilizzati durante la creazione dei Model Beans.
 \end{enumerate}
-
-\subsection{Razionale della Selezione delle Regole}
-Il processo di selezione e la conseguente esclusione delle restanti regole risponde a tre criteri chiave:
-\begin{itemize}
-    \item \textbf{Allineamento Tecnologico (Stack Match):} Sono state rimosse tutte le regole relative a framework non presenti nel progetto (es. regole specifiche per Spring Boot/Spring Data), poiché l'applicazione è strutturata esclusivamente su Servlet nativi e JDBC puro. Le regole database-specifiche (\texttt{PreparedStatement}, \texttt{SELECT *}, \texttt{SQL in loop}) sono state invece prioritarizzate per il loro alto impatto prestazionale ed ecologico.
-    \item \textbf{Mitigazione della Garbage Collection (GC):} In un'applicazione web monolitica, i consumi più critici sono spesso legati alla CPU impegnata nelle attività di Garbage Collection. Regole mirate a evitare istanziazioni superflue (\texttt{Pattern.compile()}, ridimensionamento \texttt{StringBuilder}, collezioni statiche) riducono la pressione sulla memoria Heap.
-    \item \textbf{Vincoli di Progetto:} Le regole che indirizzano direttamente i requisiti GC169 (chiamate invarianti nei cicli) e GC127 (copia ottimizzata degli array) sono state ritenute mandatarie per garantire la conformità con le specifiche di sostenibilità.
-\end{itemize}
 
 \subsection{Risultati dell'Analisi Statica e Risoluzione dei Fault}
 
 Dopo aver configurato l'ambiente di analisi statica ed eseguito la scansione iniziale (fase di \textit{baseline}), sono state rilevate complessivamente \textbf{64 violazioni di eco-design} distribuite su quattro regole principali del ruleset Creedengo. Questi problemi interessavano in modo critico i Model Bean e i Data Access Object dell'applicazione 2Chance.
 
-\subsection{Analisi Architetturale dei Consumi: Il Livello di Persistenza}
-
-Nell'ecosistema dell'architettura software di 2Chance, l'analisi empirica ha evidenziato come il livello di accesso ai dati (Data Access Object o DAO) rappresenti il principale \textit{bottleneck} dal punto di vista del consumo energetico. A differenza di layer architetturali come i Controller o i Service, i quali si limitano al routing delle richieste HTTP, alla validazione dell'input e all'orchestrazione di logiche di business prettamente in-memory, i DAO si fanno carico della comunicazione inter-processo con il database relazionale. Il consumo energetico asimmetrico dei DAO rispetto ad altri layer deriva da molteplici fattori strutturali. In primis, l'apertura, la negoziazione e la chiusura delle connessioni di rete tramite driver JDBC comportano un notevole overhead computazionale e di I/O. Inoltre, le operazioni di \textit{Object-Relational Mapping} (ORM) manuale richiedono frequenti allocazioni di memoria per la trasformazione dei \texttt{ResultSet} in strutture dati (POJO), stressando il Garbage Collector della JVM. Infine, le inefficienze nell'esecuzione delle query SQL (come \textit{table scan} o mancato uso degli indici) costringono il database engine a un intenso lavoro di I/O su disco e di computazione CPU, riflettendosi in un prolungato \textit{active waiting} (attesa attiva) dei thread applicativi e, conseguentemente, in uno spreco energetico sistemico.
-
-\subsubsection{Anti-Pattern di Sostenibilità nei DAO}
-
-Concentrando l'indagine sui model DAOs, \texttt{RecensioneDAO}, \texttt{ProdottoDAO} e \texttt{OrdineDAO} sono risultati i moduli con il margine di ottimizzazione più ampio. Il loro elevato footprint energetico nella versione di baseline era radicato in precisi anti-pattern architetturali, la cui risoluzione ha consentito di abbattere drasticamente i consumi. Di seguito si documentano le criticità individuate e definitivamente sanate.
-
-\paragraph{L'Anti-Pattern "SELECT *" e il Trasferimento Dati Incontrollato}
-In tutti i moduli di persistenza, le query di recupero facevano un uso sistematico dell'operatore \texttt{SELECT *}. Dal punto di vista della sostenibilità, questo approccio costringeva il database engine a eseguire operazioni di I/O su disco per estrarre l'interezza dei campi, compresi quelli non necessari o molto pesanti (come le stringhe \textit{Base64} delle immagini), per poi serializzarli sulla rete. Il refactoring ha introdotto proiezioni di colonne esplicite, riducendo drasticamente il payload di rete trasferito e limitando l'allocazione di byte nella memoria Heap della JVM, alleggerendo di conseguenza il carico sul Garbage Collector.
-
-\paragraph{Assenza di Batch Processing nelle Scritture Iterative}
-Le routine di inserimento multiplo, come \texttt{ProdottoDAO.aggiungiSpecifiche} e \texttt{OrdineDAO.addOrdine}, implementavano nella baseline una sequenza di \texttt{INSERT} all'interno di cicli iterativi, invocando \texttt{executeUpdate()} per ogni singolo record. Questo pattern comportava un overhead catastrofico causato dai continui \textit{round-trip} di rete e dalla negoziazione di transazioni isolate per ogni istruzione. Questa inefficienza è stata risolta adottando il costrutto \texttt{executeBatch()} di JDBC, supportato da una gestione manuale della transazione (\texttt{setAutoCommit(false)}). L'accorpamento delle scritture ha minimizzato il tempo di acquisizione delle connessioni, consentendo alla CPU di tornare rapidamente in stato di \textit{idle}.
-
-\paragraph{Risoluzione del Problema N+1 (Moltiplicazione delle Query)}
-Nella versione non ottimizzata, il metodo \texttt{OrdineDAO.getOrdiniByUtente} era affetto da una severa anomalia N+1. Nel corso dell'elaborazione del \texttt{ResultSet} principale degli ordini, il codice invocava ripetutamente un metodo secondario (\texttt{getProdottoOrdine(ordine)}) per estrarre gli articoli associati a ciascun acquisto. Se un utente possedeva $N$ ordini, il sistema eseguiva $1 + N$ query sincrone verso il database, mantenendo impegnati i thread applicativi in attesa bloccante. Questo spreco computazionale è stato risolto consolidando l'estrazione in un'unica query aggregata tramite \texttt{LEFT JOIN}, delegando l'onere dell'assemblaggio delle entità (\texttt{Ordine} e \texttt{Prodotto}) a una \texttt{LinkedHashMap} in memoria, abbattendo esponenzialmente l'overhead di rete e i picchi di consumo.
-
 \section{Microbenchmarking Energetico (JMH)}
 
-L'isolamento di queste porzioni critiche di codice delle classi DAO, identificate empiricamente come i componenti più inefficienti del sistema, costituisce il prerequisito fondamentale per la fase di microbenchmarking effettuato con il framework JMH combinato con la profilazione di EnergiBridge. Questo approccio consente di misurare con estrema precisione le performance e l'assorbimento energetico dei singoli metodi, fornendo un confronto oggettivo (in Joule per operazione) tra la versione di \textit{baseline} e la versione post-refactoring.
+\subsection{Anti-Pattern di Sostenibilità Identificati}
+
+Nell'ecosistema dell'architettura software di 2Chance, la revisione del codice ha evidenziato come il livello di accesso ai dati (Data Access Object o DAO) rappresenti il principale \textit{bottleneck} dal punto di vista del consumo energetico. A differenza di layer architetturali come i Controller o i Service, i quali si limitano al routing delle richieste HTTP, alla validazione dell'input e all'orchestrazione di logiche di business prettamente in-memory, i DAO si fanno carico della comunicazione inter-processo con il database relazionale. Il consumo energetico asimmetrico dei DAO rispetto ad altri layer deriva da molteplici fattori strutturali:
+\begin{itemize}
+\item \paragraph{L'Anti-Pattern "SELECT *" e il Trasferimento Dati Incontrollato}
+In tutti i moduli di persistenza, le query di recupero facevano un uso sistematico dell'operatore \texttt{SELECT *}. Dal punto di vista della sostenibilità, questo approccio costringeva il database engine a eseguire operazioni di I/O su disco per estrarre l'interezza dei campi, compresi quelli non necessari o molto pesanti (come le stringhe \textit{Base64} delle immagini), per poi serializzarli sulla rete. Il refactoring ha introdotto proiezioni di colonne esplicite, riducendo drasticamente il payload di rete trasferito e limitando l'allocazione di byte nella memoria Heap della JVM, alleggerendo di conseguenza il carico sul Garbage Collector.
+
+\item \paragraph{Assenza di Batch Processing nelle Scritture Iterative}
+Le routine di inserimento multiplo, come \texttt{ProdottoDAO.aggiungiSpecifiche} e \texttt{OrdineDAO.addOrdine}, implementavano nella baseline una sequenza di \texttt{INSERT} all'interno di cicli iterativi, invocando \texttt{executeUpdate()} per ogni singolo record. Questo pattern comportava un overhead catastrofico causato dai continui \textit{round-trip} di rete e dalla negoziazione di transazioni isolate per ogni istruzione. Questa inefficienza è stata risolta adottando il costrutto \texttt{executeBatch()} di JDBC, supportato da una gestione manuale della transazione (\texttt{setAutoCommit(false)}). L'accorpamento delle scritture ha minimizzato il tempo di acquisizione delle connessioni, consentendo alla CPU di tornare rapidamente in stato di \textit{idle}.
+
+\item \paragraph{Risoluzione del Problema N+1 (Moltiplicazione delle Query)}
+Nella versione non ottimizzata, il metodo \texttt{OrdineDAO.getOrdiniByUtente} era affetto da una severa anomalia N+1. Nel corso dell'elaborazione del \texttt{ResultSet} principale degli ordini, il codice invocava ripetutamente un metodo secondario (\texttt{getProdottoOrdine(ordine)}) per estrarre gli articoli associati a ciascun acquisto. Se un utente possedeva $N$ ordini, il sistema eseguiva $1 + N$ query sincrone verso il database, mantenendo impegnati i thread applicativi in attesa bloccante. Questo spreco computazionale è stato risolto consolidando l'estrazione in un'unica query aggregata tramite \texttt{LEFT JOIN}, delegando l'onere dell'assemblaggio delle entità (\texttt{Ordine} e \texttt{Prodotto}) a una \texttt{LinkedHashMap} in memoria, abbattendo esponenzialmente l'overhead di rete e i picchi di consumo.
+\end{itemize}
+
+\subsection{Microbenchmarking Energetico (JMH)}
+
+Per convalidare sperimentalmente a livello di singolo metodo le inefficienze architetturali emerse dalla revisione del codice e dalle violazioni strutturali evidenziate dall'analisi statica (\textit{Creedengo}), sono emersi specifici anti-pattern architetturali concentrati in particolare in 3 classi DAO: \texttt{ProdottoDAO}, \texttt{RecensioneDAO} e \texttt{OrdineDAO}. A causa di questi anti-pattern che causavano un elevato footprint energetico nella versione di \textit{baseline}, queste 3 classi sono state scelte per effettuare una fase di microbenchmarking per tutti i loro metodi. L'isolamento di queste porzioni critiche di codice costituisce infatti il prerequisito fondamentale per il microbenchmarking effettuato con il framework JMH combinato con la profilazione di EnergiBridge, consentendo di misurare con estrema precisione le performance e l'assorbimento energetico (in Joule per operazione) prima e dopo il refactoring. Di seguito si documentano gli anti-pattern di sostenibilità notati in questi DAO:
 
 \subsection{Strumento di Profilazione Energetica Co-Sincronizzato: Architettura e Teoria Operativa}
 
-Al fine di combinare la precisione temporale del microbenchmarking con la profilazione energetica a livello hardware, è stato sviluppato uno strumento di profilazione personalizzato (\texttt{run\_jmh\_energy\_profiler.py}). Questo script consente di eseguire i benchmark JMH catturando simultaneamente i consumi energetici tramite EnergiBridge in modo controllato e riproducibile. L'architettura dello script risponde a requisiti teorici essenziali per l'affidabilità delle misurazioni:
+Per combinare la precisione temporale del microbenchmarking con la profilazione energetica dell'hardware, ho implementato uno script Python (\texttt{run\_jmh\_energy\_profiler.py}) che coordina l'esecuzione dei test JMH e l'acquisizione dei dati di EnergiBridge. Lo script compila prima il codice Java con Maven e individua tutti i metodi di benchmark disponibili nelle classi della directory fornita in input. Successivamente, per evitare interferenze tra i test, esegue i benchmark JMH in modalità isolata per ciascun metodo per evitare il fenomeno dell'inquinamento della memoria Heap e del cross-talk tra thread differenti. Ciascun processo EnergiBridge avvolge un'istanza JVM pulita, garantendo che le metriche di consumo non risentano dell'overhead di esecuzioni precedenti. Per eliminare il rumore e le anomalie di lettura tipiche dei registri hardware RAPL, i dati energetici vengono filtrati applicando le condizioni di validità energetica rispetto al tempo ($\Delta t$): $0 \le \Delta E_{\text{CPU}} \le 55{,}0 \times \Delta t$ e $0 \le \Delta E_{\text{Core}} \le 45{,}0 \times \Delta t$. Infine, lo script unisce le metriche temporali di JMH con quelle energetiche purificate di EnergiBridge, producendo un report finale che riassume il consumo energetico totale (J), la potenza media (W), il carico e la frequenza della CPU, e i picchi di memoria RAM allocata.
 
-\begin{enumerate}
-    \item \textbf{Scoperta e Orchestrazione Automatica:}
-    Lo script automatizza il processo compilando il jar dei benchmark (\texttt{mvn clean package -DskipTests}) e interrogando l'eseguibile JMH tramite l'opzione \texttt{-l} per ricavare l'elenco dei metodi di benchmark disponibili per una determinata classe (\texttt{java -jar target/benchmarks.jar <class\_name> -l}).
-    
-    \item \textbf{Isolamento a Livello di Processo per Mitigare il Cross-Talk:}
-    L'esecuzione consecutiva di molteplici benchmark all'interno dello stesso ciclo di vita di una singola JVM può introdurre distorsioni significative nelle letture energetiche a causa del ``cross-talk'' temporale e dell'accumulo di risorse (classloading ritardato, congestione della memoria Heap, socket JDBC non immediatamente riciclati o thread di Garbage Collection attivati asincronamente).
-    Per ovviare a questo problema, lo script esegue:
-    \begin{itemize}
-        \item Una prima esecuzione globale della suite JMH per raccogliere i tempi medi nominali in formato JSON (\texttt{ms/op}), garantendo l'esecuzione corretta delle iterazioni di warm-up e misurazione.
-        \item Successivamente, la profilazione energetica viene effettuata \textbf{eseguendo ciascun metodo di benchmark singolarmente all'interno di un processo JVM isolato}, avvolto direttamente dal wrapper EnergiBridge:
-        \begin{lstlisting}[language=bash]
-energibridge.exe -o <csv_output> -- java -jar target/benchmarks.jar <method_fqn> -f 1 -wi 2 -i 2
-        \end{lstlisting}
-        Questo garantisce che la telemetria energetica campionata per ciascun metodo sia pulita e priva di influenze derivanti da esecuzioni precedenti.
-    \end{itemize}
-    
-    \item \textbf{Filtrazione del Rumore dei Sensori RAPL:}
-    I registri energetici hardware (Intel/AMD RAPL o LibreHardwareMonitor su Windows) possono presentare letture instabili dovute a transitori fisici o interferenze del sistema operativo. Queste anomalie si manifestano come picchi di potenza fittizi o decrementi (reset) nei contatori cumulativi.
-    Lo script applica una formula matematica di filtraggio sui campioni temporali consecutivi $[T_{k-1}, T_k]$ con durata $\Delta t = (T_k - T_{k-1})/1000$ secondi. I differenziali di energia $\Delta E_{CPU}$ e $\Delta E_{Core}$ vengono accumulati solo se soddisfano le seguenti condizioni fisiche:
-    \begin{equation}
-        0 \le \Delta E_{CPU} \le 250{,}0 \times \Delta t
-    \end{equation}
-    \begin{equation}
-        0 \le \Delta E_{Core} \le 150{,}0 \times \Delta t
-    \end{equation}
-    Qualsiasi variazione che ecceda la potenza limite di targa (250 W per il package CPU e 150 W per i core) o che risulti negativa viene scartata (impostata a 0 Joule), salvaguardando l'integrità del dataset.
-    
-    \item \textbf{Co-Sincronizzazione e Integrazione dei Report:}
-    Al termine delle run isolate, lo script analizza il file JSON prodotto da JMH e associa a ciascun metodo il rispettivo tempo medio per operazione. Successivamente, aggrega le telemetrie fisiche di EnergiBridge per calcolare:
-    \begin{itemize}
-        \item \textbf{Energia CPU e Core Totale (J):} Somma dei differenziali filtrati.
-        \item \textbf{Potenza Media CPU (W):} Energia CPU divisa per la durata effettiva della run.
-        \item \textbf{CPU Usage (\%) e Frequenza di Clock (MHz):} Valori medi e di picco.
-        \item \textbf{Memoria RAM Allocata (GB):} Impronta media e di picco ricavata dai campioni di memoria.
-    \end{itemize}
-    I dati unificati vengono infine formattati in una tabella testuale e salvati all'interno della cartella \texttt{extractor\_logs}.
-\end{enumerate}
-
-\subsection{Analisi dei Benchmark JMH Realizzati per ProdottoDAO e RecensioneDAO}
-Per convalidare sperimentalmente a livello di singolo metodo le inefficienze architetturali emerse dalle metriche globali dei test di carico (JMeter e \textit{EnergiBridge}) e dalle violazioni strutturali evidenziate dall'analisi statica (\textit{Creedengo}), sono stati realizzati ed eseguiti due benchmark di microlivello utilizzando il framework \textbf{JMH (Java Microbenchmark Harness)}: \texttt{ProdottoDAOBenchmark} e \texttt{RecensioneDAOBenchmark}. 
-
-La correlazione tra queste tre sorgenti di telemetria rappresenta la chiave metodologica del processo di ottimizzazione energetica orientato al software sostenibile:
-\begin{enumerate}
-    \item \textbf{L'Input Strutturale (Creedengo):} Identifica le coordinate esatte delle deviazioni dalle linee guida di eco-design (es. query SQL all'interno di cicli iterativi, select indiscriminate \texttt{SELECT *}, mancata chiusura di connessioni).
-    \item \textbf{La Rilevanza Funzionale (JMeter + EnergiBridge):} Consente di mappare se le classi affette da tali vulnerabilità strutturali ricadono all'interno dei flussi applicativi reali maggiormente sollecitati e responsabili del maggior dispendio energetico cumulativo (es. \texttt{ProdottoServlet} e \texttt{RecensioniServlet}).
-    \item \textbf{La Misurazione di Precisione (JMH):} Isola i metodi specifici dal contesto infrastrutturale del server Tomcat (eliminando il rumore della latenza di rete, dei protocolli HTTP e dell'I/O del browser) per quantificare con estrema precisione il tempo medio di esecuzione per singola operazione ($\text{ms/op}$) ed evidenziare l'efficacia dei meccanismi di controllo o dei futuri interventi di refactoring.
-\end{enumerate}
-
-\subsubsection{Descrizione delle Suite di Benchmark ed Associazione con le Violazioni}
-Le due classi di benchmark sviluppate operano sulle rispettive componenti DAO del livello di persistenza:
-
-\begin{itemize}
-    \item \textbf{\texttt{ProdottoDAOBenchmark}:}
-    Questa suite si concentra sulla valutazione delle operazioni di recupero e manipolazione del catalogo prodotti. Nello specifico, profila:
-    \begin{itemize}
-        \item \texttt{benchmarkAggiungiSpecifiche}: Mappa direttamente la violazione \texttt{creedengo-java:GCI72} (SQL request in loop) alla linea 182 di \texttt{ProdottoDAO.java}. Questo metodo esegue iterativamente query di inserimento per ciascuna specifica tecnica associata ad un prodotto, generando un notevole carico di rete locale e blocchi sequenziali.
-        \item \texttt{benchmarkGetProdotti}, \texttt{benchmarkGetProdottoByIdValid}, \texttt{benchmarkGetProdottiByCategoriaValid}: Profilano i metodi di lettura inficiati dalla violazione \texttt{creedengo-java:GCI74} (uso dell'operatore jolly \texttt{SELECT *}) alle linee 29, 46, 82, 120 e 137. L'uso di \texttt{SELECT *} incrementa l'allocazione di risorse in memoria Heap costringendo la JVM a un continuo lavoro di parsing e binding delle colonne.
-        \item \texttt{benchmarkGetProdottoByIdInvalid} e \texttt{benchmarkGetProdottiByCategoriaInvalid}: Valutano il comportamento della classe in presenza di parametri malformati (es. ID negativi o stringhe vuote), evidenziando il ruolo di barriera energetica giocato dai controlli preventivi di validazione degli argomenti.
-    \end{itemize}
-
-    \item \textbf{\texttt{RecensioneDAOBenchmark}:}
-    Questa suite isola il sistema di gestione delle recensioni degli utenti, che ha mostrato forti criticità di degradazione prestazionale sotto stress energetico. Profila:
-    \begin{itemize}
-        \item \texttt{benchmarkGetRecensioniByProdottoValid} e \texttt{benchmarkGetRecensioniByUtenteValid}: Mappano la violazione \texttt{creedengo-java:GCI74} (\texttt{SELECT *}) alle linee 33 e 51 di \texttt{RecensioneDAO.java}. In questo caso la violazione si aggrava poiché la query coinvolge join a tre vie tra le tabelle \texttt{recensione}, \texttt{utente} e \texttt{prodotto}, forzando il DBMS a caricare in memoria intere righe ridondanti da tutte e tre le tabelle.
-        \item \texttt{benchmarkAddRecensione}: Valuta le performance di scrittura sul database e la stabilità del connection pool.
-    \end{itemize}
-\end{itemize}
-
-\subsubsection{Risultati Sperimentali dei Benchmark (Smoke Runs)}
-I test sono stati eseguiti impostando una configurazione a thread singolo (\texttt{@State(Scope.Thread)}), con 2 iterazioni di warmup e 2 iterazioni di misurazione da 1 secondo ciascuna per ciascun modulo isolato. Le metriche temporali sono espresse in millisecondi per operazione ($\text{ms/op}$), mentre le metriche di consumo energetico e memoria sono aggregate e filtrate tramite lo script di co-sincronizzazione. I dati consolidati estratti dalle misurazioni sono riportati nelle Tabelle~\ref{tab:jmh_results_prodotto} e~\ref{tab:jmh_results_recensione}.
+\subsection{Risultati Sperimentali dei Benchmark (Smoke Runs)}
+I test sono stati eseguiti impostando una configurazione a thread singolo (\texttt{@State(Scope.Thread)}), con 5 iterazioni di warmup e 5 iterazioni di misurazione per ciascun modulo isolato. Le metriche temporali sono espresse in millisecondi per operazione ($\text{ms/op}$), mentre le metriche di consumo energetico e memoria sono aggregate e filtrate tramite lo script di co-sincronizzazione. I dati consolidati estratti dalle misurazioni sono riportati nelle Tabelle~\ref{tab:jmh_results_prodotto},~\ref{tab:jmh_results_recensione} e~\ref{tab:jmh_results_ordine}.
 
 \begin{table}[h!]
 \centering
@@ -458,41 +338,6 @@ I test sono stati eseguiti impostando una configurazione a thread singolo (\text
 \label{tab:jmh_results_recensione}
 \end{table}
 
-\subsubsection{Correlazione Teorica e Interpretazione dei Risultati}
-L'analisi congiunta delle metriche evidenzia tre pilastri teorici fondamentali:
-
-\begin{enumerate}
-    \item \textbf{Il Peso del Ciclo SQL (\texttt{GCI72}):}
-    Il metodo \texttt{benchmarkAggiungiSpecifiche} richiede $23{,}65$~ms per singola operazione, registrando un consumo energetico della CPU pari a $74{,}72$~J ed una potenza media assorbita di $14{,}92$~W. Questo sovraccarico temporale ed energetico è dovuto all'iterazione del ciclo SQL: l'invocazione sequenziale di istruzioni di \texttt{INSERT} forza l'apertura e chiusura logica dei canali di comunicazione, impedendo al driver JDBC di ottimizzare le istruzioni tramite operazioni di batching. Questo micro-comportamento giustifica il consumo energetico massivo di $36.089{,}51$~J rilevato su \texttt{ProdottoServlet} durante i test di Soak.
-    
-    \item \textbf{L'Impatto delle Query Indiscriminate (\texttt{GCI74}):}
-    Le query di lettura che utilizzano \texttt{SELECT *} (\texttt{benchmarkGetProdottoByIdValid} a $19{,}19$~ms/op e le letture di recensioni a $\sim 15{,}4$~ms/op) mostrano tempi ed assorbimenti elevati. Ad esempio, il metodo \texttt{benchmarkGetProdotti} (anch'esso affetto da query indiscriminata) registra un consumo di ben $279{,}08$~J sulla CPU e $13{,}36$~J sui Core fisici. Il DBMS è costretto a caricare in memoria Heap intere righe ridondanti, aumentando l'allocazione RAM. Sotto stress concorrente (come nei test di Spike in cui la latenza di \texttt{RecensioniServlet} è salita a $43{,}22$ secondi), la saturazione di rete e di memoria Heap blocca i thread di connessione, provocando una potenza media di picco di $11{,}41$~W.
-    
-    \item \textbf{La Validazione Preventiva come "Scudo Energetico":}
-    I benchmark eseguiti con parametri non validi (\texttt{benchmarkGetProdottoByIdInvalid}, \texttt{benchmarkGetRecensioniByProdottoInvalid}) mostrano un tempo medio di esecuzione quasi nullo ($0{,}0008\text{--}0{,}0009$~ms/op). Ciò avviene grazie al design difensivo basato su eccezioni immediate (\texttt{IllegalArgumentException}) lanciate prima dell'interazione con il database. Sotto il profilo della sostenibilità del software, questo indica che un filtro di validazione all'ingresso impedisce del tutto l'apertura di connessioni JDBC ed il transito di chiamate di rete esterne, proteggendo il server da carichi anomali o attacchi Denial of Service che degraderebbero l'efficienza ecologica globale del sistema.
-\end{enumerate}
-
-\subsection{Analisi dei Benchmark JMH Realizzati per OrdineDAO e Carrello}
-Per completare la validazione sperimentale del nucleo transazionale dell'applicazione, è stata realizzata ed eseguita la suite \texttt{OrdineDAOBenchmark}, mirata a profilare le operazioni di gestione del carrello e finalizzazione degli ordini. Questo modulo è di fondamentale importanza, in quanto correlato direttamente ai gravi colli di bottiglia energetici e prestazionali registrati da \texttt{AggiungiCarrelloServlet} e \texttt{CheckOutServlet} (saturazione della CPU al $100\%$ e picco di RAM di $23{,}01$~GB nei test di Soak e Spike).
-
-\subsubsection{Descrizione delle Suite di Benchmark ed Associazione con le Violazioni}
-La suite \texttt{OrdineDAOBenchmark} profila e quantifica l'impatto dei seguenti metodi e violazioni strutturali:
-\begin{itemize}
-    \item \textbf{\texttt{benchmarkAddOrdineValid}:}
-    Mappa la violazione \texttt{creedengo-java:GCI72} (\textit{Avoid SQL request in loop}) alla linea 248 di \texttt{OrdineDAO.java}. Durante la finalizzazione di un ordine, il sistema inserisce sequenzialmente gli elementi del carrello all'interno della tabella \texttt{composto} tramite un ciclo iterativo. Questo benchmark simula l'inserimento di un ordine reale contenente prodotti multipli.
-    \item \textbf{\texttt{benchmarkGetProdottoOrdineValid}:}
-    Mappa la violazione \texttt{creedengo-java:GCI74} (\textit{Don't use the query SELECT * FROM}) alla linea 83 di \texttt{OrdineDAO.java}. Profila il caricamento degli articoli associati a un ordine tramite una query che recupera tutte le colonne senza una proiezione selettiva.
-    \item \textbf{\texttt{benchmarkGetOrdiniByUtenteValid}:}
-    Mappa una combinazione estremamente critica di violazioni: \texttt{creedengo-java:GCI74} (\textit{SELECT *}) alla linea 135 e \texttt{creedengo-java:GCI72} (\textit{SQL request in loop}) alla linea 166. Nel recuperare lo storico degli ordini di un utente, il metodo esegue per ciascun ordine trovato una query SQL separata (\texttt{getProdottoOrdine}) all'interno del loop di iterazione del \texttt{ResultSet}.
-    \item \textbf{\texttt{benchmarkCarrelloOperations}:}
-    Mappa le violazioni \texttt{creedengo-java:GCI69} e \texttt{GCI3} (\textit{Do not call a function when declaring a for-type loop}) presenti in \texttt{Carrello.java} alle linee 28, 72 e 101. Profila le operazioni in-memory per il calcolo del totale del carrello ed eliminazione/modifica di elementi, verificando il sovraccarico CPU-only causato dall'interrogazione continua dei limiti della collezione.
-    \item \textbf{\texttt{benchmarkGetOrdineByIdValid} e Metodi di Controllo / Invalidazione:}
-    Forniscono il baseline di confronto (come \texttt{getOrdineById}) e misurano l'efficacia dei controlli difensivi (\texttt{benchmarkGetOrdineByIdInvalid}, \texttt{benchmarkGetProdottoOrdineInvalid}, \texttt{benchmarkGetOrdiniByUtenteInvalid}) che arrestano l'esecuzione prima dell'interazione con il database in caso di parametri non validi.
-\end{itemize}
-
-\subsubsection{Risultati Sperimentali dei Benchmark (Smoke Runs)}
-I test sono stati eseguiti con 2 iterazioni di warmup e 2 iterazioni di misurazione (durata 1 secondo per iterazione) per ciascun modulo isolato. I risultati completi contenenti le metriche temporali ed energetiche sono riportati nella Tabella~\ref{tab:jmh_results_ordine}.
-
 \begin{table}[h!]
 \centering
 \resizebox{\textwidth}{!}{
@@ -500,7 +345,6 @@ I test sono stati eseguiti con 2 iterazioni di warmup e 2 iterazioni di misurazi
 \hline
 \textbf{Metodo Profilato (OrdineDAOBenchmark)} & \textbf{Tempo Medio (ms/op)} & \textbf{CPU Energy (J)} & \textbf{Avg Power (W)} & \textbf{Core Energy (J)} & \textbf{CPU Media (\%)} & \textbf{CPU Picco (\%)} & \textbf{RAM Media (GB)} & \textbf{RAM Picco (GB)} \\ \hline
 \texttt{benchmarkAddOrdineValid} & 13,5605 & 90,12 & 15,51 & 2,88 & 27,30 & 45,04 & 25,79 & 25,85 \\
-\texttt{benchmarkCarrelloOperations} & 0,0000 & 88,49 & 15,78 & 2,83 & 23,39 & 41,02 & 25,78 & 25,83 \\
 \texttt{benchmarkGetOrdineByIdInvalid} & 0,0009 & 93,15 & 16,03 & 2,48 & 22,74 & 33,03 & 25,96 & 26,09 \\
 \texttt{benchmarkGetOrdineByIdValid} & 1,0374 & 93,99 & 16,75 & 1,27 & 32,79 & 58,56 & 25,86 & 25,93 \\
 \texttt{benchmarkGetOrdiniByUtenteInvalid} & 0,0009 & 100,47 & 17,29 & 1,55 & 25,60 & 58,93 & 26,07 & 26,41 \\
@@ -513,159 +357,29 @@ I test sono stati eseguiti con 2 iterazioni di warmup e 2 iterazioni di misurazi
 \label{tab:jmh_results_ordine}
 \end{table}
 
-\subsubsection{Correlazione Teorica e Interpretazione dei Risultati}
-I risultati empirici spiegano chiaramente le degradazioni sistemiche rilevate durante i test di carico e soak:
-\begin{enumerate}
-    \item \textbf{Il Problema del Querying $N+1$ (\texttt{GCI72} e \texttt{GCI74}):}
-    Il benchmark \texttt{benchmarkGetOrdiniByUtenteValid} registra il tempo di esecuzione in assoluto più elevato ($41{,}38$~ms/op), con un consumo energetico di $88{,}68$~J ed una potenza media di $15{,}26$~W. Dal punto di vista teorico, questo comportamento rappresenta un classico antipattern di querying $N+1$: per recuperare lo storico ordini, l'applicazione esegue 1 query iniziale e poi $N$ query aggiuntive in loop per associare i prodotti a ciascun ordine. Sotto carico prolungato (Soak Test), la continua allocazione di risorse (connessioni JDBC, array, oggetti bean) satura lo spazio Heap della JVM, portando all'accumulo di $23{,}01$~GB di RAM e a una elevata frequenza di cicli di Garbage Collection. Ciò costringe la CPU a lavorare al $100\%$ delle sue capacità, con un incremento massivo dell'impronta energetica.
-    \item \textbf{Overhead di Inserimento Sequenziale (\texttt{GCI72}):}
-    Il metodo \texttt{benchmarkAddOrdineValid} richiede $13{,}56$~ms/op, consumando $90{,}12$~J di energia package. Questo ritardo è dovuto all'inserimento sequenziale degli articoli nel database all'interno di un ciclo. Ogni iterazione comporta un roundtrip di rete ed esecuzione SQL separati, prolungando il tempo in cui la connessione JDBC rimane attiva. Quando molti utenti eseguono il checkout contemporaneamente (come nel test di Spike), questo ritardo accumulato causa l'esaurimento istantaneo delle 50 connessioni disponibili in \texttt{ConPool}, costringendo le richieste eccedenti in coda e provocando il blocco temporaneo del servizio.
-    \item \textbf{Efficienza In-Memory del Carrello (\texttt{GCI69/GCI3}):}
-    Le operazioni in memoria di \texttt{benchmarkCarrelloOperations} richiedono un tempo infinitesimo ($0{,}0000$~ms/op, ovvero $< 0{,}0001$~ms/op). Sebbene l'impatto di una singola chiamata alla guardia del loop sia irrilevante a livello micro, la ripetizione sistematica di tali invocazioni in flussi ad altissima concorrenza introduce micro-inutilizzi di cicli CPU. Il refactoring mirato a memorizzare la dimensione della collezione in una variabile locale eviterà calcoli ridondanti di CPU.
-    \item \textbf{Validazione Preventiva:}
-    Analogamente a quanto osservato per le altre componenti, i controlli di validazione preventivi (\texttt{benchmarkGetOrdineByIdInvalid}, ecc.) respingono immediatamente i parametri errati in appena $0{,}0009$~ms/op, agendo da "scudo energetico" che preserva le risorse del database e la stabilità del connection pool.
-\end{enumerate}
+\section{Piano di Refactoring ed Ottimizzazione}
 
-\section{Piano di Rifattorizzazione ed Ottimizzazione}
+Per risolvere i problemi architetturali emersi durante la revisione del codice, sanare le violazioni critiche individuate dall'analisi statica di Creedengo e massimizzare l'efficienza ecologica, in particolar modo a livello di persistenza, si è deciso di procedere a un refactoring profondo di tutti i componenti del sistema, intervenendo sistematicamente sui Data Access Object (DAO) e sui Model Beans. Questa decisione è stata supportata dalle metriche di baseline raccolte, che hanno evidenziato la necessità di un piano operativo mirato ad abbattere il consumo energetico computazionale e di rete.
 
-Per procedere alla fase di rifattorizzazione del codice con la certezza di poter quantificare oggettivamente i miglioramenti di sostenibilità energetica ($\Delta\%$), è fondamentale certificare la correttezza metodologica delle metriche raccolte e definire un piano operativo sistematico per ciascuna classe target.
-
-\subsection{Validazione e Garanzia di Correttezza delle Metriche}
-
-Le metriche temporali fornite da JMH e le telemetrie energetiche fornite da EnergiBridge, aggregate dallo strumento di profilazione co-sincronizzato, sono garantite da quattro pilastri metodologici:
-
-\begin{enumerate}
-    \item \textbf{Isolamento dei Processi JVM:}
-    L'esecuzione dei benchmark JMH in modalità isolata per ciascun metodo evita il fenomeno dell'inquinamento della memoria Heap e del cross-talk tra thread differenti. Ciascun processo EnergiBridge avvolge un'istanza JVM pulita, garantendo che le metriche di consumo (es. i $279{,}08$~J CPU per \texttt{benchmarkGetProdotti}) non risentano dell'overhead di esecuzioni precedenti.
-    
-    \item \textbf{Filtraggio Matematico delle Soglie Fisiche (TDP):}
-    L'integrazione differenziale dell'energia scarta le letture anomale dei sensori RAPL (che a volte registrano picchi spuri a causa di polling del firmware) imponendo che ogni variazione rispetti la potenza massima teorica del processore di targa:
-    \begin{equation}
-        0 \le \Delta E_{Package} \le 250{,}0 \times \Delta t
-    \end{equation}
-    \begin{equation}
-        0 \le \Delta E_{Core} \le 150{,}0 \times \Delta t
-    \end{equation}
-    Questo impedisce che overflow dei registri hardware o picchi spuri contaminino le medie globali.
-    
-    \item \textbf{Interpolazione Temporale e Gestione della Concorrenza:}
-    Nei casi in cui il campionamento energetico subisca rallentamenti dovuti al sistema operativo, l'allineamento temporale lineare (a $200$~ms nominali) assicura una quantificazione esatta del tempo e dell'energia totale spesa.
-    
-    \item \textbf{Validazione Preventiva come Zero-Line Baseline:}
-    I test sui parametri non validi (con risultati vicini a $0{,}0008$~ms/op) fungono da controllo scientifico negativo, confermando che il sistema di misurazione è in grado di registrare con estrema sensibilità l'assenza di carico sul database.
-\end{enumerate}
-
-\subsection{Piano Operativo di Rifattorizzazione ed Esperimenti Successivi}
-
-Con le metriche di baseline stabilite con precisione, si definiscono i seguenti interventi di rifattorizzazione orientati alla sostenibilità energetica:
+Per risolvere le varie tipologie di inefficienze riscontrate, sono state adottate le seguenti soluzioni architetturali:
 
 \begin{itemize}
-    \item \textbf{Risoluzione del Querying $N+1$ in \texttt{OrdineDAO}:}
-    Il metodo \texttt{getOrdiniByUtente} (attualmente a $41{,}38$~ms/op e $88{,}68$~J CPU) verrà rifattorizzato sostituendo il ciclo iterativo di query con una singola istruzione SQL contenente una \texttt{JOIN} tra le tabelle \texttt{ordini} e \texttt{composto}, riducendo i roundtrip con il database ad $1$ e abbattendo l'overhead di connessione.
+    \item \textbf{Risoluzione del Querying $N+1$:} Nei metodi affetti da query iterative (come \texttt{getOrdiniByUtente} in \texttt{OrdineDAO}), l'estrazione è stata consolidata in un'unica query aggregata tramite costrutti \texttt{LEFT JOIN}. Questo ha permesso di ridurre drasticamente i roundtrip con il database, abbattendo l'overhead di connessione ed eliminando le attese bloccanti.
     
-    \item \textbf{Batching degli Inserimenti in \texttt{ProdottoDAO} e \texttt{OrdineDAO}:}
-\texttt{benchmarkAggiungiSpecifiche} a $23{,}65$~ms/op) e articoli dell'ordine (\texttt{benchmarkAddOrdineValid} a $13{,}56$~ms/op) verranno sostituiti con operazioni batch native del driver JDBC (\texttt{addBatch} e \texttt{executeBatch}), consentendo di effettuare una singola transazione energeticamente efficiente.
+    \item \textbf{Batching degli Inserimenti e Scritture (GCI72):} Le sequenze di \texttt{INSERT} o \texttt{UPDATE} eseguite all'interno di cicli iterativi (ad esempio in \texttt{ProdottoDAO} e \texttt{OrdineDAO}) sono state sostituite con operazioni batch native del driver JDBC (\texttt{addBatch()} e \texttt{executeBatch()}). Il raggruppamento delle scritture in un'unica transazione ha minimizzato il tempo di acquisizione delle connessioni, prevenendo la saturazione del \textit{Connection Pool} sotto carico ed incrementando l'efficienza globale.
     
-    \item \textbf{Rimozione delle Query \texttt{SELECT *} (GCI74):}
-    Tutte le letture affette da query indiscriminata in \texttt{ProdottoDAO} (es. \texttt{getProdotti}) e \texttt{RecensioneDAO} (es. \texttt{getRecensioniByProdotto}) verranno riscritte esplicitando solo le colonne necessarie nella proiezione SQL, riducendo l'impronta RAM (attualmente attorno ai $26$~GB in media per JVM) e il tempo di binding dei parametri.
+    \item \textbf{Rimozione delle Query \texttt{SELECT *} e Proiezioni Esplicite (GCI74):} Tutte le query di lettura indiscriminate nei DAO sono state riscritte esplicitando unicamente le colonne necessarie nella proiezione SQL. Riducendo il payload di rete trasferito, si è alleggerita la fase di \textit{Object-Relational Mapping} (ORM), diminuendo le allocazioni temporanee nella memoria Heap della JVM e, di conseguenza, lo stress energetico dovuto ai cicli del \textit{Garbage Collector}. Parallelamente, il mapping dei risultati è stato allineato ai nomi simbolici delle colonne, aumentando la resilienza dello schema.
     
-    \item \textbf{Ottimizzazione dei Cicli in \texttt{Carrello.java} (GCI69):}
-    L'invocazione di metodi all'interno della guardia dei cicli verrà eliminata memorizzando la dimensione in una variabile locale.
+    \item \textbf{Ottimizzazione delle Guardie dei Cicli nei Model Bean (GCI69 e GCI3):} Per prevenire salti di subroutine ed interrogazioni continue ad oggetti nell'area Heap, le invocazioni di metodi all'interno dei parametri di guardia dei cicli (come \texttt{size()} o \texttt{length()}) sono state estratte introducendo variabili primitive locali prima del ciclo. Questo semplice \textit{caching} permette alla CPU di memorizzare il valore limite in un registro fisico, abilitando ottimizzazioni Just-In-Time (JIT) e annullando gli sprechi computazionali.
 \end{itemize}
 
-Al termine delle modifiche, verranno rieseguiti sia i microbenchmark JMH isolati (per validare l'abbattimento energetico del singolo metodo) sia i test prestazionali di sistema JMeter (Load, Soak e Spike) per quantificare la riduzione complessiva dell'impronta ecologica della web application 2Chance.
-
-\subsection{Rifattorizzazione dei Model Bean: Teoria dell'Ottimizzazione dei Cicli e Risultati della Verifica}
-
-Per eliminare sistematicamente le inefficienze strutturali a livello CPU-bound rilevate da Creedengo, si è proceduto alla rifattorizzazione di tutti i Model Bean dell'applicazione: \texttt{Carrello}, \texttt{Ordine}, \texttt{Prodotto}, \texttt{Recensione}, \texttt{Categoria} e \texttt{Specifiche}.
-
-\subsubsection{Analisi Teorica dell'Overhead delle Guardie dei Cicli}
-Il refactoring ha preso di mira le violazioni critiche \texttt{creedengo-java:GCI69} (mancato caching delle guardie) e \texttt{creedengo-java:GCI3} (calcolo continuo della dimensione). Dal punto di vista della teoria dei compilatori e dell'architettura della Java Virtual Machine (JVM):
-\begin{itemize}
-    \item \textbf{Costo della Chiamata a Metodo:} Invocare istruzioni come \texttt{String.length()} o \texttt{List.size()} all'interno dell'espressione condizionale di controllo di un ciclo (es. \texttt{i < string.length()}) costringe la JVM ad effettuare un salto di subroutine ad ogni singola iterazione. Anche se la HotSpot JVM applica tecniche di \textit{inlining} per minimizzare lo stack frame, la presenza di una chiamata a metodo impedisce l'applicazione di ottimizzazioni avanzate da parte del compilatore Just-In-Time (JIT), come le \textit{loop unrolling} (srotolamento del ciclo) e la \textit{loop-invariant code motion} (spostamento del codice invariante fuori dal ciclo).
-    \item \textbf{Accesso alla Memoria ed Heap Polling:} A differenza dei tipi primitivi memorizzati nei registri della CPU o nello stack frame locale del thread, gli oggetti complessi (como \texttt{ArrayList} o \texttt{String}) risiedono nell'area Heap. Interrogare continuamente lo stato interno dell'oggetto costringe a ripetuti dereferenziamenti della memoria, riducendo l'efficienza della cache della CPU (L1/L2 data cache misses).
-    \item \textbf{Caching su Stack Frame:} Introducendo una variabile primitiva locale prima del ciclo (\texttt{int len = string.length()}), il valore limite viene copiato direttamente nella tabella delle variabili locali dello stack frame del metodo. La CPU può memorizzare questo valore in un registro fisico, riducendo a zero le chiamate a metodo e i dereferenziamenti.
-\end{itemize}
-
-\subsubsection{Caso di Studio: Mutazioni Dinamiche in \texttt{Carrello.java}}
-Un caso particolarmente sensibile dal punto di vista metodologico è rappresentato dal metodo \texttt{eliminaProdotto(Prodotto p)} all'interno di \texttt{Carrello.java}. Poiché il ciclo rimuove elementi dalla lista durante l'iterazione (\texttt{prodotti.remove(i)}), l'utilizzo di una dimensione statica e immutabile avrebbe provocato eccezioni di tipo \texttt{IndexOutOfBoundsException} (a causa del decremento effettivo della dimensione della lista sottostante). 
-La soluzione applicata combina il caching locale con l'adeguamento dinamico dello stato:
-\begin{lstlisting}[language=Java]
-int size = prodotti.size();
-for (int i = 0; i < size; i++) {
-    ...
-    if (e.getProdotto().getId() == p.getId()) {
-        prodotti.remove(i);
-        i--;
-        size--; // Decremento dinamico del limite locale
-    }
-}
-\end{lstlisting}
-Questo approccio preserva la complessità computazionale $O(N)$, rimuove le chiamate ridondanti a \texttt{prodotti.size()} e garantisce la sicurezza computazionale del ciclo.
-
-\subsubsection{Verifica di Regressione tramite Test di Unità}
-Per garantire che la semantica e la logica di business dell'applicazione rimanessero del tutto inalterate, al termine del refactoring di ciascun Model Bean è stata eseguita la rispettiva suite di test di unità JUnit 5. I risultati hanno confermato l'assenza di regressioni:
-\begin{itemize}
-    \item \texttt{CarrelloTest}: 23 test superati con successo (0 fallimenti).
-    \item \texttt{OrdineTest}: 16 test superati con successo (0 fallimenti).
-    \item \texttt{ProdottoTest}: 37 test superati con successo (0 fallimenti).
-    \item \texttt{RecensioneTest}: 28 test superati con successo (0 fallimenti).
-    \item \texttt{CategoriaTest}: 18 test superati con successo (0 fallimenti).
-    \item \texttt{SpecificheTest}: 12 test superati con successo (0 fallimenti).
-\end{itemize}
-
-\subsection{Rifattorizzazione dei Data Access Object (DAO): Proiezioni SQL Esplicite, Batching ed Allineamento del Testing}
-
-Per risolvere le violazioni critiche individuate da Creedengo e massimizzare l'efficienza ecologica a livello di persistenza, si è proceduto ad un refactoring profondo di tutti i Data Access Object del sistema: \texttt{OrdineDAO}, \texttt{ProdottoDAO}, \texttt{RecensioneDAO}, \texttt{UtenteDAO}, \texttt{CategoriaDAO} e \texttt{WishListDAO}. L'intervento si è focalizzato su due problematiche strutturali fondamentali: le interrogazioni indiscriminate con wildcard (\texttt{creedengo-java:GCI74}) e l'esecuzione di interrogazioni SQL all'interno di cicli iterativi (\texttt{creedengo-java:GCI72}).
-
-\subsubsection{Ottimizzazione delle Proiezioni SQL (SELECT * - GCI74)}
-L'uso di \texttt{SELECT *} rappresenta un'inefficienza strutturale ad alto costo energetico per tre motivi principali:
-\begin{itemize}
-    \item \textbf{Payload di Rete ed I/O:} L'estrazione di campi non necessari sovraccarica l'interfaccia di rete e costringe il DBMS (MySQL) a caricare da disco blocchi di memoria inutilizzati. Esplicitando la proiezione (es. proiettando solo i campi essenziali in ciascun DAO), si minimizza linearmente la quantità di byte trasmessi sul canale TCP/IP verso il servlet container (Tomcat).
-    \item \textbf{Allocazione nella JVM ed Eden Space:} Ogni valore letto dal ResultSet viene istanziato como oggetto Java nell'Eden Space della JVM. Riducendo il payload proiettato, si previene il rapido riempimento della memoria Heap, abbattendo la frequenza di esecuzione dei cicli di Garbage Collection (che provocano blocchi Stop-the-World e causano elevati consumi energetici della CPU).
-    \item \textbf{Accoppiamento e Resilienza dello Schema:} Nelle versioni originarie dei DAO, il mapping dei dati avveniva tramite indici fisici progressivi del ResultSet (es. \texttt{rs.getString(17)}). Questa pratica espone l'applicazione a rotture semantiche repentine ad ogni alterazione dello schema SQL. Il refactoring ha introdotto query con proiezioni esplicite e il mapping basato esclusivamente sui nomi simbolici delle colonne (es. \texttt{rs.getString("marca")}).
-\end{itemize}
-
-\subsubsection{Ottimizzazione delle Scritture tramite Batching (SQL in Loop - GCI72)}
-L'esecuzione di istruzioni \texttt{INSERT} o \texttt{UPDATE} all'interno di un ciclo iterativo (es. inserimento degli articoli di un ordine in composto o delle specifiche tecniche di un prodotto) costringe l'applicazione a un overhead insostenibile:
-\begin{itemize}
-    \item \textbf{Eliminazione dei Network Roundtrips:} Eseguire query sequenziali in un ciclo comporta un'alternanza continua di stati di calcolo e di attesa I/O (latenza di rete). L'introduzione di JDBC Batching (\texttt{addBatch()} e \texttt{executeBatch()}) raggruppa le scritture in un'unica transazione bulk. Questo abbatte il numero di messaggi scambiati tra Tomcat e il DBMS da $N$ ad $1$.
-    \item \textbf{Prevenzione della Starvation del Connection Pool:} Nella versione originale, un loop di grandi dimensioni manteneva bloccata la risorsa di connessione presa da \texttt{ConPool} per un tempo prolungato. Sotto carico elevato (es. scenario di Spike), questo innescava la saturazione del pool e timeout in coda. Il batching libera quasi istantaneamente la connessione, aumentando il throughput energetico globale del sistema.
-\end{itemize}
-
-\subsubsection{Correzione e Allineamento delle Suite di Test JUnit}
-Il passaggio da getters posizionali a getters nominativi e l'adozione delle API di batching hanno richiesto l'allineamento dei mock JUnit 5 all'interno dei test di unità per garantire l'assenza di regressioni semantiche:
-\begin{itemize}
-    \item \textbf{Named Mocking:} Nelle suite \texttt{OrdineDAOTest}, \texttt{ProdottoDAOTest}, \texttt{RecensioneDAOTest}, \texttt{UtenteDAOTest}, \texttt{CategoriaDAOTest} e \texttt{WishListDAOTest}, tutti gli stub dei ResultSet basati su indici numerici (es. \texttt{when(rs.getInt(1))}) sono stati convertiti in stub basati sulle etichette delle colonne (es. \texttt{when(rs.getInt("id\_utente"))}).
-    \item \textbf{Verification delle API Batch:} In \texttt{OrdineDAOTest.java}, i test di successo e di rollback sono stati aggiornati per verificare il corretto utilizzo dei metodi di batching (verificando \texttt{stmt.executeBatch()} e \texttt{stmt.addBatch()}) anziché dell'obsoleto \texttt{executeUpdate()}.
-\end{itemize}
-La completa validazione tramite test suite globale ha certificato il perfetto superamento di tutti i 532 test di unità del sistema, a riprova della sicurezza semantica delle ottimizzazioni apportate.
+Ogni singola classe dell'applicazione è stata rifattorizzata singolarmente, seguendo un approccio incrementale e rigoroso. Al termine delle modifiche di ciascuna classe (Bean o DAO), è stata eseguita tramite Maven e JUnit 5 la specifica test suite di \textit{unit testing} relativa al solo componente modificato, in modo da isolare e correggere eventuali errori semantici o disallineamenti dei mock (ad esempio per l'uso di query batch e nomi di colonne al posto degli indici). Una volta validato con successo il componente isolato, si è proceduto all'esecuzione di una fase di \textit{integration testing} in cui è stata lanciata l'intera suite globale composta da oltre 500 test. Questo processo di verifica a doppio passaggio è stato fatto per ogni singola classe, garantendo la totale assenza di regressioni e certificando che la logica di business dell'applicazione 2Chance rimanesse del tutto inalterata prima di validare le ottimizzazioni in termini energetici.
 
 \section{Validazione delle Ottimizzazioni}
 
 \subsection{Validazione dell'Analisi Statica (Creedengo)}
 
-In seguito alle attività di refactoring orientate alla sostenibilità energetica --- che hanno introdotto il caching delle guardie dei cicli, l'uso di proiezioni SQL esplicite ed il batching delle transazioni --- è stata eseguita una nuova sessione di scansione con SonarQube. I risultati aggiornati confermano che \textbf{tutte le 64 eco-vulnerabilità sono state risolte ed i relativi fault sono stati chiusi con successo (stato CLOSED/FIXED)}.
-
-La Tabella~\ref{tab:creedengo_comparison} mostra il confronto dettagliato tra la baseline iniziale ed il report finale post-refactoring.
-
-\begin{table}[h]
-    \centering
-    \renewcommand{\arraystretch}{1.5}
-    \begin{tabular}{|p{0.35\textwidth}|p{0.35\textwidth}|c|c|}
-        \hline
-        \textbf{Regola Creedengo} & \textbf{Descrizione del Fault} & \textbf{Baseline (Attivi)} & \textbf{Post-Refactoring (Attivi)} \\ \hline
-        \texttt{creedengo-java:GCI3} & Calcolo ridondante della dimensione della collezione nei cicli & 23 & 0 \\ \hline
-        \texttt{creedengo-java:GCI69} & Invocazione di metodi invarianti nella guardia del loop & 23 & 0 \\ \hline
-        \texttt{creedengo-java:GCI74} & Uso di query indiscriminate (\texttt{SELECT * FROM}) & 16 & 0 \\ \hline
-        \texttt{creedengo-java:GCI72} & Esecuzione di richieste SQL all'interno di cicli iterativi & 2 & 0 \\ \hline
-        \multicolumn{2}{|r|}{\textbf{Totale Eco-Vulnerabilità Attive}} & \textbf{64} & \textbf{0} \\ \hline
-    \end{tabular}
-    \caption{Confronto delle violazioni statiche Creedengo prima e dopo il refactoring.}
-    \label{tab:creedengo_comparison}
-\end{table}
-
-La completa risoluzione di questi fault garantisce che l'applicazione non presenti inefficienze strutturali latenti a livello di CPU-bound e I/O-bound, allineandosi con i requisiti di sostenibilità energetica previsti per il sistema 2Chance.
+In seguito alle attività di refactoring orientate alla sostenibilità energetica, è stata eseguita una nuova sessione di scansione con Creedengo su SonarQube. I risultati aggiornati confermano che \textbf{tutte le 64 eco-vulnerabilità sono state risolte ed i relativi fault sono stati chiusi con successo (stato CLOSED/FIXED)}. La completa risoluzione di questi fault garantisce che l'applicazione non presenti inefficienze strutturali latenti a livello di CPU-bound e I/O-bound, allineandosi con i requisiti di sostenibilità energetica previsti per il sistema 2Chance.
 
 \subsection{Risultati Sperimentali dei Benchmark Post-Refactoring}
 
