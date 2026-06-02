@@ -164,7 +164,7 @@ Si valuta la robustezza strutturale a fronte di un sovraccarico repentino superi
 
 \subsection{Automazione, Isolamento e Sincronizzazione dei Test (\texttt{backend\_energy\_consumption\_analysis.ps1})}
 
-Al fine di garantire l'affidabilità scientifica, la riproducibilità e l'assenza di bias sperimentali durante le sessioni di misurazione dinamica del consumo energetico, ho sviluppato uno script di orchestrazione in PowerShell (\texttt{backend_energy_consumption_analysis.ps1}). Dal punto di vista della metodologia di sperimentazione empirica, le scelte architetturali adottate in questo script rispondono a precisi requisiti teorici:
+Al fine di garantire l'affidabilità scientifica, la riproducibilità e l'assenza di bias sperimentali durante le sessioni di misurazione dinamica del consumo energetico, ho sviluppato uno script di orchestrazione in PowerShell (\texttt{backend\_energy\_consumption\_analysis.ps1}). Dal punto di vista della metodologia di sperimentazione empirica, le scelte architetturali adottate in questo script rispondono a precisi requisiti teorici:
 
 \subsubsection{Isolamento dell'Ambiente e Prevenzione del Software Aging}
 Durante l'esecuzione dei test di carico su macchine virtuali e container Java (JVM), ho riscontrato un progressivo degrado delle prestazioni dovuto al fenomeno del \textit{software aging}. Per mitigare questo fattore di distorsione e garantire la riproducibilità dei dati, ho configurato lo script di automazione affinché esegua il riavvio dei container Docker dell'applicazione e del database MySQL prima di ogni sessione sperimentale. Questa procedura consente di azzerare completamente lo stato della memoria Heap della JVM e di chiudere tempestivamente eventuali socket rimasti aperti o transazioni pendenti sul database, ripristinando così le condizioni ambientali ideali per l'esperimento successivo. Questo degrado è indotto da due fattori principali:
@@ -183,8 +183,8 @@ Per l'analisi del consumo energetico, ho configurato la telemetria affinché si 
 Inoltre, lo script organizza gli output separando nettamente le metriche prestazionali dalla telemetria energetica. Questa separazione logica semplifica la successiva elaborazione dei dati e isola l'analisi prestazionale classica dal calcolo dell'impatto energetico.
 
 \begin{itemize}
-\item \textbf{Metriche Prestazionali (file \texttt{.jtl}):} Generati direttamente da Apache JMeter, questi log registrano i dati specifici dell'esecuzione, tra cui latenze di rete, tempi di risposta, throughput e codici di stato HTTP. Vengono archiviati nella directory \texttt{jmeter_logs} per valutare la conformità con gli SLA.
-\item \textbf{Telemetria Energetica (file \texttt{.csv}):} Registrati dal processo wrapper EnergiBridge, questi dataset catturano il consumo di potenza (espresso in Watt) e l'utilizzo delle risorse hardware durante l'esatta durata del test. Vengono isolati nella cartella \texttt{energibridge_logs} per l'analisi di sostenibilità del software.
+\item \textbf{Metriche Prestazionali (file \texttt{.jtl}):} Generati direttamente da Apache JMeter, questi log registrano i dati specifici dell'esecuzione, tra cui latenze di rete, tempi di risposta, throughput e codici di stato HTTP. Vengono archiviati nella directory \texttt{jmeter\_logs} per valutare la conformità con gli SLA.
+\item \textbf{Telemetria Energetica (file \texttt{.csv}):} Registrati dal processo wrapper EnergiBridge, questi dataset catturano il consumo di potenza (espresso in Watt) e l'utilizzo delle risorse hardware durante l'esatta durata del test. Vengono isolati nella cartella \texttt{energibridge\_logs} per l'analisi di sostenibilità del software.
 \end{itemize}
 
 \subsection{Analisi Energetica Post-Elaborazione ed Estrazione delle Metriche (\texttt{energibridge\_metrics\_extractor.py})}
@@ -198,7 +198,7 @@ Per la misurazione dei consumi energetici ho riscontrato che i sensori fisici ba
 E_{tot} = E_{end} - E_{start}
 \end{equation}
 
-la stima complessiva risulterebbe pesantemente sovrastimata o del tutto falsata. Per ovviare a questo problema e ripulire i dati, ho implementato nel mio script un filtro di soglia tarato sulla potenza fisica teorica massima del processore su cui ho eseguito i test, un AMD Ryzen AI 9 HX 370. La logica del filtro analizza ogni coppia di record consecutivi k−1 e k, calcolando l'intervallo temporale in secondi:
+la stima complessiva risulterebbe pesantemente sovrastimata o del tutto falsata. Per ovviare a questo problema e ripulire i dati, ho implementato nel mio script un filtro di soglia tarato sulla potenza fisica teorica massima del processore su cui ho eseguito i test, un AMD Ryzen AI 9 HX 370. La logica del filtro analizza ogni coppia di record consecutivi $k-1$ e $k$, calcolando l'intervallo temporale in secondi:
 
 \begin{equation}
 \Delta t = \frac{T_k - T_{k-1}}{1000}
@@ -275,13 +275,13 @@ Dopo aver configurato l'ambiente di analisi statica ed eseguito la scansione ini
 
 Nell'ecosistema dell'architettura software di 2Chance, la revisione del codice ha evidenziato come il livello di accesso ai dati (Data Access Object o DAO) rappresenti il principale \textit{bottleneck} dal punto di vista del consumo energetico. A differenza di layer architetturali come i Controller o i Service, i quali si limitano al routing delle richieste HTTP, alla validazione dell'input e all'orchestrazione di logiche di business prettamente in-memory, i DAO si fanno carico della comunicazione inter-processo con il database relazionale. Il consumo energetico asimmetrico dei DAO rispetto ad altri layer deriva da molteplici fattori strutturali:
 \begin{itemize}
-\item \paragraph{L'Anti-Pattern "SELECT *" e il Trasferimento Dati Incontrollato}
+\item \textbf{L'Anti-Pattern ``SELECT *'' e il Trasferimento Dati Incontrollato:}
 In tutti i moduli di persistenza, le query di recupero facevano un uso sistematico dell'operatore \texttt{SELECT *}. Dal punto di vista della sostenibilità, questo approccio costringeva il database engine a eseguire operazioni di I/O su disco per estrarre l'interezza dei campi, compresi quelli non necessari o molto pesanti (come le stringhe \textit{Base64} delle immagini), per poi serializzarli sulla rete. Il refactoring ha introdotto proiezioni di colonne esplicite, riducendo drasticamente il payload di rete trasferito e limitando l'allocazione di byte nella memoria Heap della JVM, alleggerendo di conseguenza il carico sul Garbage Collector.
 
-\item \paragraph{Assenza di Batch Processing nelle Scritture Iterative}
+\item \textbf{Assenza di Batch Processing nelle Scritture Iterative:}
 Le routine di inserimento multiplo, come \texttt{ProdottoDAO.aggiungiSpecifiche} e \texttt{OrdineDAO.addOrdine}, implementavano nella baseline una sequenza di \texttt{INSERT} all'interno di cicli iterativi, invocando \texttt{executeUpdate()} per ogni singolo record. Questo pattern comportava un overhead catastrofico causato dai continui \textit{round-trip} di rete e dalla negoziazione di transazioni isolate per ogni istruzione. Questa inefficienza è stata risolta adottando il costrutto \texttt{executeBatch()} di JDBC, supportato da una gestione manuale della transazione (\texttt{setAutoCommit(false)}). L'accorpamento delle scritture ha minimizzato il tempo di acquisizione delle connessioni, consentendo alla CPU di tornare rapidamente in stato di \textit{idle}.
 
-\item \paragraph{Risoluzione del Problema N+1 (Moltiplicazione delle Query)}
+\item \textbf{Risoluzione del Problema N+1 (Moltiplicazione delle Query):}
 Nella versione non ottimizzata, il metodo \texttt{OrdineDAO.getOrdiniByUtente} era affetto da una severa anomalia N+1. Nel corso dell'elaborazione del \texttt{ResultSet} principale degli ordini, il codice invocava ripetutamente un metodo secondario (\texttt{getProdottoOrdine(ordine)}) per estrarre gli articoli associati a ciascun acquisto. Se un utente possedeva $N$ ordini, il sistema eseguiva $1 + N$ query sincrone verso il database, mantenendo impegnati i thread applicativi in attesa bloccante. Questo spreco computazionale è stato risolto consolidando l'estrazione in un'unica query aggregata tramite \texttt{LEFT JOIN}, delegando l'onere dell'assemblaggio delle entità (\texttt{Ordine} e \texttt{Prodotto}) a una \texttt{LinkedHashMap} in memoria, abbattendo esponenzialmente l'overhead di rete e i picchi di consumo.
 \end{itemize}
 
@@ -516,7 +516,7 @@ I dati globali sulle prestazioni e sul consumo energetico complessivo del backen
         CPU Usage (Picco) & 99,62 & 96,40 & -3,23\% & \% \\ \hline
         Memoria RAM Usata (Media) & 26,32 & 25,47 & -3,23\% & Gigabyte (GB) \\ \hline
         Memoria RAM Usata (Picco) & 27,21 & 26,32 & -3,27\% & Gigabyte (GB) \\ \hline
-    \\end{tabular}
+    \end{tabular}
     }
     \caption{Confronto energetico e di utilizzo delle risorse hardware globale nei test JMeter.}
     \label{tab:jmeter_comparison_global}

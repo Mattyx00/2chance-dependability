@@ -1,12 +1,12 @@
 \chapter{Valutazione e Ottimizzazione Ambientale del Livello Front-End}
 
-L'analisi del Front-End del sistema 2Chance richiede una calibrazione concettuale significativa rispetto ad altre architetture web moderne. Mentre i framework Single Page Application (SPA) contemporanei come React scaricano la quasi totalità del carico computazionale di rendering del Document Object Model (DOM) sul browser client (sfruttando ed esaurendo direttamente la batteria dello smartphone o del laptop dell'utente finale), l'architettura di 2Chance è ancorata al Server-Side Rendering tramite JavaServer Pages (JSP).
+L'analisi del Front-End del sistema 2Chance richiede una calibrazione concettuale significativa rispetto ad altre architetture web moderne. Mentre i framework Single Page Application (SPA) contemporanei, come React utilizzato nel progetto di riferimento Rently, scaricano la quasi totalità del carico computazionale di rendering del Document Object Model (DOM) sul browser client (sfruttando ed esaurendo direttamente la batteria dello smartphone o del laptop dell'utente finale), l'architettura di 2Chance è ancorata al Server-Side Rendering tramite JavaServer Pages (JSP).
 
-Nel modello adottato da 2Chance, è il container servlet Tomcat a processare la logica visiva, interpolare i dati estratti dai Model Beans e assemblare iterativamente le stringhe HTML prima di trasmetterle attraverso la rete. Questa differenza architetturale non annulla la questione ecologica, ma la trasla nello spazio. L'elaborazione lato server sposta il consumo energetico verso i data center, che teoricamente potrebbero essere alimentati da fonti rinnovabili, ma produce payload di testo HTML completi che risultano significativamente più pesanti, in termini di byte, rispetto alle agili risposte in formato JSON consumate dalle API REST delle architetture React. Il trasferimento di questi byte aggiuntivi attraverso l'infrastruttura di rete globale (router, switch, ponti radio, reti cellulari) genera un impatto ecologico massiccio e spesso sottostimato.
+Nel modello adottato da 2Chance, è il container servlet Tomcat a processare la logica visiva, interpolare i dati estratti dai Model Beans e assemblare iterativamente le stringhe HTML prima di trasmetterle attraverso la rete. Questa differenza architetturale non annulla la questione ecologica, ma la trasla nello spazio. L'elaborazione lato server sposta il consumo energetico verso i data center (che teoricamente potrebbero essere alimentati da fonti rinnovabili), ma produce payload di testo HTML completi che risultano significativamente più pesanti, in termini di byte, rispetto alle agili risposte in formato JSON consumate dalle API REST delle architetture React. Il trasferimento di questi byte aggiuntivi attraverso l'infrastruttura di rete globale (router, switch, ponti radio, reti cellulari) genera un impatto ecologico massiccio e spesso sottostimato.
 
 \section{Analisi Ambientale del Baseline (GreenIT ed EcoIndex)}
 
-L'analisi dell'efficienza ecologica del front-end di 2Chance è stata condotta sulla landing page dell'applicazione tramite i tool \textbf{GreenIT} ed \textbf{EcoIndex}. Entrambi sono basati sull'algoritmo \textbf{EcoIndex} che quantifica l'impatto ambientale di una pagina web basandosi su tre parametri fisici fondamentali del Document Object Model (DOM) e della rete:
+L'analisi dell'efficienza ecologica del front-end di 2Chance è stata condotta sulla landing page dell'applicazione tramite il tool di audit \textbf{GreenIT / EcoIndex}. L'algoritmo quantifica l'impatto ambientale di una pagina web basandosi su tre parametri fisici fondamentali del Document Object Model (DOM) e della rete:
 \begin{enumerate}
     \item \textbf{Numero di Richieste HTTP}: Definisce l'overhead di comunicazione di rete (round-trip time, handshake TCP, negoziazioni SSL/TLS).
     \item \textbf{Dimensione Totale della Pagina (in KB)}: Determina la quantità fisica di dati che deve essere instradata attraverso l'infrastruttura di rete globale, consumando energia nei router, ponti radio e switch.
@@ -30,15 +30,31 @@ I risultati dell'analisi di baseline hanno rivelato i seguenti parametri globali
     \item \textbf{Dimensione DOM}: 101 nodi
 \end{itemize}
 
-Nonostante l'eccellente punteggio di partenza dovuto principalmente alla semplicità strutturale del DOM e alla mancanza di framework Javascript pesanti lato client, l'analisi di dettaglio ha rilevato inefficienze ecologiche riconducibili a quattro \textbf{Best Practice} non rispettate: \textbf{"Don't resize image in browser"}, \textbf{"Do not download unnecessary image"}, la mancanza di un foglio di stile di stampa (\textbf{"Provide print stylesheet"}) e la mancanza di direttive di caching (\textbf{"Add expires or cache-control headers"}).
+Nonostante l'eccellente punteggio di partenza (dovuto principalmente alla semplicità strutturale del DOM e alla mancanza di framework Javascript pesanti lato client), l'analisi di dettaglio ha rilevato inefficienze ecologiche riconducibili a quattro \textbf{Best Practice} non rispettate: \textbf{"Don't resize image in browser"}, \textbf{"Do not download unnecessary image"}, la mancanza di un foglio di stile di stampa (\textbf{"Provide print stylesheet"}) e la mancanza di direttive di caching (\textbf{"Add expires or cache-control headers"}).
 
 \subsection{Dettaglio dell'Inefficienza: Ridimensionamento Immagini nel Browser}
 
-Il report di GreenIT ha evidenziato che 9 immagini venivano caricate ad altissima risoluzione per poi essere drasticamente ridimensionate dal browser client tramite attributi CSS o HTML.
+Il report di GreenIT ha evidenziato che 9 immagini venivano caricate ad altissima risoluzione per poi essere drasticamente ridimensionate dal browser client tramite attributi CSS o HTML:
+\begin{itemize}
+    \item \textbf{logo.png}: Ridimensionata da 843x596 a 82x58 pixel.
+    \item \textbf{carosello1.webp}: Ridimensionata da 819x448 a 710x388 pixel.
+    \item \textbf{ipad8.jpg}: Ridimensionata da 2560x2560 a 49x49 pixel.
+    \item \textbf{mackbookpro16.jpg}: Ridimensionata da 1200x800 a 73x49 pixel.
+    \item \textbf{iphone11.jpg}: Ridimensionata da 900x900 a 49x49 pixel.
+    \item \textbf{iphone13promax.webp}: Ridimensionata da 536x402 a 65x49 pixel.
+    \item \textbf{macbook-pro-2019.jpg}: Ridimensionata da 381x492 a 38x49 pixel.
+    \item \textbf{ipadmini6.avif}: Ridimensionata da 828x828 a 49x49 pixel.
+    \item \textbf{iphone13.avif}: Ridimensionata da 828x828 a 49x49 pixel.
+\end{itemize}
 
 \subsection{Dettaglio dell'Inefficienza: Download di Risorse Nascoste (Unnecessary Downloads)}
 
-Il report di GreenIT ha individuato il pre-caricamento di immagini carosello che, a causa di regole di stile CSS, risultavano nascoste e quindi non visualizzate all'utente al momento del caricamento iniziale. Il parser HTML del browser pre-carica istantaneamente ogni tag \texttt{<img>} provvisto di attributo \texttt{src}, indipendentemente dalle proprietà CSS di visualizzazione associate (come \texttt{display: none}). Questo comporta un inutile spreco di banda per risorse che l'utente potrebbe non visualizzare mai se abbandona la pagina prima di interagire con il carosello.
+Il report di GreenIT ha individuato il pre-caricamento di immagini carosello che, a causa di regole di stile CSS, risultavano nascoste e quindi non visualizzate all'utente al momento del caricamento iniziale:
+\begin{itemize}
+    \item \textbf{carosello2.webp} (Dimensione: 710x388 pixel, nascosto via CSS).
+    \item \textbf{carosello3.webp} (Dimensione: 710x388 pixel, nascosto via CSS).
+\end{itemize}
+Il parser HTML del browser pre-carica istantaneamente ogni tag \texttt{<img>} provvisto di attributo \texttt{src}, indipendentemente dalle proprietà CSS di visualizzazione associate (come \texttt{display: none}). Questo comporta un inutile spreco di banda per risorse che l'utente potrebbe non visualizzare mai se abbandona la pagina prima di interagire con il carosello.
 
 \subsection{Dettaglio dell'Inefficienza: Assenza di un Foglio di Stile di Stampa (Print Stylesheet)}
 
@@ -376,3 +392,5 @@ Durante le fasi di audit con lo strumento GreenIT, si è osservata una leggera f
     \item Nelle misurazioni successive (Stage 4 e 5), a causa dell'introduzione del caricamento incrociato cross-origin (necessario per eliminare i cookie di sessione dagli asset statici), il browser ha dovuto rieseguire un caricamento completo (clean cache) di tutte le 21 risorse (inclusi i font, i fogli di stampa dedicati e le dipendenze CDN), portando la dimensione misurata a 211 KB.
 \end{itemize}
 Nonostante il punteggio matematico EcoIndex mostri una lieve flessione a causa del volume totale di asset attivamente dichiarati e scansionati a cache vuota, l'efficienza ecologica reale del sistema è salita al massimo livello: le risorse testuali sono compresse al 100\%, gli asset statici sono interamente memorizzati nella cache locale dopo la prima richiesta (0 byte trasferiti successivamente), i cookie sono azzerati per le risorse pubbliche e non si verificano più costosi ridimensionamenti grafici lato client o errori di instradamento HTTP 404/500.
+
+
