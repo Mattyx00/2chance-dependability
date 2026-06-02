@@ -185,30 +185,40 @@ Inoltre, lo script organizza gli output separando nettamente le metriche prestaz
 \begin{itemize}
 \item \textbf{Metriche Prestazionali (file \texttt{.jtl}):} Generati direttamente da Apache JMeter, questi log registrano i dati specifici dell'esecuzione, tra cui latenze di rete, tempi di risposta, throughput e codici di stato HTTP. Vengono archiviati nella directory \texttt{jmeter_logs} per valutare la conformità con gli SLA.
 \item \textbf{Telemetria Energetica (file \texttt{.csv}):} Registrati dal processo wrapper EnergiBridge, questi dataset catturano il consumo di potenza (espresso in Watt) e l'utilizzo delle risorse hardware durante l'esatta durata del test. Vengono isolati nella cartella \texttt{energibridge_logs} per l'analisi di sostenibilità del software.
-\item \textbf{Log di Esecuzione Standard (file \texttt{.log}):} File di testo contenenti l'output di runtime, gli errori di sistema e le informazioni di debug provenienti sia dal container dell'applicazione sia dal database MySQL, garantendo la completa tracciabilità dell'esperimento.
 \end{itemize}
 
 \subsection{Analisi Energetica Post-Elaborazione ed Estrazione delle Metriche (\texttt{energibridge\_metrics\_extractor.py})}
 
-Al fine di tradurre i dati grezzi raccolti da EnergiBridge e Apache JMeter in informazioni utili per l'ingegneria del software sostenibile, è stata sviluppata una pipeline di post-elaborazione in Python (\texttt{energibridge\_metrics\_extractor.py}). Lo script si occupa di correlare le misurazioni fisiche del consumo energetico dell'hardware (file CSV di EnergiBridge) con le richieste HTTP intercettate dall'applicazione (file JTL di JMeter), consentendo di valutare sia l'efficienza energetica globale che quella specifica di ciascuna \textit{servlet}.
-
-\subsubsection{Allineamento Temporale e Correlazione dei Log}
-L'orchestrazione dei test descritta in precedenza genera tracciati con marcatura temporale sincronizzata (\textit{timestamp}). Lo script Python riceve in input il percorso del file CSV di EnergiBridge, estrae il timestamp dal nome del file (formato \texttt{YYYY\_MM\_DD\_hh\_mm\_ss}) e ricerca nella directory \texttt{jmeter\_logs} il file JTL corrispondente. 
-
-Qualora alcune righe del file CSV presentino marcature temporali mancanti o incomplete, lo script esegue un allineamento predittivo interpolando i record partendo dal timestamp iniziale (del JTL o del primo record valido di EnergiBridge) e incrementandolo del tasso di campionamento nominale (200~ms).
+Al fine di tradurre i dati grezzi raccolti da EnergiBridge e Apache JMeter in informazioni utili per l'ingegneria del software sostenibile, è stata sviluppata una pipeline di post-elaborazione in Python (\texttt{energibridge\_metrics\_extractor.py}). Lo script si occupa di correlare le misurazioni fisiche del consumo energetico dell'hardware (file CSV di EnergiBridge) con le richieste HTTP intercettate dall'applicazione (file JTL di JMeter), consentendo di valutare sia l'efficienza energetica globale che quella specifica di ciascuna \textit{servlet}. L'orchestrazione dei test descritta in precedenza genera tracciati con marcatura temporale sincronizzata (\textit{timestamp}). Lo script Python riceve in input il percorso del file CSV di EnergiBridge, estrae il timestamp dal nome del file (formato \texttt{YYYY\_MM\_DD\_hh\_mm\_ss}) e ricerca nella directory \texttt{jmeter\_logs} il file JTL corrispondente. 
 
 \subsubsection{Filtrazione del Rumore dei Sensori RAPL}
-I sensori fisici basati su Intel/AMD RAPL (\textit{Running Average Power Limit}) o registri equivalenti possono essere soggetti a rumore hardware, caratterizzato da oscillazioni fittizie e repentine nei valori assoluti di energia (ad esempio, salti istantanei da decine a migliaia di Joule). Se calcolato tramite semplice differenza tra l'ultimo e il primo valore registrato ($E_{end} - E_{start}$), il consumo totale risulterebbe pesantemente sovrastimato o falsato.
+Per la misurazione dei consumi energetici ho riscontrato che i sensori fisici basati su Intel/AMD RAPL (\textit{Running Average Power Limit}) presentano un forte rumore hardware. Questo fenomeno si manifesta con oscillazioni fittizie e picchi repentini nei valori assoluti di energia, i quali passano istantaneamente da poche decine a migliaia di Joule. Di conseguenza, se calcolassi il consumo totale tramite una semplice differenza tra il valore finale e quello iniziale, ovvero:
 
-Per risolvere questo problema, lo script implementa un filtro di soglia basato sulla potenza fisica teorica massima del processore (AMD Ryzen AI 9 HX 370). Per ogni coppia di record consecutivi $k-1$ e $k$, viene calcolato l'intervallo temporale $\Delta t = (T_k - T_{k-1})/1000$ (in secondi) e la differenza di energia letta dai sensori $\Delta E = E_k - E_{k-1}$. La differenza viene considerata valida solo se rispetta le seguenti restrizioni fisiche, derivate dalle specifiche dell'architettura (cTDP Max di 54W):
+\begin{equation}
+E_{tot} = E_{end} - E_{start}
+\end{equation}
+
+la stima complessiva risulterebbe pesantemente sovrastimata o del tutto falsata. Per ovviare a questo problema e ripulire i dati, ho implementato nel mio script un filtro di soglia tarato sulla potenza fisica teorica massima del processore su cui ho eseguito i test, un AMD Ryzen AI 9 HX 370. La logica del filtro analizza ogni coppia di record consecutivi k−1 e k, calcolando l'intervallo temporale in secondi:
+
+\begin{equation}
+\Delta t = \frac{T_k - T_{k-1}}{1000}
+\end{equation}
+
+e la rispettiva variazione di energia:
+
+\begin{equation}
+\Delta E = E_k - E_{k-1}
+\end{equation}
+
+Nello specifico, la differenza viene considerata valida solo se rispetta le seguenti restrizioni, che ho derivato direttamente dalle specifiche tecniche dell'architettura AMD (cTDP Max pari a 54~W):
+
 \begin{itemize}
-    \item \textbf{Package CPU Energy:} $0 \le \Delta E_{CPU} \le 55.0 \times \Delta t$. Una variazione superiore a 55~W per frazione di secondo (valore del cTDP Max più 1W di tolleranza) viene scartata (impostata a 0) in quanto fisicamente impossibile per l'intero SoC.
-    \item \textbf{Core CPU Energy (PPO):} $0 \le \Delta E_{Core} \le 45.0 \times \Delta t$. Variazioni superiori a 45~W sui singoli core elaborativi (stimato all'80\% del budget energetico del package) vengono analogamente filtrate.
+\item \textbf{Package CPU Energy:} $0 \le \Delta E_{CPU} \le 55.0 \times \Delta t$. Una variazione di energia che sottintende una potenza superiore a 55~W (corrispondente al cTDP Max con l'aggiunta di 1~W di tolleranza) viene considerata un picco spurio e azzerata, poiché fisicamente impossibile per l'intero SoC.
+\item \textbf{Core CPU Energy (PP0):} $0 \le \Delta E_{Core} \le 45.0 \times \Delta t$. Ho applicato una limitazione analoga per i soli core elaborativi, fissando la soglia a 45~W, valore che ho stimato come l'80% del budget energetico complessivo del package.
 \end{itemize}
-Questo approccio consente di accumulare solo i contributi reali di consumo energetico, neutralizzando i picchi spuri e rendendo le misurazioni stabili e confrontabili.
 
 \subsubsection{Calcolo delle Metriche Globali di Sistema}
-Le metriche di sostenibilità globali sono calcolate tramite sommatoria dei delta filtrati per l'intero set di record $M$:
+Le metriche di utilizzo CPU, frequenza e memoria RAM usata vengono aggregate calcolandone il valore medio e il picco massimo registrato durante la sessione. Le metriche di sostenibilità globali sono calcolate tramite sommatoria dei delta filtrati per l'intero set di record $M$:
 \begin{itemize}
     \item \textbf{Durata Totale dell'Analisi ($T_{global}$):}
     \begin{equation}
@@ -227,39 +237,6 @@ Le metriche di sostenibilità globali sono calcolate tramite sommatoria dei delt
         P_{avg} = \frac{E_{CPU}}{T_{global}}
     \end{equation}
 \end{itemize}
-Le metriche di utilizzo CPU, frequenza e memoria RAM usata vengono aggregate calcolandone il valore medio e il picco massimo registrato durante la sessione.
-
-\subsubsection{Calcolo delle Metriche per Singola Servlet (Algoritmo Sweep-Line)}
-Assegnare il consumo hardware complessivo alle singole componenti software rappresenta una sfida teorica, in quanto molteplici richieste HTTP possono essere elaborate in parallelo dai thread di Tomcat. Lo script risolve questo problema applicando un algoritmo di attribuzione proporzionale a grana fine basato su time-slice, ottimizzato tramite una tecnica \textit{sweep-line}.
-
-Per ogni time-slice delimitato da due campionamenti di EnergiBridge $[T_{k-1}, T_k]$:
-\begin{enumerate}
-    \item Viene identificato l'insieme delle richieste HTTP attive in quell'intervallo temporale. Una richiesta $i$, definita dal suo intervallo $[start_i, end_i]$, è considerata attiva nella slice se:
-    \begin{equation}
-        start_i \le T_k \quad \land \quad end_i \ge T_{k-1}
-    \end{equation}
-    \item Si calcola la concorrenza locale $N_{active}$, ovvero il numero di richieste simultanee che condividono la risorsa elaborativa nella slice.
-    \item Se $N_{active} > 0$, l'energia consumata dalla CPU durante la slice ($\Delta E_{CPU, k}$ e $\Delta E_{Core, k}$) viene suddivisa equamente tra le richieste attive (\textit{Fair Sharing Rule}):
-    \begin{equation}
-        \text{Share}_{CPU} = \frac{\Delta E_{CPU, k}}{N_{active}}, \quad \text{Share}_{Core} = \frac{\Delta E_{Core, k}}{N_{active}}
-    \end{equation}
-    L'energia calcolata viene accreditata alle rispettive \textit{servlet} di appartenenza.
-    \item Per ogni servlet attiva nella slice, vengono memorizzati i campioni istantanei di utilizzo della CPU, frequenza di clock e allocazione della memoria RAM, e viene incrementata la durata cumulativa di attività del servlet.
-\end{enumerate}
-
-L'algoritmo sweep-line mantiene un pool attivo di richieste scorrendo linearmente i record di EnergiBridge. Avendo ordinato preventivamente le richieste JMeter per tempo di inizio, la complessità computazionale è lineare $O(N + M)$ (dove $N$ è il numero totale di richieste HTTP e $M$ il numero di campioni energetici), evitando scansioni quadratiche ridondanti.
-
-Al termine del ciclo, per ogni servlet $s$ vengono estratte le seguenti metriche di performance e sostenibilità:
-\begin{itemize}
-    \item \textbf{Requests:} Numero di invocazioni totali della servlet.
-    \item \textbf{Avg Resp Time:} Tempo medio di risposta calcolato direttamente dal log prestazionale JTL.
-    \item \textbf{CPU/Core Energy:} Somma degli share energetici attribuiti alla servlet nei diversi time-slice.
-    \item \textbf{Avg Power:} Calcolata dividendo l'energia CPU attribuita per il tempo totale in cui la servlet è stata attiva.
-    \item \textbf{Avg/Peak CPU e RAM:} Statistiche descrittive (medie e picchi) calcolate unicamente sulle slice in cui la servlet era in esecuzione.
-\end{itemize}
-
-\subsubsection{Esportazione Multicanale}
-Infine, lo script genera due report separati in formato testuale: un report globale focalizzato sull'infrastruttura energetica complessiva e un report di unità strutturato in tabella per l'analisi comparativa delle singole servlet. Per garantire che i log fisici siano facilmente analizzabili da tool di monitoraggio automatici, lo script rimuove tutte le sequenze di escape ANSI (utilizzate per colorare l'output su console) prima di scrivere i file nelle directory \texttt{performance\_system\_testing\_logs} e \texttt{performance\_unit\_testing\_logs}.
 
 \subsection{Classificazione Energetica dei Componenti e Target di Ottimizzazione}
 
