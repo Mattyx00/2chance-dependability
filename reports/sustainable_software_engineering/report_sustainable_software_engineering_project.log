@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2026.1.3)  2 JUN 2026 07:14
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2026.1.3)  2 JUN 2026 11:03
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -725,10 +725,7 @@ Package csquotes Info: ... none found.
 (./report_sustainable_software_engineering_project.aux
 (./chapters/introduction_and_system_baseline.aux)
 (./chapters/software_architectural_overview.aux)
-(./chapters/backend_energy_sustainability.aux)
-(./chapters/frontend_sustainability.aux)
-(./chapters/open_source_license_monitoring.aux)
-(./chapters/trade_off_analysis_and_conclusions.aux))
+(./chapters/backend_energy_sustainability.aux))
 \openout1 = `report_sustainable_software_engineering_project.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 44.
@@ -824,32 +821,19 @@ Package hyperref Info: Option `pageanchor' set `false' on input line 47.
 /Program Files/texlive/2025/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc
 }]
 Package hyperref Info: Option `pageanchor' set `true' on input line 49.
- (./report_sustainable_software_engineering_project.toc
-Overfull \hbox (135.25337pt too wide) in paragraph at lines 27--27
- [][] [][][]\T1/cmr/m/n/12 Automazione, Iso-la-mento e Sin-croniz-zazione dei T
-est (\T1/cmtt/m/n/12 backend_energy_consumption_analysis.ps1\T1/cmr/m/n/12 )[][
-] [][]  
- []
-
-
-Overfull \hbox (164.9017pt too wide) in paragraph at lines 33--33
- [][] [][][]\T1/cmr/m/n/12 Analisi En-er-get-ica Post-Elaborazione ed Es-trazio
-ne delle Met-riche (\T1/cmtt/m/n/12 energibridge_metrics_extractor.py\T1/cmr/m/
-n/12 )[][] [][]  
- []
-
-[1
-
-] [2])
+ (./report_sustainable_software_engineering_project.toc)
 \tf@toc=\write5
 \openout5 = `report_sustainable_software_engineering_project.toc'.
 
- [3]
+ [1
+
+]
 \openout2 = `chapters/introduction_and_system_baseline.aux'.
 
- (./chapters/introduction_and_system_baseline.tex
+
+(./chapters/introduction_and_system_baseline.tex
 Chapter 1.
-) [4
+) [2
 
 
 ]
@@ -867,7 +851,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 16--17
 
  []
 
-[5
+[3
 
 
 
@@ -887,7 +871,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 46--47
 
  []
 
-[6]) [7]
+[4]) [5]
 \openout2 = `chapters/backend_energy_sustainability.aux'.
 
  (./chapters/backend_energy_sustainability.tex
@@ -898,7 +882,7 @@ Overfull \hbox (14.07468pt too wide) in paragraph at lines 11--12
  cre-ato la di-rec-tory di sis-tema \T1/cmtt/m/n/12 C:\Program
  []
 
-[8
+[6
 
 
 
@@ -958,8 +942,8 @@ Overfull \hbox (13.41364pt too wide) in paragraph at lines 41--51
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[9{c:/Program Files/texlive/2025/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t
-s1.enc}] [10]
+[7{c:/Program Files/texlive/2025/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t
+s1.enc}] [8]
 Overfull \hbox (16.09477pt too wide) in paragraph at lines 98--99
 []\T1/cmr/m/n/12 Esplora il cat-a-l-ogo vi-su-al-iz-zando i prodotti per cat-e-
 go-ria (\T1/cmtt/m/n/12 /ProdottiPerCategoriaServlet\T1/cmr/m/n/12 ). 
@@ -977,7 +961,7 @@ Overfull \hbox (8.18141pt too wide) in paragraph at lines 116--117
 uzione dell'applicazione nell'infrastruttura
  []
 
-[11] [12]
+[9] [10]
 LaTeX Font Info:    Font shape `T1/cmtt/bx/n' in size <14.4> not available
 (Font)              Font shape `T1/cmtt/m/n' tried instead on input line 165.
 
@@ -1021,7 +1005,7 @@ untodivistadellametodologiadisperimentazioneempirica; lesceltearchitetturaliado
 ttateinquestoscriptrispondonoaprecisirequisititeorici \OT1/cmr/m/n/12 :$ 
  []
 
-[13]
+[11]
 Overfull \hbox (34.87653pt too wide) in paragraph at lines 170--171
 \T1/cmtt/m/n/12 Durante l'esecuzione dei test di carico su macchine virtuali e 
 container Java (JVM),
@@ -1240,7 +1224,7 @@ Overfull \hbox (41.05002pt too wide) in paragraph at lines 181--182
 fattore di distorsione
  []
 
-[14]
+[12]
 Overfull \hbox (64.84833pt too wide) in paragraph at lines 183--184
 []\T1/cmtt/m/n/12 Inoltre, lo script organizza gli output separando nettamente 
 le metriche prestazionali
@@ -1537,7 +1521,7 @@ Overfull \hbox (53.397pt too wide) in paragraph at lines 201--202
 lo temporale in secondi: 
  []
 
-[15]
+[13]
 Overfull \hbox (52.50134pt too wide) in paragraph at lines 213--214
 []\T1/cmtt/m/n/12 Nello specifico, la differenza viene considerata valida solo 
 se rispetta le seguenti
@@ -1594,1109 +1578,1673 @@ delta filtrati per
  []
 
 
-Overfull \hbox (59.5705pt too wide) in paragraph at lines 243--244
+Overfull \hbox (34.87653pt too wide) in paragraph at lines 243--244
+\T1/cmtt/m/n/12 Per l'Analisi Statica dell'Eco-Design basata su regole (\T1/cmt
+t/m/it/12 Rule-Based Eco-Design Static
+ []
+
+
+Overfull \hbox (18.43887pt too wide) in paragraph at lines 243--244
+\T1/cmtt/m/it/12 Analysis\T1/cmtt/m/n/12 ), è necessario integrare il codice so
+rgente locale, un'istanza attiva di
+ []
+
+
+Overfull \hbox (12.26538pt too wide) in paragraph at lines 243--244
+\T1/cmtt/m/n/12 SonarQube e il plugin Creedengo. Poiché Creedengo (evoluzione d
+i \T1/cmtt/m/it/12 ecoCode\T1/cmtt/m/n/12 ) opera
+ []
+
+
+Overfull \hbox (10.18256pt too wide) in paragraph at lines 243--244
+\T1/cmtt/m/n/12 come plugin per SonarQube, esso si integra direttamente nella p
+ipeline di Static
+ []
+
+
+Overfull \hbox (47.22351pt too wide) in paragraph at lines 243--244
+\T1/cmtt/m/n/12 Application Security Testing (SAST) esistente. Dato che il prog
+etto è containerizzato
+ []
+
+
+Overfull \hbox (47.22351pt too wide) in paragraph at lines 243--244
+\T1/cmtt/m/n/12 tramite Docker, l'esecuzione locale di SonarQube in parallelo a
+ll'applicazione risulta
+ []
+
+
+Overfull \hbox (15.46039pt too wide) in paragraph at lines 245--246
+[]\T1/cmtt/m/n/12 Di seguito viene descritta la guida pratica passo-passo per l
+a configurazione,
+ []
+
+[14]
+Overfull \hbox (53.397pt too wide) in paragraph at lines 249--250
+\T1/cmtt/m/n/12 Prima di procedere alla scansione del codice, è fondamentale as
+sicurarsi che l'ambiente
+ []
+
+
+Overfull \hbox (59.5705pt too wide) in paragraph at lines 249--250
+\T1/cmtt/m/n/12 SonarQube disponga del ruleset Java di Creedengo. I passaggi pe
+r predisporre l'ambiente
+ []
+
+(c:/Program Files/texlive/2025/texmf-dist/tex/latex/listings/lstlang1.sty
+File: lstlang1.sty 2025/11/14 1.11b listings language file
+)
+(c:/Program Files/texlive/2025/texmf-dist/tex/latex/listings/lstlang1.sty
+File: lstlang1.sty 2025/11/14 1.11b listings language file
+)
+Overfull \hbox (51.90424pt too wide) in paragraph at lines 252--253
+[]\T1/cmtt/m/n/12 Avvio di SonarQube via Docker: Se non si dispone di un server
+ SonarQube dedicato,
+ []
+
+Package hyperref Info: bookmark level for unknown lstlisting defaults to 0 on i
+nput line 253.
+
+Overfull \hbox (42.03156pt too wide) in paragraph at lines 254--255
+[][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (21.03677pt too wide) in paragraph at lines 257--258
+[]\T1/cmtt/m/n/12 Installazione del Plugin Creedengo: Il plugin Creedengo per J
+ava (in formato
+ []
+
+
+Overfull \hbox (2.5163pt too wide) in paragraph at lines 257--258
+\T1/cmtt/m/n/12 .jar) deve essere scaricato dalla sezione release del repositor
+y ufficiale
+ []
+
+
+Overfull \hbox (8.68979pt too wide) in paragraph at lines 257--258
+\T1/cmtt/m/n/12 GitHub (green-code-initiative/creedengo-java) ed inserito all'i
+nterno della
+ []
+
+
+Overfull \hbox (33.38376pt too wide) in paragraph at lines 257--258
+\T1/cmtt/m/n/12 cartella delle estensioni di SonarQube. Il trasferimento nel co
+ntainer avviene
+ []
+
+
+Overfull \hbox (264.27948pt too wide) in paragraph at lines 259--260
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+
+Overfull \hbox (14.86328pt too wide) in paragraph at lines 262--263
+[]\T1/cmtt/m/n/12 Riavvio del Container: Per forzare il caricamento del plugin 
+ed attivare le
+ []
+
+
+Overfull \hbox (21.03677pt too wide) in paragraph at lines 262--263
+\T1/cmtt/m/n/12 nuove regole di eco-design all'interno di SonarQube, si riavvia
+ il container: 
+ []
+
+
+Overfull \hbox (4.00906pt too wide) in paragraph at lines 269--270
+\T1/cmtt/m/n/12 Per agevolare l'installazione e la configurazione di SonarQube 
+con Creedengo su
+ []
+
+
+Overfull \hbox (220.0813pt too wide) in paragraph at lines 269--270
+\T1/cmtt/m/n/12 qualsiasi altra infrastruttura, è stato predisposto lo script d
+i automazione scripts/setup-sonarqube-creedengo.sh.
+ []
+
+
+Overfull \hbox (4.00906pt too wide) in paragraph at lines 269--270
+\T1/cmtt/m/n/12 Tale script verifica la presenza di Docker, scarica automaticam
+ente la versione
+ []
+
+
+Overfull \hbox (59.5705pt too wide) in paragraph at lines 269--270
+\T1/cmtt/m/n/12 desiderata del plugin da GitHub se non presente localmente, avv
+ia il container SonarQube
+ []
+
+
+Overfull \hbox (16.35605pt too wide) in paragraph at lines 269--270
+\T1/cmtt/m/n/12 standalone, copia la libreria nella directory corretta del cont
+ainer ed esegue il
+ []
+
+
+Overfull \hbox (10.18256pt too wide) in paragraph at lines 272--273
+\T1/cmtt/m/n/12 Per massimizzare il ritorno ecologico delle attività di refacto
+ring e ridurre il
+ []
+
+
+Overfull \hbox (71.91748pt too wide) in paragraph at lines 272--273
+\T1/cmtt/m/n/12 rumore nelle metriche di telemetria statica, sono state selezio
+nate 11 regole fondamentali
+ []
+
+
+Overfull \hbox (53.397pt too wide) in paragraph at lines 272--273
+\T1/cmtt/m/n/12 del ruleset Creedengo Java. Ciascuna regola è stata scelta in b
+ase alla sua pertinenza
+ []
+
+
+Overfull \hbox (16.35605pt too wide) in paragraph at lines 272--273
+\T1/cmtt/m/n/12 tecnologica con l'architettura MVC di 2Chance (basata su Java S
+ervlets e JDBC/DAO
+ []
+
+[15]
+Overfull \hbox (27.80737pt too wide) in paragraph at lines 274--275
+[]\T1/cmtt/m/n/12 Le regole attivate e le relative motivazioni teoriche sono de
+scritte di seguito: 
+ []
+
+
+Overfull \hbox (27.21027pt too wide) in paragraph at lines 277--279
+[]\T1/cmtt/m/n/12 Avoid getting the size of the collection in the loop (Evitare
+ il calcolo della
+ []
+
+
+Overfull \hbox (33.38376pt too wide) in paragraph at lines 277--279
+\T1/cmtt/m/n/12 dimensione delle collezioni nei cicli): Questa regola rappresen
+ta una variante
+ []
+
+
+Overfull \hbox (8.68979pt too wide) in paragraph at lines 277--279
+\T1/cmtt/m/n/12 diretta delle specifiche di progetto relative all'efficienza co
+mputazionale
+ []
+
+
+Overfull \hbox (21.03677pt too wide) in paragraph at lines 277--279
+\T1/cmtt/m/n/12 (GC169). L'invocazione continua del metodo .size() all'interno 
+della guardia
+ []
+
+
+Overfull \hbox (33.38376pt too wide) in paragraph at lines 277--279
+\T1/cmtt/m/n/12 di un ciclo forza la JVM a ricalcolare i limiti della collezion
+e a ogni singola
+ []
+
+
+Overfull \hbox (45.73074pt too wide) in paragraph at lines 280--282
+[]\T1/cmtt/m/n/12 Avoid SQL request in loop (Evitare query SQL all'interno di c
+icli): L'esecuzione
+ []
+
+
+Overfull \hbox (58.07773pt too wide) in paragraph at lines 280--282
+\T1/cmtt/m/n/12 di interrogazioni al database all'interno di cicli iterativi è 
+un fattore altamente
+ []
+
+
+Overfull \hbox (14.86328pt too wide) in paragraph at lines 280--282
+\T1/cmtt/m/n/12 inefficiente. Genera un overhead continuo di rete e costringe i
+l motore del
+ []
+
+
+Overfull \hbox (27.21027pt too wide) in paragraph at lines 280--282
+\T1/cmtt/m/n/12 database a un lavoro sequenziale pesante, mantenendo attivi i t
+hread di Tomcat
+ []
+
+
+Overfull \hbox (21.03677pt too wide) in paragraph at lines 283--285
+[]\T1/cmtt/m/n/12 Avoid usage of static collections (Evitare l'uso di collezion
+i statiche): Le
+ []
+
+
+Overfull \hbox (14.86328pt too wide) in paragraph at lines 283--285
+\T1/cmtt/m/n/12 collezioni statiche persistono per l'intera durata della JVM. S
+e non gestite
+ []
+
+
+Overfull \hbox (21.03677pt too wide) in paragraph at lines 283--285
+\T1/cmtt/m/n/12 in modo impeccabile, possono provocare perdite di memoria stris
+cianti. Sotto
+ []
+
+
+Overfull \hbox (27.21027pt too wide) in paragraph at lines 283--285
+\T1/cmtt/m/n/12 stress (es. durante i Soak Test), la saturazione della memoria 
+Heap costringe
+ []
+
+
+Overfull \hbox (33.38376pt too wide) in paragraph at lines 283--285
+\T1/cmtt/m/n/12 la JVM a frequenti cicli di Major Garbage Collection, con un co
+nsumo energetico
+ []
+
+
+Overfull \hbox (39.55725pt too wide) in paragraph at lines 286--288
+[]\T1/cmtt/m/n/12 Avoid using Pattern.compile() in a non-static context (Evitar
+e Pattern.compile()
+ []
+
+
+Overfull \hbox (51.90424pt too wide) in paragraph at lines 286--288
+\T1/cmtt/m/n/12 in contesto non statico): La compilazione di espressioni regola
+ri è un'operazione
+ []
+
+
+Overfull \hbox (21.03677pt too wide) in paragraph at lines 286--288
+\T1/cmtt/m/n/12 onerosa per la CPU. Compilare ripetutamente lo stesso pattern a
+ll'interno dei
+ []
+
+
+Overfull \hbox (14.86328pt too wide) in paragraph at lines 286--288
+\T1/cmtt/m/n/12 metodi delle Servlet ad ogni richiesta, anziché memorizzarlo in
+ una costante
+ []
+
+
+Overfull \hbox (14.86328pt too wide) in paragraph at lines 289--291
+[]\T1/cmtt/m/n/12 Do not call a function when declaring a for-type loop (Non in
+vocare funzioni
+ []
+
+
+Overfull \hbox (33.38376pt too wide) in paragraph at lines 289--291
+\T1/cmtt/m/n/12 nella dichiarazione del ciclo for): Corrisponde al vincolo GC16
+9 (classificato
+ []
+
+
+Overfull \hbox (8.68979pt too wide) in paragraph at lines 289--291
+\T1/cmtt/m/n/12 a priorità elevata). Identifica chiamate a funzioni invarianti 
+all'interno
+ []
+
+
+Overfull \hbox (39.55725pt too wide) in paragraph at lines 289--291
+\T1/cmtt/m/n/12 dei parametri di inizializzazione o di guardia dei cicli, sugge
+rendo di estrarle
+ []
+
+
+Overfull \hbox (33.38376pt too wide) in paragraph at lines 289--291
+\T1/cmtt/m/n/12 in variabili locali ed evitando migliaia di invocazioni ridonda
+nti del medesimo
+ []
+
+
+Overfull \hbox (8.68979pt too wide) in paragraph at lines 292--294
+[]\T1/cmtt/m/n/12 Don't use the query SELECT * FROM (Evitare l'uso di SELECT *)
+: Il recupero
+ []
+
+
+Overfull \hbox (21.03677pt too wide) in paragraph at lines 292--294
+\T1/cmtt/m/n/12 indiscriminato di tutte le colonne di una tabella costringe a t
+rasferire byte
+ []
+
+
+Overfull \hbox (27.21027pt too wide) in paragraph at lines 292--294
+\T1/cmtt/m/n/12 inutili attraverso la connessione di rete e obbliga la JVM ad a
+llocare oggetti
+ []
+
+
+Overfull \hbox (39.55725pt too wide) in paragraph at lines 295--297
+[]\T1/cmtt/m/n/12 Free resources (Rilascio delle risorse): La mancata chiusura 
+manuale dei canali
+ []
+
+
+Overfull \hbox (33.38376pt too wide) in paragraph at lines 295--297
+\T1/cmtt/m/n/12 di comunicazione con il database (como Connection, Statement e 
+ResultSet) porta
+ []
+
+
+Overfull \hbox (8.68979pt too wide) in paragraph at lines 295--297
+\T1/cmtt/m/n/12 a colli di bottiglia e memory leak. Quando il connection pool e
+saurisce le
+ []
+
+
+Overfull \hbox (21.03677pt too wide) in paragraph at lines 295--297
+\T1/cmtt/m/n/12 risorse, Tomcat deve gestire i thread in attesa attiva, degrada
+ndo gravemente
+ []
+
+
+Overfull \hbox (58.07773pt too wide) in paragraph at lines 298--300
+[]\T1/cmtt/m/n/12 Initialize builder/buffer with the appropriate size (Iniziali
+zzazione StringBuilder
+ []
+
+
+Overfull \hbox (21.03677pt too wide) in paragraph at lines 298--300
+\T1/cmtt/m/n/12 con dimensione corretta): Questa regola contrasta l'impatto del
+la mutabilità
+ []
+
+
+Overfull \hbox (8.68979pt too wide) in paragraph at lines 298--300
+\T1/cmtt/m/n/12 delle stringhe. Creare uno StringBuilder o uno StringBuffer sen
+za indicare
+ []
+
+
+Overfull \hbox (8.68979pt too wide) in paragraph at lines 298--300
+\T1/cmtt/m/n/12 una capacità iniziale obbliga la JVM ad eseguire continui ridim
+ensionamenti
+ []
+
+
+Overfull \hbox (14.86328pt too wide) in paragraph at lines 298--300
+\T1/cmtt/m/n/12 e copie degli array di caratteri interni man mano che la string
+a si espande. 
+ []
+
+[16]
+Overfull \hbox (27.21027pt too wide) in paragraph at lines 301--303
+[]\T1/cmtt/m/n/12 orElseGet instead of orElse (Utilizzo di orElseGet al posto d
+i orElse): Nelle
+ []
+
+
+Overfull \hbox (8.68979pt too wide) in paragraph at lines 301--303
+\T1/cmtt/m/n/12 strutture di tipo Optional, il metodo .orElse(...) valuta l'esp
+ressione di
+ []
+
+
+Overfull \hbox (21.03677pt too wide) in paragraph at lines 301--303
+\T1/cmtt/m/n/12 fallback in ogni caso, anche se il valore principale è presente
+. Utilizzando
+ []
+
+
+Overfull \hbox (33.38376pt too wide) in paragraph at lines 301--303
+\T1/cmtt/m/n/12 .orElseGet(...) si sfrutta la \T1/cmtt/m/it/12 lazy evaluation\
+T1/cmtt/m/n/12 , eseguendo il blocco di fallback
+ []
+
+
+Overfull \hbox (39.55725pt too wide) in paragraph at lines 301--303
+\T1/cmtt/m/n/12 unicamente se necessario ed eliminando calcoli ridondanti sotto
+ carichi elevati. 
+ []
+
+
+Overfull \hbox (8.68979pt too wide) in paragraph at lines 304--306
+[]\T1/cmtt/m/n/12 Use PreparedStatement instead of Statement (Utilizzo di Prepa
+redStatement):
+ []
+
+
+Overfull \hbox (45.73074pt too wide) in paragraph at lines 304--306
+\T1/cmtt/m/n/12 I PreparedStatement consentono al motore di MySQL di pre-compil
+are ed ottimizzare
+ []
+
+
+Overfull \hbox (33.38376pt too wide) in paragraph at lines 304--306
+\T1/cmtt/m/n/12 la query una sola volta. Reutilizzare query pre-compilate riduc
+e sensibilmente
+ []
+
+
+Overfull \hbox (27.21027pt too wide) in paragraph at lines 304--306
+\T1/cmtt/m/n/12 il carico computazionale sull'infrastruttura del database duran
+te l'esecuzione
+ []
+
+
+Overfull \hbox (8.68979pt too wide) in paragraph at lines 307--309
+[]\T1/cmtt/m/n/12 Use System.arraycopy to copy arrays (Utilizzo di System.array
+copy): Questa
+ []
+
+
+Overfull \hbox (45.73074pt too wide) in paragraph at lines 307--309
+\T1/cmtt/m/n/12 regola fa riferimento diretto alla specifica di progetto GC127 
+(Medium Severity).
+ []
+
+
+Overfull \hbox (21.03677pt too wide) in paragraph at lines 307--309
+\T1/cmtt/m/n/12 L'uso di cicli di iterazione manuali per copiare singoli elemen
+ti da un array
+ []
+
+
+Overfull \hbox (51.90424pt too wide) in paragraph at lines 307--309
+\T1/cmtt/m/n/12 all'altro è altamente inefficiente. La funzione System.arraycop
+y() si interfaccia
+ []
+
+
+Overfull \hbox (45.73074pt too wide) in paragraph at lines 307--309
+\T1/cmtt/m/n/12 direttamente con istruzioni native a basso livello del sistema 
+operativo (scritte
+ []
+
+
+Overfull \hbox (2.5163pt too wide) in paragraph at lines 307--309
+\T1/cmtt/m/n/12 in C), garantendo una copia di blocchi di memoria estremamente 
+efficiente. 
+ []
+
+
+Overfull \hbox (28.70303pt too wide) in paragraph at lines 312--313
+\T1/cmtt/m/n/12 Il processo di selezione e la conseguente esclusione delle rest
+anti regole risponde
+ []
+
+
+Overfull \hbox (8.68979pt too wide) in paragraph at lines 314--315
+[]\T1/cmtt/m/n/12 Allineamento Tecnologico (Stack Match): Sono state rimosse tu
+tte le regole
+ []
+
+
+Overfull \hbox (2.5163pt too wide) in paragraph at lines 314--315
+\T1/cmtt/m/n/12 relative a framework non presenti nel progetto (es. regole spec
+ifiche per
+ []
+
+
+Overfull \hbox (14.86328pt too wide) in paragraph at lines 314--315
+\T1/cmtt/m/n/12 Spring Boot/Spring Data), poiché l'applicazione è strutturata e
+sclusivamente
+ []
+
+
+Overfull \hbox (45.73074pt too wide) in paragraph at lines 314--315
+\T1/cmtt/m/n/12 su Servlet nativi e JDBC puro. Le regole database-specifiche (P
+reparedStatement,
+ []
+
+
+Overfull \hbox (45.73074pt too wide) in paragraph at lines 314--315
+\T1/cmtt/m/n/12 SELECT *, SQL in loop) sono state invece prioritarizzate per il
+ loro alto impatto
+ []
+
+
+Overfull \hbox (21.03677pt too wide) in paragraph at lines 315--316
+[]\T1/cmtt/m/n/12 Mitigazione della Garbage Collection (GC): In un'applicazione
+ web monolitica,
+ []
+
+
+Overfull \hbox (2.5163pt too wide) in paragraph at lines 315--316
+\T1/cmtt/m/n/12 i consumi più critici sono spesso legati alla CPU impegnata nel
+le attività
+ []
+
+
+Overfull \hbox (107.46567pt too wide) in paragraph at lines 315--316
+\T1/cmtt/m/n/12 di Garbage Collection. Regole mirate a evitare istanziazioni su
+perflue (Pattern.compile(),
+ []
+
+
+Overfull \hbox (8.68979pt too wide) in paragraph at lines 315--316
+\T1/cmtt/m/n/12 ridimensionamento StringBuilder, collezioni statiche) riducono 
+la pressione
+ []
+
+
+Overfull \hbox (27.21027pt too wide) in paragraph at lines 316--317
+[]\T1/cmtt/m/n/12 Vincoli di Progetto: Le regole che indirizzano direttamente i
+ requisiti GC169
+ []
+
+
+Overfull \hbox (14.86328pt too wide) in paragraph at lines 316--317
+\T1/cmtt/m/n/12 (chiamate invarianti nei cicli) e GC127 (copia ottimizzata degl
+i array) sono
+ []
+
+
+Overfull \hbox (2.5163pt too wide) in paragraph at lines 316--317
+\T1/cmtt/m/n/12 state ritenute mandatarie per garantire la conformità con le sp
+ecifiche di
+ []
+
+
+Overfull \hbox (41.05002pt too wide) in paragraph at lines 321--322
+\T1/cmtt/m/n/12 Dopo aver configurato l'ambiente di analisi statica ed eseguito
+ la scansione iniziale
+ []
+
+
+Overfull \hbox (36.95935pt too wide) in paragraph at lines 321--322
+\T1/cmtt/m/n/12 (fase di \T1/cmtt/m/it/12 baseline\T1/cmtt/m/n/12 ), sono state
+ rilevate complessivamente 64 violazioni di eco-design
+ []
+
+
+Overfull \hbox (10.18256pt too wide) in paragraph at lines 321--322
+\T1/cmtt/m/n/12 distribuite su quattro regole principali del ruleset Creedengo.
+ Questi problemi
+ []
+
+
+Overfull \hbox (28.70303pt too wide) in paragraph at lines 321--322
+\T1/cmtt/m/n/12 interessavano in modo critico i Model Bean e i Data Access Obje
+ct dell'applicazione
+ []
+
+[17]
+Overfull \hbox (59.5705pt too wide) in paragraph at lines 325--326
 \T1/cmtt/m/n/12 Nell'ecosistema dell'architettura software di 2Chance, l'analis
 i empirica ha evidenziato
  []
 
 
-Overfull \hbox (53.397pt too wide) in paragraph at lines 243--244
+Overfull \hbox (53.397pt too wide) in paragraph at lines 325--326
 \T1/cmtt/m/n/12 come il livello di accesso ai dati (Data Access Object o DAO) r
 appresenti il principale
  []
 
 
-Overfull \hbox (80.1738pt too wide) in paragraph at lines 243--244
+Overfull \hbox (80.1738pt too wide) in paragraph at lines 325--326
 \T1/cmtt/m/it/12 bottleneck \T1/cmtt/m/n/12 dal punto di vista del consumo ener
 getico. A differenza di layer architetturali
  []
 
 
-Overfull \hbox (28.70303pt too wide) in paragraph at lines 243--244
+Overfull \hbox (28.70303pt too wide) in paragraph at lines 325--326
 \T1/cmtt/m/n/12 come i Controller o i Service, i quali si limitano al routing d
 elle richieste HTTP,
  []
 
 
-Overfull \hbox (28.70303pt too wide) in paragraph at lines 243--244
+Overfull \hbox (28.70303pt too wide) in paragraph at lines 325--326
 \T1/cmtt/m/n/12 alla validazione dell'input e all'orchestrazione di logiche di 
 business prettamente
  []
 
 
-Overfull \hbox (28.70303pt too wide) in paragraph at lines 243--244
+Overfull \hbox (28.70303pt too wide) in paragraph at lines 325--326
 \T1/cmtt/m/n/12 in-memory, i DAO si fanno carico della comunicazione inter-proc
 esso con il database
  []
 
 
-Overfull \hbox (4.00906pt too wide) in paragraph at lines 243--244
+Overfull \hbox (4.00906pt too wide) in paragraph at lines 325--326
 \T1/cmtt/m/n/12 relazionale. Il consumo energetico asimmetrico dei DAO rispetto
  ad altri layer
  []
 
 
-Overfull \hbox (16.35605pt too wide) in paragraph at lines 243--244
+Overfull \hbox (16.35605pt too wide) in paragraph at lines 325--326
 \T1/cmtt/m/n/12 deriva da molteplici fattori strutturali. In primis, l'apertura
 , la negoziazione
  []
 
 
-Overfull \hbox (22.52954pt too wide) in paragraph at lines 243--244
+Overfull \hbox (22.52954pt too wide) in paragraph at lines 325--326
 \T1/cmtt/m/n/12 e la chiusura delle connessioni di rete tramite driver JDBC com
 portano un notevole
  []
 
 
-Overfull \hbox (41.05002pt too wide) in paragraph at lines 243--244
+Overfull \hbox (41.05002pt too wide) in paragraph at lines 325--326
 \T1/cmtt/m/n/12 overhead computazionale e di I/O. Inoltre, le operazioni di \T1
 /cmtt/m/it/12 Object-Relational Mapping
  []
 
 
-Overfull \hbox (4.00906pt too wide) in paragraph at lines 243--244
+Overfull \hbox (4.00906pt too wide) in paragraph at lines 325--326
 \T1/cmtt/m/n/12 (ORM) manuale richiedono frequenti allocazioni di memoria per l
 a trasformazione
  []
 
 
-Overfull \hbox (22.52954pt too wide) in paragraph at lines 243--244
+Overfull \hbox (22.52954pt too wide) in paragraph at lines 325--326
 \T1/cmtt/m/n/12 dei ResultSet in strutture dati (POJO), stressando il Garbage C
 ollector della JVM.
  []
 
 
-Overfull \hbox (24.61237pt too wide) in paragraph at lines 243--244
+Overfull \hbox (24.61237pt too wide) in paragraph at lines 325--326
 \T1/cmtt/m/n/12 Infine, le inefficienze nell'esecuzione delle query SQL (come \
 T1/cmtt/m/it/12 table scan \T1/cmtt/m/n/12 o mancato
  []
 
 
-Overfull \hbox (34.87653pt too wide) in paragraph at lines 243--244
+Overfull \hbox (34.87653pt too wide) in paragraph at lines 325--326
 \T1/cmtt/m/n/12 uso degli indici) costringono il database engine a un intenso l
 avoro di I/O su disco
  []
 
 
-Overfull \hbox (36.95935pt too wide) in paragraph at lines 243--244
+Overfull \hbox (36.95935pt too wide) in paragraph at lines 325--326
 \T1/cmtt/m/n/12 e di computazione CPU, riflettendosi in un prolungato \T1/cmtt/
 m/it/12 active waiting \T1/cmtt/m/n/12 (attesa attiva)
  []
 
 
-Overfull \hbox (4.00906pt too wide) in paragraph at lines 243--244
+Overfull \hbox (4.00906pt too wide) in paragraph at lines 325--326
 \T1/cmtt/m/n/12 dei thread applicativi e, conseguentemente, in uno spreco energ
 etico sistemico. 
  []
 
-[16]
-Overfull \hbox (28.70303pt too wide) in paragraph at lines 247--248
+
+Overfull \hbox (28.70303pt too wide) in paragraph at lines 329--330
 \T1/cmtt/m/n/12 Concentrando l'indagine sui model DAOs, RecensioneDAO, Prodotto
 DAO e OrdineDAO sono
  []
 
 
-Overfull \hbox (4.00906pt too wide) in paragraph at lines 247--248
+Overfull \hbox (4.00906pt too wide) in paragraph at lines 329--330
 \T1/cmtt/m/n/12 risultati i moduli con il margine di ottimizzazione più ampio. 
 Il loro elevato
  []
 
 
-Overfull \hbox (34.87653pt too wide) in paragraph at lines 247--248
+Overfull \hbox (34.87653pt too wide) in paragraph at lines 329--330
 \T1/cmtt/m/n/12 footprint energetico nella versione di baseline era radicato in
  precisi anti-pattern
  []
 
 
-Overfull \hbox (47.22351pt too wide) in paragraph at lines 247--248
+Overfull \hbox (47.22351pt too wide) in paragraph at lines 329--330
 \T1/cmtt/m/n/12 architetturali, la cui risoluzione ha consentito di abbattere d
 rasticamente i consumi.
  []
 
 
-Overfull \hbox (12.2887pt too wide) in paragraph at lines 250--251
+Overfull \hbox (12.2887pt too wide) in paragraph at lines 332--333
  []\T1/cmr/bx/n/12 L'Anti-Pattern "SE-LECT *" e il Trasfer-i-mento Dati In-con-
 trol-lato[] \T1/cmtt/m/n/12 In tutti i moduli
  []
 
 
-Overfull \hbox (4.00906pt too wide) in paragraph at lines 250--251
+Overfull \hbox (4.00906pt too wide) in paragraph at lines 332--333
 \T1/cmtt/m/n/12 di persistenza, le query di recupero facevano un uso sistematic
 o dell'operatore
  []
 
 
-Overfull \hbox (4.00906pt too wide) in paragraph at lines 250--251
+Overfull \hbox (4.00906pt too wide) in paragraph at lines 332--333
 \T1/cmtt/m/n/12 SELECT *. Dal punto di vista della sostenibilità, questo approc
 cio costringeva
  []
 
 
-Overfull \hbox (16.35605pt too wide) in paragraph at lines 250--251
+Overfull \hbox (16.35605pt too wide) in paragraph at lines 332--333
 \T1/cmtt/m/n/12 il database engine a eseguire operazioni di I/O su disco per es
 trarre l'interezza
  []
 
 
-Overfull \hbox (16.35605pt too wide) in paragraph at lines 250--251
+Overfull \hbox (16.35605pt too wide) in paragraph at lines 332--333
 \T1/cmtt/m/n/12 dei campi, compresi quelli non necessari o molto pesanti (come 
 le stringhe \T1/cmtt/m/it/12 Base64
  []
 
 
-Overfull \hbox (10.18256pt too wide) in paragraph at lines 250--251
+Overfull \hbox (10.18256pt too wide) in paragraph at lines 332--333
 \T1/cmtt/m/n/12 delle immagini), per poi serializzarli sulla rete. Il refactori
 ng ha introdotto
  []
 
 
-Overfull \hbox (47.22351pt too wide) in paragraph at lines 250--251
+Overfull \hbox (47.22351pt too wide) in paragraph at lines 332--333
 \T1/cmtt/m/n/12 proiezioni di colonne esplicite, riducendo drasticamente il pay
 load di rete trasferito
  []
 
 
-Overfull \hbox (4.00906pt too wide) in paragraph at lines 250--251
+Overfull \hbox (4.00906pt too wide) in paragraph at lines 332--333
 \T1/cmtt/m/n/12 e limitando l'allocazione di byte nella memoria Heap della JVM,
  alleggerendo di
  []
 
 
-Overfull \hbox (28.70303pt too wide) in paragraph at lines 253--254
+Overfull \hbox (28.70303pt too wide) in paragraph at lines 335--336
 \T1/cmtt/m/n/12 multiplo, come ProdottoDAO.aggiungiSpecifiche e OrdineDAO.addOr
 dine, implementavano
  []
 
 
-Overfull \hbox (4.00906pt too wide) in paragraph at lines 253--254
+Overfull \hbox (4.00906pt too wide) in paragraph at lines 335--336
 \T1/cmtt/m/n/12 nella baseline una sequenza di INSERT all'interno di cicli iter
 ativi, invocando
  []
 
 
-Overfull \hbox (4.00906pt too wide) in paragraph at lines 253--254
+Overfull \hbox (4.00906pt too wide) in paragraph at lines 335--336
 \T1/cmtt/m/n/12 executeUpdate() per ogni singolo record. Questo pattern comport
 ava un overhead
  []
 
 
-Overfull \hbox (61.65332pt too wide) in paragraph at lines 253--254
+Overfull \hbox (61.65332pt too wide) in paragraph at lines 335--336
 \T1/cmtt/m/n/12 catastrofico causato dai continui \T1/cmtt/m/it/12 round-trip \
 T1/cmtt/m/n/12 di rete e dalla negoziazione di transazioni
  []
 
 
-Overfull \hbox (59.5705pt too wide) in paragraph at lines 253--254
+Overfull \hbox (59.5705pt too wide) in paragraph at lines 335--336
 \T1/cmtt/m/n/12 isolate per ogni istruzione. Questa inefficienza è stata risolt
 a adottando il costrutto
  []
 
 
-Overfull \hbox (133.6524pt too wide) in paragraph at lines 253--254
+Overfull \hbox (133.6524pt too wide) in paragraph at lines 335--336
 \T1/cmtt/m/n/12 executeBatch() di JDBC, supportato da una gestione manuale dell
 a transazione (setAutoCommit(false)).
  []
 
 
-Overfull \hbox (65.74399pt too wide) in paragraph at lines 253--254
+Overfull \hbox (65.74399pt too wide) in paragraph at lines 335--336
 \T1/cmtt/m/n/12 L'accorpamento delle scritture ha minimizzato il tempo di acqui
 sizione delle connessioni,
  []
 
 
-Overfull \hbox (41.05002pt too wide) in paragraph at lines 256--257
+Overfull \hbox (41.05002pt too wide) in paragraph at lines 338--339
 \T1/cmtt/m/n/12 ottimizzata, il metodo OrdineDAO.getOrdiniByUtente era affetto 
 da una severa anomalia
  []
 
 
-Overfull \hbox (22.52954pt too wide) in paragraph at lines 256--257
+Overfull \hbox (22.52954pt too wide) in paragraph at lines 338--339
 \T1/cmtt/m/n/12 N+1. Nel corso dell'elaborazione del ResultSet principale degli
  ordini, il codice
  []
 
 
-Overfull \hbox (34.87653pt too wide) in paragraph at lines 256--257
+Overfull \hbox (34.87653pt too wide) in paragraph at lines 338--339
 \T1/cmtt/m/n/12 invocava ripetutamente un metodo secondario (getProdottoOrdine(
 ordine)) per estrarre
  []
 
 
-Overfull \hbox (8.49802pt too wide) in paragraph at lines 256--257
+Overfull \hbox (8.49802pt too wide) in paragraph at lines 338--339
 \T1/cmtt/m/n/12 gli articoli associati a ciascun acquisto. Se un utente possede
 va $\OML/cmm/m/it/12 N$ \T1/cmtt/m/n/12 ordini, il
  []
 
 
-Overfull \hbox (41.05002pt too wide) in paragraph at lines 256--257
+Overfull \hbox (41.05002pt too wide) in paragraph at lines 338--339
 \T1/cmtt/m/n/12 thread applicativi in attesa bloccante. Questo spreco computazi
 onale è stato risolto
  []
 
 
-Overfull \hbox (22.52954pt too wide) in paragraph at lines 256--257
+Overfull \hbox (22.52954pt too wide) in paragraph at lines 338--339
 \T1/cmtt/m/n/12 consolidando l'estrazione in un'unica query aggregata tramite L
 EFT JOIN, delegando
  []
 
 
-Overfull \hbox (16.35605pt too wide) in paragraph at lines 256--257
+Overfull \hbox (16.35605pt too wide) in paragraph at lines 338--339
 \T1/cmtt/m/n/12 l'onere dell'assemblaggio delle entità (Ordine e Prodotto) a un
 a LinkedHashMap in
  []
 
-[17]
-Overfull \hbox (16.35605pt too wide) in paragraph at lines 260--261
+[18]
+Overfull \hbox (16.35605pt too wide) in paragraph at lines 342--343
 \T1/cmtt/m/n/12 L'isolamento di queste porzioni critiche di codice delle classi
  DAO, identificate
  []
 
 
-Overfull \hbox (65.74399pt too wide) in paragraph at lines 260--261
+Overfull \hbox (65.74399pt too wide) in paragraph at lines 342--343
 \T1/cmtt/m/n/12 empiricamente come i componenti più inefficienti del sistema, c
 ostituisce il prerequisito
  []
 
 
-Overfull \hbox (53.397pt too wide) in paragraph at lines 260--261
+Overfull \hbox (53.397pt too wide) in paragraph at lines 342--343
 \T1/cmtt/m/n/12 fondamentale per la fase di microbenchmarking effettuato con il
  framework JMH combinato
  []
 
 
-Overfull \hbox (4.00906pt too wide) in paragraph at lines 260--261
+Overfull \hbox (4.00906pt too wide) in paragraph at lines 342--343
 \T1/cmtt/m/n/12 con la profilazione di EnergiBridge. Questo approccio consente 
 di misurare con
  []
 
 
-Overfull \hbox (16.35605pt too wide) in paragraph at lines 260--261
+Overfull \hbox (16.35605pt too wide) in paragraph at lines 342--343
 \T1/cmtt/m/n/12 estrema precisione le performance e l'assorbimento energetico d
 ei singoli metodi,
  []
 
 
-Overfull \hbox (41.05002pt too wide) in paragraph at lines 260--261
+Overfull \hbox (41.05002pt too wide) in paragraph at lines 342--343
 \T1/cmtt/m/n/12 fornendo un confronto oggettivo (in Joule per operazione) tra l
 a versione di \T1/cmtt/m/it/12 baseline
  []
 
 
-Overfull \hbox (10.87083pt too wide) in paragraph at lines 262--262
+Overfull \hbox (10.87083pt too wide) in paragraph at lines 344--344
 []\T1/cmr/bx/n/14.4 Strumento di Pro-fi-lazione En-er-get-ica Co-Sincronizzato:
  Ar-chitet-
  []
 
 
-Overfull \hbox (47.22351pt too wide) in paragraph at lines 264--265
+Overfull \hbox (47.22351pt too wide) in paragraph at lines 346--347
 \T1/cmtt/m/n/12 Al fine di combinare la precisione temporale del microbenchmark
 ing con la profilazione
  []
 
 
-Overfull \hbox (4.00906pt too wide) in paragraph at lines 264--265
+Overfull \hbox (4.00906pt too wide) in paragraph at lines 346--347
 \T1/cmtt/m/n/12 energetica a livello hardware, è stato sviluppato uno strumento
  di profilazione
  []
 
 
-Overfull \hbox (10.18256pt too wide) in paragraph at lines 264--265
+Overfull \hbox (10.18256pt too wide) in paragraph at lines 346--347
 \T1/cmtt/m/n/12 personalizzato (run_jmh_energy_profiler.py). Questo script cons
 ente di eseguire
  []
 
 
-Overfull \hbox (34.87653pt too wide) in paragraph at lines 264--265
+Overfull \hbox (34.87653pt too wide) in paragraph at lines 346--347
 \T1/cmtt/m/n/12 i benchmark JMH catturando simultaneamente i consumi energetici
  tramite EnergiBridge
  []
 
 
-Overfull \hbox (47.22351pt too wide) in paragraph at lines 264--265
+Overfull \hbox (47.22351pt too wide) in paragraph at lines 346--347
 \T1/cmtt/m/n/12 in modo controllato e riproducibile. L'architettura dello scrip
 t risponde a requisiti
  []
 
 
-Overfull \hbox (58.07773pt too wide) in paragraph at lines 267--269
+Overfull \hbox (58.07773pt too wide) in paragraph at lines 349--351
 []\T1/cmtt/m/n/12 Scoperta e Orchestrazione Automatica: Lo script automatizza i
 l processo compilando
  []
 
 
-Overfull \hbox (39.55725pt too wide) in paragraph at lines 267--269
+Overfull \hbox (39.55725pt too wide) in paragraph at lines 349--351
 \T1/cmtt/m/n/12 il jar dei benchmark (mvn clean package -DskipTests) e interrog
 ando l'eseguibile
  []
 
 
-Overfull \hbox (51.90424pt too wide) in paragraph at lines 267--269
+Overfull \hbox (51.90424pt too wide) in paragraph at lines 349--351
 \T1/cmtt/m/n/12 JMH tramite l'opzione -l per ricavare l'elenco dei metodi di be
 nchmark disponibili
  []
 
 
-Overfull \hbox (21.03677pt too wide) in paragraph at lines 267--269
+Overfull \hbox (21.03677pt too wide) in paragraph at lines 349--351
 \T1/cmtt/m/n/12 per una determinata classe (java -jar target/benchmarks.jar <cl
 ass_name> -l). 
  []
 
 
-Overfull \hbox (2.5163pt too wide) in paragraph at lines 270--273
+Overfull \hbox (2.5163pt too wide) in paragraph at lines 352--355
 []\T1/cmtt/m/n/12 Isolamento a Livello di Processo per Mitigare il Cross-Talk: 
 L'esecuzione
  []
 
 
-Overfull \hbox (2.5163pt too wide) in paragraph at lines 270--273
+Overfull \hbox (2.5163pt too wide) in paragraph at lines 352--355
 \T1/cmtt/m/n/12 consecutiva di molteplici benchmark all'interno dello stesso ci
 clo di vita
  []
 
 
-Overfull \hbox (70.42471pt too wide) in paragraph at lines 270--273
+Overfull \hbox (70.42471pt too wide) in paragraph at lines 352--355
 \T1/cmtt/m/n/12 di una singola JVM può introdurre distorsioni significative nel
 le letture energetiche
  []
 
 
-Overfull \hbox (8.68979pt too wide) in paragraph at lines 270--273
+Overfull \hbox (8.68979pt too wide) in paragraph at lines 352--355
 \T1/cmtt/m/n/12 a causa del ``cross-talk'' temporale e dell'accumulo di risorse
  (classloading
  []
 
 
-Overfull \hbox (58.07773pt too wide) in paragraph at lines 270--273
+Overfull \hbox (58.07773pt too wide) in paragraph at lines 352--355
 \T1/cmtt/m/n/12 ritardato, congestione della memoria Heap, socket JDBC non imme
 diatamente riciclati
  []
 
 
-Overfull \hbox (27.21027pt too wide) in paragraph at lines 270--273
+Overfull \hbox (27.21027pt too wide) in paragraph at lines 352--355
 \T1/cmtt/m/n/12 o thread di Garbage Collection attivati asincronamente). Per ov
 viare a questo
  []
 
 
-Overfull \hbox (22.19249pt too wide) in paragraph at lines 274--275
+Overfull \hbox (22.19249pt too wide) in paragraph at lines 356--357
 []\T1/cmtt/m/n/12 Una prima esecuzione globale della suite JMH per raccogliere 
 i tempi medi
  []
 
 
-Overfull \hbox (16.019pt too wide) in paragraph at lines 274--275
+Overfull \hbox (16.019pt too wide) in paragraph at lines 356--357
 \T1/cmtt/m/n/12 nominali in formato JSON (ms/op), garantendo l'esecuzione corre
 tta delle
  []
 
-(c:/Program Files/texlive/2025/texmf-dist/tex/latex/listings/lstlang1.sty
-File: lstlang1.sty 2025/11/14 1.11b listings language file
-)
-(c:/Program Files/texlive/2025/texmf-dist/tex/latex/listings/lstlang1.sty
-File: lstlang1.sty 2025/11/14 1.11b listings language file
-)
-Overfull \hbox (3.67201pt too wide) in paragraph at lines 275--276
+
+Overfull \hbox (3.67201pt too wide) in paragraph at lines 357--358
 []\T1/cmtt/m/n/12 Successivamente, la profilazione energetica viene effettuata 
 eseguendo
  []
 
 
-Overfull \hbox (16.019pt too wide) in paragraph at lines 275--276
+Overfull \hbox (16.019pt too wide) in paragraph at lines 357--358
 \T1/cmtt/m/n/12 ciascun metodo di benchmark singolarmente all'interno di un pro
 cesso JVM
  []
 
 
-Overfull \hbox (282.7209pt too wide) in paragraph at lines 277--278
+Overfull \hbox (282.7209pt too wide) in paragraph at lines 359--360
 [][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
 ][][][][][] 
  []
 
-
-Overfull \hbox (40.71297pt too wide) in paragraph at lines 279--280
+[19]
+Overfull \hbox (40.71297pt too wide) in paragraph at lines 361--362
 \T1/cmtt/m/n/12 Questo garantisce che la telemetria energetica campionata per c
 iascun metodo
  []
 
 
-Overfull \hbox (51.90424pt too wide) in paragraph at lines 282--285
+Overfull \hbox (51.90424pt too wide) in paragraph at lines 364--367
 []\T1/cmtt/m/n/12 Filtrazione del Rumore dei Sensori RAPL: I registri energetic
 i hardware (Intel/AMD
  []
 
 
-Overfull \hbox (14.86328pt too wide) in paragraph at lines 282--285
+Overfull \hbox (14.86328pt too wide) in paragraph at lines 364--367
 \T1/cmtt/m/n/12 RAPL o LibreHardwareMonitor su Windows) possono presentare lett
 ure instabili
  []
 
 
-Overfull \hbox (45.73074pt too wide) in paragraph at lines 282--285
+Overfull \hbox (45.73074pt too wide) in paragraph at lines 364--367
 \T1/cmtt/m/n/12 dovute a transitori fisici o interferenze del sistema operativo
 . Queste anomalie
  []
 
 
-Overfull \hbox (39.55725pt too wide) in paragraph at lines 282--285
+Overfull \hbox (39.55725pt too wide) in paragraph at lines 364--367
 \T1/cmtt/m/n/12 si manifestano come picchi di potenza fittizi o decrementi (res
 et) nei contatori
  []
 
 
-Overfull \hbox (39.55725pt too wide) in paragraph at lines 282--285
+Overfull \hbox (39.55725pt too wide) in paragraph at lines 364--367
 \T1/cmtt/m/n/12 cumulativi. Lo script applica una formula matematica di filtrag
 gio sui campioni
  []
 
 
-Overfull \hbox (29.64938pt too wide) in paragraph at lines 282--285
+Overfull \hbox (29.64938pt too wide) in paragraph at lines 364--367
 \T1/cmtt/m/n/12 differenziali di energia $\OT1/cmr/m/n/12 ^^A\OML/cmm/m/it/12 E
 []$ \T1/cmtt/m/n/12 e $\OT1/cmr/m/n/12 ^^A\OML/cmm/m/it/12 E[]$ \T1/cmtt/m/n/12
  vengono accumulati solo se soddisfano
  []
 
-[18]
-Overfull \hbox (39.55725pt too wide) in paragraph at lines 290--292
+
+Overfull \hbox (39.55725pt too wide) in paragraph at lines 372--374
 \T1/cmtt/m/n/12 Qualsiasi variazione che ecceda la potenza limite di targa (250
  W per il package
  []
 
 
-Overfull \hbox (2.5163pt too wide) in paragraph at lines 290--292
+Overfull \hbox (2.5163pt too wide) in paragraph at lines 372--374
 \T1/cmtt/m/n/12 CPU e 150 W per i core) o che risulti negativa viene scartata (
 impostata a
  []
 
 
-Overfull \hbox (21.03677pt too wide) in paragraph at lines 293--295
+Overfull \hbox (21.03677pt too wide) in paragraph at lines 375--377
 []\T1/cmtt/m/n/12 Co-Sincronizzazione e Integrazione dei Report: Al termine del
 le run isolate,
  []
 
 
-Overfull \hbox (2.5163pt too wide) in paragraph at lines 293--295
+Overfull \hbox (2.5163pt too wide) in paragraph at lines 375--377
 \T1/cmtt/m/n/12 lo script analizza il file JSON prodotto da JMH e associa a cia
 scun metodo
  []
 
 
-Overfull \hbox (45.73074pt too wide) in paragraph at lines 293--295
+Overfull \hbox (45.73074pt too wide) in paragraph at lines 375--377
 \T1/cmtt/m/n/12 il rispettivo tempo medio per operazione. Successivamente, aggr
 ega le telemetrie
  []
 
 
-Overfull \hbox (9.8455pt too wide) in paragraph at lines 297--298
+Overfull \hbox (9.8455pt too wide) in paragraph at lines 379--380
 []\T1/cmtt/m/n/12 Potenza Media CPU (W): Energia CPU divisa per la durata effet
 tiva della
  []
 
 
-Overfull \hbox (28.36598pt too wide) in paragraph at lines 299--300
+Overfull \hbox (28.36598pt too wide) in paragraph at lines 381--382
 []\T1/cmtt/m/n/12 Memoria RAM Allocata (GB): Impronta media e di picco ricavata
  dai campioni
  []
 
 
-Overfull \hbox (14.86328pt too wide) in paragraph at lines 301--302
+Overfull \hbox (14.86328pt too wide) in paragraph at lines 383--384
 \T1/cmtt/m/n/12 I dati unificati vengono infine formattati in una tabella testu
 ale e salvati
  []
 
 
-Overfull \hbox (78.09097pt too wide) in paragraph at lines 305--306
+Overfull \hbox (78.09097pt too wide) in paragraph at lines 387--388
 \T1/cmtt/m/n/12 Per convalidare sperimentalmente a livello di singolo metodo le
  inefficienze architetturali
  []
 
 
-Overfull \hbox (12.26538pt too wide) in paragraph at lines 305--306
+Overfull \hbox (12.26538pt too wide) in paragraph at lines 387--388
 \T1/cmtt/m/n/12 emerse dalle metriche globali dei test di carico (JMeter e \T1/
 cmtt/m/it/12 EnergiBridge\T1/cmtt/m/n/12 ) e dalle
  []
 
 
-Overfull \hbox (6.09189pt too wide) in paragraph at lines 305--306
+Overfull \hbox (6.09189pt too wide) in paragraph at lines 387--388
 \T1/cmtt/m/n/12 violazioni strutturali evidenziate dall'analisi statica (\T1/cm
 tt/m/it/12 Creedengo\T1/cmtt/m/n/12 ), sono stati
  []
 
 
-Overfull \hbox (16.35605pt too wide) in paragraph at lines 305--306
+Overfull \hbox (16.35605pt too wide) in paragraph at lines 387--388
 \T1/cmtt/m/n/12 realizzati ed eseguiti due benchmark di microlivello utilizzand
 o il framework JMH
  []
 
 
-Overfull \hbox (77.19531pt too wide) in paragraph at lines 307--308
+Overfull \hbox (77.19531pt too wide) in paragraph at lines 389--390
 []\T1/cmtt/m/n/12 La correlazione tra queste tre sorgenti di telemetria rappres
 enta la chiave metodologica
  []
 
 
-Overfull \hbox (51.90424pt too wide) in paragraph at lines 309--310
+Overfull \hbox (51.90424pt too wide) in paragraph at lines 391--392
 []\T1/cmtt/m/n/12 L'Input Strutturale (Creedengo): Identifica le coordinate esa
 tte delle deviazioni
  []
 
 
-Overfull \hbox (33.38376pt too wide) in paragraph at lines 309--310
+Overfull \hbox (33.38376pt too wide) in paragraph at lines 391--392
 \T1/cmtt/m/n/12 dalle linee guida di eco-design (es. query SQL all'interno di c
 icli iterativi,
  []
 
 
-Overfull \hbox (8.68979pt too wide) in paragraph at lines 310--311
+Overfull \hbox (8.68979pt too wide) in paragraph at lines 392--393
 []\T1/cmtt/m/n/12 La Rilevanza Funzionale (JMeter + EnergiBridge): Consente di 
 mappare se le
  []
 
 
-Overfull \hbox (39.55725pt too wide) in paragraph at lines 310--311
+Overfull \hbox (39.55725pt too wide) in paragraph at lines 392--393
 \T1/cmtt/m/n/12 classi affette da tali vulnerabilità strutturali ricadono all'i
 nterno dei flussi
  []
 
 
-Overfull \hbox (33.38376pt too wide) in paragraph at lines 310--311
+Overfull \hbox (33.38376pt too wide) in paragraph at lines 392--393
 \T1/cmtt/m/n/12 applicativi reali maggiormente sollecitati e responsabili del m
 aggior dispendio
  []
 
-
-Overfull \hbox (101.29218pt too wide) in paragraph at lines 311--312
+[20]
+Overfull \hbox (101.29218pt too wide) in paragraph at lines 393--394
 []\T1/cmtt/m/n/12 La Misurazione di Precisione (JMH): Isola i metodi specifici 
 dal contesto infrastrutturale
  []
 
 
-Overfull \hbox (21.03677pt too wide) in paragraph at lines 311--312
+Overfull \hbox (21.03677pt too wide) in paragraph at lines 393--394
 \T1/cmtt/m/n/12 del server Tomcat (eliminando il rumore della latenza di rete, 
 dei protocolli
  []
 
 
-Overfull \hbox (21.03677pt too wide) in paragraph at lines 311--312
+Overfull \hbox (21.03677pt too wide) in paragraph at lines 393--394
 \T1/cmtt/m/n/12 HTTP e dell'I/O del browser) per quantificare con estrema preci
 sione il tempo
  []
 
 
-Overfull \hbox (21.03677pt too wide) in paragraph at lines 311--312
+Overfull \hbox (21.03677pt too wide) in paragraph at lines 393--394
 \T1/cmtt/m/n/12 medio di esecuzione per singola operazione ($[]$) ed evidenziar
 e l'efficacia
  []
 
-[19]
-Overfull \hbox (16.35605pt too wide) in paragraph at lines 315--316
+
+Overfull \hbox (16.35605pt too wide) in paragraph at lines 397--398
 \T1/cmtt/m/n/12 Le due classi di benchmark sviluppate operano sulle rispettive 
 componenti DAO del
  []
 
 
-Overfull \hbox (58.07773pt too wide) in paragraph at lines 318--320
+Overfull \hbox (58.07773pt too wide) in paragraph at lines 400--402
 []\T1/cmtt/m/n/12 ProdottoDAOBenchmark: Questa suite si concentra sulla valutaz
 ione delle operazioni
  []
 
 
-Overfull \hbox (21.03677pt too wide) in paragraph at lines 318--320
+Overfull \hbox (21.03677pt too wide) in paragraph at lines 400--402
 \T1/cmtt/m/n/12 di recupero e manipolazione del catalogo prodotti. Nello specif
 ico, profila: 
  []
 
 
-Overfull \hbox (83.92741pt too wide) in paragraph at lines 321--322
+Overfull \hbox (83.92741pt too wide) in paragraph at lines 403--404
 []\T1/cmtt/m/n/12 benchmarkAggiungiSpecifiche: Mappa direttamente la violazione
  creedengo-java:GCI72
  []
 
 
-Overfull \hbox (16.019pt too wide) in paragraph at lines 321--322
+Overfull \hbox (16.019pt too wide) in paragraph at lines 403--404
 \T1/cmtt/m/n/12 (SQL request in loop) alla linea 182 di ProdottoDAO.java. Quest
 o metodo
  []
 
 
-Overfull \hbox (22.19249pt too wide) in paragraph at lines 321--322
+Overfull \hbox (22.19249pt too wide) in paragraph at lines 403--404
 \T1/cmtt/m/n/12 esegue iterativamente query di inserimento per ciascuna specifi
 ca tecnica
  []
 
 
-Overfull \hbox (9.8455pt too wide) in paragraph at lines 321--322
+Overfull \hbox (9.8455pt too wide) in paragraph at lines 403--404
 \T1/cmtt/m/n/12 associata ad un prodotto, generando un notevole carico di rete 
 locale e
  []
 
 
-Overfull \hbox (127.14186pt too wide) in paragraph at lines 322--323
+Overfull \hbox (127.14186pt too wide) in paragraph at lines 404--405
 []\T1/cmtt/m/n/12 benchmarkGetProdotti, benchmarkGetProdottoByIdValid, benchmar
 kGetProdottiByCategoriaValid:
  []
 
 
-Overfull \hbox (46.88646pt too wide) in paragraph at lines 322--323
+Overfull \hbox (46.88646pt too wide) in paragraph at lines 404--405
 \T1/cmtt/m/n/12 Profilano i metodi di lettura inficiati dalla violazione creede
 ngo-java:GCI74
  []
 
 
-Overfull \hbox (40.71297pt too wide) in paragraph at lines 322--323
+Overfull \hbox (40.71297pt too wide) in paragraph at lines 404--405
 \T1/cmtt/m/n/12 (uso dell'operatore jolly SELECT *) alle linee 29, 46, 82, 120 
 e 137. L'uso
  []
 
 
-Overfull \hbox (40.71297pt too wide) in paragraph at lines 322--323
+Overfull \hbox (40.71297pt too wide) in paragraph at lines 404--405
 \T1/cmtt/m/n/12 di SELECT * incrementa l'allocazione di risorse in memoria Heap
  costringendo
  []
 
 
-Overfull \hbox (22.19249pt too wide) in paragraph at lines 323--324
+Overfull \hbox (22.19249pt too wide) in paragraph at lines 405--406
 []\T1/cmtt/m/n/12 benchmarkGetProdottoByIdInvalid e benchmarkGetProdottiByCateg
 oriaInvalid:
  []
 
 
-Overfull \hbox (28.36598pt too wide) in paragraph at lines 323--324
+Overfull \hbox (28.36598pt too wide) in paragraph at lines 405--406
 \T1/cmtt/m/n/12 Valutano il comportamento della classe in presenza di parametri
  malformati
  []
 
 
-Overfull \hbox (3.67201pt too wide) in paragraph at lines 323--324
+Overfull \hbox (3.67201pt too wide) in paragraph at lines 405--406
 \T1/cmtt/m/n/12 (es. ID negativi o stringhe vuote), evidenziando il ruolo di ba
 rriera
  []
 
 
-Overfull \hbox (34.53947pt too wide) in paragraph at lines 323--324
+Overfull \hbox (34.53947pt too wide) in paragraph at lines 405--406
 \T1/cmtt/m/n/12 energetica giocato dai controlli preventivi di validazione degl
 i argomenti. 
  []
 
 
-Overfull \hbox (58.07773pt too wide) in paragraph at lines 326--328
+Overfull \hbox (58.07773pt too wide) in paragraph at lines 408--410
 []\T1/cmtt/m/n/12 RecensioneDAOBenchmark: Questa suite isola il sistema di gest
 ione delle recensioni
  []
 
 
-Overfull \hbox (8.68979pt too wide) in paragraph at lines 326--328
+Overfull \hbox (8.68979pt too wide) in paragraph at lines 408--410
 \T1/cmtt/m/n/12 degli utenti, che ha mostrato forti criticità di degradazione p
 restazionale
  []
 
 
-Overfull \hbox (40.71297pt too wide) in paragraph at lines 329--330
+Overfull \hbox (40.71297pt too wide) in paragraph at lines 411--412
 []\T1/cmtt/m/n/12 benchmarkGetRecensioniByProdottoValid e benchmarkGetRecension
 iByUtenteValid:
  []
 
 
-Overfull \hbox (16.019pt too wide) in paragraph at lines 329--330
+Overfull \hbox (16.019pt too wide) in paragraph at lines 411--412
 \T1/cmtt/m/n/12 Mappano la violazione creedengo-java:GCI74 (SELECT *) alle line
 e 33 e 51
  []
 
 
-Overfull \hbox (3.67201pt too wide) in paragraph at lines 329--330
+Overfull \hbox (3.67201pt too wide) in paragraph at lines 411--412
 \T1/cmtt/m/n/12 di RecensioneDAO.java. In questo caso la violazione si aggrava 
 poiché
  []
 
 
-Overfull \hbox (59.23344pt too wide) in paragraph at lines 329--330
+Overfull \hbox (59.23344pt too wide) in paragraph at lines 411--412
 \T1/cmtt/m/n/12 la query coinvolge join a tre vie tra le tabelle recensione, ut
 ente e prodotto,
  []
 
 
-Overfull \hbox (9.8455pt too wide) in paragraph at lines 329--330
+Overfull \hbox (9.8455pt too wide) in paragraph at lines 411--412
 \T1/cmtt/m/n/12 forzando il DBMS a caricare in memoria intere righe ridondanti 
 da tutte
  []
 
 
-Overfull \hbox (16.019pt too wide) in paragraph at lines 330--331
+Overfull \hbox (16.019pt too wide) in paragraph at lines 412--413
 []\T1/cmtt/m/n/12 benchmarkAddRecensione: Valuta le performance di scrittura su
 l database
  []
 
 
-Overfull \hbox (115.13193pt too wide) in paragraph at lines 335--336
+Overfull \hbox (115.13193pt too wide) in paragraph at lines 417--418
 \T1/cmtt/m/n/12 I test sono stati eseguiti impostando una configurazione a thre
 ad singolo (@State(Scope.Thread)),
  []
 
 
-Overfull \hbox (22.52954pt too wide) in paragraph at lines 335--336
+Overfull \hbox (22.52954pt too wide) in paragraph at lines 417--418
 \T1/cmtt/m/n/12 con 2 iterazioni di warmup e 2 iterazioni di misurazione da 1 s
 econdo ciascuna per
  []
 
 
-Overfull \hbox (10.18256pt too wide) in paragraph at lines 335--336
+Overfull \hbox (10.18256pt too wide) in paragraph at lines 417--418
 \T1/cmtt/m/n/12 ciascun modulo isolato. Le metriche temporali sono espresse in 
 millisecondi per
  []
 
 
-Overfull \hbox (41.05002pt too wide) in paragraph at lines 335--336
+Overfull \hbox (41.05002pt too wide) in paragraph at lines 417--418
 \T1/cmtt/m/n/12 operazione ($[]$), mentre le metriche di consumo energetico e m
 emoria sono aggregate
  []
 
 
-Overfull \hbox (16.35605pt too wide) in paragraph at lines 335--336
+Overfull \hbox (16.35605pt too wide) in paragraph at lines 417--418
 \T1/cmtt/m/n/12 e filtrate tramite lo script di co-sincronizzazione. I dati con
 solidati estratti
  []
 
-
-LaTeX Warning: `!h' float specifier changed to `!ht'.
-
-
-LaTeX Warning: `!h' float specifier changed to `!ht'.
-
-
-Overfull \hbox (4.00906pt too wide) in paragraph at lines 380--381
+[21]
+Overfull \hbox (4.00906pt too wide) in paragraph at lines 462--463
 \T1/cmtt/m/n/12 L'analisi congiunta delle metriche evidenzia tre pilastri teori
 ci fondamentali: 
  []
 
-[20]
-Overfull \hbox (27.21027pt too wide) in paragraph at lines 383--385
+
+Overfull \hbox (27.21027pt too wide) in paragraph at lines 465--467
 []\T1/cmtt/m/n/12 Il Peso del Ciclo SQL (GCI72): Il metodo benchmarkAggiungiSpe
 cifiche richiede
  []
 
 
-Overfull \hbox (10.75943pt too wide) in paragraph at lines 383--385
+Overfull \hbox (10.75943pt too wide) in paragraph at lines 465--467
 \OT1/cmr/m/n/12 23[]65$ \T1/cmtt/m/n/12 ms per singola operazione, registrando 
 un consumo energetico della CPU
  []
 
 
-Overfull \hbox (12.82907pt too wide) in paragraph at lines 383--385
+Overfull \hbox (12.82907pt too wide) in paragraph at lines 465--467
 \T1/cmtt/m/n/12 pari a $\OT1/cmr/m/n/12 74[]72$ \T1/cmtt/m/n/12 J ed una potenz
 a media assorbita di $\OT1/cmr/m/n/12 14[]92$ \T1/cmtt/m/n/12 W. Questo sovracc
 arico
  []
 
 
-Overfull \hbox (14.86328pt too wide) in paragraph at lines 383--385
+Overfull \hbox (14.86328pt too wide) in paragraph at lines 465--467
 \T1/cmtt/m/n/12 temporale ed energetico è dovuto all'iterazione del ciclo SQL: 
 l'invocazione
  []
 
 
-Overfull \hbox (2.5163pt too wide) in paragraph at lines 383--385
+Overfull \hbox (2.5163pt too wide) in paragraph at lines 465--467
 \T1/cmtt/m/n/12 sequenziale di istruzioni di INSERT forza l'apertura e chiusura
  logica dei
  []
 
 
-Overfull \hbox (27.21027pt too wide) in paragraph at lines 383--385
+Overfull \hbox (27.21027pt too wide) in paragraph at lines 465--467
 \T1/cmtt/m/n/12 canali di comunicazione, impedendo al driver JDBC di ottimizzar
 e le istruzioni
  []
 
 
-Overfull \hbox (45.73074pt too wide) in paragraph at lines 383--385
+Overfull \hbox (45.73074pt too wide) in paragraph at lines 465--467
 \T1/cmtt/m/n/12 tramite operazioni di batching. Questo micro-comportamento gius
 tifica il consumo
  []
 
 
-Overfull \hbox (6.95413pt too wide) in paragraph at lines 383--385
+Overfull \hbox (6.95413pt too wide) in paragraph at lines 465--467
 \T1/cmtt/m/n/12 energetico massivo di $\OT1/cmr/m/n/12 36\OML/cmm/m/it/12 :\OT1
 /cmr/m/n/12 089[]51$ \T1/cmtt/m/n/12 J rilevato su ProdottoServlet durante i te
 st
  []
 
 
-Overfull \hbox (45.73074pt too wide) in paragraph at lines 386--388
+Overfull \hbox (45.73074pt too wide) in paragraph at lines 468--470
 []\T1/cmtt/m/n/12 L'Impatto delle Query Indiscriminate (GCI74): Le query di let
 tura che utilizzano
  []
 
 
-Overfull \hbox (35.4534pt too wide) in paragraph at lines 386--388
+Overfull \hbox (35.4534pt too wide) in paragraph at lines 468--470
 \T1/cmtt/m/n/12 SELECT * (benchmarkGetProdottoByIdValid a $\OT1/cmr/m/n/12 19[]
 19$ \T1/cmtt/m/n/12 ms/op e le letture di recensioni
  []
 
 
-Overfull \hbox (23.72462pt too wide) in paragraph at lines 386--388
+Overfull \hbox (23.72462pt too wide) in paragraph at lines 468--470
 \T1/cmtt/m/n/12 a $\OMS/cmsy/m/n/12 ^^X \OT1/cmr/m/n/12 15[]4$ \T1/cmtt/m/n/12 
 ms/op) mostrano tempi ed assorbimenti elevati. Ad esempio, il metodo
  []
 
 
-Overfull \hbox (14.86328pt too wide) in paragraph at lines 386--388
+Overfull \hbox (14.86328pt too wide) in paragraph at lines 468--470
 \T1/cmtt/m/n/12 benchmarkGetProdotti (anch'esso affetto da query indiscriminata
 ) registra un
  []
 
 
-Overfull \hbox (37.22449pt too wide) in paragraph at lines 386--388
+Overfull \hbox (37.22449pt too wide) in paragraph at lines 468--470
 \T1/cmtt/m/n/12 consumo di ben $\OT1/cmr/m/n/12 279[]08$ \T1/cmtt/m/n/12 J sull
 a CPU e $\OT1/cmr/m/n/12 13[]36$ \T1/cmtt/m/n/12 J sui Core fisici. Il DBMS è c
 ostretto
  []
 
 
-Overfull \hbox (14.86328pt too wide) in paragraph at lines 386--388
+Overfull \hbox (14.86328pt too wide) in paragraph at lines 468--470
 \T1/cmtt/m/n/12 a caricare in memoria Heap intere righe ridondanti, aumentando 
 l'allocazione
  []
 
 
-Overfull \hbox (2.5163pt too wide) in paragraph at lines 386--388
+Overfull \hbox (2.5163pt too wide) in paragraph at lines 468--470
 \T1/cmtt/m/n/12 RAM. Sotto stress concorrente (come nei test di Spike in cui la
  latenza di
  []
 
 
-Overfull \hbox (35.4534pt too wide) in paragraph at lines 386--388
+Overfull \hbox (35.4534pt too wide) in paragraph at lines 468--470
 \T1/cmtt/m/n/12 RecensioniServlet è salita a $\OT1/cmr/m/n/12 43[]22$ \T1/cmtt/
 m/n/12 secondi), la saturazione di rete e di memoria
  []
 
 
-Overfull \hbox (2.5163pt too wide) in paragraph at lines 386--388
+Overfull \hbox (2.5163pt too wide) in paragraph at lines 468--470
 \T1/cmtt/m/n/12 Heap blocca i thread di connessione, provocando una potenza med
 ia di picco
  []
 
 
-Overfull \hbox (14.86328pt too wide) in paragraph at lines 389--391
+Overfull \hbox (14.86328pt too wide) in paragraph at lines 471--473
 []\T1/cmtt/m/n/12 La Validazione Preventiva come "Scudo Energetico": I benchmar
 k eseguiti con
  []
 
 
-Overfull \hbox (132.15964pt too wide) in paragraph at lines 389--391
+Overfull \hbox (132.15964pt too wide) in paragraph at lines 471--473
 \T1/cmtt/m/n/12 parametri non validi (benchmarkGetProdottoByIdInvalid, benchmar
 kGetRecensioniByProdottoInvalid)
  []
 
 
-Overfull \hbox (12.23196pt too wide) in paragraph at lines 389--391
+Overfull \hbox (12.23196pt too wide) in paragraph at lines 471--473
 \T1/cmtt/m/n/12 mostrano un tempo medio di esecuzione quasi nullo ($\OT1/cmr/m/
 n/12 0[]0008[]0[]0009$ \T1/cmtt/m/n/12 ms/op). Ciò
  []
 
 
-Overfull \hbox (107.46567pt too wide) in paragraph at lines 389--391
+Overfull \hbox (107.46567pt too wide) in paragraph at lines 471--473
 \T1/cmtt/m/n/12 avviene grazie al design difensivo basato su eccezioni immediat
 e (IllegalArgumentException)
  []
 
 
-Overfull \hbox (76.5982pt too wide) in paragraph at lines 389--391
+Overfull \hbox (76.5982pt too wide) in paragraph at lines 471--473
 \T1/cmtt/m/n/12 lanciate prima dell'interazione con il database. Sotto il profi
 lo della sostenibilità
  []
 
 
-Overfull \hbox (33.38376pt too wide) in paragraph at lines 389--391
+Overfull \hbox (33.38376pt too wide) in paragraph at lines 471--473
 \T1/cmtt/m/n/12 del software, questo indica che un filtro di validazione all'in
 gresso impedisce
  []
 
 
-Overfull \hbox (8.68979pt too wide) in paragraph at lines 389--391
+Overfull \hbox (8.68979pt too wide) in paragraph at lines 471--473
 \T1/cmtt/m/n/12 del tutto l'apertura di connessioni JDBC ed il transito di chia
 mate di rete
  []
 
 
-Overfull \hbox (27.21027pt too wide) in paragraph at lines 389--391
+Overfull \hbox (27.21027pt too wide) in paragraph at lines 471--473
 \T1/cmtt/m/n/12 esterne, proteggendo il server da carichi anomali o attacchi De
 nial of Service
  []
 
-
-Overfull \hbox (47.22351pt too wide) in paragraph at lines 394--395
+[22]
+Overfull \hbox (47.22351pt too wide) in paragraph at lines 476--477
 \T1/cmtt/m/n/12 Per completare la validazione sperimentale del nucleo transazio
 nale dell'applicazione,
  []
 
 
-Overfull \hbox (16.35605pt too wide) in paragraph at lines 394--395
+Overfull \hbox (16.35605pt too wide) in paragraph at lines 476--477
 \T1/cmtt/m/n/12 è stata realizzata ed eseguita la suite OrdineDAOBenchmark, mir
 ata a profilare le
  []
 
 
-Overfull \hbox (16.35605pt too wide) in paragraph at lines 394--395
+Overfull \hbox (16.35605pt too wide) in paragraph at lines 476--477
 \T1/cmtt/m/n/12 operazioni di gestione del carrello e finalizzazione degli ordi
 ni. Questo modulo
  []
 
 
-Overfull \hbox (10.18256pt too wide) in paragraph at lines 394--395
+Overfull \hbox (10.18256pt too wide) in paragraph at lines 476--477
 \T1/cmtt/m/n/12 è di fondamentale importanza, in quanto correlato direttamente 
 ai gravi colli di
  []
 
 
-Overfull \hbox (84.26447pt too wide) in paragraph at lines 394--395
+Overfull \hbox (84.26447pt too wide) in paragraph at lines 476--477
 \T1/cmtt/m/n/12 bottiglia energetici e prestazionali registrati da AggiungiCarr
 elloServlet e CheckOutServlet
  []
 
 
-Overfull \hbox (33.49509pt too wide) in paragraph at lines 394--395
+Overfull \hbox (33.49509pt too wide) in paragraph at lines 476--477
 \T1/cmtt/m/n/12 (saturazione della CPU al $\OT1/cmr/m/n/12 100%$ \T1/cmtt/m/n/1
 2 e picco di RAM di $\OT1/cmr/m/n/12 23[]01$ \T1/cmtt/m/n/12 GB nei test di Soa
 k e Spike). 
  []
 
-[21]
-Overfull \hbox (10.18256pt too wide) in paragraph at lines 397--398
+
+Overfull \hbox (10.18256pt too wide) in paragraph at lines 479--480
 \T1/cmtt/m/n/12 La suite OrdineDAOBenchmark profila e quantifica l'impatto dei 
 seguenti metodi e
  []
 
 
-Overfull \hbox (21.03677pt too wide) in paragraph at lines 399--401
+Overfull \hbox (21.03677pt too wide) in paragraph at lines 481--483
 []\T1/cmtt/m/n/12 benchmarkAddOrdineValid: Mappa la violazione creedengo-java:G
 CI72 (\T1/cmtt/m/it/12 Avoid SQL
  []
 
 
-Overfull \hbox (23.1196pt too wide) in paragraph at lines 399--401
+Overfull \hbox (23.1196pt too wide) in paragraph at lines 481--483
 \T1/cmtt/m/it/12 request in loop\T1/cmtt/m/n/12 ) alla linea 248 di OrdineDAO.j
 ava. Durante la finalizzazione
  []
 
 
-Overfull \hbox (14.86328pt too wide) in paragraph at lines 399--401
+Overfull \hbox (14.86328pt too wide) in paragraph at lines 481--483
 \T1/cmtt/m/n/12 di un ordine, il sistema inserisce sequenzialmente gli elementi
  del carrello
  []
 
 
-Overfull \hbox (39.55725pt too wide) in paragraph at lines 399--401
+Overfull \hbox (39.55725pt too wide) in paragraph at lines 481--483
 \T1/cmtt/m/n/12 all'interno della tabella composto tramite un ciclo iterativo. 
 Questo benchmark
  []
 
 
-Overfull \hbox (2.5163pt too wide) in paragraph at lines 401--403
+Overfull \hbox (2.5163pt too wide) in paragraph at lines 483--485
 []\T1/cmtt/m/n/12 benchmarkGetProdottoOrdineValid: Mappa la violazione creedeng
 o-java:GCI74
  []
 
 
-Overfull \hbox (23.1196pt too wide) in paragraph at lines 401--403
+Overfull \hbox (23.1196pt too wide) in paragraph at lines 483--485
 \T1/cmtt/m/n/12 (\T1/cmtt/m/it/12 Don't use the query SELECT * FROM\T1/cmtt/m/n
 /12 ) alla linea 83 di OrdineDAO.java. Profila
  []
 
 
-Overfull \hbox (51.90424pt too wide) in paragraph at lines 401--403
+Overfull \hbox (51.90424pt too wide) in paragraph at lines 483--485
 \T1/cmtt/m/n/12 il caricamento degli articoli associati a un ordine tramite una
  query che recupera
  []
 
 
-Overfull \hbox (21.03677pt too wide) in paragraph at lines 403--405
+Overfull \hbox (21.03677pt too wide) in paragraph at lines 485--487
 []\T1/cmtt/m/n/12 benchmarkGetOrdiniByUtenteValid: Mappa una combinazione estre
 mamente critica
  []
 
 
-Overfull \hbox (72.50754pt too wide) in paragraph at lines 403--405
+Overfull \hbox (72.50754pt too wide) in paragraph at lines 485--487
 \T1/cmtt/m/n/12 di violazioni: creedengo-java:GCI74 (\T1/cmtt/m/it/12 SELECT *\
 T1/cmtt/m/n/12 ) alla linea 135 e creedengo-java:GCI72
  []
 
 
-Overfull \hbox (23.1196pt too wide) in paragraph at lines 403--405
+Overfull \hbox (23.1196pt too wide) in paragraph at lines 485--487
 \T1/cmtt/m/n/12 (\T1/cmtt/m/it/12 SQL request in loop\T1/cmtt/m/n/12 ) alla lin
 ea 166. Nel recuperare lo storico degli ordini
  []
 
 
-Overfull \hbox (39.55725pt too wide) in paragraph at lines 403--405
+Overfull \hbox (39.55725pt too wide) in paragraph at lines 485--487
 \T1/cmtt/m/n/12 di un utente, il metodo esegue per ciascun ordine trovato una q
 uery SQL separata
  []
 
 
-Overfull \hbox (21.03677pt too wide) in paragraph at lines 405--407
+Overfull \hbox (21.03677pt too wide) in paragraph at lines 487--489
 []\T1/cmtt/m/n/12 benchmarkCarrelloOperations: Mappa le violazioni creedengo-ja
 va:GCI69 e GCI3
  []
 
 
-Overfull \hbox (47.81357pt too wide) in paragraph at lines 405--407
+Overfull \hbox (47.81357pt too wide) in paragraph at lines 487--489
 \T1/cmtt/m/n/12 (\T1/cmtt/m/it/12 Do not call a function when declaring a for-t
 ype loop\T1/cmtt/m/n/12 ) presenti in Carrello.java
  []
 
 
-Overfull \hbox (14.86328pt too wide) in paragraph at lines 405--407
+Overfull \hbox (14.86328pt too wide) in paragraph at lines 487--489
 \T1/cmtt/m/n/12 alle linee 28, 72 e 101. Profila le operazioni in-memory per il
  calcolo del
  []
 
 
-Overfull \hbox (70.42471pt too wide) in paragraph at lines 405--407
+Overfull \hbox (70.42471pt too wide) in paragraph at lines 487--489
 \T1/cmtt/m/n/12 totale del carrello ed eliminazione/modifica di elementi, verif
 icando il sovraccarico
  []
 
 
-Overfull \hbox (2.5163pt too wide) in paragraph at lines 405--407
+Overfull \hbox (2.5163pt too wide) in paragraph at lines 487--489
 \T1/cmtt/m/n/12 CPU-only causato dall'interrogazione continua dei limiti della 
 collezione. 
  []
 
 
-Overfull \hbox (27.21027pt too wide) in paragraph at lines 407--409
+Overfull \hbox (27.21027pt too wide) in paragraph at lines 489--491
 []\T1/cmtt/m/n/12 benchmarkGetOrdineByIdValid e Metodi di Controllo / Invalidaz
 ione: Forniscono
  []
 
 
-Overfull \hbox (51.90424pt too wide) in paragraph at lines 407--409
+Overfull \hbox (51.90424pt too wide) in paragraph at lines 489--491
 \T1/cmtt/m/n/12 il baseline di confronto (come getOrdineById) e misurano l'effi
 cacia dei controlli
  []
 
 
-Overfull \hbox (14.86328pt too wide) in paragraph at lines 407--409
+Overfull \hbox (14.86328pt too wide) in paragraph at lines 489--491
 \T1/cmtt/m/n/12 difensivi (benchmarkGetOrdineByIdInvalid, benchmarkGetProdottoO
 rdineInvalid,
  []
 
 
-Overfull \hbox (64.25122pt too wide) in paragraph at lines 407--409
+Overfull \hbox (64.25122pt too wide) in paragraph at lines 489--491
 \T1/cmtt/m/n/12 benchmarkGetOrdiniByUtenteInvalid) che arrestano l'esecuzione p
 rima dell'interazione
  []
 
 
-Overfull \hbox (28.70303pt too wide) in paragraph at lines 412--413
+Overfull \hbox (28.70303pt too wide) in paragraph at lines 494--495
 \T1/cmtt/m/n/12 I test sono stati eseguiti con 2 iterazioni di warmup e 2 itera
 zioni di misurazione
  []
 
 
-Overfull \hbox (28.70303pt too wide) in paragraph at lines 412--413
+Overfull \hbox (28.70303pt too wide) in paragraph at lines 494--495
 \T1/cmtt/m/n/12 (durata 1 secondo per iterazione) per ciascun modulo isolato. I
  risultati completi
  []
 
 
-Overfull \hbox (16.35605pt too wide) in paragraph at lines 412--413
+Overfull \hbox (16.35605pt too wide) in paragraph at lines 494--495
 \T1/cmtt/m/n/12 contenenti le metriche temporali ed energetiche sono riportati 
 nella Tabella [][]3.4[][]. 
  []
@@ -2705,1164 +3253,528 @@ nella Tabella [][]3.4[][].
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 
-Overfull \hbox (41.05002pt too wide) in paragraph at lines 435--436
+Overfull \hbox (41.05002pt too wide) in paragraph at lines 517--518
 \T1/cmtt/m/n/12 I risultati empirici spiegano chiaramente le degradazioni siste
 miche rilevate durante
  []
 
-
-Overfull \hbox (114.62137pt too wide) in paragraph at lines 437--439
+[23]
+Overfull \hbox (114.62137pt too wide) in paragraph at lines 519--521
 []\T1/cmtt/m/n/12 Il Problema del Querying $\OML/cmm/m/it/12 N \OT1/cmr/m/n/12 
 + 1$ \T1/cmtt/m/n/12 (GCI72 e GCI74): Il benchmark benchmarkGetOrdiniByUtenteVa
 lid
  []
 
 
-Overfull \hbox (16.93292pt too wide) in paragraph at lines 437--439
+Overfull \hbox (16.93292pt too wide) in paragraph at lines 519--521
 \T1/cmtt/m/n/12 registra il tempo di esecuzione in assoluto più elevato ($\OT1/
 cmr/m/n/12 41[]38$ \T1/cmtt/m/n/12 ms/op), con un
  []
 
 
-Overfull \hbox (0.48209pt too wide) in paragraph at lines 437--439
+Overfull \hbox (0.48209pt too wide) in paragraph at lines 519--521
 \T1/cmtt/m/n/12 consumo energetico di $\OT1/cmr/m/n/12 88[]68$ \T1/cmtt/m/n/12 
 J ed una potenza media di $\OT1/cmr/m/n/12 15[]26$ \T1/cmtt/m/n/12 W. Dal punto
  di
  []
 
 
-Overfull \hbox (2.5163pt too wide) in paragraph at lines 437--439
+Overfull \hbox (2.5163pt too wide) in paragraph at lines 519--521
 \T1/cmtt/m/n/12 vista teorico, questo comportamento rappresenta un classico ant
 ipattern di
  []
 
 
-Overfull \hbox (7.00525pt too wide) in paragraph at lines 437--439
+Overfull \hbox (7.00525pt too wide) in paragraph at lines 519--521
 \T1/cmtt/m/n/12 query iniziale e poi $\OML/cmm/m/it/12 N$ \T1/cmtt/m/n/12 query
  aggiuntive in loop per associare i prodotti a
  []
 
 
-Overfull \hbox (21.03677pt too wide) in paragraph at lines 437--439
+Overfull \hbox (21.03677pt too wide) in paragraph at lines 519--521
 \T1/cmtt/m/n/12 ciascun ordine. Sotto carico prolungato (Soak Test), la continu
 a allocazione
  []
 
 
-Overfull \hbox (27.21027pt too wide) in paragraph at lines 437--439
+Overfull \hbox (27.21027pt too wide) in paragraph at lines 519--521
 \T1/cmtt/m/n/12 di risorse (connessioni JDBC, array, oggetti bean) satura lo sp
 azio Heap della
  []
 
 
-Overfull \hbox (35.4534pt too wide) in paragraph at lines 437--439
+Overfull \hbox (35.4534pt too wide) in paragraph at lines 519--521
 \T1/cmtt/m/n/12 JVM, portando all'accumulo di $\OT1/cmr/m/n/12 23[]01$ \T1/cmtt
 /m/n/12 GB di RAM e a una elevata frequenza di cicli
  []
 
 
-Overfull \hbox (60.80014pt too wide) in paragraph at lines 437--439
+Overfull \hbox (60.80014pt too wide) in paragraph at lines 519--521
 \T1/cmtt/m/n/12 di Garbage Collection. Ciò costringe la CPU a lavorare al $\OT1
 /cmr/m/n/12 100%$ \T1/cmtt/m/n/12 delle sue capacità,
  []
 
-[22]
-Overfull \hbox (33.38376pt too wide) in paragraph at lines 439--441
+
+Overfull \hbox (33.38376pt too wide) in paragraph at lines 521--523
 []\T1/cmtt/m/n/12 Overhead di Inserimento Sequenziale (GCI72): Il metodo benchm
 arkAddOrdineValid
  []
 
 
-Overfull \hbox (6.65558pt too wide) in paragraph at lines 439--441
+Overfull \hbox (6.65558pt too wide) in paragraph at lines 521--523
 \T1/cmtt/m/n/12 richiede $\OT1/cmr/m/n/12 13[]56$ \T1/cmtt/m/n/12 ms/op, consum
 ando $\OT1/cmr/m/n/12 90[]12$ \T1/cmtt/m/n/12 J di energia package. Questo rita
 rdo
  []
 
 
-Overfull \hbox (14.86328pt too wide) in paragraph at lines 439--441
+Overfull \hbox (14.86328pt too wide) in paragraph at lines 521--523
 \T1/cmtt/m/n/12 è dovuto all'inserimento sequenziale degli articoli nel databas
 e all'interno
  []
 
 
-Overfull \hbox (21.03677pt too wide) in paragraph at lines 439--441
+Overfull \hbox (21.03677pt too wide) in paragraph at lines 521--523
 \T1/cmtt/m/n/12 di un ciclo. Ogni iterazione comporta un roundtrip di rete ed e
 secuzione SQL
  []
 
 
-Overfull \hbox (39.55725pt too wide) in paragraph at lines 439--441
+Overfull \hbox (39.55725pt too wide) in paragraph at lines 521--523
 \T1/cmtt/m/n/12 separati, prolungando il tempo in cui la connessione JDBC riman
 e attiva. Quando
  []
 
 
-Overfull \hbox (27.21027pt too wide) in paragraph at lines 439--441
+Overfull \hbox (27.21027pt too wide) in paragraph at lines 521--523
 \T1/cmtt/m/n/12 molti utenti eseguono il checkout contemporaneamente (come nel 
 test di Spike),
  []
 
 
-Overfull \hbox (21.03677pt too wide) in paragraph at lines 439--441
+Overfull \hbox (21.03677pt too wide) in paragraph at lines 521--523
 \T1/cmtt/m/n/12 questo ritardo accumulato causa l'esaurimento istantaneo delle 
 50 connessioni
  []
 
 
-Overfull \hbox (39.55725pt too wide) in paragraph at lines 439--441
+Overfull \hbox (39.55725pt too wide) in paragraph at lines 521--523
 \T1/cmtt/m/n/12 disponibili in ConPool, costringendo le richieste eccedenti in 
 coda e provocando
  []
 
 
-Overfull \hbox (14.86328pt too wide) in paragraph at lines 441--443
+Overfull \hbox (14.86328pt too wide) in paragraph at lines 523--525
 []\T1/cmtt/m/n/12 Efficienza In-Memory del Carrello (GCI69/GCI3): Le operazioni
  in memoria di
  []
 
 
-Overfull \hbox (4.28738pt too wide) in paragraph at lines 441--443
+Overfull \hbox (4.28738pt too wide) in paragraph at lines 523--525
 \T1/cmtt/m/n/12 benchmarkCarrelloOperations richiedono un tempo infinitesimo ($
 \OT1/cmr/m/n/12 0[]0000$ \T1/cmtt/m/n/12 ms/op,
  []
 
 
-Overfull \hbox (29.10645pt too wide) in paragraph at lines 441--443
+Overfull \hbox (29.10645pt too wide) in paragraph at lines 523--525
 \T1/cmtt/m/n/12 ovvero $\OML/cmm/m/it/12 < \OT1/cmr/m/n/12 0[]0001$ \T1/cmtt/m/
 n/12 ms/op). Sebbene l'impatto di una singola chiamata alla guardia
  []
 
 
-Overfull \hbox (14.86328pt too wide) in paragraph at lines 441--443
+Overfull \hbox (14.86328pt too wide) in paragraph at lines 523--525
 \T1/cmtt/m/n/12 del loop sia irrilevante a livello micro, la ripetizione sistem
 atica di tali
  []
 
 
-Overfull \hbox (14.86328pt too wide) in paragraph at lines 441--443
+Overfull \hbox (14.86328pt too wide) in paragraph at lines 523--525
 \T1/cmtt/m/n/12 invocazioni in flussi ad altissima concorrenza introduce micro-
 inutilizzi di
  []
 
 
-Overfull \hbox (21.03677pt too wide) in paragraph at lines 441--443
+Overfull \hbox (21.03677pt too wide) in paragraph at lines 523--525
 \T1/cmtt/m/n/12 cicli CPU. Il refactoring mirato a memorizzare la dimensione de
 lla collezione
  []
 
 
-Overfull \hbox (45.73074pt too wide) in paragraph at lines 443--445
+Overfull \hbox (45.73074pt too wide) in paragraph at lines 525--527
 []\T1/cmtt/m/n/12 Validazione Preventiva: Analogamente a quanto osservato per l
 e altre componenti,
  []
 
 
-Overfull \hbox (8.68979pt too wide) in paragraph at lines 443--445
+Overfull \hbox (8.68979pt too wide) in paragraph at lines 525--527
 \T1/cmtt/m/n/12 i controlli di validazione preventivi (benchmarkGetOrdineByIdIn
 valid, ecc.)
  []
 
 
-Overfull \hbox (4.28738pt too wide) in paragraph at lines 443--445
+Overfull \hbox (4.28738pt too wide) in paragraph at lines 525--527
 \T1/cmtt/m/n/12 respingono immediatamente i parametri errati in appena $\OT1/cm
 r/m/n/12 0[]0009$ \T1/cmtt/m/n/12 ms/op, agendo
  []
 
 
-Overfull \hbox (21.03677pt too wide) in paragraph at lines 443--445
+Overfull \hbox (21.03677pt too wide) in paragraph at lines 525--527
 \T1/cmtt/m/n/12 da "scudo energetico" che preserva le risorse del database e la
  stabilità del
  []
 
 
-Overfull \hbox (34.87653pt too wide) in paragraph at lines 449--450
-\T1/cmtt/m/n/12 Per l'Analisi Statica dell'Eco-Design basata su regole (\T1/cmt
-t/m/it/12 Rule-Based Eco-Design Static
- []
-
-
-Overfull \hbox (18.43887pt too wide) in paragraph at lines 449--450
-\T1/cmtt/m/it/12 Analysis\T1/cmtt/m/n/12 ), è necessario integrare il codice so
-rgente locale, un'istanza attiva di
- []
-
-
-Overfull \hbox (12.26538pt too wide) in paragraph at lines 449--450
-\T1/cmtt/m/n/12 SonarQube e il plugin Creedengo. Poiché Creedengo (evoluzione d
-i \T1/cmtt/m/it/12 ecoCode\T1/cmtt/m/n/12 ) opera
- []
-
-
-Overfull \hbox (10.18256pt too wide) in paragraph at lines 449--450
-\T1/cmtt/m/n/12 come plugin per SonarQube, esso si integra direttamente nella p
-ipeline di Static
- []
-
-
-Overfull \hbox (47.22351pt too wide) in paragraph at lines 449--450
-\T1/cmtt/m/n/12 Application Security Testing (SAST) esistente. Dato che il prog
-etto è containerizzato
- []
-
-
-Overfull \hbox (47.22351pt too wide) in paragraph at lines 449--450
-\T1/cmtt/m/n/12 tramite Docker, l'esecuzione locale di SonarQube in parallelo a
-ll'applicazione risulta
- []
-
-[23]
-Overfull \hbox (15.46039pt too wide) in paragraph at lines 451--452
-[]\T1/cmtt/m/n/12 Di seguito viene descritta la guida pratica passo-passo per l
-a configurazione,
- []
-
-
-Overfull \hbox (53.397pt too wide) in paragraph at lines 455--456
-\T1/cmtt/m/n/12 Prima di procedere alla scansione del codice, è fondamentale as
-sicurarsi che l'ambiente
- []
-
-
-Overfull \hbox (59.5705pt too wide) in paragraph at lines 455--456
-\T1/cmtt/m/n/12 SonarQube disponga del ruleset Java di Creedengo. I passaggi pe
-r predisporre l'ambiente
- []
-
-
-Overfull \hbox (51.90424pt too wide) in paragraph at lines 458--459
-[]\T1/cmtt/m/n/12 Avvio di SonarQube via Docker: Se non si dispone di un server
- SonarQube dedicato,
- []
-
-Package hyperref Info: bookmark level for unknown lstlisting defaults to 0 on i
-nput line 459.
-
-Overfull \hbox (42.03156pt too wide) in paragraph at lines 460--461
-[][][][][][][][][][][][][][][][][][][][][][][][][] 
- []
-
-
-Overfull \hbox (21.03677pt too wide) in paragraph at lines 463--464
-[]\T1/cmtt/m/n/12 Installazione del Plugin Creedengo: Il plugin Creedengo per J
-ava (in formato
- []
-
-
-Overfull \hbox (2.5163pt too wide) in paragraph at lines 463--464
-\T1/cmtt/m/n/12 .jar) deve essere scaricato dalla sezione release del repositor
-y ufficiale
- []
-
-
-Overfull \hbox (8.68979pt too wide) in paragraph at lines 463--464
-\T1/cmtt/m/n/12 GitHub (green-code-initiative/creedengo-java) ed inserito all'i
-nterno della
- []
-
-
-Overfull \hbox (33.38376pt too wide) in paragraph at lines 463--464
-\T1/cmtt/m/n/12 cartella delle estensioni di SonarQube. Il trasferimento nel co
-ntainer avviene
- []
-
-
-Overfull \hbox (264.27948pt too wide) in paragraph at lines 465--466
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
- []
-
-
-Overfull \hbox (14.86328pt too wide) in paragraph at lines 468--469
-[]\T1/cmtt/m/n/12 Riavvio del Container: Per forzare il caricamento del plugin 
-ed attivare le
- []
-
-
-Overfull \hbox (21.03677pt too wide) in paragraph at lines 468--469
-\T1/cmtt/m/n/12 nuove regole di eco-design all'interno di SonarQube, si riavvia
- il container: 
- []
-
-
-Overfull \hbox (4.00906pt too wide) in paragraph at lines 475--476
-\T1/cmtt/m/n/12 Per agevolare l'installazione e la configurazione di SonarQube 
-con Creedengo su
- []
-
-
-Overfull \hbox (220.0813pt too wide) in paragraph at lines 475--476
-\T1/cmtt/m/n/12 qualsiasi altra infrastruttura, è stato predisposto lo script d
-i automazione scripts/setup-sonarqube-creedengo.sh.
- []
-
-
-Overfull \hbox (4.00906pt too wide) in paragraph at lines 475--476
-\T1/cmtt/m/n/12 Tale script verifica la presenza di Docker, scarica automaticam
-ente la versione
- []
-
-
-Overfull \hbox (59.5705pt too wide) in paragraph at lines 475--476
-\T1/cmtt/m/n/12 desiderata del plugin da GitHub se non presente localmente, avv
-ia il container SonarQube
- []
-
-
-Overfull \hbox (16.35605pt too wide) in paragraph at lines 475--476
-\T1/cmtt/m/n/12 standalone, copia la libreria nella directory corretta del cont
-ainer ed esegue il
- []
-
-
-Overfull \hbox (10.18256pt too wide) in paragraph at lines 478--479
-\T1/cmtt/m/n/12 Per massimizzare il ritorno ecologico delle attività di refacto
-ring e ridurre il
- []
-
-
-Overfull \hbox (71.91748pt too wide) in paragraph at lines 478--479
-\T1/cmtt/m/n/12 rumore nelle metriche di telemetria statica, sono state selezio
-nate 11 regole fondamentali
- []
-
-
-Overfull \hbox (53.397pt too wide) in paragraph at lines 478--479
-\T1/cmtt/m/n/12 del ruleset Creedengo Java. Ciascuna regola è stata scelta in b
-ase alla sua pertinenza
- []
-
-
-Overfull \hbox (16.35605pt too wide) in paragraph at lines 478--479
-\T1/cmtt/m/n/12 tecnologica con l'architettura MVC di 2Chance (basata su Java S
-ervlets e JDBC/DAO
- []
-
-
-Overfull \hbox (27.80737pt too wide) in paragraph at lines 480--481
-[]\T1/cmtt/m/n/12 Le regole attivate e le relative motivazioni teoriche sono de
-scritte di seguito: 
- []
-
-
-Overfull \hbox (27.21027pt too wide) in paragraph at lines 483--485
-[]\T1/cmtt/m/n/12 Avoid getting the size of the collection in the loop (Evitare
- il calcolo della
- []
-
-
-Overfull \hbox (33.38376pt too wide) in paragraph at lines 483--485
-\T1/cmtt/m/n/12 dimensione delle collezioni nei cicli): Questa regola rappresen
-ta una variante
- []
-
-
-Overfull \hbox (8.68979pt too wide) in paragraph at lines 483--485
-\T1/cmtt/m/n/12 diretta delle specifiche di progetto relative all'efficienza co
-mputazionale
- []
-
-
-Overfull \hbox (21.03677pt too wide) in paragraph at lines 483--485
-\T1/cmtt/m/n/12 (GC169). L'invocazione continua del metodo .size() all'interno 
-della guardia
- []
-
-
-Overfull \hbox (33.38376pt too wide) in paragraph at lines 483--485
-\T1/cmtt/m/n/12 di un ciclo forza la JVM a ricalcolare i limiti della collezion
-e a ogni singola
- []
-
-[24]
-Overfull \hbox (45.73074pt too wide) in paragraph at lines 486--488
-[]\T1/cmtt/m/n/12 Avoid SQL request in loop (Evitare query SQL all'interno di c
-icli): L'esecuzione
- []
-
-
-Overfull \hbox (58.07773pt too wide) in paragraph at lines 486--488
-\T1/cmtt/m/n/12 di interrogazioni al database all'interno di cicli iterativi è 
-un fattore altamente
- []
-
-
-Overfull \hbox (14.86328pt too wide) in paragraph at lines 486--488
-\T1/cmtt/m/n/12 inefficiente. Genera un overhead continuo di rete e costringe i
-l motore del
- []
-
-
-Overfull \hbox (27.21027pt too wide) in paragraph at lines 486--488
-\T1/cmtt/m/n/12 database a un lavoro sequenziale pesante, mantenendo attivi i t
-hread di Tomcat
- []
-
-
-Overfull \hbox (21.03677pt too wide) in paragraph at lines 489--491
-[]\T1/cmtt/m/n/12 Avoid usage of static collections (Evitare l'uso di collezion
-i statiche): Le
- []
-
-
-Overfull \hbox (14.86328pt too wide) in paragraph at lines 489--491
-\T1/cmtt/m/n/12 collezioni statiche persistono per l'intera durata della JVM. S
-e non gestite
- []
-
-
-Overfull \hbox (21.03677pt too wide) in paragraph at lines 489--491
-\T1/cmtt/m/n/12 in modo impeccabile, possono provocare perdite di memoria stris
-cianti. Sotto
- []
-
-
-Overfull \hbox (27.21027pt too wide) in paragraph at lines 489--491
-\T1/cmtt/m/n/12 stress (es. durante i Soak Test), la saturazione della memoria 
-Heap costringe
- []
-
-
-Overfull \hbox (33.38376pt too wide) in paragraph at lines 489--491
-\T1/cmtt/m/n/12 la JVM a frequenti cicli di Major Garbage Collection, con un co
-nsumo energetico
- []
-
-
-Overfull \hbox (39.55725pt too wide) in paragraph at lines 492--494
-[]\T1/cmtt/m/n/12 Avoid using Pattern.compile() in a non-static context (Evitar
-e Pattern.compile()
- []
-
-
-Overfull \hbox (51.90424pt too wide) in paragraph at lines 492--494
-\T1/cmtt/m/n/12 in contesto non statico): La compilazione di espressioni regola
-ri è un'operazione
- []
-
-
-Overfull \hbox (21.03677pt too wide) in paragraph at lines 492--494
-\T1/cmtt/m/n/12 onerosa per la CPU. Compilare ripetutamente lo stesso pattern a
-ll'interno dei
- []
-
-
-Overfull \hbox (14.86328pt too wide) in paragraph at lines 492--494
-\T1/cmtt/m/n/12 metodi delle Servlet ad ogni richiesta, anziché memorizzarlo in
- una costante
- []
-
-
-Overfull \hbox (14.86328pt too wide) in paragraph at lines 495--497
-[]\T1/cmtt/m/n/12 Do not call a function when declaring a for-type loop (Non in
-vocare funzioni
- []
-
-
-Overfull \hbox (33.38376pt too wide) in paragraph at lines 495--497
-\T1/cmtt/m/n/12 nella dichiarazione del ciclo for): Corrisponde al vincolo GC16
-9 (classificato
- []
-
-
-Overfull \hbox (8.68979pt too wide) in paragraph at lines 495--497
-\T1/cmtt/m/n/12 a priorità elevata). Identifica chiamate a funzioni invarianti 
-all'interno
- []
-
-
-Overfull \hbox (39.55725pt too wide) in paragraph at lines 495--497
-\T1/cmtt/m/n/12 dei parametri di inizializzazione o di guardia dei cicli, sugge
-rendo di estrarle
- []
-
-
-Overfull \hbox (33.38376pt too wide) in paragraph at lines 495--497
-\T1/cmtt/m/n/12 in variabili locali ed evitando migliaia di invocazioni ridonda
-nti del medesimo
- []
-
-
-Overfull \hbox (8.68979pt too wide) in paragraph at lines 498--500
-[]\T1/cmtt/m/n/12 Don't use the query SELECT * FROM (Evitare l'uso di SELECT *)
-: Il recupero
- []
-
-
-Overfull \hbox (21.03677pt too wide) in paragraph at lines 498--500
-\T1/cmtt/m/n/12 indiscriminato di tutte le colonne di una tabella costringe a t
-rasferire byte
- []
-
-
-Overfull \hbox (27.21027pt too wide) in paragraph at lines 498--500
-\T1/cmtt/m/n/12 inutili attraverso la connessione di rete e obbliga la JVM ad a
-llocare oggetti
- []
-
-
-Overfull \hbox (39.55725pt too wide) in paragraph at lines 501--503
-[]\T1/cmtt/m/n/12 Free resources (Rilascio delle risorse): La mancata chiusura 
-manuale dei canali
- []
-
-
-Overfull \hbox (33.38376pt too wide) in paragraph at lines 501--503
-\T1/cmtt/m/n/12 di comunicazione con il database (como Connection, Statement e 
-ResultSet) porta
- []
-
-
-Overfull \hbox (8.68979pt too wide) in paragraph at lines 501--503
-\T1/cmtt/m/n/12 a colli di bottiglia e memory leak. Quando il connection pool e
-saurisce le
- []
-
-
-Overfull \hbox (21.03677pt too wide) in paragraph at lines 501--503
-\T1/cmtt/m/n/12 risorse, Tomcat deve gestire i thread in attesa attiva, degrada
-ndo gravemente
- []
-
-
-Overfull \hbox (58.07773pt too wide) in paragraph at lines 504--506
-[]\T1/cmtt/m/n/12 Initialize builder/buffer with the appropriate size (Iniziali
-zzazione StringBuilder
- []
-
-
-Overfull \hbox (21.03677pt too wide) in paragraph at lines 504--506
-\T1/cmtt/m/n/12 con dimensione corretta): Questa regola contrasta l'impatto del
-la mutabilità
- []
-
-
-Overfull \hbox (8.68979pt too wide) in paragraph at lines 504--506
-\T1/cmtt/m/n/12 delle stringhe. Creare uno StringBuilder o uno StringBuffer sen
-za indicare
- []
-
-
-Overfull \hbox (8.68979pt too wide) in paragraph at lines 504--506
-\T1/cmtt/m/n/12 una capacità iniziale obbliga la JVM ad eseguire continui ridim
-ensionamenti
- []
-
-
-Overfull \hbox (14.86328pt too wide) in paragraph at lines 504--506
-\T1/cmtt/m/n/12 e copie degli array di caratteri interni man mano che la string
-a si espande. 
- []
-
-
-Overfull \hbox (27.21027pt too wide) in paragraph at lines 507--509
-[]\T1/cmtt/m/n/12 orElseGet instead of orElse (Utilizzo di orElseGet al posto d
-i orElse): Nelle
- []
-
-
-Overfull \hbox (8.68979pt too wide) in paragraph at lines 507--509
-\T1/cmtt/m/n/12 strutture di tipo Optional, il metodo .orElse(...) valuta l'esp
-ressione di
- []
-
-
-Overfull \hbox (21.03677pt too wide) in paragraph at lines 507--509
-\T1/cmtt/m/n/12 fallback in ogni caso, anche se il valore principale è presente
-. Utilizzando
- []
-
-
-Overfull \hbox (33.38376pt too wide) in paragraph at lines 507--509
-\T1/cmtt/m/n/12 .orElseGet(...) si sfrutta la \T1/cmtt/m/it/12 lazy evaluation\
-T1/cmtt/m/n/12 , eseguendo il blocco di fallback
- []
-
-
-Overfull \hbox (39.55725pt too wide) in paragraph at lines 507--509
-\T1/cmtt/m/n/12 unicamente se necessario ed eliminando calcoli ridondanti sotto
- carichi elevati. 
- []
-
-[25]
-Overfull \hbox (8.68979pt too wide) in paragraph at lines 510--512
-[]\T1/cmtt/m/n/12 Use PreparedStatement instead of Statement (Utilizzo di Prepa
-redStatement):
- []
-
-
-Overfull \hbox (45.73074pt too wide) in paragraph at lines 510--512
-\T1/cmtt/m/n/12 I PreparedStatement consentono al motore di MySQL di pre-compil
-are ed ottimizzare
- []
-
-
-Overfull \hbox (33.38376pt too wide) in paragraph at lines 510--512
-\T1/cmtt/m/n/12 la query una sola volta. Reutilizzare query pre-compilate riduc
-e sensibilmente
- []
-
-
-Overfull \hbox (27.21027pt too wide) in paragraph at lines 510--512
-\T1/cmtt/m/n/12 il carico computazionale sull'infrastruttura del database duran
-te l'esecuzione
- []
-
-
-Overfull \hbox (8.68979pt too wide) in paragraph at lines 513--515
-[]\T1/cmtt/m/n/12 Use System.arraycopy to copy arrays (Utilizzo di System.array
-copy): Questa
- []
-
-
-Overfull \hbox (45.73074pt too wide) in paragraph at lines 513--515
-\T1/cmtt/m/n/12 regola fa riferimento diretto alla specifica di progetto GC127 
-(Medium Severity).
- []
-
-
-Overfull \hbox (21.03677pt too wide) in paragraph at lines 513--515
-\T1/cmtt/m/n/12 L'uso di cicli di iterazione manuali per copiare singoli elemen
-ti da un array
- []
-
-
-Overfull \hbox (51.90424pt too wide) in paragraph at lines 513--515
-\T1/cmtt/m/n/12 all'altro è altamente inefficiente. La funzione System.arraycop
-y() si interfaccia
- []
-
-
-Overfull \hbox (45.73074pt too wide) in paragraph at lines 513--515
-\T1/cmtt/m/n/12 direttamente con istruzioni native a basso livello del sistema 
-operativo (scritte
- []
-
-
-Overfull \hbox (2.5163pt too wide) in paragraph at lines 513--515
-\T1/cmtt/m/n/12 in C), garantendo una copia di blocchi di memoria estremamente 
-efficiente. 
- []
-
-
-Overfull \hbox (28.70303pt too wide) in paragraph at lines 518--519
-\T1/cmtt/m/n/12 Il processo di selezione e la conseguente esclusione delle rest
-anti regole risponde
- []
-
-
-Overfull \hbox (8.68979pt too wide) in paragraph at lines 520--521
-[]\T1/cmtt/m/n/12 Allineamento Tecnologico (Stack Match): Sono state rimosse tu
-tte le regole
- []
-
-
-Overfull \hbox (2.5163pt too wide) in paragraph at lines 520--521
-\T1/cmtt/m/n/12 relative a framework non presenti nel progetto (es. regole spec
-ifiche per
- []
-
-
-Overfull \hbox (14.86328pt too wide) in paragraph at lines 520--521
-\T1/cmtt/m/n/12 Spring Boot/Spring Data), poiché l'applicazione è strutturata e
-sclusivamente
- []
-
-
-Overfull \hbox (45.73074pt too wide) in paragraph at lines 520--521
-\T1/cmtt/m/n/12 su Servlet nativi e JDBC puro. Le regole database-specifiche (P
-reparedStatement,
- []
-
-
-Overfull \hbox (45.73074pt too wide) in paragraph at lines 520--521
-\T1/cmtt/m/n/12 SELECT *, SQL in loop) sono state invece prioritarizzate per il
- loro alto impatto
- []
-
-
-Overfull \hbox (21.03677pt too wide) in paragraph at lines 521--522
-[]\T1/cmtt/m/n/12 Mitigazione della Garbage Collection (GC): In un'applicazione
- web monolitica,
- []
-
-
-Overfull \hbox (2.5163pt too wide) in paragraph at lines 521--522
-\T1/cmtt/m/n/12 i consumi più critici sono spesso legati alla CPU impegnata nel
-le attività
- []
-
-
-Overfull \hbox (107.46567pt too wide) in paragraph at lines 521--522
-\T1/cmtt/m/n/12 di Garbage Collection. Regole mirate a evitare istanziazioni su
-perflue (Pattern.compile(),
- []
-
-
-Overfull \hbox (8.68979pt too wide) in paragraph at lines 521--522
-\T1/cmtt/m/n/12 ridimensionamento StringBuilder, collezioni statiche) riducono 
-la pressione
- []
-
-
-Overfull \hbox (27.21027pt too wide) in paragraph at lines 522--523
-[]\T1/cmtt/m/n/12 Vincoli di Progetto: Le regole che indirizzano direttamente i
- requisiti GC169
- []
-
-
-Overfull \hbox (14.86328pt too wide) in paragraph at lines 522--523
-\T1/cmtt/m/n/12 (chiamate invarianti nei cicli) e GC127 (copia ottimizzata degl
-i array) sono
- []
-
-
-Overfull \hbox (2.5163pt too wide) in paragraph at lines 522--523
-\T1/cmtt/m/n/12 state ritenute mandatarie per garantire la conformità con le sp
-ecifiche di
- []
-
-
-Overfull \hbox (41.05002pt too wide) in paragraph at lines 527--528
-\T1/cmtt/m/n/12 Dopo aver configurato l'ambiente di analisi statica ed eseguito
- la scansione iniziale
- []
-
-
-Overfull \hbox (36.95935pt too wide) in paragraph at lines 527--528
-\T1/cmtt/m/n/12 (fase di \T1/cmtt/m/it/12 baseline\T1/cmtt/m/n/12 ), sono state
- rilevate complessivamente 64 violazioni di eco-design
- []
-
-
-Overfull \hbox (10.18256pt too wide) in paragraph at lines 527--528
-\T1/cmtt/m/n/12 distribuite su quattro regole principali del ruleset Creedengo.
- Questi problemi
- []
-
-
-Overfull \hbox (28.70303pt too wide) in paragraph at lines 527--528
-\T1/cmtt/m/n/12 interessavano in modo critico i Model Bean e i Data Access Obje
-ct dell'applicazione
- []
-
-
-Overfull \hbox (21.63388pt too wide) in paragraph at lines 529--530
-[]\T1/cmtt/m/n/12 In seguito alle attività di refactoring orientate alla sosten
-ibilità energetica
- []
-
-
-Overfull \hbox (4.00906pt too wide) in paragraph at lines 529--530
-\T1/cmtt/m/n/12 --- che hanno introdotto il caching delle guardie dei cicli, l'
-uso di proiezioni
- []
-
-
-Overfull \hbox (41.05002pt too wide) in paragraph at lines 529--530
-\T1/cmtt/m/n/12 SQL esplicite ed il batching delle transazioni --- è stata eseg
-uita una nuova sessione
- []
-
-
-Overfull \hbox (108.95844pt too wide) in paragraph at lines 529--530
-\T1/cmtt/m/n/12 di scansione con SonarQube. I risultati aggiornati confermano c
-he tutte le 64 eco-vulnerabilità
- []
-
-
-Overfull \hbox (78.09097pt too wide) in paragraph at lines 529--530
-\T1/cmtt/m/n/12 sono state risolte ed i relativi fault sono stati chiusi con su
-ccesso (stato CLOSED/FIXED). 
- []
-
-
-Overfull \hbox (9.2869pt too wide) in paragraph at lines 531--532
-[]\T1/cmtt/m/n/12 La Tabella [][]3.5[][] mostra il confronto dettagliato tra la
- baseline iniziale ed il
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 541--541
-[]|\T1/cmr/m/n/12 Uso di query in-dis-crim-i-nate
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 542--542
-[]|\T1/cmr/m/n/12 Esecuzione di richi-este SQL
- []
-
-
-Overfull \hbox (152.63206pt too wide) in paragraph at lines 536--545
- [][] 
- []
-
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-
-Overfull \hbox (40.15436pt too wide) in paragraph at lines 549--550
-[]\T1/cmtt/m/n/12 La completa risoluzione di questi fault garantisce che l'appl
-icazione non presenti
- []
-
-
-Overfull \hbox (16.35605pt too wide) in paragraph at lines 549--550
-\T1/cmtt/m/n/12 inefficienze strutturali latenti a livello di CPU-bound e I/O-b
-ound, allineandosi
- []
-
-[26]
-Overfull \hbox (10.18256pt too wide) in paragraph at lines 553--554
+Overfull \hbox (10.18256pt too wide) in paragraph at lines 531--532
 \T1/cmtt/m/n/12 Per procedere alla fase di rifattorizzazione del codice con la 
 certezza di poter
  []
 
 
-Overfull \hbox (11.24521pt too wide) in paragraph at lines 553--554
+Overfull \hbox (11.24521pt too wide) in paragraph at lines 531--532
 \T1/cmtt/m/n/12 quantificare oggettivamente i miglioramenti di sostenibilità en
 ergetica ($\OT1/cmr/m/n/12 ^^A%$\T1/cmtt/m/n/12 ), è
  []
 
 
-Overfull \hbox (53.397pt too wide) in paragraph at lines 553--554
+Overfull \hbox (53.397pt too wide) in paragraph at lines 531--532
 \T1/cmtt/m/n/12 fondamentale certificare la correttezza metodologica delle metr
 iche raccolte e definire
  []
 
-
-Overfull \hbox (65.74399pt too wide) in paragraph at lines 557--558
+[24]
+Overfull \hbox (65.74399pt too wide) in paragraph at lines 535--536
 \T1/cmtt/m/n/12 Le metriche temporali fornite da JMH e le telemetrie energetich
 e fornite da EnergiBridge,
  []
 
 
-Overfull \hbox (41.05002pt too wide) in paragraph at lines 557--558
+Overfull \hbox (41.05002pt too wide) in paragraph at lines 535--536
 \T1/cmtt/m/n/12 aggregate dallo strumento di profilazione co-sincronizzato, son
 o garantite da quattro
  []
 
 
-Overfull \hbox (33.38376pt too wide) in paragraph at lines 560--562
+Overfull \hbox (33.38376pt too wide) in paragraph at lines 538--540
 []\T1/cmtt/m/n/12 Isolamento dei Processi JVM: L'esecuzione dei benchmark JMH i
 n modalità isolata
  []
 
 
-Overfull \hbox (8.68979pt too wide) in paragraph at lines 560--562
+Overfull \hbox (8.68979pt too wide) in paragraph at lines 538--540
 \T1/cmtt/m/n/12 per ciascun metodo evita il fenomeno dell'inquinamento della me
 moria Heap e
  []
 
 
-Overfull \hbox (14.86328pt too wide) in paragraph at lines 560--562
+Overfull \hbox (14.86328pt too wide) in paragraph at lines 538--540
 \T1/cmtt/m/n/12 del cross-talk tra thread differenti. Ciascun processo EnergiBr
 idge avvolge
  []
 
 
-Overfull \hbox (16.63437pt too wide) in paragraph at lines 560--562
+Overfull \hbox (16.63437pt too wide) in paragraph at lines 538--540
 \T1/cmtt/m/n/12 un'istanza JVM pulita, garantendo che le metriche di consumo (e
 s. i $\OT1/cmr/m/n/12 279[]08$ \T1/cmtt/m/n/12 J
  []
 
 
-Overfull \hbox (58.07773pt too wide) in paragraph at lines 560--562
+Overfull \hbox (58.07773pt too wide) in paragraph at lines 538--540
 \T1/cmtt/m/n/12 CPU per benchmarkGetProdotti) non risentano dell'overhead di es
 ecuzioni precedenti. 
  []
 
 
-Overfull \hbox (27.21027pt too wide) in paragraph at lines 563--565
+Overfull \hbox (27.21027pt too wide) in paragraph at lines 541--543
 []\T1/cmtt/m/n/12 Filtraggio Matematico delle Soglie Fisiche (TDP): L'integrazi
 one differenziale
  []
 
 
-Overfull \hbox (33.38376pt too wide) in paragraph at lines 563--565
+Overfull \hbox (33.38376pt too wide) in paragraph at lines 541--543
 \T1/cmtt/m/n/12 dell'energia scarta le letture anomale dei sensori RAPL (che a 
 volte registrano
  []
 
 
-Overfull \hbox (8.68979pt too wide) in paragraph at lines 563--565
+Overfull \hbox (8.68979pt too wide) in paragraph at lines 541--543
 \T1/cmtt/m/n/12 picchi spuri a causa di polling del firmware) imponendo che ogn
 i variazione
  []
 
 
-Overfull \hbox (27.21027pt too wide) in paragraph at lines 570--572
+Overfull \hbox (27.21027pt too wide) in paragraph at lines 548--550
 \T1/cmtt/m/n/12 Questo impedisce che overflow dei registri hardware o picchi sp
 uri contaminino
  []
 
-[27]
-Overfull \hbox (2.5163pt too wide) in paragraph at lines 573--575
+
+Overfull \hbox (2.5163pt too wide) in paragraph at lines 551--553
 []\T1/cmtt/m/n/12 Interpolazione Temporale e Gestione della Concorrenza: Nei ca
 si in cui il
  []
 
 
-Overfull \hbox (8.68979pt too wide) in paragraph at lines 573--575
+Overfull \hbox (8.68979pt too wide) in paragraph at lines 551--553
 \T1/cmtt/m/n/12 campionamento energetico subisca rallentamenti dovuti al sistem
 a operativo,
  []
 
 
-Overfull \hbox (44.83508pt too wide) in paragraph at lines 573--575
+Overfull \hbox (44.83508pt too wide) in paragraph at lines 551--553
 \T1/cmtt/m/n/12 l'allineamento temporale lineare (a $\OT1/cmr/m/n/12 200$ \T1/c
 mtt/m/n/12 ms nominali) assicura una quantificazione
  []
 
 
-Overfull \hbox (39.55725pt too wide) in paragraph at lines 576--578
+Overfull \hbox (39.55725pt too wide) in paragraph at lines 554--556
 []\T1/cmtt/m/n/12 Validazione Preventiva come Zero-Line Baseline: I test sui pa
 rametri non validi
  []
 
 
-Overfull \hbox (35.15485pt too wide) in paragraph at lines 576--578
+Overfull \hbox (35.15485pt too wide) in paragraph at lines 554--556
 \T1/cmtt/m/n/12 (con risultati vicini a $\OT1/cmr/m/n/12 0[]0008$ \T1/cmtt/m/n/
 12 ms/op) fungono da controllo scientifico negativo,
  []
 
 
-Overfull \hbox (27.21027pt too wide) in paragraph at lines 576--578
+Overfull \hbox (27.21027pt too wide) in paragraph at lines 554--556
 \T1/cmtt/m/n/12 confermando che il sistema di misurazione è in grado di registr
 are con estrema
  []
 
 
-Overfull \hbox (4.00906pt too wide) in paragraph at lines 582--583
+Overfull \hbox (4.00906pt too wide) in paragraph at lines 560--561
 \T1/cmtt/m/n/12 Con le metriche di baseline stabilite con precisione, si defini
 scono i seguenti
  []
 
 
-Overfull \hbox (65.23343pt too wide) in paragraph at lines 585--587
+Overfull \hbox (65.23343pt too wide) in paragraph at lines 563--565
 []\T1/cmtt/m/n/12 Risoluzione del Querying $\OML/cmm/m/it/12 N \OT1/cmr/m/n/12 
 + 1$ \T1/cmtt/m/n/12 in OrdineDAO: Il metodo getOrdiniByUtente (attualmente
  []
 
 
-Overfull \hbox (31.34955pt too wide) in paragraph at lines 585--587
+Overfull \hbox (31.34955pt too wide) in paragraph at lines 563--565
 \T1/cmtt/m/n/12 a $\OT1/cmr/m/n/12 41[]38$ \T1/cmtt/m/n/12 ms/op e $\OT1/cmr/m/
 n/12 88[]68$ \T1/cmtt/m/n/12 J CPU) verrà rifattorizzato sostituendo il ciclo i
 terativo
  []
 
 
-Overfull \hbox (2.5163pt too wide) in paragraph at lines 585--587
+Overfull \hbox (2.5163pt too wide) in paragraph at lines 563--565
 \T1/cmtt/m/n/12 di query con una singola istruzione SQL contenente una JOIN tra
  le tabelle
  []
 
 
-Overfull \hbox (2.21774pt too wide) in paragraph at lines 585--587
+Overfull \hbox (2.21774pt too wide) in paragraph at lines 563--565
 \T1/cmtt/m/n/12 ordini e composto, riducendo i roundtrip con il database ad $\O
 T1/cmr/m/n/12 1$ \T1/cmtt/m/n/12 e abbattendo
  []
 
 
-Overfull \hbox (51.90424pt too wide) in paragraph at lines 588--590
+Overfull \hbox (51.90424pt too wide) in paragraph at lines 566--568
 []\T1/cmtt/m/n/12 Batching degli Inserimenti in ProdottoDAO e OrdineDAO: benchm
 arkAggiungiSpecifiche
  []
 
 
-Overfull \hbox (12.82907pt too wide) in paragraph at lines 588--590
+Overfull \hbox (12.82907pt too wide) in paragraph at lines 566--568
 \T1/cmtt/m/n/12 a $\OT1/cmr/m/n/12 23[]65$ \T1/cmtt/m/n/12 ms/op) e articoli de
 ll'ordine (benchmarkAddOrdineValid a $\OT1/cmr/m/n/12 13[]56$ \T1/cmtt/m/n/12 m
 s/op)
  []
 
 
-Overfull \hbox (8.68979pt too wide) in paragraph at lines 588--590
+Overfull \hbox (8.68979pt too wide) in paragraph at lines 566--568
 \T1/cmtt/m/n/12 verranno sostituiti con operazioni batch native del driver JDBC
  (addBatch e
  []
 
 
-Overfull \hbox (39.55725pt too wide) in paragraph at lines 588--590
+Overfull \hbox (39.55725pt too wide) in paragraph at lines 566--568
 \T1/cmtt/m/n/12 executeBatch), consentendo di effettuare una singola transazion
 e energeticamente
  []
 
 
-Overfull \hbox (2.5163pt too wide) in paragraph at lines 591--593
+Overfull \hbox (2.5163pt too wide) in paragraph at lines 569--571
 []\T1/cmtt/m/n/12 Rimozione delle Query SELECT * (GCI74): Tutte le letture affe
 tte da query
  []
 
 
-Overfull \hbox (132.15964pt too wide) in paragraph at lines 591--593
+Overfull \hbox (132.15964pt too wide) in paragraph at lines 569--571
 \T1/cmtt/m/n/12 indiscriminata in ProdottoDAO (es. getProdotti) e RecensioneDAO
  (es. getRecensioniByProdotto)
  []
 
 
-Overfull \hbox (8.68979pt too wide) in paragraph at lines 591--593
+Overfull \hbox (8.68979pt too wide) in paragraph at lines 569--571
 \T1/cmtt/m/n/12 verranno riscritte esplicitando solo le colonne necessarie nell
 a proiezione
  []
 
 
-Overfull \hbox (20.43967pt too wide) in paragraph at lines 591--593
+Overfull \hbox (20.43967pt too wide) in paragraph at lines 569--571
 \T1/cmtt/m/n/12 SQL, riducendo l'impronta RAM (attualmente attorno ai $\OT1/cmr
 /m/n/12 26$ \T1/cmtt/m/n/12 GB in media per JVM)
  []
 
-
-Overfull \hbox (8.68979pt too wide) in paragraph at lines 594--596
+[25]
+Overfull \hbox (8.68979pt too wide) in paragraph at lines 572--574
 []\T1/cmtt/m/n/12 Ottimizzazione dei Cicli in Carrello.java (GCI69): L'invocazi
 one di metodi
  []
 
 
-Overfull \hbox (27.21027pt too wide) in paragraph at lines 594--596
+Overfull \hbox (27.21027pt too wide) in paragraph at lines 572--574
 \T1/cmtt/m/n/12 all'interno della guardia dei cicli verrà eliminata memorizzand
 o la dimensione
  []
 
 
-Overfull \hbox (27.80737pt too wide) in paragraph at lines 598--599
+Overfull \hbox (27.80737pt too wide) in paragraph at lines 576--577
 []\T1/cmtt/m/n/12 Al termine delle modifiche, verranno rieseguiti sia i microbe
 nchmark JMH isolati
  []
 
 
-Overfull \hbox (34.87653pt too wide) in paragraph at lines 598--599
+Overfull \hbox (34.87653pt too wide) in paragraph at lines 576--577
 \T1/cmtt/m/n/12 (per validare l'abbattimento energetico del singolo metodo) sia
  i test prestazionali
  []
 
 
-Overfull \hbox (10.18256pt too wide) in paragraph at lines 598--599
+Overfull \hbox (10.18256pt too wide) in paragraph at lines 576--577
 \T1/cmtt/m/n/12 di sistema JMeter (Load, Soak e Spike) per quantificare la ridu
 zione complessiva
  []
 
 
-Overfull \hbox (53.397pt too wide) in paragraph at lines 602--603
+Overfull \hbox (53.397pt too wide) in paragraph at lines 580--581
 \T1/cmtt/m/n/12 Per eliminare sistematicamente le inefficienze strutturali a li
 vello CPU-bound rilevate
  []
 
 
-Overfull \hbox (84.26447pt too wide) in paragraph at lines 602--603
+Overfull \hbox (84.26447pt too wide) in paragraph at lines 580--581
 \T1/cmtt/m/n/12 da Creedengo, si è proceduto alla rifattorizzazione di tutti i 
 Model Bean dell'applicazione:
  []
 
 
-Overfull \hbox (34.87653pt too wide) in paragraph at lines 605--606
+Overfull \hbox (34.87653pt too wide) in paragraph at lines 583--584
 \T1/cmtt/m/n/12 Il refactoring ha preso di mira le violazioni critiche creedeng
 o-java:GCI69 (mancato
  []
 
 
-Overfull \hbox (16.35605pt too wide) in paragraph at lines 605--606
+Overfull \hbox (16.35605pt too wide) in paragraph at lines 583--584
 \T1/cmtt/m/n/12 caching delle guardie) e creedengo-java:GCI3 (calcolo continuo 
 della dimensione).
  []
 
 
-Overfull \hbox (47.22351pt too wide) in paragraph at lines 605--606
+Overfull \hbox (47.22351pt too wide) in paragraph at lines 583--584
 \T1/cmtt/m/n/12 Dal punto di vista della teoria dei compilatori e dell'architet
 tura della Java Virtual
  []
 
-[28]
-Overfull \hbox (2.5163pt too wide) in paragraph at lines 607--608
+
+Overfull \hbox (2.5163pt too wide) in paragraph at lines 585--586
 []\T1/cmtt/m/n/12 Costo della Chiamata a Metodo: Invocare istruzioni come Strin
 g.length() o
  []
 
 
-Overfull \hbox (27.21027pt too wide) in paragraph at lines 607--608
+Overfull \hbox (27.21027pt too wide) in paragraph at lines 585--586
 \T1/cmtt/m/n/12 List.size() all'interno dell'espressione condizionale di contro
 llo di un ciclo
  []
 
 
-Overfull \hbox (39.55725pt too wide) in paragraph at lines 607--608
+Overfull \hbox (39.55725pt too wide) in paragraph at lines 585--586
 \T1/cmtt/m/n/12 (es. i < string.length()) costringe la JVM ad effettuare un sal
 to di subroutine
  []
 
 
-Overfull \hbox (45.73074pt too wide) in paragraph at lines 607--608
+Overfull \hbox (45.73074pt too wide) in paragraph at lines 585--586
 \T1/cmtt/m/n/12 ad ogni singola iterazione. Anche se la HotSpot JVM applica tec
 niche di \T1/cmtt/m/it/12 inlining
  []
 
 
-Overfull \hbox (27.21027pt too wide) in paragraph at lines 607--608
+Overfull \hbox (27.21027pt too wide) in paragraph at lines 585--586
 \T1/cmtt/m/n/12 per minimizzare lo stack frame, la presenza di una chiamata a m
 etodo impedisce
  []
 
 
-Overfull \hbox (33.38376pt too wide) in paragraph at lines 607--608
+Overfull \hbox (33.38376pt too wide) in paragraph at lines 585--586
 \T1/cmtt/m/n/12 l'applicazione di ottimizzazioni avanzate da parte del compilat
 ore Just-In-Time
  []
 
 
-Overfull \hbox (4.59912pt too wide) in paragraph at lines 607--608
+Overfull \hbox (4.59912pt too wide) in paragraph at lines 585--586
 \T1/cmtt/m/n/12 (JIT), come le \T1/cmtt/m/it/12 loop unrolling \T1/cmtt/m/n/12 
 (srotolamento del ciclo) e la \T1/cmtt/m/it/12 loop-invariant
  []
 
 
-Overfull \hbox (51.90424pt too wide) in paragraph at lines 608--609
+Overfull \hbox (51.90424pt too wide) in paragraph at lines 586--587
 []\T1/cmtt/m/n/12 Accesso alla Memoria ed Heap Polling: A differenza dei tipi p
 rimitivi memorizzati
  []
 
 
-Overfull \hbox (58.07773pt too wide) in paragraph at lines 608--609
+Overfull \hbox (58.07773pt too wide) in paragraph at lines 586--587
 \T1/cmtt/m/n/12 nei registri della CPU o nello stack frame locale del thread, g
 li oggetti complessi
  []
 
 
-Overfull \hbox (27.21027pt too wide) in paragraph at lines 608--609
+Overfull \hbox (27.21027pt too wide) in paragraph at lines 586--587
 \T1/cmtt/m/n/12 (como ArrayList o String) risiedono nell'area Heap. Interrogare
  continuamente
  []
 
 
-Overfull \hbox (2.5163pt too wide) in paragraph at lines 608--609
+Overfull \hbox (2.5163pt too wide) in paragraph at lines 586--587
 \T1/cmtt/m/n/12 lo stato interno dell'oggetto costringe a ripetuti dereferenzia
 menti della
  []
 
 
-Overfull \hbox (39.55725pt too wide) in paragraph at lines 608--609
+Overfull \hbox (39.55725pt too wide) in paragraph at lines 586--587
 \T1/cmtt/m/n/12 memoria, riducendo l'efficienza della cache della CPU (L1/L2 da
 ta cache misses). 
  []
 
 
-Overfull \hbox (2.5163pt too wide) in paragraph at lines 609--610
+Overfull \hbox (2.5163pt too wide) in paragraph at lines 587--588
 []\T1/cmtt/m/n/12 Caching su Stack Frame: Introducendo una variabile primitiva 
 locale prima
  []
 
 
-Overfull \hbox (51.90424pt too wide) in paragraph at lines 609--610
+Overfull \hbox (51.90424pt too wide) in paragraph at lines 587--588
 \T1/cmtt/m/n/12 del ciclo (int len = string.length()), il valore limite viene c
 opiato direttamente
  []
 
 
-Overfull \hbox (2.5163pt too wide) in paragraph at lines 609--610
+Overfull \hbox (2.5163pt too wide) in paragraph at lines 587--588
 \T1/cmtt/m/n/12 nella tabella delle variabili locali dello stack frame del meto
 do. La CPU
  []
 
 
-Overfull \hbox (45.73074pt too wide) in paragraph at lines 609--610
+Overfull \hbox (45.73074pt too wide) in paragraph at lines 587--588
 \T1/cmtt/m/n/12 può memorizzare questo valore in un registro fisico, riducendo 
 a zero le chiamate
  []
@@ -3870,509 +3782,577 @@ a zero le chiamate
 (c:/Program Files/texlive/2025/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2025/11/14 1.11b listings language file
 )
-Overfull \hbox (16.35605pt too wide) in paragraph at lines 613--615
+Overfull \hbox (16.35605pt too wide) in paragraph at lines 591--593
 \T1/cmtt/m/n/12 Un caso particolarmente sensibile dal punto di vista metodologi
 co è rappresentato
  []
 
 
-Overfull \hbox (4.00906pt too wide) in paragraph at lines 613--615
+Overfull \hbox (4.00906pt too wide) in paragraph at lines 591--593
 \T1/cmtt/m/n/12 dal metodo eliminaProdotto(Prodotto p) all'interno di Carrello.
 java. Poiché il
  []
 
 
-Overfull \hbox (59.5705pt too wide) in paragraph at lines 613--615
+Overfull \hbox (59.5705pt too wide) in paragraph at lines 591--593
 \T1/cmtt/m/n/12 ciclo rimuove elementi dalla lista durante l'iterazione (prodot
 ti.remove(i)), l'utilizzo
  []
 
 
-Overfull \hbox (133.6524pt too wide) in paragraph at lines 613--615
+Overfull \hbox (133.6524pt too wide) in paragraph at lines 591--593
 \T1/cmtt/m/n/12 di una dimensione statica e immutabile avrebbe provocato eccezi
 oni di tipo IndexOutOfBoundsException
  []
 
 
-Overfull \hbox (10.18256pt too wide) in paragraph at lines 613--615
+Overfull \hbox (10.18256pt too wide) in paragraph at lines 591--593
 \T1/cmtt/m/n/12 (a causa del decremento effettivo della dimensione della lista 
 sottostante). La
  []
 
 
-Overfull \hbox (41.05002pt too wide) in paragraph at lines 613--615
+Overfull \hbox (41.05002pt too wide) in paragraph at lines 591--593
 \T1/cmtt/m/n/12 soluzione applicata combina il caching locale con l'adeguamento
  dinamico dello stato: 
  []
 
-
-Overfull \hbox (20.76933pt too wide) in paragraph at lines 626--627
+[26]
+Overfull \hbox (20.76933pt too wide) in paragraph at lines 604--605
 \T1/cmtt/m/n/12 Questo approccio preserva la complessità computazionale $\OML/c
 mm/m/it/12 O\OT1/cmr/m/n/12 (\OML/cmm/m/it/12 N\OT1/cmr/m/n/12 )$\T1/cmtt/m/n/1
 2 , rimuove le chiamate
  []
 
 
-Overfull \hbox (10.18256pt too wide) in paragraph at lines 626--627
+Overfull \hbox (10.18256pt too wide) in paragraph at lines 604--605
 \T1/cmtt/m/n/12 ridondanti a prodotti.size() e garantisce la sicurezza computaz
 ionale del ciclo. 
  []
 
 
-Overfull \hbox (34.87653pt too wide) in paragraph at lines 629--630
+Overfull \hbox (34.87653pt too wide) in paragraph at lines 607--608
 \T1/cmtt/m/n/12 Per garantire che la semantica e la logica di business dell'app
 licazione rimanessero
  []
 
 
-Overfull \hbox (53.397pt too wide) in paragraph at lines 629--630
+Overfull \hbox (53.397pt too wide) in paragraph at lines 607--608
 \T1/cmtt/m/n/12 del tutto inalterate, al termine del refactoring di ciascun Mod
 el Bean è stata eseguita
  []
 
 
-Overfull \hbox (41.05002pt too wide) in paragraph at lines 629--630
+Overfull \hbox (41.05002pt too wide) in paragraph at lines 607--608
 \T1/cmtt/m/n/12 la rispettiva suite di test di unità JUnit 5. I risultati hanno
  confermato l'assenza
  []
 
-[29]
-Overfull \hbox (65.74399pt too wide) in paragraph at lines 641--642
+
+Overfull \hbox (65.74399pt too wide) in paragraph at lines 619--620
 \T1/cmtt/m/n/12 Per risolvere le violazioni critiche individuate da Creedengo e
  massimizzare l'efficienza
  []
 
 
-Overfull \hbox (10.18256pt too wide) in paragraph at lines 641--642
+Overfull \hbox (10.18256pt too wide) in paragraph at lines 619--620
 \T1/cmtt/m/n/12 ecologica a livello di persistenza, si è proceduto ad un refact
 oring profondo di
  []
 
 
-Overfull \hbox (4.00906pt too wide) in paragraph at lines 641--642
+Overfull \hbox (4.00906pt too wide) in paragraph at lines 619--620
 \T1/cmtt/m/n/12 tutti i Data Access Object del sistema: OrdineDAO, ProdottoDAO,
  RecensioneDAO,
  []
 
 
-Overfull \hbox (65.74399pt too wide) in paragraph at lines 641--642
+Overfull \hbox (65.74399pt too wide) in paragraph at lines 619--620
 \T1/cmtt/m/n/12 UtenteDAO, CategoriaDAO e WishListDAO. L'intervento si è focali
 zzato su due problematiche
  []
 
 
-Overfull \hbox (102.78494pt too wide) in paragraph at lines 641--642
+Overfull \hbox (102.78494pt too wide) in paragraph at lines 619--620
 \T1/cmtt/m/n/12 strutturali fondamentali: le interrogazioni indiscriminate con 
 wildcard (creedengo-java:GCI74)
  []
 
 
-Overfull \hbox (78.09097pt too wide) in paragraph at lines 641--642
+Overfull \hbox (78.09097pt too wide) in paragraph at lines 619--620
 \T1/cmtt/m/n/12 e l'esecuzione di interrogazioni SQL all'interno di cicli itera
 tivi (creedengo-java:GCI72). 
  []
 
 
-Overfull \hbox (22.52954pt too wide) in paragraph at lines 644--645
+Overfull \hbox (22.52954pt too wide) in paragraph at lines 622--623
 \T1/cmtt/m/n/12 L'uso di SELECT * rappresenta un'inefficienza strutturale ad al
 to costo energetico
  []
 
 
-Overfull \hbox (76.5982pt too wide) in paragraph at lines 646--647
+Overfull \hbox (76.5982pt too wide) in paragraph at lines 624--625
 []\T1/cmtt/m/n/12 Payload di Rete ed I/O: L'estrazione di campi non necessari s
 ovraccarica l'interfaccia
  []
 
 
-Overfull \hbox (2.5163pt too wide) in paragraph at lines 646--647
+Overfull \hbox (2.5163pt too wide) in paragraph at lines 624--625
 \T1/cmtt/m/n/12 di rete e costringe il DBMS (MySQL) a caricare da disco blocchi
  di memoria
  []
 
 
-Overfull \hbox (58.07773pt too wide) in paragraph at lines 646--647
+Overfull \hbox (58.07773pt too wide) in paragraph at lines 624--625
 \T1/cmtt/m/n/12 inutilizzati. Esplicitando la proiezione (es. proiettando solo 
 i campi essenziali
  []
 
 
-Overfull \hbox (8.68979pt too wide) in paragraph at lines 646--647
+Overfull \hbox (8.68979pt too wide) in paragraph at lines 624--625
 \T1/cmtt/m/n/12 in ciascun DAO), si minimizza linearmente la quantità di byte t
 rasmessi sul
  []
 
-
-Overfull \hbox (8.68979pt too wide) in paragraph at lines 647--648
+[27]
+Overfull \hbox (8.68979pt too wide) in paragraph at lines 625--626
 []\T1/cmtt/m/n/12 Allocazione nella JVM ed Eden Space: Ogni valore letto dal Re
 sultSet viene
  []
 
 
-Overfull \hbox (14.86328pt too wide) in paragraph at lines 647--648
+Overfull \hbox (14.86328pt too wide) in paragraph at lines 625--626
 \T1/cmtt/m/n/12 istanziato como oggetto Java nell'Eden Space della JVM. Riducen
 do il payload
  []
 
 
-Overfull \hbox (14.86328pt too wide) in paragraph at lines 647--648
+Overfull \hbox (14.86328pt too wide) in paragraph at lines 625--626
 \T1/cmtt/m/n/12 proiettato, si previene il rapido riempimento della memoria Hea
 p, abbattendo
  []
 
 
-Overfull \hbox (45.73074pt too wide) in paragraph at lines 647--648
+Overfull \hbox (45.73074pt too wide) in paragraph at lines 625--626
 \T1/cmtt/m/n/12 la frequenza di esecuzione dei cicli di Garbage Collection (che
  provocano blocchi
  []
 
 
-Overfull \hbox (14.86328pt too wide) in paragraph at lines 648--649
+Overfull \hbox (14.86328pt too wide) in paragraph at lines 626--627
 []\T1/cmtt/m/n/12 Accoppiamento e Resilienza dello Schema: Nelle versioni origi
 narie dei DAO,
  []
 
 
-Overfull \hbox (14.86328pt too wide) in paragraph at lines 648--649
+Overfull \hbox (14.86328pt too wide) in paragraph at lines 626--627
 \T1/cmtt/m/n/12 il mapping dei dati avveniva tramite indici fisici progressivi 
 del ResultSet
  []
 
 
-Overfull \hbox (58.07773pt too wide) in paragraph at lines 648--649
+Overfull \hbox (58.07773pt too wide) in paragraph at lines 626--627
 \T1/cmtt/m/n/12 (es. rs.getString(17)). Questa pratica espone l'applicazione a 
 rotture semantiche
  []
 
 
-Overfull \hbox (14.86328pt too wide) in paragraph at lines 648--649
+Overfull \hbox (14.86328pt too wide) in paragraph at lines 626--627
 \T1/cmtt/m/n/12 repentine ad ogni alterazione dello schema SQL. Il refactoring 
 ha introdotto
  []
 
 
-Overfull \hbox (2.5163pt too wide) in paragraph at lines 648--649
+Overfull \hbox (2.5163pt too wide) in paragraph at lines 626--627
 \T1/cmtt/m/n/12 query con proiezioni esplicite e il mapping basato esclusivamen
 te sui nomi
  []
 
 
-Overfull \hbox (16.35605pt too wide) in paragraph at lines 652--653
+Overfull \hbox (16.35605pt too wide) in paragraph at lines 630--631
 \T1/cmtt/m/n/12 L'esecuzione di istruzioni INSERT o UPDATE all'interno di un ci
 clo iterativo (es.
  []
 
 
-Overfull \hbox (4.00906pt too wide) in paragraph at lines 652--653
+Overfull \hbox (4.00906pt too wide) in paragraph at lines 630--631
 \T1/cmtt/m/n/12 inserimento degli articoli di un ordine in composto o delle spe
 cifiche tecniche
  []
 
 
-Overfull \hbox (14.86328pt too wide) in paragraph at lines 654--655
+Overfull \hbox (14.86328pt too wide) in paragraph at lines 632--633
 []\T1/cmtt/m/n/12 Eliminazione dei Network Roundtrips: Eseguire query sequenzia
 li in un ciclo
  []
 
 
-Overfull \hbox (14.86328pt too wide) in paragraph at lines 654--655
+Overfull \hbox (14.86328pt too wide) in paragraph at lines 632--633
 \T1/cmtt/m/n/12 comporta un'alternanza continua di stati di calcolo e di attesa
  I/O (latenza
  []
 
 
-Overfull \hbox (51.90424pt too wide) in paragraph at lines 654--655
+Overfull \hbox (51.90424pt too wide) in paragraph at lines 632--633
 \T1/cmtt/m/n/12 di rete). L'introduzione di JDBC Batching (addBatch() e execute
 Batch()) raggruppa
  []
 
 
-Overfull \hbox (39.55725pt too wide) in paragraph at lines 654--655
+Overfull \hbox (39.55725pt too wide) in paragraph at lines 632--633
 \T1/cmtt/m/n/12 le scritture in un'unica transazione bulk. Questo abbatte il nu
 mero di messaggi
  []
 
-[30]
-Overfull \hbox (14.86328pt too wide) in paragraph at lines 655--656
+
+Overfull \hbox (14.86328pt too wide) in paragraph at lines 633--634
 []\T1/cmtt/m/n/12 Prevenzione della Starvation del Connection Pool: Nella versi
 one originale,
  []
 
 
-Overfull \hbox (33.38376pt too wide) in paragraph at lines 655--656
+Overfull \hbox (33.38376pt too wide) in paragraph at lines 633--634
 \T1/cmtt/m/n/12 un loop di grandi dimensioni manteneva bloccata la risorsa di c
 onnessione presa
  []
 
 
-Overfull \hbox (8.68979pt too wide) in paragraph at lines 655--656
+Overfull \hbox (8.68979pt too wide) in paragraph at lines 633--634
 \T1/cmtt/m/n/12 da ConPool per un tempo prolungato. Sotto carico elevato (es. s
 cenario di
  []
 
 
-Overfull \hbox (39.55725pt too wide) in paragraph at lines 655--656
+Overfull \hbox (39.55725pt too wide) in paragraph at lines 633--634
 \T1/cmtt/m/n/12 Spike), questo innescava la saturazione del pool e timeout in c
 oda. Il batching
  []
 
 
-Overfull \hbox (39.55725pt too wide) in paragraph at lines 655--656
+Overfull \hbox (39.55725pt too wide) in paragraph at lines 633--634
 \T1/cmtt/m/n/12 libera quasi istantaneamente la connessione, aumentando il thro
 ughput energetico
  []
 
 
-Overfull \hbox (4.00906pt too wide) in paragraph at lines 659--660
+Overfull \hbox (4.00906pt too wide) in paragraph at lines 637--638
 \T1/cmtt/m/n/12 Il passaggio da getters posizionali a getters nominativi e l'ad
 ozione delle API
  []
 
 
-Overfull \hbox (10.18256pt too wide) in paragraph at lines 659--660
+Overfull \hbox (10.18256pt too wide) in paragraph at lines 637--638
 \T1/cmtt/m/n/12 di batching hanno richiesto l'allineamento dei mock JUnit 5 all
 'interno dei test
  []
 
 
-Overfull \hbox (27.21027pt too wide) in paragraph at lines 661--662
+Overfull \hbox (27.21027pt too wide) in paragraph at lines 639--640
 []\T1/cmtt/m/n/12 Named Mocking: Nelle suite OrdineDAOTest, ProdottoDAOTest, Re
 censioneDAOTest,
  []
 
 
-Overfull \hbox (33.38376pt too wide) in paragraph at lines 661--662
+Overfull \hbox (33.38376pt too wide) in paragraph at lines 639--640
 \T1/cmtt/m/n/12 UtenteDAOTest, CategoriaDAOTest e WishListDAOTest, tutti gli st
 ub dei ResultSet
  []
 
 
-Overfull \hbox (14.86328pt too wide) in paragraph at lines 661--662
+Overfull \hbox (14.86328pt too wide) in paragraph at lines 639--640
 \T1/cmtt/m/n/12 basati su indici numerici (es. when(rs.getInt(1))) sono stati c
 onvertiti in
  []
 
 
-Overfull \hbox (27.21027pt too wide) in paragraph at lines 661--662
+Overfull \hbox (27.21027pt too wide) in paragraph at lines 639--640
 \T1/cmtt/m/n/12 stub basati sulle etichette delle colonne (es. when(rs.getInt("
 id_utente"))). 
  []
 
 
-Overfull \hbox (2.5163pt too wide) in paragraph at lines 662--663
+Overfull \hbox (2.5163pt too wide) in paragraph at lines 640--641
 []\T1/cmtt/m/n/12 Verification delle API Batch: In OrdineDAOTest.java, i test d
 i successo e
  []
 
 
-Overfull \hbox (39.55725pt too wide) in paragraph at lines 662--663
+Overfull \hbox (39.55725pt too wide) in paragraph at lines 640--641
 \T1/cmtt/m/n/12 di rollback sono stati aggiornati per verificare il corretto ut
 ilizzo dei metodi
  []
 
 
-Overfull \hbox (70.42471pt too wide) in paragraph at lines 662--663
+Overfull \hbox (70.42471pt too wide) in paragraph at lines 640--641
 \T1/cmtt/m/n/12 di batching (verificando stmt.executeBatch() e stmt.addBatch())
  anziché dell'obsoleto
  []
 
-
-Overfull \hbox (65.74399pt too wide) in paragraph at lines 664--665
+[28]
+Overfull \hbox (65.74399pt too wide) in paragraph at lines 642--643
 \T1/cmtt/m/n/12 La completa validazione tramite test suite globale ha certifica
 to il perfetto superamento
  []
 
 
-Overfull \hbox (28.70303pt too wide) in paragraph at lines 664--665
+Overfull \hbox (28.70303pt too wide) in paragraph at lines 642--643
 \T1/cmtt/m/n/12 di tutti i 532 test di unità del sistema, a riprova della sicur
 ezza semantica delle
  []
 
 
-Overfull \hbox (4.00906pt too wide) in paragraph at lines 668--669
+Overfull \hbox (4.00906pt too wide) in paragraph at lines 648--649
+\T1/cmtt/m/n/12 In seguito alle attività di refactoring orientate alla sostenib
+ilità energetica
+ []
+
+
+Overfull \hbox (4.00906pt too wide) in paragraph at lines 648--649
+\T1/cmtt/m/n/12 --- che hanno introdotto il caching delle guardie dei cicli, l'
+uso di proiezioni
+ []
+
+
+Overfull \hbox (41.05002pt too wide) in paragraph at lines 648--649
+\T1/cmtt/m/n/12 SQL esplicite ed il batching delle transazioni --- è stata eseg
+uita una nuova sessione
+ []
+
+
+Overfull \hbox (108.95844pt too wide) in paragraph at lines 648--649
+\T1/cmtt/m/n/12 di scansione con SonarQube. I risultati aggiornati confermano c
+he tutte le 64 eco-vulnerabilità
+ []
+
+
+Overfull \hbox (78.09097pt too wide) in paragraph at lines 648--649
+\T1/cmtt/m/n/12 sono state risolte ed i relativi fault sono stati chiusi con su
+ccesso (stato CLOSED/FIXED). 
+ []
+
+
+Overfull \hbox (9.2869pt too wide) in paragraph at lines 650--651
+[]\T1/cmtt/m/n/12 La Tabella [][]3.5[][] mostra il confronto dettagliato tra la
+ baseline iniziale ed il
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 660--660
+[]|\T1/cmr/m/n/12 Uso di query in-dis-crim-i-nate
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 661--661
+[]|\T1/cmr/m/n/12 Esecuzione di richi-este SQL
+ []
+
+
+Overfull \hbox (152.63206pt too wide) in paragraph at lines 655--664
+ [][] 
+ []
+
+
+Overfull \hbox (40.15436pt too wide) in paragraph at lines 668--669
+[]\T1/cmtt/m/n/12 La completa risoluzione di questi fault garantisce che l'appl
+icazione non presenti
+ []
+
+
+Overfull \hbox (16.35605pt too wide) in paragraph at lines 668--669
+\T1/cmtt/m/n/12 inefficienze strutturali latenti a livello di CPU-bound e I/O-b
+ound, allineandosi
+ []
+
+
+Overfull \hbox (4.00906pt too wide) in paragraph at lines 672--673
 \T1/cmtt/m/n/12 Al fine di verificare quantitativamente il guadagno prestaziona
 le ed energetico
  []
 
 
-Overfull \hbox (10.18256pt too wide) in paragraph at lines 668--669
+Overfull \hbox (10.18256pt too wide) in paragraph at lines 672--673
 \T1/cmtt/m/n/12 ottenuto in seguito alle attività di refactoring, la suite di m
 icrobenchmark JMH
  []
 
 
-Overfull \hbox (22.52954pt too wide) in paragraph at lines 668--669
+Overfull \hbox (22.52954pt too wide) in paragraph at lines 672--673
 \T1/cmtt/m/n/12 + EnergiBridge è stata eseguita con successo sul sistema ottimi
 zzato. I risultati
  []
 
 
-Overfull \hbox (28.70303pt too wide) in paragraph at lines 668--669
+Overfull \hbox (28.70303pt too wide) in paragraph at lines 672--673
 \T1/cmtt/m/n/12 reali registrati consentono di confrontare sia i tempi medi per
  operazione (\T1/cmtt/m/it/12 Average
  []
 
 
-Overfull \hbox (24.61237pt too wide) in paragraph at lines 668--669
+Overfull \hbox (24.61237pt too wide) in paragraph at lines 672--673
 \T1/cmtt/m/it/12 Time \T1/cmtt/m/n/12 espresso in ms/op) sia il consumo energet
 ico cumulativo della CPU (\T1/cmtt/m/it/12 CPU Energy
  []
 
 
-Overfull \hbox (9.2869pt too wide) in paragraph at lines 670--671
+Overfull \hbox (9.2869pt too wide) in paragraph at lines 674--675
 []\T1/cmtt/m/n/12 Si fa notare che EnergiBridge misura l'energia totale consuma
 ta dalla CPU per
  []
 
 
-Overfull \hbox (10.18256pt too wide) in paragraph at lines 670--671
+Overfull \hbox (10.18256pt too wide) in paragraph at lines 674--675
 \T1/cmtt/m/n/12 la durata complessiva della run di stress di ciascun benchmark.
  Di conseguenza,
  []
 
 
-Overfull \hbox (84.26447pt too wide) in paragraph at lines 670--671
+Overfull \hbox (84.26447pt too wide) in paragraph at lines 674--675
 \T1/cmtt/m/n/12 nei metodi ad altissima ottimizzazione (come getOrdiniByUtenteV
 alid o getProdottoByIdValid),
  []
 
 
-Overfull \hbox (47.22351pt too wide) in paragraph at lines 670--671
+Overfull \hbox (47.22351pt too wide) in paragraph at lines 674--675
 \T1/cmtt/m/n/12 il crollo drammatico del tempo di esecuzione determina un aumen
 to altrettanto drastico
  []
 
 
-Overfull \hbox (30.78586pt too wide) in paragraph at lines 670--671
+Overfull \hbox (30.78586pt too wide) in paragraph at lines 674--675
 \T1/cmtt/m/n/12 del \T1/cmtt/m/it/12 throughput \T1/cmtt/m/n/12 (numero di oper
 azioni completate al secondo). Sotto stress massivo,
  []
 
 
-Overfull \hbox (41.05002pt too wide) in paragraph at lines 670--671
+Overfull \hbox (41.05002pt too wide) in paragraph at lines 674--675
 \T1/cmtt/m/n/12 la CPU esegue quindi molte più operazioni nell'unità di tempo r
 ispetto alla baseline,
  []
 
 
-Overfull \hbox (41.05002pt too wide) in paragraph at lines 670--671
+Overfull \hbox (41.05002pt too wide) in paragraph at lines 674--675
 \T1/cmtt/m/n/12 mantenendo un assorbimento attivo elevato. Tuttavia, dividendo 
 il consumo energetico
  []
 
 
-Overfull \hbox (59.5705pt too wide) in paragraph at lines 670--671
+Overfull \hbox (59.5705pt too wide) in paragraph at lines 674--675
 \T1/cmtt/m/n/12 totale per il numero di operazioni eseguite, l'energia consumat
 a per singola transazione
  []
 
 
-Overfull \hbox (18.43887pt too wide) in paragraph at lines 670--671
+Overfull \hbox (18.43887pt too wide) in paragraph at lines 674--675
 \T1/cmtt/m/n/12 (\T1/cmtt/m/it/12 Joules per operation\T1/cmtt/m/n/12 ) si abba
 tte in modo esponenziale, portando a una reattività
  []
 
-[31]
-Overfull \hbox (21.63388pt too wide) in paragraph at lines 672--673
+[29]
+Overfull \hbox (21.63388pt too wide) in paragraph at lines 676--677
 []\T1/cmtt/m/n/12 Nelle tabelle seguenti viene presentato il confronto dettagli
 ato delle metriche
  []
 
 
-Overfull \hbox (15.46039pt too wide) in paragraph at lines 699--700
+Overfull \hbox (15.46039pt too wide) in paragraph at lines 703--704
 []\T1/cmtt/m/n/12 Il metodo principale getOrdiniByUtenteValid registra un abbat
 timento del tempo
  []
 
 
-Overfull \hbox (20.79388pt too wide) in paragraph at lines 699--700
+Overfull \hbox (20.79388pt too wide) in paragraph at lines 703--704
 \T1/cmtt/m/n/12 medio di esecuzione da $\OT1/cmr/m/n/12 41[]38$ \T1/cmtt/m/n/12
  ms/op a $\OT1/cmr/m/n/12 1[]01$ \T1/cmtt/m/n/12 ms/op, pari a un **guadagno pr
 estazionale
  []
 
 
-Overfull \hbox (30.77267pt too wide) in paragraph at lines 699--700
+Overfull \hbox (30.77267pt too wide) in paragraph at lines 703--704
 \T1/cmtt/m/n/12 del 97,54%**. L'energia cumulativa registrata dal sensore sale 
 leggermente da $\OT1/cmr/m/n/12 88[]68$
  []
 
 
-Overfull \hbox (61.64014pt too wide) in paragraph at lines 699--700
+Overfull \hbox (61.64014pt too wide) in paragraph at lines 703--704
 \T1/cmtt/m/n/12 J a $\OT1/cmr/m/n/12 96[]11$ \T1/cmtt/m/n/12 J a causa del thro
 ughput incrementato di oltre 40 volte, ma il costo energetico
  []
 
 
-Overfull \hbox (10.18256pt too wide) in paragraph at lines 699--700
+Overfull \hbox (10.18256pt too wide) in paragraph at lines 703--704
 \T1/cmtt/m/n/12 computazionale per singola operazione scende a una frazione irr
 isoria del valore
  []
 
 
-Overfull \hbox (21.03677pt too wide) in paragraph at lines 731--732
+Overfull \hbox (21.03677pt too wide) in paragraph at lines 735--736
 []\T1/cmtt/m/n/12 benchmarkGetProdottoByIdValid riduce il tempo medio di esecuz
 ione del **79,90 
  []
 
 
-LaTeX Warning: `!h' float specifier changed to `!ht'.
+LaTeX Warning: Reference `tab:jmh_comparison_recensione' on page 30 undefined o
+n input line 741.
 
-
-Overfull \hbox (15.46039pt too wide) in paragraph at lines 759--760
+[30]
+Overfull \hbox (15.46039pt too wide) in paragraph at lines 763--764
 []\T1/cmtt/m/n/12 I metodi critici per la lettura delle recensioni (getRecensio
 niByProdottoValid
  []
 
 
-Overfull \hbox (59.5705pt too wide) in paragraph at lines 759--760
+Overfull \hbox (59.5705pt too wide) in paragraph at lines 763--764
 \T1/cmtt/m/n/12 e getRecensioniByUtenteValid) evidenziano entrambi un **abbatti
 mento del tempo superiore
  []
 
-[32]
-Overfull \hbox (13.03839pt too wide) in paragraph at lines 761--761
+
+Overfull \hbox (13.03839pt too wide) in paragraph at lines 765--765
 []\T1/cmr/bx/n/17.28 Confronto En-er-getico di Sis-tema Post-Refactoring (JMe-
  []
 
 
-Overfull \hbox (41.05002pt too wide) in paragraph at lines 763--764
+Overfull \hbox (41.05002pt too wide) in paragraph at lines 767--768
 \T1/cmtt/m/n/12 Al fine di validare l'impatto reale delle ottimizzazioni a live
 llo di intero sistema,
  []
 
 
-Overfull \hbox (22.52954pt too wide) in paragraph at lines 763--764
+Overfull \hbox (22.52954pt too wide) in paragraph at lines 767--768
 \T1/cmtt/m/n/12 gli scenari di test dinamici pre-esistenti (Load, Soak e Spike 
 Testing) sono stati
  []
 
 
-Overfull \hbox (10.18256pt too wide) in paragraph at lines 763--764
+Overfull \hbox (10.18256pt too wide) in paragraph at lines 767--768
 \T1/cmtt/m/n/12 eseguiti nuovamente sull'applicazione ottimizzata (branch sse-i
 mprovements). Le
  []
 
 
-Overfull \hbox (10.18256pt too wide) in paragraph at lines 763--764
+Overfull \hbox (10.18256pt too wide) in paragraph at lines 767--768
 \T1/cmtt/m/n/12 sessioni sono state condotte riproducendo esattamente le medesi
 me configurazioni
  []
 
 
-Overfull \hbox (10.18256pt too wide) in paragraph at lines 763--764
+Overfull \hbox (10.18256pt too wide) in paragraph at lines 767--768
 \T1/cmtt/m/n/12 hardware e i carichi di lavoro deterministici applicati per la 
 misurazione della
  []
 
 
-Overfull \hbox (40.15436pt too wide) in paragraph at lines 765--766
+LaTeX Warning: Reference `tab:jmeter_comparison_global' on page 31 undefined on
+ input line 769.
+
+
+Overfull \hbox (40.15436pt too wide) in paragraph at lines 769--770
 []\T1/cmtt/m/n/12 I dati globali sulle prestazioni e sul consumo energetico com
 plessivo del backend,
  []
 
 
-Overfull \hbox (4.00906pt too wide) in paragraph at lines 765--766
+Overfull \hbox (4.00906pt too wide) in paragraph at lines 769--770
 \T1/cmtt/m/n/12 rilevati tramite EnergiBridge durante l'esecuzione headless dei
  test di JMeter,
  []
@@ -4384,7 +4364,7 @@ See the graphics package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.802     }
+l.806     }
            
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
@@ -4393,7 +4373,7 @@ or  <return>  to continue without it.
 ! Missing } inserted.
 <inserted text> 
                 }
-l.802     }
+l.806     }
            
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -4404,7 +4384,7 @@ my insertion and my current dilemma will both disappear.
 ! Missing } inserted.
 <inserted text> 
                 }
-l.802     }
+l.806     }
            
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -4415,14 +4395,14 @@ my insertion and my current dilemma will both disappear.
 ! Missing \cr inserted.
 <inserted text> 
                 \cr 
-l.802     }
+l.806     }
            
 I'm guessing that you meant to end an alignment here.
 
 ! Missing { inserted.
 <inserted text> 
                 {
-l.802     }
+l.806     }
            
 I've put in what seems to be necessary to fix
 the current column of the current alignment.
@@ -4431,7 +4411,7 @@ Try to go on, since this might almost work.
 ! Missing { inserted.
 <inserted text> 
                 {
-l.802     }
+l.806     }
            
 I've put in what seems to be necessary to fix
 the current column of the current alignment.
@@ -4440,7 +4420,7 @@ Try to go on, since this might almost work.
 ! Missing } inserted.
 <inserted text> 
                 }
-l.802     }
+l.806     }
            
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -4451,7 +4431,7 @@ my insertion and my current dilemma will both disappear.
 ! Missing } inserted.
 <inserted text> 
                 }
-l.802     }
+l.806     }
            
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -4462,7 +4442,7 @@ my insertion and my current dilemma will both disappear.
 ! Missing } inserted.
 <inserted text> 
                 }
-l.802     }
+l.806     }
            
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -4473,14 +4453,14 @@ my insertion and my current dilemma will both disappear.
 ! Missing \cr inserted.
 <inserted text> 
                 \cr 
-l.802     }
+l.806     }
            
 I'm guessing that you meant to end an alignment here.
 
 ! Misplaced \cr.
 <inserted text> \cr 
                     
-l.802     }
+l.806     }
            
 I can't figure out why you would want to use a tab mark
 or \cr or \span just now. If something like a right brace
@@ -4491,14 +4471,14 @@ might try typing `S' now just to see what is salvageable.
 ! Missing \cr inserted.
 <inserted text> 
                 \cr 
-l.802     }
+l.806     }
            
 I'm guessing that you meant to end an alignment here.
 
 ! Misplaced \cr.
 <inserted text> \cr 
                     
-l.802     }
+l.806     }
            
 I can't figure out why you would want to use a tab mark
 or \cr or \span just now. If something like a right brace
@@ -4509,14 +4489,14 @@ might try typing `S' now just to see what is salvageable.
 ! Missing \cr inserted.
 <inserted text> 
                 \cr 
-l.802     }
+l.806     }
            
 I'm guessing that you meant to end an alignment here.
 
 ! Misplaced \cr.
 <inserted text> \cr 
                     
-l.802     }
+l.806     }
            
 I can't figure out why you would want to use a tab mark
 or \cr or \span just now. If something like a right brace
@@ -4527,14 +4507,14 @@ might try typing `S' now just to see what is salvageable.
 ! Missing \cr inserted.
 <inserted text> 
                 \cr 
-l.802     }
+l.806     }
            
 I'm guessing that you meant to end an alignment here.
 
 ! Misplaced \cr.
 <inserted text> \cr 
                     
-l.802     }
+l.806     }
            
 I can't figure out why you would want to use a tab mark
 or \cr or \span just now. If something like a right brace
@@ -4545,14 +4525,14 @@ might try typing `S' now just to see what is salvageable.
 ! Missing \cr inserted.
 <inserted text> 
                 \cr 
-l.802     }
+l.806     }
            
 I'm guessing that you meant to end an alignment here.
 
 ! Misplaced \cr.
 <inserted text> \cr 
                     
-l.802     }
+l.806     }
            
 I can't figure out why you would want to use a tab mark
 or \cr or \span just now. If something like a right brace
@@ -4563,14 +4543,14 @@ might try typing `S' now just to see what is salvageable.
 ! Missing \cr inserted.
 <inserted text> 
                 \cr 
-l.802     }
+l.806     }
            
 I'm guessing that you meant to end an alignment here.
 
 ! Misplaced \cr.
 <inserted text> \cr 
                     
-l.802     }
+l.806     }
            
 I can't figure out why you would want to use a tab mark
 or \cr or \span just now. If something like a right brace
@@ -4581,14 +4561,14 @@ might try typing `S' now just to see what is salvageable.
 ! Missing \cr inserted.
 <inserted text> 
                 \cr 
-l.802     }
+l.806     }
            
 I'm guessing that you meant to end an alignment here.
 
 ! Misplaced \cr.
 <inserted text> \cr 
                     
-l.802     }
+l.806     }
            
 I can't figure out why you would want to use a tab mark
 or \cr or \span just now. If something like a right brace
@@ -4599,14 +4579,14 @@ might try typing `S' now just to see what is salvageable.
 ! Missing \cr inserted.
 <inserted text> 
                 \cr 
-l.802     }
+l.806     }
            
 I'm guessing that you meant to end an alignment here.
 
 ! Misplaced \cr.
 <inserted text> \cr 
                     
-l.802     }
+l.806     }
            
 I can't figure out why you would want to use a tab mark
 or \cr or \span just now. If something like a right brace
@@ -4617,14 +4597,14 @@ might try typing `S' now just to see what is salvageable.
 ! Missing \cr inserted.
 <inserted text> 
                 \cr 
-l.802     }
+l.806     }
            
 I'm guessing that you meant to end an alignment here.
 
 ! Misplaced \cr.
 <inserted text> \cr 
                     
-l.802     }
+l.806     }
            
 I can't figure out why you would want to use a tab mark
 or \cr or \span just now. If something like a right brace
@@ -4635,14 +4615,14 @@ might try typing `S' now just to see what is salvageable.
 ! Missing \cr inserted.
 <inserted text> 
                 \cr 
-l.802     }
+l.806     }
            
 I'm guessing that you meant to end an alignment here.
 
 ! Misplaced \cr.
 <inserted text> \cr 
                     
-l.802     }
+l.806     }
            
 I can't figure out why you would want to use a tab mark
 or \cr or \span just now. If something like a right brace
@@ -4653,14 +4633,14 @@ might try typing `S' now just to see what is salvageable.
 ! Missing \cr inserted.
 <inserted text> 
                 \cr 
-l.802     }
+l.806     }
            
 I'm guessing that you meant to end an alignment here.
 
 ! Misplaced \cr.
 <inserted text> \cr 
                     
-l.802     }
+l.806     }
            
 I can't figure out why you would want to use a tab mark
 or \cr or \span just now. If something like a right brace
@@ -4671,14 +4651,14 @@ might try typing `S' now just to see what is salvageable.
 ! Missing \cr inserted.
 <inserted text> 
                 \cr 
-l.802     }
+l.806     }
            
 I'm guessing that you meant to end an alignment here.
 
 ! Misplaced \cr.
 <inserted text> \cr 
                     
-l.802     }
+l.806     }
            
 I can't figure out why you would want to use a tab mark
 or \cr or \span just now. If something like a right brace
@@ -4689,14 +4669,14 @@ might try typing `S' now just to see what is salvageable.
 ! Missing \cr inserted.
 <inserted text> 
                 \cr 
-l.802     }
+l.806     }
            
 I'm guessing that you meant to end an alignment here.
 
 ! Misplaced \cr.
 <inserted text> \cr 
                     
-l.802     }
+l.806     }
            
 I can't figure out why you would want to use a tab mark
 or \cr or \span just now. If something like a right brace
@@ -4707,14 +4687,14 @@ might try typing `S' now just to see what is salvageable.
 ! Missing \cr inserted.
 <inserted text> 
                 \cr 
-l.802     }
+l.806     }
            
 I'm guessing that you meant to end an alignment here.
 
 ! Misplaced \cr.
 <inserted text> \cr 
                     
-l.802     }
+l.806     }
            
 I can't figure out why you would want to use a tab mark
 or \cr or \span just now. If something like a right brace
@@ -4725,14 +4705,14 @@ might try typing `S' now just to see what is salvageable.
 ! Missing \cr inserted.
 <inserted text> 
                 \cr 
-l.802     }
+l.806     }
            
 I'm guessing that you meant to end an alignment here.
 
 ! Misplaced \cr.
 <inserted text> \cr 
                     
-l.802     }
+l.806     }
            
 I can't figure out why you would want to use a tab mark
 or \cr or \span just now. If something like a right brace
@@ -4743,14 +4723,14 @@ might try typing `S' now just to see what is salvageable.
 ! Missing \cr inserted.
 <inserted text> 
                 \cr 
-l.802     }
+l.806     }
            
 I'm guessing that you meant to end an alignment here.
 
 ! Misplaced \cr.
 <inserted text> \cr 
                     
-l.802     }
+l.806     }
            
 I can't figure out why you would want to use a tab mark
 or \cr or \span just now. If something like a right brace
@@ -4761,14 +4741,14 @@ might try typing `S' now just to see what is salvageable.
 ! Missing \cr inserted.
 <inserted text> 
                 \cr 
-l.802     }
+l.806     }
            
 I'm guessing that you meant to end an alignment here.
 
 ! Misplaced \cr.
 <inserted text> \cr 
                     
-l.802     }
+l.806     }
            
 I can't figure out why you would want to use a tab mark
 or \cr or \span just now. If something like a right brace
@@ -4779,14 +4759,14 @@ might try typing `S' now just to see what is salvageable.
 ! Missing \cr inserted.
 <inserted text> 
                 \cr 
-l.802     }
+l.806     }
            
 I'm guessing that you meant to end an alignment here.
 
 ! Misplaced \cr.
 <inserted text> \cr 
                     
-l.802     }
+l.806     }
            
 I can't figure out why you would want to use a tab mark
 or \cr or \span just now. If something like a right brace
@@ -4797,14 +4777,14 @@ might try typing `S' now just to see what is salvageable.
 ! Missing \cr inserted.
 <inserted text> 
                 \cr 
-l.802     }
+l.806     }
            
 I'm guessing that you meant to end an alignment here.
 
 ! Misplaced \cr.
 <inserted text> \cr 
                     
-l.802     }
+l.806     }
            
 I can't figure out why you would want to use a tab mark
 or \cr or \span just now. If something like a right brace
@@ -4815,14 +4795,14 @@ might try typing `S' now just to see what is salvageable.
 ! Missing \cr inserted.
 <inserted text> 
                 \cr 
-l.802     }
+l.806     }
            
 I'm guessing that you meant to end an alignment here.
 
 ! Misplaced \cr.
 <inserted text> \cr 
                     
-l.802     }
+l.806     }
            
 I can't figure out why you would want to use a tab mark
 or \cr or \span just now. If something like a right brace
@@ -4833,14 +4813,14 @@ might try typing `S' now just to see what is salvageable.
 ! Missing \cr inserted.
 <inserted text> 
                 \cr 
-l.802     }
+l.806     }
            
 I'm guessing that you meant to end an alignment here.
 
 ! Misplaced \cr.
 <inserted text> \cr 
                     
-l.802     }
+l.806     }
            
 I can't figure out why you would want to use a tab mark
 or \cr or \span just now. If something like a right brace
@@ -4851,14 +4831,14 @@ might try typing `S' now just to see what is salvageable.
 ! Missing \cr inserted.
 <inserted text> 
                 \cr 
-l.802     }
+l.806     }
            
 I'm guessing that you meant to end an alignment here.
 
 ! Misplaced \cr.
 <inserted text> \cr 
                     
-l.802     }
+l.806     }
            
 I can't figure out why you would want to use a tab mark
 or \cr or \span just now. If something like a right brace
@@ -4869,14 +4849,14 @@ might try typing `S' now just to see what is salvageable.
 ! Missing \cr inserted.
 <inserted text> 
                 \cr 
-l.802     }
+l.806     }
            
 I'm guessing that you meant to end an alignment here.
 
 ! Misplaced \cr.
 <inserted text> \cr 
                     
-l.802     }
+l.806     }
            
 I can't figure out why you would want to use a tab mark
 or \cr or \span just now. If something like a right brace
@@ -4887,14 +4867,14 @@ might try typing `S' now just to see what is salvageable.
 ! Missing \cr inserted.
 <inserted text> 
                 \cr 
-l.802     }
+l.806     }
            
 I'm guessing that you meant to end an alignment here.
 
 ! Misplaced \cr.
 <inserted text> \cr 
                     
-l.802     }
+l.806     }
            
 I can't figure out why you would want to use a tab mark
 or \cr or \span just now. If something like a right brace
@@ -4905,14 +4885,14 @@ might try typing `S' now just to see what is salvageable.
 ! Missing \cr inserted.
 <inserted text> 
                 \cr 
-l.802     }
+l.806     }
            
 I'm guessing that you meant to end an alignment here.
 
 ! Misplaced \cr.
 <inserted text> \cr 
                     
-l.802     }
+l.806     }
            
 I can't figure out why you would want to use a tab mark
 or \cr or \span just now. If something like a right brace
@@ -4923,14 +4903,14 @@ might try typing `S' now just to see what is salvageable.
 ! Missing \cr inserted.
 <inserted text> 
                 \cr 
-l.802     }
+l.806     }
            
 I'm guessing that you meant to end an alignment here.
 
 ! Misplaced \cr.
 <inserted text> \cr 
                     
-l.802     }
+l.806     }
            
 I can't figure out why you would want to use a tab mark
 or \cr or \span just now. If something like a right brace
@@ -4941,14 +4921,14 @@ might try typing `S' now just to see what is salvageable.
 ! Missing \cr inserted.
 <inserted text> 
                 \cr 
-l.802     }
+l.806     }
            
 I'm guessing that you meant to end an alignment here.
 
 ! Misplaced \cr.
 <inserted text> \cr 
                     
-l.802     }
+l.806     }
            
 I can't figure out why you would want to use a tab mark
 or \cr or \span just now. If something like a right brace
@@ -4959,14 +4939,14 @@ might try typing `S' now just to see what is salvageable.
 ! Missing \cr inserted.
 <inserted text> 
                 \cr 
-l.802     }
+l.806     }
            
 I'm guessing that you meant to end an alignment here.
 
 ! Misplaced \cr.
 <inserted text> \cr 
                     
-l.802     }
+l.806     }
            
 I can't figure out why you would want to use a tab mark
 or \cr or \span just now. If something like a right brace
@@ -4977,14 +4957,14 @@ might try typing `S' now just to see what is salvageable.
 ! Missing \cr inserted.
 <inserted text> 
                 \cr 
-l.802     }
+l.806     }
            
 I'm guessing that you meant to end an alignment here.
 
 ! Misplaced \cr.
 <inserted text> \cr 
                     
-l.802     }
+l.806     }
            
 I can't figure out why you would want to use a tab mark
 or \cr or \span just now. If something like a right brace
@@ -4995,14 +4975,14 @@ might try typing `S' now just to see what is salvageable.
 ! Missing \cr inserted.
 <inserted text> 
                 \cr 
-l.802     }
+l.806     }
            
 I'm guessing that you meant to end an alignment here.
 
 ! Misplaced \cr.
 <inserted text> \cr 
                     
-l.802     }
+l.806     }
            
 I can't figure out why you would want to use a tab mark
 or \cr or \span just now. If something like a right brace
@@ -5013,14 +4993,14 @@ might try typing `S' now just to see what is salvageable.
 ! Missing \cr inserted.
 <inserted text> 
                 \cr 
-l.802     }
+l.806     }
            
 I'm guessing that you meant to end an alignment here.
 
 ! Misplaced \cr.
 <inserted text> \cr 
                     
-l.802     }
+l.806     }
            
 I can't figure out why you would want to use a tab mark
 or \cr or \span just now. If something like a right brace
@@ -5031,14 +5011,14 @@ might try typing `S' now just to see what is salvageable.
 ! Missing \cr inserted.
 <inserted text> 
                 \cr 
-l.802     }
+l.806     }
            
 I'm guessing that you meant to end an alignment here.
 
 ! Misplaced \cr.
 <inserted text> \cr 
                     
-l.802     }
+l.806     }
            
 I can't figure out why you would want to use a tab mark
 or \cr or \span just now. If something like a right brace
@@ -5049,14 +5029,14 @@ might try typing `S' now just to see what is salvageable.
 ! Missing \cr inserted.
 <inserted text> 
                 \cr 
-l.802     }
+l.806     }
            
 I'm guessing that you meant to end an alignment here.
 
 ! Misplaced \cr.
 <inserted text> \cr 
                     
-l.802     }
+l.806     }
            
 I can't figure out why you would want to use a tab mark
 or \cr or \span just now. If something like a right brace
@@ -5067,14 +5047,14 @@ might try typing `S' now just to see what is salvageable.
 ! Missing \cr inserted.
 <inserted text> 
                 \cr 
-l.802     }
+l.806     }
            
 I'm guessing that you meant to end an alignment here.
 
 ! Misplaced \cr.
 <inserted text> \cr 
                     
-l.802     }
+l.806     }
            
 I can't figure out why you would want to use a tab mark
 or \cr or \span just now. If something like a right brace
@@ -5085,14 +5065,14 @@ might try typing `S' now just to see what is salvageable.
 ! Missing \cr inserted.
 <inserted text> 
                 \cr 
-l.802     }
+l.806     }
            
 I'm guessing that you meant to end an alignment here.
 
 ! Misplaced \cr.
 <inserted text> \cr 
                     
-l.802     }
+l.806     }
            
 I can't figure out why you would want to use a tab mark
 or \cr or \span just now. If something like a right brace
@@ -5103,14 +5083,14 @@ might try typing `S' now just to see what is salvageable.
 ! Missing \cr inserted.
 <inserted text> 
                 \cr 
-l.802     }
+l.806     }
            
 I'm guessing that you meant to end an alignment here.
 
 ! Misplaced \cr.
 <inserted text> \cr 
                     
-l.802     }
+l.806     }
            
 I can't figure out why you would want to use a tab mark
 or \cr or \span just now. If something like a right brace
@@ -5121,14 +5101,14 @@ might try typing `S' now just to see what is salvageable.
 ! Missing \cr inserted.
 <inserted text> 
                 \cr 
-l.802     }
+l.806     }
            
 I'm guessing that you meant to end an alignment here.
 
 ! Misplaced \cr.
 <inserted text> \cr 
                     
-l.802     }
+l.806     }
            
 I can't figure out why you would want to use a tab mark
 or \cr or \span just now. If something like a right brace
@@ -5139,14 +5119,14 @@ might try typing `S' now just to see what is salvageable.
 ! Missing \cr inserted.
 <inserted text> 
                 \cr 
-l.802     }
+l.806     }
            
 I'm guessing that you meant to end an alignment here.
 
 ! Misplaced \cr.
 <inserted text> \cr 
                     
-l.802     }
+l.806     }
            
 I can't figure out why you would want to use a tab mark
 or \cr or \span just now. If something like a right brace
@@ -5157,14 +5137,14 @@ might try typing `S' now just to see what is salvageable.
 ! Missing \cr inserted.
 <inserted text> 
                 \cr 
-l.802     }
+l.806     }
            
 I'm guessing that you meant to end an alignment here.
 
 ! Misplaced \cr.
 <inserted text> \cr 
                     
-l.802     }
+l.806     }
            
 I can't figure out why you would want to use a tab mark
 or \cr or \span just now. If something like a right brace
@@ -5175,14 +5155,14 @@ might try typing `S' now just to see what is salvageable.
 ! Missing \cr inserted.
 <inserted text> 
                 \cr 
-l.802     }
+l.806     }
            
 I'm guessing that you meant to end an alignment here.
 
 ! Misplaced \cr.
 <inserted text> \cr 
                     
-l.802     }
+l.806     }
            
 I can't figure out why you would want to use a tab mark
 or \cr or \span just now. If something like a right brace
@@ -5193,14 +5173,14 @@ might try typing `S' now just to see what is salvageable.
 ! Missing \cr inserted.
 <inserted text> 
                 \cr 
-l.802     }
+l.806     }
            
 I'm guessing that you meant to end an alignment here.
 
 ! Misplaced \cr.
 <inserted text> \cr 
                     
-l.802     }
+l.806     }
            
 I can't figure out why you would want to use a tab mark
 or \cr or \span just now. If something like a right brace
@@ -5211,14 +5191,14 @@ might try typing `S' now just to see what is salvageable.
 ! Missing \cr inserted.
 <inserted text> 
                 \cr 
-l.802     }
+l.806     }
            
 I'm guessing that you meant to end an alignment here.
 
 ! Misplaced \cr.
 <inserted text> \cr 
                     
-l.802     }
+l.806     }
            
 I can't figure out why you would want to use a tab mark
 or \cr or \span just now. If something like a right brace
@@ -5229,14 +5209,14 @@ might try typing `S' now just to see what is salvageable.
 ! Missing \cr inserted.
 <inserted text> 
                 \cr 
-l.802     }
+l.806     }
            
 I'm guessing that you meant to end an alignment here.
 
 ! Misplaced \cr.
 <inserted text> \cr 
                     
-l.802     }
+l.806     }
            
 I can't figure out why you would want to use a tab mark
 or \cr or \span just now. If something like a right brace
@@ -5247,14 +5227,14 @@ might try typing `S' now just to see what is salvageable.
 ! Missing \cr inserted.
 <inserted text> 
                 \cr 
-l.802     }
+l.806     }
            
 I'm guessing that you meant to end an alignment here.
 
 ! Misplaced \cr.
 <inserted text> \cr 
                     
-l.802     }
+l.806     }
            
 I can't figure out why you would want to use a tab mark
 or \cr or \span just now. If something like a right brace
@@ -5265,14 +5245,14 @@ might try typing `S' now just to see what is salvageable.
 ! Missing \cr inserted.
 <inserted text> 
                 \cr 
-l.802     }
+l.806     }
            
 I'm guessing that you meant to end an alignment here.
 
 ! Misplaced \cr.
 <inserted text> \cr 
                     
-l.802     }
+l.806     }
            
 I can't figure out why you would want to use a tab mark
 or \cr or \span just now. If something like a right brace
@@ -5283,16 +5263,16 @@ might try typing `S' now just to see what is salvageable.
 ! Missing \cr inserted.
 <inserted text> 
                 \cr 
-l.802     }
+l.806     }
            
 (That makes 100 errors; please try again.) 
 Here is how much of TeX's memory you used:
- 23900 strings out of 467538
- 437229 string characters out of 5401323
- 1125191 words of memory out of 5000000
- 52153 multiletter control sequences out of 15000+600000
+ 23775 strings out of 467538
+ 434582 string characters out of 5401323
+ 1122104 words of memory out of 5000000
+ 52082 multiletter control sequences out of 15000+600000
  642807 words of font info for 74 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 84i,12n,94p,1520b,1370s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 84i,12n,94p,1520b,1319s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
 !  ==> Fatal error occurred, no output PDF file produced!

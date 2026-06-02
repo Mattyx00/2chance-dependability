@@ -238,6 +238,88 @@ Le metriche di utilizzo CPU, frequenza e memoria RAM usata vengono aggregate cal
     \end{equation}
 \end{itemize}
 
+\section{Analisi Statica del Codice (Creedengo)}
+
+Per l'Analisi Statica dell'Eco-Design basata su regole (\textit{Rule-Based Eco-Design Static Analysis}), è necessario integrare il codice sorgente locale, un'istanza attiva di SonarQube e il plugin Creedengo. Poiché Creedengo (evoluzione di \textit{ecoCode}) opera come plugin per SonarQube, esso si integra direttamente nella pipeline di Static Application Security Testing (SAST) esistente. Dato che il progetto è containerizzato tramite Docker, l'esecuzione locale di SonarQube in parallelo all'applicazione risulta estremamente efficiente.
+
+Di seguito viene descritta la guida pratica passo-passo per la configurazione, l'esecuzione e l'estrazione delle eco-vulnerabilità rilevate.
+
+\subsection{Configurazione di SonarQube con il Plugin Creedengo}
+
+Prima di procedere alla scansione del codice, è fondamentale assicurarsi che l'ambiente SonarQube disponga del ruleset Java di Creedengo. I passaggi per predisporre l'ambiente prevedono:
+
+\begin{enumerate}
+    \item \textbf{Avvio di SonarQube via Docker:} Se non si dispone di un server SonarQube dedicato, è possibile avviarlo standalone tramite il comando:
+    \begin{lstlisting}[language=bash, caption={Avvio del container SonarQube}, label={lst:run_sonarqube}]
+docker run -d --name sonarqube-sse -p 9000:9000 sonarqube:community
+    \end{lstlisting}
+
+    \item \textbf{Installazione del Plugin Creedengo:} Il plugin Creedengo per Java (in formato \texttt{.jar}) deve essere scaricato dalla sezione release del repository ufficiale GitHub (\texttt{green-code-initiative/creedengo-java}) ed inserito all'interno della cartella delle estensioni di SonarQube. Il trasferimento nel container avviene tramite:
+    \begin{lstlisting}[language=bash, caption={Copia del plugin Creedengo nel container}, label={lst:copy_plugin}]
+docker cp plugin/creedengo-java-plugin-2.1.2.jar sonarqube-sse:/opt/sonarqube/extensions/plugins/
+    \end{lstlisting}
+
+    \item \textbf{Riavvio del Container:} Per forzare il caricamento del plugin ed attivare le nuove regole di eco-design all'interno di SonarQube, si riavvia il container:
+    \begin{lstlisting}[language=bash, caption={Riavvio del container SonarQube}, label={lst:restart_sonarqube}]
+docker restart sonarqube-sse
+    \end{lstlisting}
+\end{enumerate}
+
+\subsection{Automazione del Setup su Nuove Infrastrutture}
+Per agevolare l'installazione e la configurazione di SonarQube con Creedengo su qualsiasi altra infrastruttura, è stato predisposto lo script di automazione \texttt{scripts/setup-sonarqube-creedengo.sh}. Tale script verifica la presenza di Docker, scarica automaticamente la versione desiderata del plugin da GitHub se non presente localmente, avvia il container SonarQube standalone, copia la libreria nella directory corretta del container ed esegue il riavvio del servizio.
+
+\subsection{Selezione delle Regole di Eco-Design}
+Per massimizzare il ritorno ecologico delle attività di refactoring e ridurre il rumore nelle metriche di telemetria statica, sono state selezionate 11 regole fondamentali del ruleset Creedengo Java. Ciascuna regola è stata scelta in base alla sua pertinenza tecnologica con l'architettura MVC di 2Chance (basata su Java Servlets e JDBC/DAO nativi) e all'impatto sulla riduzione del sovraccarico hardware.
+
+Le regole attivate e le relative motivazioni teoriche sono descritte di seguito:
+
+\begin{enumerate}
+    \item \textbf{Avoid getting the size of the collection in the loop (Evitare il calcolo della dimensione delle collezioni nei cicli):}
+    Questa regola rappresenta una variante diretta delle specifiche di progetto relative all'efficienza computazionale (GC169). L'invocazione continua del metodo \texttt{.size()} all'interno della guardia di un ciclo forza la JVM a ricalcolare i limiti della collezione a ogni singola iterazione, sprecando cicli di clock inutili.
+    
+    \item \textbf{Avoid SQL request in loop (Evitare query SQL all'interno di cicli):}
+    L'esecuzione di interrogazioni al database all'interno di cicli iterativi è un fattore altamente inefficiente. Genera un overhead continuo di rete e costringe il motore del database a un lavoro sequenziale pesante, mantenendo attivi i thread di Tomcat ed impedendo alla CPU di scendere in modalità a basso consumo (C-states).
+    
+    \item \textbf{Avoid usage of static collections (Evitare l'uso di collezioni statiche):}
+    Le collezioni statiche persistono per l'intera durata della JVM. Se non gestite in modo impeccabile, possono provocare perdite di memoria striscianti. Sotto stress (es. durante i Soak Test), la saturazione della memoria Heap costringe la JVM a frequenti cicli di Major Garbage Collection, con un consumo energetico molto elevato.
+    
+    \item \textbf{Avoid using Pattern.compile() in a non-static context (Evitare Pattern.compile() in contesto non statico):}
+    La compilazione di espressioni regolari è un'operazione onerosa per la CPU. Compilare ripetutamente lo stesso pattern all'interno dei metodi delle Servlet ad ogni richiesta, anziché memorizzarlo in una costante \texttt{private static final Pattern}, introduce un inutile overhead elaborativo.
+    
+    \item \textbf{Do not call a function when declaring a for-type loop (Non invocare funzioni nella dichiarazione del ciclo for):}
+    Corrisponde al vincolo GC169 (classificato a priorità elevata). Identifica chiamate a funzioni invarianti all'interno dei parametri di inizializzazione o di guardia dei cicli, suggerendo di estrarle in variabili locali ed evitando migliaia di invocazioni ridondanti del medesimo metodo.
+    
+    \item \textbf{Don't use the query SELECT * FROM (Evitare l'uso di SELECT *):}
+    Il recupero indiscriminato di tutte le colonne di una tabella costringe a trasferire byte inutili attraverso la connessione di rete e obbliga la JVM ad allocare oggetti in memoria per campi non utilizzati durante la creazione dei Model Beans.
+    
+    \item \textbf{Free resources (Rilascio delle risorse):}
+    La mancata chiusura manuale dei canali di comunicazione con il database (como \texttt{Connection}, \texttt{Statement} e \texttt{ResultSet}) porta a colli di bottiglia e memory leak. Quando il connection pool esaurisce le risorse, Tomcat deve gestire i thread in attesa attiva, degradando gravemente la stabilità e l'efficienza ecologica del server.
+    
+    \item \textbf{Initialize builder/buffer with the appropriate size (Inizializzazione StringBuilder con dimensione corretta):}
+    Questa regola contrasta l'impatto della mutabilità delle stringhe. Creare uno \texttt{StringBuilder} o uno \texttt{StringBuffer} senza indicare una capacità iniziale obbliga la JVM ad eseguire continui ridimensionamenti e copie degli array di caratteri interni man mano che la stringa si espande.
+    
+    \item \textbf{orElseGet instead of orElse (Utilizzo di orElseGet al posto di orElse):}
+    Nelle strutture di tipo \texttt{Optional}, il metodo \texttt{.orElse(...)} valuta l'espressione di fallback in ogni caso, anche se il valore principale è presente. Utilizzando \texttt{.orElseGet(...)} si sfrutta la \textit{lazy evaluation}, eseguendo il blocco di fallback unicamente se necessario ed eliminando calcoli ridondanti sotto carichi elevati.
+    
+    \item \textbf{Use PreparedStatement instead of Statement (Utilizzo di PreparedStatement):}
+    I \texttt{PreparedStatement} consentono al motore di MySQL di pre-compilare ed ottimizzare la query una sola volta. Reutilizzare query pre-compilate riduce sensibilmente il carico computazionale sull'infrastruttura del database durante l'esecuzione di transazioni concorrenti.
+    
+    \item \textbf{Use System.arraycopy to copy arrays (Utilizzo di System.arraycopy):}
+    Questa regola fa riferimento diretto alla specifica di progetto GC127 (Medium Severity). L'uso di cicli di iterazione manuali per copiare singoli elementi da un array all'altro è altamente inefficiente. La funzione \texttt{System.arraycopy()} si interfaccia direttamente con istruzioni native a basso livello del sistema operativo (scritte in C), garantendo una copia di blocchi di memoria estremamente efficiente.
+\end{enumerate}
+
+\subsection{Razionale della Selezione delle Regole}
+Il processo di selezione e la conseguente esclusione delle restanti regole risponde a tre criteri chiave:
+\begin{itemize}
+    \item \textbf{Allineamento Tecnologico (Stack Match):} Sono state rimosse tutte le regole relative a framework non presenti nel progetto (es. regole specifiche per Spring Boot/Spring Data), poiché l'applicazione è strutturata esclusivamente su Servlet nativi e JDBC puro. Le regole database-specifiche (\texttt{PreparedStatement}, \texttt{SELECT *}, \texttt{SQL in loop}) sono state invece prioritarizzate per il loro alto impatto prestazionale ed ecologico.
+    \item \textbf{Mitigazione della Garbage Collection (GC):} In un'applicazione web monolitica, i consumi più critici sono spesso legati alla CPU impegnata nelle attività di Garbage Collection. Regole mirate a evitare istanziazioni superflue (\texttt{Pattern.compile()}, ridimensionamento \texttt{StringBuilder}, collezioni statiche) riducono la pressione sulla memoria Heap.
+    \item \textbf{Vincoli di Progetto:} Le regole che indirizzano direttamente i requisiti GC169 (chiamate invarianti nei cicli) e GC127 (copia ottimizzata degli array) sono state ritenute mandatarie per garantire la conformità con le specifiche di sostenibilità.
+\end{itemize}
+
+\subsection{Risultati dell'Analisi Statica e Risoluzione dei Fault}
+
+Dopo aver configurato l'ambiente di analisi statica ed eseguito la scansione iniziale (fase di \textit{baseline}), sono state rilevate complessivamente \textbf{64 violazioni di eco-design} distribuite su quattro regole principali del ruleset Creedengo. Questi problemi interessavano in modo critico i Model Bean e i Data Access Object dell'applicazione 2Chance.
+
 \subsection{Analisi Architetturale dei Consumi: Il Livello di Persistenza}
 
 Nell'ecosistema dell'architettura software di 2Chance, l'analisi empirica ha evidenziato come il livello di accesso ai dati (Data Access Object o DAO) rappresenti il principale \textit{bottleneck} dal punto di vista del consumo energetico. A differenza di layer architetturali come i Controller o i Service, i quali si limitano al routing delle richieste HTTP, alla validazione dell'input e all'orchestrazione di logiche di business prettamente in-memory, i DAO si fanno carico della comunicazione inter-processo con il database relazionale. Il consumo energetico asimmetrico dei DAO rispetto ad altri layer deriva da molteplici fattori strutturali. In primis, l'apertura, la negoziazione e la chiusura delle connessioni di rete tramite driver JDBC comportano un notevole overhead computazionale e di I/O. Inoltre, le operazioni di \textit{Object-Relational Mapping} (ORM) manuale richiedono frequenti allocazioni di memoria per la trasformazione dei \texttt{ResultSet} in strutture dati (POJO), stressando il Garbage Collector della JVM. Infine, le inefficienze nell'esecuzione delle query SQL (come \textit{table scan} o mancato uso degli indici) costringono il database engine a un intenso lavoro di I/O su disco e di computazione CPU, riflettendosi in un prolungato \textit{active waiting} (attesa attiva) dei thread applicativi e, conseguentemente, in uno spreco energetico sistemico.
@@ -299,64 +381,6 @@ energibridge.exe -o <csv_output> -- java -jar target/benchmarks.jar <method_fqn>
         \item \textbf{Memoria RAM Allocata (GB):} Impronta media e di picco ricavata dai campioni di memoria.
     \end{itemize}
     I dati unificati vengono infine formattati in una tabella testuale e salvati all'interno della cartella \texttt{extractor\_logs}.
-\end{enumerate}
-
-\subsection{Target ad Alta Priorità: Componenti Critici (MUST Work On)}
-Questi componenti sono i diretti responsabili dei picchi massivi di energia CPU ($J$), potenza media ($W$) e saturazione della RAM evidenziati nei log globali dell'applicazione.
-
-\begin{enumerate}
-    \item \textbf{Target A: \texttt{ProdottoDAO} (Motore di Parsing del Catalogo)}
-    \begin{itemize}
-        \item \textbf{Razionale Empirico:} La classe \texttt{ProdottoServlet} ha rappresentato il principale fattore di consumo energetico assoluto sia durante la fase di Load ($3731{,}77$~J) che di Soak ($36.089{,}51$~J).
-        \item \textbf{Coordinate di Intersezione Creedengo:}
-        \begin{itemize}
-            \item Linea 182: \texttt{creedengo-java:GCI72} -- \textit{Avoid SQL request in loop} (Critico).
-            \item Linee 29, 46, 82, 120, 137: \texttt{creedengo-java:GCI74} -- \textit{Don't use the query SELECT * FROM} (Critico).
-        \end{itemize}
-        \item \textbf{Azione Consigliata:} Creare la classe di benchmark \texttt{ProdottoDAOBenchmark} tramite JMH. Isolare ed analizzare i metodi corrispondenti alle linee 182 e 29/46/82/120/137. La rimozione della query SQL nidificata all'interno del ciclo (linea 182) e la specificazione di colonne esplicite al posto dell'operatore jolly \texttt{SELECT *} risolveranno direttamente il sovraccarico responsabile dei $36.089{,}51$ Joule consumati nel recupero dei dati.
-    \end{itemize}
-
-    \item \textbf{Target B: \texttt{RecensioneDAO} (Sottosistema delle Recensioni)}
-    \begin{itemize}
-        \item \textbf{Razionale Empirico:} La classe \texttt{RecensioniServlet} ha mostrato un severo decadimento prestazionale sotto picchi improvvisi di traffico (test di Spike), con tempi di risposta saliti a $43{,}22$ secondi e una potenza media di picco pari a $11{,}41$~W.
-        \item \textbf{Coordinate di Intersezione Creedengo:}
-        \begin{itemize}
-            \item Linee 33, 51: \texttt{creedengo-java:GCI74} -- \textit{Don't use the query SELECT * FROM} (Critico).
-        \end{itemize}
-        \item \textbf{Azione Consigliata:} Creare la classe di benchmark \texttt{RecensioneDAOBenchmark} tramite JMH. Eseguire il microbenchmarking dei metodi che avvolgono le linee 33 e 51 (es. \texttt{getRecensioniByProdotto}). Il recupero selettivo delle sole colonne indispensabili ridurrà immediatamente l'overhead di allocazione e processamento dei dati che causa il blocco della servlet sotto stress.
-    \end{itemize}
-
-    \item \textbf{Target C: \texttt{Carrello} \& \texttt{OrdineDAO} (Nucleo delle Transazioni)}
-    \begin{itemize}
-        \item \textbf{Razionale Empirico:} Le classi \texttt{AggiungiCarrelloServlet} e \texttt{CheckOutServlet} hanno contribuito in modo determinante all'innalzamento del picco di RAM fino a $23{,}01$~GB, saturando l'utilizzo della CPU al $100\%$ del picco sotto tracciamento prolungato.
-        \item \textbf{Coordinate di Intersezione Creedengo:}
-        \begin{itemize}
-            \item \texttt{Carrello.java} (Linee 28, 72, 101): \texttt{creedengo-java:GCI69} \& \texttt{GCI3} -- \textit{Do not call a function when declaring a for-type loop} (Critico).
-            \item \texttt{OrdineDAO.java} (Linea 248): \texttt{creedengo-java:GCI72} -- \textit{Avoid SQL request in loop} (Critico).
-            \item \texttt{OrdineDAO.java} (Linee 37, 83, 135, 295): \texttt{creedengo-java:GCI74} -- \textit{Don't use the query SELECT * FROM} (Critico).
-        \end{itemize}
-        \item \textbf{Azione Consigliata:} Creare il benchmark \texttt{OrdineDAOBenchmark}. La query SQL nidificata all'interno del ciclo alla linea 248 rappresenta un drenaggio energetico straordinariamente elevato. Isolarla unitamente ai cicli del carrello consentirà di verificare quantitativamente la riduzione dell'allocazione di memoria e l'abbassamento del carico elaborativo globale.
-    \end{itemize}
-\end{enumerate}
-
-\subsection{Componenti da Escludere (SKIP)}
-Si raccomanda di non implementare benchmark JMH per le seguenti componenti indicate nel report di Creedengo. Sebbene contengano segnalazioni strutturali di livello critico, esse non appartengono ai flussi d'uso reali tracciati nella telemetria dinamica.
-
-\begin{enumerate}
-    \item \textbf{Skip A: \texttt{AdminService.java} (Linee 95, 370)}
-    \begin{itemize}
-        \item \textbf{Razionale per l'esclusione:} La classe \texttt{AdminService} presenta violazioni legate ai limiti invarianti dei cicli (\texttt{GCI69/GCI3}), ma la telemetria mostra che le azioni amministrative sono eseguite molto raramente. Poiché non sono sollecitate negli scenari JMeter, lo sviluppo di un benchmark JMH associato produrrebbe una variazione pressoché nulla nel delta di risparmio energetico complessivo ($\Delta\%$). Questo problema va corretto staticamente nel codice, evitando lo sforzo di microbenchmarking.
-    \end{itemize}
-
-    \item \textbf{Skip B: \texttt{UtenteDAO.java} (Linee 25, 57, 102) \& \texttt{Utente.java} (Linee 71, 95, 119, 143, 199, 251)}
-    \begin{itemize}
-        \item \textbf{Razionale per l'esclusione:} La telemetria mostra che \texttt{UtenteServlet} consuma quantità di energia quasi non rilevabili (circa $23$~J totali nel test di Spike). Inoltre, come descritto nelle linee guida architetturali, i processi legati alla sicurezza e all'hashing delle password (\texttt{Utente.hashPassword}) sono progettati per essere computazionalmente onerosi al fine di contrastare attacchi brute-force. Ridurre questi cicli di calcolo per limare pochi Joule esporrebbe il sistema a gravi rischi di sicurezza.
-    \end{itemize}
-
-    \item \textbf{Skip C: \texttt{WishListDAO.java} (Linea 79) \& \texttt{Specifiche.java}}
-    \begin{itemize}
-        \item \textbf{Razionale per l'esclusione:} La servlet \texttt{WishlistServlet} e le classi ausiliarie delle specifiche mostrano tempi di risposta minimi (es. $19{,}94$~ms) e un'impronta di risorse globale trascurabile nei test a lungo termine. Il loro impatto globale sull'assorbimento hardware è irrilevante.
-    \end{itemize}
 \end{enumerate}
 
 \subsection{Analisi dei Benchmark JMH Realizzati per ProdottoDAO e RecensioneDAO}
@@ -502,111 +526,7 @@ I risultati empirici spiegano chiaramente le degradazioni sistemiche rilevate du
     Analogamente a quanto osservato per le altre componenti, i controlli di validazione preventivi (\texttt{benchmarkGetOrdineByIdInvalid}, ecc.) respingono immediatamente i parametri errati in appena $0{,}0009$~ms/op, agendo da "scudo energetico" che preserva le risorse del database e la stabilità del connection pool.
 \end{enumerate}
 
-\section{Analisi Statica del Codice (Creedengo)}
-
-Per l'Analisi Statica dell'Eco-Design basata su regole (\textit{Rule-Based Eco-Design Static Analysis}), è necessario integrare il codice sorgente locale, un'istanza attiva di SonarQube e il plugin Creedengo. Poiché Creedengo (evoluzione di \textit{ecoCode}) opera come plugin per SonarQube, esso si integra direttamente nella pipeline di Static Application Security Testing (SAST) esistente. Dato che il progetto è containerizzato tramite Docker, l'esecuzione locale di SonarQube in parallelo all'applicazione risulta estremamente efficiente.
-
-Di seguito viene descritta la guida pratica passo-passo per la configurazione, l'esecuzione e l'estrazione delle eco-vulnerabilità rilevate.
-
-\subsection{Configurazione di SonarQube con il Plugin Creedengo}
-
-Prima di procedere alla scansione del codice, è fondamentale assicurarsi che l'ambiente SonarQube disponga del ruleset Java di Creedengo. I passaggi per predisporre l'ambiente prevedono:
-
-\begin{enumerate}
-    \item \textbf{Avvio di SonarQube via Docker:} Se non si dispone di un server SonarQube dedicato, è possibile avviarlo standalone tramite il comando:
-    \begin{lstlisting}[language=bash, caption={Avvio del container SonarQube}, label={lst:run_sonarqube}]
-docker run -d --name sonarqube-sse -p 9000:9000 sonarqube:community
-    \end{lstlisting}
-
-    \item \textbf{Installazione del Plugin Creedengo:} Il plugin Creedengo per Java (in formato \texttt{.jar}) deve essere scaricato dalla sezione release del repository ufficiale GitHub (\texttt{green-code-initiative/creedengo-java}) ed inserito all'interno della cartella delle estensioni di SonarQube. Il trasferimento nel container avviene tramite:
-    \begin{lstlisting}[language=bash, caption={Copia del plugin Creedengo nel container}, label={lst:copy_plugin}]
-docker cp plugin/creedengo-java-plugin-2.1.2.jar sonarqube-sse:/opt/sonarqube/extensions/plugins/
-    \end{lstlisting}
-
-    \item \textbf{Riavvio del Container:} Per forzare il caricamento del plugin ed attivare le nuove regole di eco-design all'interno di SonarQube, si riavvia il container:
-    \begin{lstlisting}[language=bash, caption={Riavvio del container SonarQube}, label={lst:restart_sonarqube}]
-docker restart sonarqube-sse
-    \end{lstlisting}
-\end{enumerate}
-
-\subsection{Automazione del Setup su Nuove Infrastrutture}
-Per agevolare l'installazione e la configurazione di SonarQube con Creedengo su qualsiasi altra infrastruttura, è stato predisposto lo script di automazione \texttt{scripts/setup-sonarqube-creedengo.sh}. Tale script verifica la presenza di Docker, scarica automaticamente la versione desiderata del plugin da GitHub se non presente localmente, avvia il container SonarQube standalone, copia la libreria nella directory corretta del container ed esegue il riavvio del servizio.
-
-\subsection{Selezione delle Regole di Eco-Design}
-Per massimizzare il ritorno ecologico delle attività di refactoring e ridurre il rumore nelle metriche di telemetria statica, sono state selezionate 11 regole fondamentali del ruleset Creedengo Java. Ciascuna regola è stata scelta in base alla sua pertinenza tecnologica con l'architettura MVC di 2Chance (basata su Java Servlets e JDBC/DAO nativi) e all'impatto sulla riduzione del sovraccarico hardware.
-
-Le regole attivate e le relative motivazioni teoriche sono descritte di seguito:
-
-\begin{enumerate}
-    \item \textbf{Avoid getting the size of the collection in the loop (Evitare il calcolo della dimensione delle collezioni nei cicli):}
-    Questa regola rappresenta una variante diretta delle specifiche di progetto relative all'efficienza computazionale (GC169). L'invocazione continua del metodo \texttt{.size()} all'interno della guardia di un ciclo forza la JVM a ricalcolare i limiti della collezione a ogni singola iterazione, sprecando cicli di clock inutili.
-    
-    \item \textbf{Avoid SQL request in loop (Evitare query SQL all'interno di cicli):}
-    L'esecuzione di interrogazioni al database all'interno di cicli iterativi è un fattore altamente inefficiente. Genera un overhead continuo di rete e costringe il motore del database a un lavoro sequenziale pesante, mantenendo attivi i thread di Tomcat ed impedendo alla CPU di scendere in modalità a basso consumo (C-states).
-    
-    \item \textbf{Avoid usage of static collections (Evitare l'uso di collezioni statiche):}
-    Le collezioni statiche persistono per l'intera durata della JVM. Se non gestite in modo impeccabile, possono provocare perdite di memoria striscianti. Sotto stress (es. durante i Soak Test), la saturazione della memoria Heap costringe la JVM a frequenti cicli di Major Garbage Collection, con un consumo energetico molto elevato.
-    
-    \item \textbf{Avoid using Pattern.compile() in a non-static context (Evitare Pattern.compile() in contesto non statico):}
-    La compilazione di espressioni regolari è un'operazione onerosa per la CPU. Compilare ripetutamente lo stesso pattern all'interno dei metodi delle Servlet ad ogni richiesta, anziché memorizzarlo in una costante \texttt{private static final Pattern}, introduce un inutile overhead elaborativo.
-    
-    \item \textbf{Do not call a function when declaring a for-type loop (Non invocare funzioni nella dichiarazione del ciclo for):}
-    Corrisponde al vincolo GC169 (classificato a priorità elevata). Identifica chiamate a funzioni invarianti all'interno dei parametri di inizializzazione o di guardia dei cicli, suggerendo di estrarle in variabili locali ed evitando migliaia di invocazioni ridondanti del medesimo metodo.
-    
-    \item \textbf{Don't use the query SELECT * FROM (Evitare l'uso di SELECT *):}
-    Il recupero indiscriminato di tutte le colonne di una tabella costringe a trasferire byte inutili attraverso la connessione di rete e obbliga la JVM ad allocare oggetti in memoria per campi non utilizzati durante la creazione dei Model Beans.
-    
-    \item \textbf{Free resources (Rilascio delle risorse):}
-    La mancata chiusura manuale dei canali di comunicazione con il database (como \texttt{Connection}, \texttt{Statement} e \texttt{ResultSet}) porta a colli di bottiglia e memory leak. Quando il connection pool esaurisce le risorse, Tomcat deve gestire i thread in attesa attiva, degradando gravemente la stabilità e l'efficienza ecologica del server.
-    
-    \item \textbf{Initialize builder/buffer with the appropriate size (Inizializzazione StringBuilder con dimensione corretta):}
-    Questa regola contrasta l'impatto della mutabilità delle stringhe. Creare uno \texttt{StringBuilder} o uno \texttt{StringBuffer} senza indicare una capacità iniziale obbliga la JVM ad eseguire continui ridimensionamenti e copie degli array di caratteri interni man mano che la stringa si espande.
-    
-    \item \textbf{orElseGet instead of orElse (Utilizzo di orElseGet al posto di orElse):}
-    Nelle strutture di tipo \texttt{Optional}, il metodo \texttt{.orElse(...)} valuta l'espressione di fallback in ogni caso, anche se il valore principale è presente. Utilizzando \texttt{.orElseGet(...)} si sfrutta la \textit{lazy evaluation}, eseguendo il blocco di fallback unicamente se necessario ed eliminando calcoli ridondanti sotto carichi elevati.
-    
-    \item \textbf{Use PreparedStatement instead of Statement (Utilizzo di PreparedStatement):}
-    I \texttt{PreparedStatement} consentono al motore di MySQL di pre-compilare ed ottimizzare la query una sola volta. Reutilizzare query pre-compilate riduce sensibilmente il carico computazionale sull'infrastruttura del database durante l'esecuzione di transazioni concorrenti.
-    
-    \item \textbf{Use System.arraycopy to copy arrays (Utilizzo di System.arraycopy):}
-    Questa regola fa riferimento diretto alla specifica di progetto GC127 (Medium Severity). L'uso di cicli di iterazione manuali per copiare singoli elementi da un array all'altro è altamente inefficiente. La funzione \texttt{System.arraycopy()} si interfaccia direttamente con istruzioni native a basso livello del sistema operativo (scritte in C), garantendo una copia di blocchi di memoria estremamente efficiente.
-\end{enumerate}
-
-\subsection{Razionale della Selezione delle Regole}
-Il processo di selezione e la conseguente esclusione delle restanti regole risponde a tre criteri chiave:
-\begin{itemize}
-    \item \textbf{Allineamento Tecnologico (Stack Match):} Sono state rimosse tutte le regole relative a framework non presenti nel progetto (es. regole specifiche per Spring Boot/Spring Data), poiché l'applicazione è strutturata esclusivamente su Servlet nativi e JDBC puro. Le regole database-specifiche (\texttt{PreparedStatement}, \texttt{SELECT *}, \texttt{SQL in loop}) sono state invece prioritarizzate per il loro alto impatto prestazionale ed ecologico.
-    \item \textbf{Mitigazione della Garbage Collection (GC):} In un'applicazione web monolitica, i consumi più critici sono spesso legati alla CPU impegnata nelle attività di Garbage Collection. Regole mirate a evitare istanziazioni superflue (\texttt{Pattern.compile()}, ridimensionamento \texttt{StringBuilder}, collezioni statiche) riducono la pressione sulla memoria Heap.
-    \item \textbf{Vincoli di Progetto:} Le regole che indirizzano direttamente i requisiti GC169 (chiamate invarianti nei cicli) e GC127 (copia ottimizzata degli array) sono state ritenute mandatarie per garantire la conformità con le specifiche di sostenibilità.
-\end{itemize}
-
-\subsection{Risultati dell'Analisi Statica e Risoluzione dei Fault}
-
-Dopo aver configurato l'ambiente di analisi statica ed eseguito la scansione iniziale (fase di \textit{baseline}), sono state rilevate complessivamente \textbf{64 violazioni di eco-design} distribuite su quattro regole principali del ruleset Creedengo. Questi problemi interessavano in modo critico i Model Bean e i Data Access Object dell'applicazione 2Chance.
-
-In seguito alle attività di refactoring orientate alla sostenibilità energetica --- che hanno introdotto il caching delle guardie dei cicli, l'uso di proiezioni SQL esplicite ed il batching delle transazioni --- è stata eseguita una nuova sessione di scansione con SonarQube. I risultati aggiornati confermano che \textbf{tutte le 64 eco-vulnerabilità sono state risolte ed i relativi fault sono stati chiusi con successo (stato CLOSED/FIXED)}.
-
-La Tabella~\ref{tab:creedengo_comparison} mostra il confronto dettagliato tra la baseline iniziale ed il report finale post-refactoring.
-
-\begin{table}[h]
-    \centering
-    \renewcommand{\arraystretch}{1.5}
-    \begin{tabular}{|p{0.35\textwidth}|p{0.35\textwidth}|c|c|}
-        \hline
-        \textbf{Regola Creedengo} & \textbf{Descrizione del Fault} & \textbf{Baseline (Attivi)} & \textbf{Post-Refactoring (Attivi)} \\ \hline
-        \texttt{creedengo-java:GCI3} & Calcolo ridondante della dimensione della collezione nei cicli & 23 & 0 \\ \hline
-        \texttt{creedengo-java:GCI69} & Invocazione di metodi invarianti nella guardia del loop & 23 & 0 \\ \hline
-        \texttt{creedengo-java:GCI74} & Uso di query indiscriminate (\texttt{SELECT * FROM}) & 16 & 0 \\ \hline
-        \texttt{creedengo-java:GCI72} & Esecuzione di richieste SQL all'interno di cicli iterativi & 2 & 0 \\ \hline
-        \multicolumn{2}{|r|}{\textbf{Totale Eco-Vulnerabilità Attive}} & \textbf{64} & \textbf{0} \\ \hline
-    \end{tabular}
-    \caption{Confronto delle violazioni statiche Creedengo prima e dopo il refactoring.}
-    \label{tab:creedengo_comparison}
-\end{table}
-
-La completa risoluzione di questi fault garantisce che l'applicazione non presenti inefficienze strutturali latenti a livello di CPU-bound e I/O-bound, allineandosi con i requisiti di sostenibilità energetica previsti per il sistema 2Chance.
-
-\section{Garanzia di Correttezza Metodologica e Piano di Rifattorizzazione}
+\section{Piano di Rifattorizzazione ed Ottimizzazione}
 
 Per procedere alla fase di rifattorizzazione del codice con la certezza di poter quantificare oggettivamente i miglioramenti di sostenibilità energetica ($\Delta\%$), è fondamentale certificare la correttezza metodologica delle metriche raccolte e definire un piano operativo sistematico per ciascuna classe target.
 
@@ -720,6 +640,32 @@ Il passaggio da getters posizionali a getters nominativi e l'adozione delle API 
     \item \textbf{Verification delle API Batch:} In \texttt{OrdineDAOTest.java}, i test di successo e di rollback sono stati aggiornati per verificare il corretto utilizzo dei metodi di batching (verificando \texttt{stmt.executeBatch()} e \texttt{stmt.addBatch()}) anziché dell'obsoleto \texttt{executeUpdate()}.
 \end{itemize}
 La completa validazione tramite test suite globale ha certificato il perfetto superamento di tutti i 532 test di unità del sistema, a riprova della sicurezza semantica delle ottimizzazioni apportate.
+
+\section{Validazione delle Ottimizzazioni}
+
+\subsection{Validazione dell'Analisi Statica (Creedengo)}
+
+In seguito alle attività di refactoring orientate alla sostenibilità energetica --- che hanno introdotto il caching delle guardie dei cicli, l'uso di proiezioni SQL esplicite ed il batching delle transazioni --- è stata eseguita una nuova sessione di scansione con SonarQube. I risultati aggiornati confermano che \textbf{tutte le 64 eco-vulnerabilità sono state risolte ed i relativi fault sono stati chiusi con successo (stato CLOSED/FIXED)}.
+
+La Tabella~\ref{tab:creedengo_comparison} mostra il confronto dettagliato tra la baseline iniziale ed il report finale post-refactoring.
+
+\begin{table}[h]
+    \centering
+    \renewcommand{\arraystretch}{1.5}
+    \begin{tabular}{|p{0.35\textwidth}|p{0.35\textwidth}|c|c|}
+        \hline
+        \textbf{Regola Creedengo} & \textbf{Descrizione del Fault} & \textbf{Baseline (Attivi)} & \textbf{Post-Refactoring (Attivi)} \\ \hline
+        \texttt{creedengo-java:GCI3} & Calcolo ridondante della dimensione della collezione nei cicli & 23 & 0 \\ \hline
+        \texttt{creedengo-java:GCI69} & Invocazione di metodi invarianti nella guardia del loop & 23 & 0 \\ \hline
+        \texttt{creedengo-java:GCI74} & Uso di query indiscriminate (\texttt{SELECT * FROM}) & 16 & 0 \\ \hline
+        \texttt{creedengo-java:GCI72} & Esecuzione di richieste SQL all'interno di cicli iterativi & 2 & 0 \\ \hline
+        \multicolumn{2}{|r|}{\textbf{Totale Eco-Vulnerabilità Attive}} & \textbf{64} & \textbf{0} \\ \hline
+    \end{tabular}
+    \caption{Confronto delle violazioni statiche Creedengo prima e dopo il refactoring.}
+    \label{tab:creedengo_comparison}
+\end{table}
+
+La completa risoluzione di questi fault garantisce che l'applicazione non presenti inefficienze strutturali latenti a livello di CPU-bound e I/O-bound, allineandosi con i requisiti di sostenibilità energetica previsti per il sistema 2Chance.
 
 \subsection{Risultati Sperimentali dei Benchmark Post-Refactoring}
 

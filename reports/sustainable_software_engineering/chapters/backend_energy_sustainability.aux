@@ -1,83 +1,84 @@
 \relax 
 \providecommand\hyper@newdestlabel[2]{}
-\@writefile{toc}{\contentsline {chapter}{\numberline {3}Sostenibilità Energetica del Back-End}{8}{chapter.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {3}Sostenibilità Energetica del Back-End}{6}{chapter.3}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {section}{\numberline {3.1}Misurazione Dinamica dell'Energia tramite EnergiBridge e JMeter}{8}{section.3.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.1}Configurazione dell'Ambiente di Profilazione}{8}{subsection.3.1.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.2}Strategia di Monitoraggio e Workload Deterministico}{8}{subsection.3.1.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Astrazione del Contesto di Rete (Test Plan)}{9}{section*.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Orchestrazione della Concorrenza (Thread Group)}{9}{section*.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Mantenimento dello Stato e dell'Isolamento (Session Management)}{9}{section*.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Campionamento delle Interazioni (HTTP Samplers)}{9}{section*.5}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {3.1}{\ignorespaces Metriche di sostenibilità hardware campionate.}}{10}{table.3.1}\protected@file@percent }
-\newlabel{tab:metriche_energia}{{3.1}{10}{Metriche di sostenibilità hardware campionate}{table.3.1}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.3}Progettazione degli Scenari di Test JMeter}{10}{subsection.3.1.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Simulazione del Flusso Utente (User Journey)}{11}{section*.6}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.4}Definizione delle Soglie di Accettabilità (SLAs) e Dimensionamento dei Test}{12}{subsection.3.1.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Esperimento di Stress Preventivo: Determinazione del Punto di Rottura (Capacità Nominale $C$)}{12}{section*.7}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Analisi del Collo di Bottiglia sotto Carico Elevato}{12}{section*.8}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{1. Scenario di Load Testing (Carico di Picco Sostenibile)}{13}{section*.9}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{2. Scenario di Soak Testing (Resistenza e Memory Leak)}{13}{section*.10}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{3. Scenario di Spike Testing (Tolleranza ai Picchi Improvvisi)}{13}{section*.11}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.5}Automazione, Isolamento e Sincronizzazione dei Test (\texttt  {backend\_energy\_consumption\_analysis.ps1})}{14}{subsection.3.1.5}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Isolamento dell'Ambiente e Prevenzione del Software Aging}{14}{section*.12}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Warm-Up del Server e Risoluzione dei Transitori}{14}{section*.13}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Sincronizzazione della Profilazione ed Esecuzione Headless}{14}{section*.14}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.6}Analisi Energetica Post-Elaborazione ed Estrazione delle Metriche (\texttt  {energibridge\_metrics\_extractor.py})}{15}{subsection.3.1.6}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Filtrazione del Rumore dei Sensori RAPL}{15}{section*.15}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Calcolo delle Metriche Globali di Sistema}{16}{section*.16}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.7}Analisi Architetturale dei Consumi: Il Livello di Persistenza}{17}{subsection.3.1.7}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Anti-Pattern di Sostenibilità nei DAO}{17}{section*.17}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{L'Anti-Pattern "SELECT *" e il Trasferimento Dati Incontrollato}{17}{section*.18}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Assenza di Batch Processing nelle Scritture Iterative}{17}{section*.19}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Risoluzione del Problema N+1 (Moltiplicazione delle Query)}{17}{section*.20}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {3.2}Microbenchmarking Energetico (JMH)}{18}{section.3.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.1}Strumento di Profilazione Energetica Co-Sincronizzato: Architettura e Teoria Operativa}{18}{subsection.3.2.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.2}Analisi dei Benchmark JMH Realizzati per ProdottoDAO e RecensioneDAO}{19}{subsection.3.2.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Descrizione delle Suite di Benchmark ed Associazione con le Violazioni}{20}{section*.21}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Risultati Sperimentali dei Benchmark (Smoke Runs)}{20}{section*.22}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {3.2}{\ignorespaces Risultati temporali ed energetici per la classe ProdottoDAOBenchmark.}}{21}{table.3.2}\protected@file@percent }
-\newlabel{tab:jmh_results_prodotto}{{3.2}{21}{Risultati temporali ed energetici per la classe ProdottoDAOBenchmark}{table.3.2}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {3.3}{\ignorespaces Risultati temporali ed energetici per la classe RecensioneDAOBenchmark.}}{21}{table.3.3}\protected@file@percent }
-\newlabel{tab:jmh_results_recensione}{{3.3}{21}{Risultati temporali ed energetici per la classe RecensioneDAOBenchmark}{table.3.3}{}}
-\@writefile{toc}{\contentsline {subsubsection}{Correlazione Teorica e Interpretazione dei Risultati}{21}{section*.23}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.3}Analisi dei Benchmark JMH Realizzati per OrdineDAO e Carrello}{22}{subsection.3.2.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Descrizione delle Suite di Benchmark ed Associazione con le Violazioni}{22}{section*.24}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Risultati Sperimentali dei Benchmark (Smoke Runs)}{22}{section*.25}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {3.4}{\ignorespaces Risultati temporali ed energetici per la classe OrdineDAOBenchmark.}}{23}{table.3.4}\protected@file@percent }
-\newlabel{tab:jmh_results_ordine}{{3.4}{23}{Risultati temporali ed energetici per la classe OrdineDAOBenchmark}{table.3.4}{}}
-\@writefile{toc}{\contentsline {subsubsection}{Correlazione Teorica e Interpretazione dei Risultati}{23}{section*.26}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {3.3}Analisi Statica del Codice (Creedengo)}{23}{section.3.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.1}Configurazione di SonarQube con il Plugin Creedengo}{24}{subsection.3.3.1}\protected@file@percent }
-\newlabel{lst:run_sonarqube}{{3.1}{24}{Avvio del container SonarQube}{lstlisting.3.1}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.1}Avvio del container SonarQube}{24}{lstlisting.3.1}\protected@file@percent }
-\newlabel{lst:copy_plugin}{{3.2}{24}{Copia del plugin Creedengo nel container}{lstlisting.3.2}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.2}Copia del plugin Creedengo nel container}{24}{lstlisting.3.2}\protected@file@percent }
-\newlabel{lst:restart_sonarqube}{{3.3}{24}{Riavvio del container SonarQube}{lstlisting.3.3}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.3}Riavvio del container SonarQube}{24}{lstlisting.3.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.2}Automazione del Setup su Nuove Infrastrutture}{24}{subsection.3.3.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.3}Selezione delle Regole di Eco-Design}{24}{subsection.3.3.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.4}Razionale della Selezione delle Regole}{26}{subsection.3.3.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.5}Risultati dell'Analisi Statica e Risoluzione dei Fault}{26}{subsection.3.3.5}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {3.5}{\ignorespaces Confronto delle violazioni statiche Creedengo prima e dopo il refactoring.}}{27}{table.3.5}\protected@file@percent }
-\newlabel{tab:creedengo_comparison}{{3.5}{27}{Confronto delle violazioni statiche Creedengo prima e dopo il refactoring}{table.3.5}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {3.4}Garanzia di Correttezza Metodologica e Piano di Rifattorizzazione}{27}{section.3.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.1}Validazione e Garanzia di Correttezza delle Metriche}{27}{subsection.3.4.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.2}Piano Operativo di Rifattorizzazione ed Esperimenti Successivi}{28}{subsection.3.4.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.3}Rifattorizzazione dei Model Bean: Teoria dell'Ottimizzazione dei Cicli e Risultati della Verifica}{28}{subsection.3.4.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Analisi Teorica dell'Overhead delle Guardie dei Cicli}{29}{section*.27}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Caso di Studio: Mutazioni Dinamiche in \texttt  {Carrello.java}}{29}{section*.28}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Verifica di Regressione tramite Test di Unità}{29}{section*.29}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.4}Rifattorizzazione dei Data Access Object (DAO): Proiezioni SQL Esplicite, Batching ed Allineamento del Testing}{30}{subsection.3.4.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Ottimizzazione delle Proiezioni SQL (SELECT * - GCI74)}{30}{section*.30}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Ottimizzazione delle Scritture tramite Batching (SQL in Loop - GCI72)}{31}{section*.31}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{Correzione e Allineamento delle Suite di Test JUnit}{31}{section*.32}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.5}Risultati Sperimentali dei Benchmark Post-Refactoring}{31}{subsection.3.4.5}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{1. Analisi Comparativa: OrdineDAOBenchmark}{32}{section*.33}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {3.6}{\ignorespaces Confronto temporale ed energetico per la classe OrdineDAOBenchmark.}}{32}{table.3.6}\protected@file@percent }
-\newlabel{tab:jmh_comparison_ordine}{{3.6}{32}{Confronto temporale ed energetico per la classe OrdineDAOBenchmark}{table.3.6}{}}
-\@writefile{toc}{\contentsline {subsubsection}{2. Analisi Comparativa: ProdottoDAOBenchmark}{32}{section*.34}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {3.7}{\ignorespaces Confronto temporale ed energetico per la classe ProdottoDAOBenchmark.}}{32}{table.3.7}\protected@file@percent }
-\newlabel{tab:jmh_comparison_prodotto}{{3.7}{32}{Confronto temporale ed energetico per la classe ProdottoDAOBenchmark}{table.3.7}{}}
-\@writefile{toc}{\contentsline {subsubsection}{3. Analisi Comparativa: RecensioneDAOBenchmark}{32}{section*.35}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3.1}Misurazione Dinamica dell'Energia tramite EnergiBridge e JMeter}{6}{section.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.1}Configurazione dell'Ambiente di Profilazione}{6}{subsection.3.1.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.2}Strategia di Monitoraggio e Workload Deterministico}{6}{subsection.3.1.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Astrazione del Contesto di Rete (Test Plan)}{7}{section*.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Orchestrazione della Concorrenza (Thread Group)}{7}{section*.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Mantenimento dello Stato e dell'Isolamento (Session Management)}{7}{section*.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Campionamento delle Interazioni (HTTP Samplers)}{7}{section*.5}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {3.1}{\ignorespaces Metriche di sostenibilità hardware campionate.}}{8}{table.3.1}\protected@file@percent }
+\newlabel{tab:metriche_energia}{{3.1}{8}{Metriche di sostenibilità hardware campionate}{table.3.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.3}Progettazione degli Scenari di Test JMeter}{8}{subsection.3.1.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Simulazione del Flusso Utente (User Journey)}{9}{section*.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.4}Definizione delle Soglie di Accettabilità (SLAs) e Dimensionamento dei Test}{10}{subsection.3.1.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Esperimento di Stress Preventivo: Determinazione del Punto di Rottura (Capacità Nominale $C$)}{10}{section*.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Analisi del Collo di Bottiglia sotto Carico Elevato}{10}{section*.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{1. Scenario di Load Testing (Carico di Picco Sostenibile)}{11}{section*.9}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{2. Scenario di Soak Testing (Resistenza e Memory Leak)}{11}{section*.10}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{3. Scenario di Spike Testing (Tolleranza ai Picchi Improvvisi)}{11}{section*.11}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.5}Automazione, Isolamento e Sincronizzazione dei Test (\texttt  {backend\_energy\_consumption\_analysis.ps1})}{12}{subsection.3.1.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Isolamento dell'Ambiente e Prevenzione del Software Aging}{12}{section*.12}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Warm-Up del Server e Risoluzione dei Transitori}{12}{section*.13}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Sincronizzazione della Profilazione ed Esecuzione Headless}{12}{section*.14}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.6}Analisi Energetica Post-Elaborazione ed Estrazione delle Metriche (\texttt  {energibridge\_metrics\_extractor.py})}{13}{subsection.3.1.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Filtrazione del Rumore dei Sensori RAPL}{13}{section*.15}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Calcolo delle Metriche Globali di Sistema}{14}{section*.16}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3.2}Analisi Statica del Codice (Creedengo)}{15}{section.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.1}Configurazione di SonarQube con il Plugin Creedengo}{15}{subsection.3.2.1}\protected@file@percent }
+\newlabel{lst:run_sonarqube}{{3.1}{15}{Avvio del container SonarQube}{lstlisting.3.1}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.1}Avvio del container SonarQube}{15}{lstlisting.3.1}\protected@file@percent }
+\newlabel{lst:copy_plugin}{{3.2}{15}{Copia del plugin Creedengo nel container}{lstlisting.3.2}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.2}Copia del plugin Creedengo nel container}{15}{lstlisting.3.2}\protected@file@percent }
+\newlabel{lst:restart_sonarqube}{{3.3}{15}{Riavvio del container SonarQube}{lstlisting.3.3}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.3}Riavvio del container SonarQube}{15}{lstlisting.3.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.2}Automazione del Setup su Nuove Infrastrutture}{15}{subsection.3.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.3}Selezione delle Regole di Eco-Design}{16}{subsection.3.2.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.4}Razionale della Selezione delle Regole}{17}{subsection.3.2.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.5}Risultati dell'Analisi Statica e Risoluzione dei Fault}{17}{subsection.3.2.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.6}Analisi Architetturale dei Consumi: Il Livello di Persistenza}{18}{subsection.3.2.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Anti-Pattern di Sostenibilità nei DAO}{18}{section*.17}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{L'Anti-Pattern "SELECT *" e il Trasferimento Dati Incontrollato}{18}{section*.18}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Assenza di Batch Processing nelle Scritture Iterative}{18}{section*.19}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Risoluzione del Problema N+1 (Moltiplicazione delle Query)}{19}{section*.20}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3.3}Microbenchmarking Energetico (JMH)}{19}{section.3.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.1}Strumento di Profilazione Energetica Co-Sincronizzato: Architettura e Teoria Operativa}{19}{subsection.3.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.2}Analisi dei Benchmark JMH Realizzati per ProdottoDAO e RecensioneDAO}{20}{subsection.3.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Descrizione delle Suite di Benchmark ed Associazione con le Violazioni}{21}{section*.21}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Risultati Sperimentali dei Benchmark (Smoke Runs)}{21}{section*.22}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {3.2}{\ignorespaces Risultati temporali ed energetici per la classe ProdottoDAOBenchmark.}}{22}{table.3.2}\protected@file@percent }
+\newlabel{tab:jmh_results_prodotto}{{3.2}{22}{Risultati temporali ed energetici per la classe ProdottoDAOBenchmark}{table.3.2}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3.3}{\ignorespaces Risultati temporali ed energetici per la classe RecensioneDAOBenchmark.}}{22}{table.3.3}\protected@file@percent }
+\newlabel{tab:jmh_results_recensione}{{3.3}{22}{Risultati temporali ed energetici per la classe RecensioneDAOBenchmark}{table.3.3}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Correlazione Teorica e Interpretazione dei Risultati}{22}{section*.23}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.3}Analisi dei Benchmark JMH Realizzati per OrdineDAO e Carrello}{23}{subsection.3.3.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Descrizione delle Suite di Benchmark ed Associazione con le Violazioni}{23}{section*.24}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Risultati Sperimentali dei Benchmark (Smoke Runs)}{23}{section*.25}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {3.4}{\ignorespaces Risultati temporali ed energetici per la classe OrdineDAOBenchmark.}}{24}{table.3.4}\protected@file@percent }
+\newlabel{tab:jmh_results_ordine}{{3.4}{24}{Risultati temporali ed energetici per la classe OrdineDAOBenchmark}{table.3.4}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Correlazione Teorica e Interpretazione dei Risultati}{24}{section*.26}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3.4}Piano di Rifattorizzazione ed Ottimizzazione}{24}{section.3.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.1}Validazione e Garanzia di Correttezza delle Metriche}{25}{subsection.3.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.2}Piano Operativo di Rifattorizzazione ed Esperimenti Successivi}{25}{subsection.3.4.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.3}Rifattorizzazione dei Model Bean: Teoria dell'Ottimizzazione dei Cicli e Risultati della Verifica}{26}{subsection.3.4.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Analisi Teorica dell'Overhead delle Guardie dei Cicli}{26}{section*.27}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Caso di Studio: Mutazioni Dinamiche in \texttt  {Carrello.java}}{27}{section*.28}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Verifica di Regressione tramite Test di Unità}{27}{section*.29}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.4}Rifattorizzazione dei Data Access Object (DAO): Proiezioni SQL Esplicite, Batching ed Allineamento del Testing}{27}{subsection.3.4.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Ottimizzazione delle Proiezioni SQL (SELECT * - GCI74)}{28}{section*.30}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Ottimizzazione delle Scritture tramite Batching (SQL in Loop - GCI72)}{28}{section*.31}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{Correzione e Allineamento delle Suite di Test JUnit}{28}{section*.32}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3.5}Validazione delle Ottimizzazioni}{29}{section.3.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.5.1}Validazione dell'Analisi Statica (Creedengo)}{29}{subsection.3.5.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {3.5}{\ignorespaces Confronto delle violazioni statiche Creedengo prima e dopo il refactoring.}}{29}{table.3.5}\protected@file@percent }
+\newlabel{tab:creedengo_comparison}{{3.5}{29}{Confronto delle violazioni statiche Creedengo prima e dopo il refactoring}{table.3.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.5.2}Risultati Sperimentali dei Benchmark Post-Refactoring}{29}{subsection.3.5.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{1. Analisi Comparativa: OrdineDAOBenchmark}{30}{section*.33}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {3.6}{\ignorespaces Confronto temporale ed energetico per la classe OrdineDAOBenchmark.}}{30}{table.3.6}\protected@file@percent }
+\newlabel{tab:jmh_comparison_ordine}{{3.6}{30}{Confronto temporale ed energetico per la classe OrdineDAOBenchmark}{table.3.6}{}}
+\@writefile{toc}{\contentsline {subsubsection}{2. Analisi Comparativa: ProdottoDAOBenchmark}{30}{section*.34}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {3.7}{\ignorespaces Confronto temporale ed energetico per la classe ProdottoDAOBenchmark.}}{30}{table.3.7}\protected@file@percent }
+\newlabel{tab:jmh_comparison_prodotto}{{3.7}{30}{Confronto temporale ed energetico per la classe ProdottoDAOBenchmark}{table.3.7}{}}
