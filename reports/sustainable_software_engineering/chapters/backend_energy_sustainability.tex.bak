@@ -185,30 +185,40 @@ Inoltre, lo script organizza gli output separando nettamente le metriche prestaz
 \begin{itemize}
 \item \textbf{Metriche Prestazionali (file \texttt{.jtl}):} Generati direttamente da Apache JMeter, questi log registrano i dati specifici dell'esecuzione, tra cui latenze di rete, tempi di risposta, throughput e codici di stato HTTP. Vengono archiviati nella directory \texttt{jmeter_logs} per valutare la conformità con gli SLA.
 \item \textbf{Telemetria Energetica (file \texttt{.csv}):} Registrati dal processo wrapper EnergiBridge, questi dataset catturano il consumo di potenza (espresso in Watt) e l'utilizzo delle risorse hardware durante l'esatta durata del test. Vengono isolati nella cartella \texttt{energibridge_logs} per l'analisi di sostenibilità del software.
-\item \textbf{Log di Esecuzione Standard (file \texttt{.log}):} File di testo contenenti l'output di runtime, gli errori di sistema e le informazioni di debug provenienti sia dal container dell'applicazione sia dal database MySQL, garantendo la completa tracciabilità dell'esperimento.
 \end{itemize}
 
 \subsection{Analisi Energetica Post-Elaborazione ed Estrazione delle Metriche (\texttt{energibridge\_metrics\_extractor.py})}
 
-Al fine di tradurre i dati grezzi raccolti da EnergiBridge e Apache JMeter in informazioni utili per l'ingegneria del software sostenibile, è stata sviluppata una pipeline di post-elaborazione in Python (\texttt{energibridge\_metrics\_extractor.py}). Lo script si occupa di correlare le misurazioni fisiche del consumo energetico dell'hardware (file CSV di EnergiBridge) con le richieste HTTP intercettate dall'applicazione (file JTL di JMeter), consentendo di valutare sia l'efficienza energetica globale che quella specifica di ciascuna \textit{servlet}.
-
-\subsubsection{Allineamento Temporale e Correlazione dei Log}
-L'orchestrazione dei test descritta in precedenza genera tracciati con marcatura temporale sincronizzata (\textit{timestamp}). Lo script Python riceve in input il percorso del file CSV di EnergiBridge, estrae il timestamp dal nome del file (formato \texttt{YYYY\_MM\_DD\_hh\_mm\_ss}) e ricerca nella directory \texttt{jmeter\_logs} il file JTL corrispondente. 
-
-Qualora alcune righe del file CSV presentino marcature temporali mancanti o incomplete, lo script esegue un allineamento predittivo interpolando i record partendo dal timestamp iniziale (del JTL o del primo record valido di EnergiBridge) e incrementandolo del tasso di campionamento nominale (200~ms).
+Al fine di tradurre i dati grezzi raccolti da EnergiBridge e Apache JMeter in informazioni utili per l'ingegneria del software sostenibile, è stata sviluppata una pipeline di post-elaborazione in Python (\texttt{energibridge\_metrics\_extractor.py}). Lo script si occupa di correlare le misurazioni fisiche del consumo energetico dell'hardware (file CSV di EnergiBridge) con le richieste HTTP intercettate dall'applicazione (file JTL di JMeter), consentendo di valutare sia l'efficienza energetica globale che quella specifica di ciascuna \textit{servlet}. L'orchestrazione dei test descritta in precedenza genera tracciati con marcatura temporale sincronizzata (\textit{timestamp}). Lo script Python riceve in input il percorso del file CSV di EnergiBridge, estrae il timestamp dal nome del file (formato \texttt{YYYY\_MM\_DD\_hh\_mm\_ss}) e ricerca nella directory \texttt{jmeter\_logs} il file JTL corrispondente. 
 
 \subsubsection{Filtrazione del Rumore dei Sensori RAPL}
-I sensori fisici basati su Intel/AMD RAPL (\textit{Running Average Power Limit}) o registri equivalenti possono essere soggetti a rumore hardware, caratterizzato da oscillazioni fittizie e repentine nei valori assoluti di energia (ad esempio, salti istantanei da decine a migliaia di Joule). Se calcolato tramite semplice differenza tra l'ultimo e il primo valore registrato ($E_{end} - E_{start}$), il consumo totale risulterebbe pesantemente sovrastimato o falsato.
+Per la misurazione dei consumi energetici ho riscontrato che i sensori fisici basati su Intel/AMD RAPL (\textit{Running Average Power Limit}) presentano un forte rumore hardware. Questo fenomeno si manifesta con oscillazioni fittizie e picchi repentini nei valori assoluti di energia, i quali passano istantaneamente da poche decine a migliaia di Joule. Di conseguenza, se calcolassi il consumo totale tramite una semplice differenza tra il valore finale e quello iniziale, ovvero:
 
-Per risolvere questo problema, lo script implementa un filtro di soglia basato sulla potenza fisica teorica massima del processore (AMD Ryzen AI 9 HX 370). Per ogni coppia di record consecutivi $k-1$ e $k$, viene calcolato l'intervallo temporale $\Delta t = (T_k - T_{k-1})/1000$ (in secondi) e la differenza di energia letta dai sensori $\Delta E = E_k - E_{k-1}$. La differenza viene considerata valida solo se rispetta le seguenti restrizioni fisiche, derivate dalle specifiche dell'architettura (cTDP Max di 54W):
+\begin{equation}
+E_{tot} = E_{end} - E_{start}
+\end{equation}
+
+la stima complessiva risulterebbe pesantemente sovrastimata o del tutto falsata. Per ovviare a questo problema e ripulire i dati, ho implementato nel mio script un filtro di soglia tarato sulla potenza fisica teorica massima del processore su cui ho eseguito i test, un AMD Ryzen AI 9 HX 370. La logica del filtro analizza ogni coppia di record consecutivi k−1 e k, calcolando l'intervallo temporale in secondi:
+
+\begin{equation}
+\Delta t = \frac{T_k - T_{k-1}}{1000}
+\end{equation}
+
+e la rispettiva variazione di energia:
+
+\begin{equation}
+\Delta E = E_k - E_{k-1}
+\end{equation}
+
+Nello specifico, la differenza viene considerata valida solo se rispetta le seguenti restrizioni, che ho derivato direttamente dalle specifiche tecniche dell'architettura AMD (cTDP Max pari a 54~W):
+
 \begin{itemize}
-    \item \textbf{Package CPU Energy:} $0 \le \Delta E_{CPU} \le 55.0 \times \Delta t$. Una variazione superiore a 55~W per frazione di secondo (valore del cTDP Max più 1W di tolleranza) viene scartata (impostata a 0) in quanto fisicamente impossibile per l'intero SoC.
-    \item \textbf{Core CPU Energy (PPO):} $0 \le \Delta E_{Core} \le 45.0 \times \Delta t$. Variazioni superiori a 45~W sui singoli core elaborativi (stimato all'80\% del budget energetico del package) vengono analogamente filtrate.
+\item \textbf{Package CPU Energy:} $0 \le \Delta E_{CPU} \le 55.0 \times \Delta t$. Una variazione di energia che sottintende una potenza superiore a 55~W (corrispondente al cTDP Max con l'aggiunta di 1~W di tolleranza) viene considerata un picco spurio e azzerata, poiché fisicamente impossibile per l'intero SoC.
+\item \textbf{Core CPU Energy (PP0):} $0 \le \Delta E_{Core} \le 45.0 \times \Delta t$. Ho applicato una limitazione analoga per i soli core elaborativi, fissando la soglia a 45~W, valore che ho stimato come l'80% del budget energetico complessivo del package.
 \end{itemize}
-Questo approccio consente di accumulare solo i contributi reali di consumo energetico, neutralizzando i picchi spuri e rendendo le misurazioni stabili e confrontabili.
 
 \subsubsection{Calcolo delle Metriche Globali di Sistema}
-Le metriche di sostenibilità globali sono calcolate tramite sommatoria dei delta filtrati per l'intero set di record $M$:
+Le metriche di utilizzo CPU, frequenza e memoria RAM usata vengono aggregate calcolandone il valore medio e il picco massimo registrato durante la sessione. Le metriche di sostenibilità globali sono calcolate tramite sommatoria dei delta filtrati per l'intero set di record $M$:
 \begin{itemize}
     \item \textbf{Durata Totale dell'Analisi ($T_{global}$):}
     \begin{equation}
@@ -227,168 +237,31 @@ Le metriche di sostenibilità globali sono calcolate tramite sommatoria dei delt
         P_{avg} = \frac{E_{CPU}}{T_{global}}
     \end{equation}
 \end{itemize}
-Le metriche di utilizzo CPU, frequenza e memoria RAM usata vengono aggregate calcolandone il valore medio e il picco massimo registrato durante la sessione.
 
-\subsubsection{Calcolo delle Metriche per Singola Servlet (Algoritmo Sweep-Line)}
-Assegnare il consumo hardware complessivo alle singole componenti software rappresenta una sfida teorica, in quanto molteplici richieste HTTP possono essere elaborate in parallelo dai thread di Tomcat. Lo script risolve questo problema applicando un algoritmo di attribuzione proporzionale a grana fine basato su time-slice, ottimizzato tramite una tecnica \textit{sweep-line}.
+\subsection{Analisi Architetturale dei Consumi: Il Livello di Persistenza}
 
-Per ogni time-slice delimitato da due campionamenti di EnergiBridge $[T_{k-1}, T_k]$:
-\begin{enumerate}
-    \item Viene identificato l'insieme delle richieste HTTP attive in quell'intervallo temporale. Una richiesta $i$, definita dal suo intervallo $[start_i, end_i]$, è considerata attiva nella slice se:
-    \begin{equation}
-        start_i \le T_k \quad \land \quad end_i \ge T_{k-1}
-    \end{equation}
-    \item Si calcola la concorrenza locale $N_{active}$, ovvero il numero di richieste simultanee che condividono la risorsa elaborativa nella slice.
-    \item Se $N_{active} > 0$, l'energia consumata dalla CPU durante la slice ($\Delta E_{CPU, k}$ e $\Delta E_{Core, k}$) viene suddivisa equamente tra le richieste attive (\textit{Fair Sharing Rule}):
-    \begin{equation}
-        \text{Share}_{CPU} = \frac{\Delta E_{CPU, k}}{N_{active}}, \quad \text{Share}_{Core} = \frac{\Delta E_{Core, k}}{N_{active}}
-    \end{equation}
-    L'energia calcolata viene accreditata alle rispettive \textit{servlet} di appartenenza.
-    \item Per ogni servlet attiva nella slice, vengono memorizzati i campioni istantanei di utilizzo della CPU, frequenza di clock e allocazione della memoria RAM, e viene incrementata la durata cumulativa di attività del servlet.
-\end{enumerate}
+Nell'ecosistema dell'architettura software di 2Chance, l'analisi empirica ha evidenziato come il livello di accesso ai dati (Data Access Object o DAO) rappresenti il principale \textit{bottleneck} dal punto di vista del consumo energetico. A differenza di layer architetturali come i Controller o i Service, i quali si limitano al routing delle richieste HTTP, alla validazione dell'input e all'orchestrazione di logiche di business prettamente in-memory, i DAO si fanno carico della comunicazione inter-processo con il database relazionale. Il consumo energetico asimmetrico dei DAO rispetto ad altri layer deriva da molteplici fattori strutturali. In primis, l'apertura, la negoziazione e la chiusura delle connessioni di rete tramite driver JDBC comportano un notevole overhead computazionale e di I/O. Inoltre, le operazioni di \textit{Object-Relational Mapping} (ORM) manuale richiedono frequenti allocazioni di memoria per la trasformazione dei \texttt{ResultSet} in strutture dati (POJO), stressando il Garbage Collector della JVM. Infine, le inefficienze nell'esecuzione delle query SQL (come \textit{table scan} o mancato uso degli indici) costringono il database engine a un intenso lavoro di I/O su disco e di computazione CPU, riflettendosi in un prolungato \textit{active waiting} (attesa attiva) dei thread applicativi e, conseguentemente, in uno spreco energetico sistemico.
 
-L'algoritmo sweep-line mantiene un pool attivo di richieste scorrendo linearmente i record di EnergiBridge. Avendo ordinato preventivamente le richieste JMeter per tempo di inizio, la complessità computazionale è lineare $O(N + M)$ (dove $N$ è il numero totale di richieste HTTP e $M$ il numero di campioni energetici), evitando scansioni quadratiche ridondanti.
+\subsubsection{Anti-Pattern di Sostenibilità nei DAO}
 
-Al termine del ciclo, per ogni servlet $s$ vengono estratte le seguenti metriche di performance e sostenibilità:
-\begin{itemize}
-    \item \textbf{Requests:} Numero di invocazioni totali della servlet.
-    \item \textbf{Avg Resp Time:} Tempo medio di risposta calcolato direttamente dal log prestazionale JTL.
-    \item \textbf{CPU/Core Energy:} Somma degli share energetici attribuiti alla servlet nei diversi time-slice.
-    \item \textbf{Avg Power:} Calcolata dividendo l'energia CPU attribuita per il tempo totale in cui la servlet è stata attiva.
-    \item \textbf{Avg/Peak CPU e RAM:} Statistiche descrittive (medie e picchi) calcolate unicamente sulle slice in cui la servlet era in esecuzione.
-\end{itemize}
+Concentrando l'indagine sui model DAOs, \texttt{RecensioneDAO}, \texttt{ProdottoDAO} e \texttt{OrdineDAO} sono risultati i moduli con il margine di ottimizzazione più ampio. Il loro elevato footprint energetico nella versione di baseline era radicato in precisi anti-pattern architetturali, la cui risoluzione ha consentito di abbattere drasticamente i consumi. Di seguito si documentano le criticità individuate e definitivamente sanate.
 
-\subsubsection{Esportazione Multicanale}
-Infine, lo script genera due report separati in formato testuale: un report globale focalizzato sull'infrastruttura energetica complessiva e un report di unità strutturato in tabella per l'analisi comparativa delle singole servlet. Per garantire che i log fisici siano facilmente analizzabili da tool di monitoraggio automatici, lo script rimuove tutte le sequenze di escape ANSI (utilizzate per colorare l'output su console) prima di scrivere i file nelle directory \texttt{performance\_system\_testing\_logs} e \texttt{performance\_unit\_testing\_logs}.
+\paragraph{L'Anti-Pattern "SELECT *" e il Trasferimento Dati Incontrollato}
+In tutti i moduli di persistenza, le query di recupero facevano un uso sistematico dell'operatore \texttt{SELECT *}. Dal punto di vista della sostenibilità, questo approccio costringeva il database engine a eseguire operazioni di I/O su disco per estrarre l'interezza dei campi, compresi quelli non necessari o molto pesanti (come le stringhe \textit{Base64} delle immagini), per poi serializzarli sulla rete. Il refactoring ha introdotto proiezioni di colonne esplicite, riducendo drasticamente il payload di rete trasferito e limitando l'allocazione di byte nella memoria Heap della JVM, alleggerendo di conseguenza il carico sul Garbage Collector.
 
-\subsection{Classificazione Energetica dei Componenti e Target di Ottimizzazione}
+\paragraph{Assenza di Batch Processing nelle Scritture Iterative}
+Le routine di inserimento multiplo, come \texttt{ProdottoDAO.aggiungiSpecifiche} e \texttt{OrdineDAO.addOrdine}, implementavano nella baseline una sequenza di \texttt{INSERT} all'interno di cicli iterativi, invocando \texttt{executeUpdate()} per ogni singolo record. Questo pattern comportava un overhead catastrofico causato dai continui \textit{round-trip} di rete e dalla negoziazione di transazioni isolate per ogni istruzione. Questa inefficienza è stata risolta adottando il costrutto \texttt{executeBatch()} di JDBC, supportato da una gestione manuale della transazione (\texttt{setAutoCommit(false)}). L'accorpamento delle scritture ha minimizzato il tempo di acquisizione delle connessioni, consentendo alla CPU di tornare rapidamente in stato di \textit{idle}.
 
-Sulla base di una rigorosa analisi empirica dei dataset di test di Load, Soak e Spike, è possibile categorizzare i componenti del back-end dell'applicazione in tre livelli (\textit{tier}) distinti: \textbf{Target Definiti per JMH + EnergiBridge}, \textbf{Target Secondari/Condizionali} e \textbf{Componenti da Saltare} (\textit{Components to Skip}). Questa classificazione consente di ottimizzare il budget e lo sforzo di sviluppo, evitando di dedicare tempo alla scrittura di microbenchmark per porzioni di codice che non produrrebbero una riduzione significativa del consumo energetico ($\Delta\%$).
-
-\subsubsection{Target Definiti: Componenti Prioritari (MUST Work On)}
-Questi componenti rappresentano le priorità assolute e critiche dell'attività di ottimizzazione. Le relative metriche evidenziano una sollecitazione hardware massiva e costante in tutti e tre i profili di test operativi. Essi devono essere necessariamente isolati in una pipeline combinata JMH + EnergiBridge per tracciare il loro consumo di baseline in Joule per operazione ($J/\text{op}$).
-
-\begin{enumerate}
-    \item \textbf{Il Sottosistema di Gestione delle Recensioni (Path \texttt{RecensioniServlet})}
-    \begin{itemize}
-        \item \textbf{Evidenza Empirica:} Nel test di Load, il sottosistema consuma ben $2273{,}44$~J. Nel test di Soak, drena un quantitativo massivo di energia pari a $22.373{,}84$~J, portando l'utilizzo della CPU al picco limite del $100\%$ e l'allocazione di RAM fino a $23{,}01$~GB. Durante il test di Spike, i tempi di risposta crollano drasticamente fino a $43{,}22$ secondi, mantenendo un assorbimento di potenza medio di $11{,}41$~W.
-        \item \textbf{Cosa estrarre per JMH:} I metodi lato back-end per il recupero e l'ordinamento all'interno dei layer Service o DAO (es. \texttt{RecensioneDAO.getRecensioniByProdotto(...)} o eventuali routine intermedie di analisi testuale o sentiment analysis).
-        \item \textbf{Target Creedengo:} Ricerca di inefficienze legate alla mutabilità delle stringhe e al sovraccarico da concatenazione (es. l'uso dell'operatore \texttt{+=} all'interno di un ciclo per generare dinamicamente le stringhe HTML delle recensioni) e alle varianti di ciclo invarianti (regola GC169). La rimozione di queste inefficienze ridurrà l'allocazione di picco della RAM (pari a $23{,}01$~GB) e arresterà i cicli di Garbage Collection ad alto dispendio energetico che saturano la CPU.
-    \end{itemize}
-
-    \item \textbf{Il Sottosistema del Catalogo Prodotti e Query (Path \texttt{ProdottoServlet})}
-    \begin{itemize}
-        \item \textbf{Evidenza Empirica:} Rappresenta il principale consumatore energetico del sistema. Registra il consumo energetico assoluto più elevato sia nel test di Load standard ($3731{,}77$~J) sia nel test di Soak prolungato ($36.089{,}51$~J), mantenendo costantemente un picco di occupazione della memoria RAM di $23{,}00$~GB.
-        \item \textbf{Cosa estrarre per JMH:} La logica di Object-Relational Mapping (ORM) in cui i set di risultati del database (\texttt{ResultSet}) vengono convertiti in POJO (Model Beans), come \texttt{ProdottoDAO.mapResultSetToPojo(...)}.
-        \item \textbf{Target Creedengo:} Verifica delle violazioni della regola GC169 (invocazione di \texttt{.size()} o altre condizioni invarianti all'interno di cicli che elaborano tabelle di prodotti) ed eliminazione delle query SQL eseguite all'interno di cicli (un enorme spreco energetico che costringe i thread di Tomcat a rimanere attivi in attesa di I/O).
-    \end{itemize}
-\end{enumerate}
-
-\subsubsection{Target Secondari: Priorità Media (High Priority If Time Permits)}
-Questi componenti mostrano un elevato utilizzo di risorse, ma i loro pattern energetici rispecchiano da vicino quelli dei target primari, suggerendo che probabilmente condividono la stessa architettura sottostante o gli stessi metodi helper.
-
-\begin{enumerate}
-    \item \textbf{I Motori di Confronto e Gestione del Carrello (Path \texttt{ConfrontaServlet} \& \texttt{AggiungiCarrelloServlet})}
-    \begin{itemize}
-        \item \textbf{Evidenza Empirica:} Entrambi i componenti consumano circa $2200$~J nei test di Load e $22.000$~J in quelli di Soak, registrando lo stesso picco limite di RAM a $23{,}01$~GB. Durante improvvisi picchi di traffico (Spike), portano l'utilizzo della CPU rispettivamente all'$88{,}50\%$ e all'$87{,}10\%$.
-        \item \textbf{Cosa estrarre per JMH:} Le strutture dati interne che gestiscono il parsing delle collezioni, il matching degli elementi o il calcolo del totale dei prezzi (es. \texttt{CarrelloService.calcolaTotale()} o \texttt{ProdottoService.comparaCaratteristiche()}).
-        \item \textbf{Target Creedengo:} Regola GC127 (utilizzo di \texttt{System.arraycopy} per la copia di array). Se gli array del carrello o di confronto vengono copiati o uniti elemento per elemento mediante cicli iterativi manuali, il refactoring verso trasferimenti nativi di blocchi di memoria a livello C ridurrà immediatamente i tempi di elaborazione della CPU.
-    \end{itemize}
-\end{enumerate}
-
-\subsubsection{Componenti da Saltare (Components to SKIP)}
-Si raccomanda esplicitamente di non sviluppare benchmark JMH per i seguenti livelli, poiché lo sforzo di ingegnerizzazione e isolamento non porterebbe a benefici o risparmi energetici concreti. La classificazione dei componenti da escludere è riassunta graficamente nella Figura~\ref{fig:components_skip}.
-
-\begin{figure}[h]
-    \centering
-    \begin{tikzpicture}[
-        node distance=1.2cm and 0.4cm,
-        box/.style={
-            draw,
-            rectangle,
-            rounded corners=3pt,
-            align=center,
-            fill=blue!5,
-            minimum width=4.2cm,
-            minimum height=1.5cm,
-            font=\small\sffamily
-        },
-        mainbox/.style={
-            draw,
-            rectangle,
-            rounded corners=5pt,
-            align=center,
-            fill=red!10,
-            minimum width=10.5cm,
-            minimum height=1.0cm,
-            font=\bfseries\small\sffamily
-        },
-        arrow/.style={
-            thick,
-            ->,
-            >=stealth
-        }
-    ]
-        % Main header box
-        \node (main) [mainbox] {COMPONENTI DA ESCLUDERE DAL BENCHMARKING (SKIP)};
-        
-        % Three columns below
-        \node (user) [box, below left=of main, xshift=1.5cm, yshift=-0.5cm] {
-            \textbf{Profilo Utente}\\
-            \texttt{UtenteServlet}\\
-            \texttt{ProdottiPerCategoria}
-        };
-        
-        \node (crypto) [box, below=of main, yshift=-0.5cm] {
-            \textbf{Sicurezza \& Crypto}\\
-            \texttt{LoginServlet}\\
-            \texttt{RegistrazioneServlet}
-        };
-        
-        \node (infra) [box, below right=of main, xshift=-1.5cm, yshift=-0.5cm] {
-            \textbf{Instradamento / Infra}\\
-            \texttt{landingpage}\\
-            \texttt{logoutServlet}
-        };
-        
-        % Connections
-        \draw [arrow] (main.south) -- ++(0,-0.4) -| (user.north);
-        \draw [arrow] (main.south) -- (crypto.north);
-        \draw [arrow] (main.south) -- ++(0,-0.4) -| (infra.north);
-        
-    \end{tikzpicture}
-    \caption{Classificazione strutturata dei componenti del back-end consigliati per l'esclusione dal microbenchmarking energetico.}
-    \label{fig:components_skip}
-\end{figure}
-
-\begin{enumerate}
-    \item \textbf{Il Livello del Profilo Utente (\texttt{UtenteServlet} \& \texttt{ProdottiPerCategoriaServlet})}
-    \begin{itemize}
-        \item \textbf{Perché saltarlo:} Il loro consumo energetico complessivo è eccezionalmente basso su tutti i fronti (ad esempio, solo circa $21\text{--}23$~J totali durante i test di Spike). L'utilizzo della CPU rimane minimo e l'occupazione della memoria RAM si attesta sui valori minimi di baseline. Non è presente alcuna dispersione energetica significativa che possa giustificare lo sforzo di isolamento tramite JMH.
-    \end{itemize}
-
-    \item \textbf{I Gate di Sicurezza Crittografica (\texttt{LoginServlet} \& \texttt{RegistrazioneServlet})}
-    \begin{itemize}
-        \item \textbf{Perché saltarlo:} Sebbene la \texttt{RegistrazioneServlet} registri un assorbimento attivo medio di $8{,}19$~W o $10{,}26$~W, si tratta di un classico esempio di compromesso (\textit{trade-off}) ingegneristico obbligato. Le routine di sicurezza, come l'algoritmo di hashing delle password \texttt{Utente.hashPassword}, utilizzano calcoli matematici volutamente complessi e lenti per opporre resistenza agli attacchi di forza bruta. Ottimizzare questi cicli CPU per risparmiare pochi Joule comprometterebbe direttamente la sicurezza del sistema e la fiducia degli utenti. In questo perimetro crittografico, il costo energetico rappresenta una caratteristica di sicurezza intenzionale e non negoziabile.
-    \end{itemize}
-
-    \item \textbf{Instradamento Fisico ed Infrastruttura Flat (\texttt{landingpage} \& \texttt{logoutServlet})}
-    \begin{itemize}
-        \item \textbf{Perché saltarlo:} Anche se la \texttt{logoutServlet} mostra un numero elevato di richieste nei test di lunga durata, il suo tempo medio di esecuzione scende a un valore irrisorio di $2{,}70$~ms. Il consumo di queste componenti è legato prevalentemente alla gestione delle richieste di rete, alla distruzione delle sessioni e all'overhead di I/O del server. Questi cicli di vita infrastrutturali appartengono all'architettura del servlet container Tomcat~9.0 e non alla logica di business dell'applicazione, il che significa che JMH non potrebbe ottimizzarli direttamente.
-    \end{itemize}
-\end{enumerate}
+\paragraph{Risoluzione del Problema N+1 (Moltiplicazione delle Query)}
+Nella versione non ottimizzata, il metodo \texttt{OrdineDAO.getOrdiniByUtente} era affetto da una severa anomalia N+1. Nel corso dell'elaborazione del \texttt{ResultSet} principale degli ordini, il codice invocava ripetutamente un metodo secondario (\texttt{getProdottoOrdine(ordine)}) per estrarre gli articoli associati a ciascun acquisto. Se un utente possedeva $N$ ordini, il sistema eseguiva $1 + N$ query sincrone verso il database, mantenendo impegnati i thread applicativi in attesa bloccante. Questo spreco computazionale è stato risolto consolidando l'estrazione in un'unica query aggregata tramite \texttt{LEFT JOIN}, delegando l'onere dell'assemblaggio delle entità (\texttt{Ordine} e \texttt{Prodotto}) a una \texttt{LinkedHashMap} in memoria, abbattendo esponenzialmente l'overhead di rete e i picchi di consumo.
 
 \section{Microbenchmarking Energetico (JMH)}
 
-Incrociando i risultati del report dell'audit strutturale di Creedengo con la telemetria empirica estratta dai test di Load, Soak e Spike, è possibile individuare con precisione le coordinate e le classi del codice sorgente che richiedono prioritariamente l'applicazione della pipeline combinata di microbenchmarking JMH + EnergiBridge. La regola cardine della strategia d'intersezione risiede nel definire microbenchmark JMH \textbf{esclusivamente per quelle funzioni che presentano una violazione di eco-design rilevata da Creedengo E che sono attivamente invocate all'interno dei flussi di richieste utente più intensi ed energeticamente dispendiosi}.
-
-Di seguito viene presentata la descrizione teorico-architetturale dello strumento di misurazione energetica utilizzato, seguita dalla selezione mirata delle componenti da sottoporre a microbenchmarking e dall'elenco dei componenti esclusi.
+L'isolamento di queste porzioni critiche di codice delle classi DAO, identificate empiricamente come i componenti più inefficienti del sistema, costituisce il prerequisito fondamentale per la fase di microbenchmarking effettuato con il framework JMH combinato con la profilazione di EnergiBridge. Questo approccio consente di misurare con estrema precisione le performance e l'assorbimento energetico dei singoli metodi, fornendo un confronto oggettivo (in Joule per operazione) tra la versione di \textit{baseline} e la versione post-refactoring.
 
 \subsection{Strumento di Profilazione Energetica Co-Sincronizzato: Architettura e Teoria Operativa}
 
-Al fine di combinare la precisione temporale del microbenchmarking con la profilazione energetica a livello hardware, è stato sviluppato uno strumento di profilazione personalizzato (\texttt{run\_jmh\_energy\_profiler.py}). Questo script consente di eseguire i benchmark JMH catturando simultaneamente i consumi energetici tramite EnergiBridge in modo controllato e riproducibile.
-
-L'architettura dello strumento risponde a requisiti teorici essenziali per l'affidabilità delle misurazioni:
+Al fine di combinare la precisione temporale del microbenchmarking con la profilazione energetica a livello hardware, è stato sviluppato uno strumento di profilazione personalizzato (\texttt{run\_jmh\_energy\_profiler.py}). Questo script consente di eseguire i benchmark JMH catturando simultaneamente i consumi energetici tramite EnergiBridge in modo controllato e riproducibile. L'architettura dello script risponde a requisiti teorici essenziali per l'affidabilità delle misurazioni:
 
 \begin{enumerate}
     \item \textbf{Scoperta e Orchestrazione Automatica:}

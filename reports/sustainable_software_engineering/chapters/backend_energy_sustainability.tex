@@ -238,134 +238,30 @@ Le metriche di utilizzo CPU, frequenza e memoria RAM usata vengono aggregate cal
     \end{equation}
 \end{itemize}
 
-\subsection{Classificazione Energetica dei Componenti e Target di Ottimizzazione}
+\subsection{Analisi Architetturale dei Consumi: Il Livello di Persistenza}
 
-Sulla base di una rigorosa analisi empirica dei dataset di test di Load, Soak e Spike, è possibile categorizzare i componenti del back-end dell'applicazione in tre livelli (\textit{tier}) distinti: \textbf{Target Definiti per JMH + EnergiBridge}, \textbf{Target Secondari/Condizionali} e \textbf{Componenti da Saltare} (\textit{Components to Skip}). Questa classificazione consente di ottimizzare il budget e lo sforzo di sviluppo, evitando di dedicare tempo alla scrittura di microbenchmark per porzioni di codice che non produrrebbero una riduzione significativa del consumo energetico ($\Delta\%$).
+Nell'ecosistema dell'architettura software di 2Chance, l'analisi empirica ha evidenziato come il livello di accesso ai dati (Data Access Object o DAO) rappresenti il principale \textit{bottleneck} dal punto di vista del consumo energetico. A differenza di layer architetturali come i Controller o i Service, i quali si limitano al routing delle richieste HTTP, alla validazione dell'input e all'orchestrazione di logiche di business prettamente in-memory, i DAO si fanno carico della comunicazione inter-processo con il database relazionale. Il consumo energetico asimmetrico dei DAO rispetto ad altri layer deriva da molteplici fattori strutturali. In primis, l'apertura, la negoziazione e la chiusura delle connessioni di rete tramite driver JDBC comportano un notevole overhead computazionale e di I/O. Inoltre, le operazioni di \textit{Object-Relational Mapping} (ORM) manuale richiedono frequenti allocazioni di memoria per la trasformazione dei \texttt{ResultSet} in strutture dati (POJO), stressando il Garbage Collector della JVM. Infine, le inefficienze nell'esecuzione delle query SQL (come \textit{table scan} o mancato uso degli indici) costringono il database engine a un intenso lavoro di I/O su disco e di computazione CPU, riflettendosi in un prolungato \textit{active waiting} (attesa attiva) dei thread applicativi e, conseguentemente, in uno spreco energetico sistemico.
 
-\subsubsection{Target Definiti: Componenti Prioritari (MUST Work On)}
-Questi componenti rappresentano le priorità assolute e critiche dell'attività di ottimizzazione. Le relative metriche evidenziano una sollecitazione hardware massiva e costante in tutti e tre i profili di test operativi. Essi devono essere necessariamente isolati in una pipeline combinata JMH + EnergiBridge per tracciare il loro consumo di baseline in Joule per operazione ($J/\text{op}$).
+\subsubsection{Anti-Pattern di Sostenibilità nei DAO}
 
-\begin{enumerate}
-    \item \textbf{Il Sottosistema di Gestione delle Recensioni (Path \texttt{RecensioniServlet})}
-    \begin{itemize}
-        \item \textbf{Evidenza Empirica:} Nel test di Load, il sottosistema consuma ben $2273{,}44$~J. Nel test di Soak, drena un quantitativo massivo di energia pari a $22.373{,}84$~J, portando l'utilizzo della CPU al picco limite del $100\%$ e l'allocazione di RAM fino a $23{,}01$~GB. Durante il test di Spike, i tempi di risposta crollano drasticamente fino a $43{,}22$ secondi, mantenendo un assorbimento di potenza medio di $11{,}41$~W.
-        \item \textbf{Cosa estrarre per JMH:} I metodi lato back-end per il recupero e l'ordinamento all'interno dei layer Service o DAO (es. \texttt{RecensioneDAO.getRecensioniByProdotto(...)} o eventuali routine intermedie di analisi testuale o sentiment analysis).
-        \item \textbf{Target Creedengo:} Ricerca di inefficienze legate alla mutabilità delle stringhe e al sovraccarico da concatenazione (es. l'uso dell'operatore \texttt{+=} all'interno di un ciclo per generare dinamicamente le stringhe HTML delle recensioni) e alle varianti di ciclo invarianti (regola GC169). La rimozione di queste inefficienze ridurrà l'allocazione di picco della RAM (pari a $23{,}01$~GB) e arresterà i cicli di Garbage Collection ad alto dispendio energetico che saturano la CPU.
-    \end{itemize}
+Concentrando l'indagine sui model DAOs, \texttt{RecensioneDAO}, \texttt{ProdottoDAO} e \texttt{OrdineDAO} sono risultati i moduli con il margine di ottimizzazione più ampio. Il loro elevato footprint energetico nella versione di baseline era radicato in precisi anti-pattern architetturali, la cui risoluzione ha consentito di abbattere drasticamente i consumi. Di seguito si documentano le criticità individuate e definitivamente sanate.
 
-    \item \textbf{Il Sottosistema del Catalogo Prodotti e Query (Path \texttt{ProdottoServlet})}
-    \begin{itemize}
-        \item \textbf{Evidenza Empirica:} Rappresenta il principale consumatore energetico del sistema. Registra il consumo energetico assoluto più elevato sia nel test di Load standard ($3731{,}77$~J) sia nel test di Soak prolungato ($36.089{,}51$~J), mantenendo costantemente un picco di occupazione della memoria RAM di $23{,}00$~GB.
-        \item \textbf{Cosa estrarre per JMH:} La logica di Object-Relational Mapping (ORM) in cui i set di risultati del database (\texttt{ResultSet}) vengono convertiti in POJO (Model Beans), come \texttt{ProdottoDAO.mapResultSetToPojo(...)}.
-        \item \textbf{Target Creedengo:} Verifica delle violazioni della regola GC169 (invocazione di \texttt{.size()} o altre condizioni invarianti all'interno di cicli che elaborano tabelle di prodotti) ed eliminazione delle query SQL eseguite all'interno di cicli (un enorme spreco energetico che costringe i thread di Tomcat a rimanere attivi in attesa di I/O).
-    \end{itemize}
-\end{enumerate}
+\paragraph{L'Anti-Pattern "SELECT *" e il Trasferimento Dati Incontrollato}
+In tutti i moduli di persistenza, le query di recupero facevano un uso sistematico dell'operatore \texttt{SELECT *}. Dal punto di vista della sostenibilità, questo approccio costringeva il database engine a eseguire operazioni di I/O su disco per estrarre l'interezza dei campi, compresi quelli non necessari o molto pesanti (come le stringhe \textit{Base64} delle immagini), per poi serializzarli sulla rete. Il refactoring ha introdotto proiezioni di colonne esplicite, riducendo drasticamente il payload di rete trasferito e limitando l'allocazione di byte nella memoria Heap della JVM, alleggerendo di conseguenza il carico sul Garbage Collector.
 
-\subsubsection{Target Secondari: Priorità Media (High Priority If Time Permits)}
-Questi componenti mostrano un elevato utilizzo di risorse, ma i loro pattern energetici rispecchiano da vicino quelli dei target primari, suggerendo che probabilmente condividono la stessa architettura sottostante o gli stessi metodi helper.
+\paragraph{Assenza di Batch Processing nelle Scritture Iterative}
+Le routine di inserimento multiplo, come \texttt{ProdottoDAO.aggiungiSpecifiche} e \texttt{OrdineDAO.addOrdine}, implementavano nella baseline una sequenza di \texttt{INSERT} all'interno di cicli iterativi, invocando \texttt{executeUpdate()} per ogni singolo record. Questo pattern comportava un overhead catastrofico causato dai continui \textit{round-trip} di rete e dalla negoziazione di transazioni isolate per ogni istruzione. Questa inefficienza è stata risolta adottando il costrutto \texttt{executeBatch()} di JDBC, supportato da una gestione manuale della transazione (\texttt{setAutoCommit(false)}). L'accorpamento delle scritture ha minimizzato il tempo di acquisizione delle connessioni, consentendo alla CPU di tornare rapidamente in stato di \textit{idle}.
 
-\begin{enumerate}
-    \item \textbf{I Motori di Confronto e Gestione del Carrello (Path \texttt{ConfrontaServlet} \& \texttt{AggiungiCarrelloServlet})}
-    \begin{itemize}
-        \item \textbf{Evidenza Empirica:} Entrambi i componenti consumano circa $2200$~J nei test di Load e $22.000$~J in quelli di Soak, registrando lo stesso picco limite di RAM a $23{,}01$~GB. Durante improvvisi picchi di traffico (Spike), portano l'utilizzo della CPU rispettivamente all'$88{,}50\%$ e all'$87{,}10\%$.
-        \item \textbf{Cosa estrarre per JMH:} Le strutture dati interne che gestiscono il parsing delle collezioni, il matching degli elementi o il calcolo del totale dei prezzi (es. \texttt{CarrelloService.calcolaTotale()} o \texttt{ProdottoService.comparaCaratteristiche()}).
-        \item \textbf{Target Creedengo:} Regola GC127 (utilizzo di \texttt{System.arraycopy} per la copia di array). Se gli array del carrello o di confronto vengono copiati o uniti elemento per elemento mediante cicli iterativi manuali, il refactoring verso trasferimenti nativi di blocchi di memoria a livello C ridurrà immediatamente i tempi di elaborazione della CPU.
-    \end{itemize}
-\end{enumerate}
-
-\subsubsection{Componenti da Saltare (Components to SKIP)}
-Si raccomanda esplicitamente di non sviluppare benchmark JMH per i seguenti livelli, poiché lo sforzo di ingegnerizzazione e isolamento non porterebbe a benefici o risparmi energetici concreti. La classificazione dei componenti da escludere è riassunta graficamente nella Figura~\ref{fig:components_skip}.
-
-\begin{figure}[h]
-    \centering
-    \begin{tikzpicture}[
-        node distance=1.2cm and 0.4cm,
-        box/.style={
-            draw,
-            rectangle,
-            rounded corners=3pt,
-            align=center,
-            fill=blue!5,
-            minimum width=4.2cm,
-            minimum height=1.5cm,
-            font=\small\sffamily
-        },
-        mainbox/.style={
-            draw,
-            rectangle,
-            rounded corners=5pt,
-            align=center,
-            fill=red!10,
-            minimum width=10.5cm,
-            minimum height=1.0cm,
-            font=\bfseries\small\sffamily
-        },
-        arrow/.style={
-            thick,
-            ->,
-            >=stealth
-        }
-    ]
-        % Main header box
-        \node (main) [mainbox] {COMPONENTI DA ESCLUDERE DAL BENCHMARKING (SKIP)};
-        
-        % Three columns below
-        \node (user) [box, below left=of main, xshift=1.5cm, yshift=-0.5cm] {
-            \textbf{Profilo Utente}\\
-            \texttt{UtenteServlet}\\
-            \texttt{ProdottiPerCategoria}
-        };
-        
-        \node (crypto) [box, below=of main, yshift=-0.5cm] {
-            \textbf{Sicurezza \& Crypto}\\
-            \texttt{LoginServlet}\\
-            \texttt{RegistrazioneServlet}
-        };
-        
-        \node (infra) [box, below right=of main, xshift=-1.5cm, yshift=-0.5cm] {
-            \textbf{Instradamento / Infra}\\
-            \texttt{landingpage}\\
-            \texttt{logoutServlet}
-        };
-        
-        % Connections
-        \draw [arrow] (main.south) -- ++(0,-0.4) -| (user.north);
-        \draw [arrow] (main.south) -- (crypto.north);
-        \draw [arrow] (main.south) -- ++(0,-0.4) -| (infra.north);
-        
-    \end{tikzpicture}
-    \caption{Classificazione strutturata dei componenti del back-end consigliati per l'esclusione dal microbenchmarking energetico.}
-    \label{fig:components_skip}
-\end{figure}
-
-\begin{enumerate}
-    \item \textbf{Il Livello del Profilo Utente (\texttt{UtenteServlet} \& \texttt{ProdottiPerCategoriaServlet})}
-    \begin{itemize}
-        \item \textbf{Perché saltarlo:} Il loro consumo energetico complessivo è eccezionalmente basso su tutti i fronti (ad esempio, solo circa $21\text{--}23$~J totali durante i test di Spike). L'utilizzo della CPU rimane minimo e l'occupazione della memoria RAM si attesta sui valori minimi di baseline. Non è presente alcuna dispersione energetica significativa che possa giustificare lo sforzo di isolamento tramite JMH.
-    \end{itemize}
-
-    \item \textbf{I Gate di Sicurezza Crittografica (\texttt{LoginServlet} \& \texttt{RegistrazioneServlet})}
-    \begin{itemize}
-        \item \textbf{Perché saltarlo:} Sebbene la \texttt{RegistrazioneServlet} registri un assorbimento attivo medio di $8{,}19$~W o $10{,}26$~W, si tratta di un classico esempio di compromesso (\textit{trade-off}) ingegneristico obbligato. Le routine di sicurezza, come l'algoritmo di hashing delle password \texttt{Utente.hashPassword}, utilizzano calcoli matematici volutamente complessi e lenti per opporre resistenza agli attacchi di forza bruta. Ottimizzare questi cicli CPU per risparmiare pochi Joule comprometterebbe direttamente la sicurezza del sistema e la fiducia degli utenti. In questo perimetro crittografico, il costo energetico rappresenta una caratteristica di sicurezza intenzionale e non negoziabile.
-    \end{itemize}
-
-    \item \textbf{Instradamento Fisico ed Infrastruttura Flat (\texttt{landingpage} \& \texttt{logoutServlet})}
-    \begin{itemize}
-        \item \textbf{Perché saltarlo:} Anche se la \texttt{logoutServlet} mostra un numero elevato di richieste nei test di lunga durata, il suo tempo medio di esecuzione scende a un valore irrisorio di $2{,}70$~ms. Il consumo di queste componenti è legato prevalentemente alla gestione delle richieste di rete, alla distruzione delle sessioni e all'overhead di I/O del server. Questi cicli di vita infrastrutturali appartengono all'architettura del servlet container Tomcat~9.0 e non alla logica di business dell'applicazione, il che significa che JMH non potrebbe ottimizzarli direttamente.
-    \end{itemize}
-\end{enumerate}
+\paragraph{Risoluzione del Problema N+1 (Moltiplicazione delle Query)}
+Nella versione non ottimizzata, il metodo \texttt{OrdineDAO.getOrdiniByUtente} era affetto da una severa anomalia N+1. Nel corso dell'elaborazione del \texttt{ResultSet} principale degli ordini, il codice invocava ripetutamente un metodo secondario (\texttt{getProdottoOrdine(ordine)}) per estrarre gli articoli associati a ciascun acquisto. Se un utente possedeva $N$ ordini, il sistema eseguiva $1 + N$ query sincrone verso il database, mantenendo impegnati i thread applicativi in attesa bloccante. Questo spreco computazionale è stato risolto consolidando l'estrazione in un'unica query aggregata tramite \texttt{LEFT JOIN}, delegando l'onere dell'assemblaggio delle entità (\texttt{Ordine} e \texttt{Prodotto}) a una \texttt{LinkedHashMap} in memoria, abbattendo esponenzialmente l'overhead di rete e i picchi di consumo.
 
 \section{Microbenchmarking Energetico (JMH)}
 
-Incrociando i risultati del report dell'audit strutturale di Creedengo con la telemetria empirica estratta dai test di Load, Soak e Spike, è possibile individuare con precisione le coordinate e le classi del codice sorgente che richiedono prioritariamente l'applicazione della pipeline combinata di microbenchmarking JMH + EnergiBridge. La regola cardine della strategia d'intersezione risiede nel definire microbenchmark JMH \textbf{esclusivamente per quelle funzioni che presentano una violazione di eco-design rilevata da Creedengo E che sono attivamente invocate all'interno dei flussi di richieste utente più intensi ed energeticamente dispendiosi}.
-
-Di seguito viene presentata la descrizione teorico-architetturale dello strumento di misurazione energetica utilizzato, seguita dalla selezione mirata delle componenti da sottoporre a microbenchmarking e dall'elenco dei componenti esclusi.
+L'isolamento di queste porzioni critiche di codice delle classi DAO, identificate empiricamente come i componenti più inefficienti del sistema, costituisce il prerequisito fondamentale per la fase di microbenchmarking effettuato con il framework JMH combinato con la profilazione di EnergiBridge. Questo approccio consente di misurare con estrema precisione le performance e l'assorbimento energetico dei singoli metodi, fornendo un confronto oggettivo (in Joule per operazione) tra la versione di \textit{baseline} e la versione post-refactoring.
 
 \subsection{Strumento di Profilazione Energetica Co-Sincronizzato: Architettura e Teoria Operativa}
 
-Al fine di combinare la precisione temporale del microbenchmarking con la profilazione energetica a livello hardware, è stato sviluppato uno strumento di profilazione personalizzato (\texttt{run\_jmh\_energy\_profiler.py}). Questo script consente di eseguire i benchmark JMH catturando simultaneamente i consumi energetici tramite EnergiBridge in modo controllato e riproducibile.
-
-L'architettura dello strumento risponde a requisiti teorici essenziali per l'affidabilità delle misurazioni:
+Al fine di combinare la precisione temporale del microbenchmarking con la profilazione energetica a livello hardware, è stato sviluppato uno strumento di profilazione personalizzato (\texttt{run\_jmh\_energy\_profiler.py}). Questo script consente di eseguire i benchmark JMH catturando simultaneamente i consumi energetici tramite EnergiBridge in modo controllato e riproducibile. L'architettura dello script risponde a requisiti teorici essenziali per l'affidabilità delle misurazioni:
 
 \begin{enumerate}
     \item \textbf{Scoperta e Orchestrazione Automatica:}
@@ -403,64 +299,6 @@ energibridge.exe -o <csv_output> -- java -jar target/benchmarks.jar <method_fqn>
         \item \textbf{Memoria RAM Allocata (GB):} Impronta media e di picco ricavata dai campioni di memoria.
     \end{itemize}
     I dati unificati vengono infine formattati in una tabella testuale e salvati all'interno della cartella \texttt{extractor\_logs}.
-\end{enumerate}
-
-\subsection{Target ad Alta Priorità: Componenti Critici (MUST Work On)}
-Questi componenti sono i diretti responsabili dei picchi massivi di energia CPU ($J$), potenza media ($W$) e saturazione della RAM evidenziati nei log globali dell'applicazione.
-
-\begin{enumerate}
-    \item \textbf{Target A: \texttt{ProdottoDAO} (Motore di Parsing del Catalogo)}
-    \begin{itemize}
-        \item \textbf{Razionale Empirico:} La classe \texttt{ProdottoServlet} ha rappresentato il principale fattore di consumo energetico assoluto sia durante la fase di Load ($3731{,}77$~J) che di Soak ($36.089{,}51$~J).
-        \item \textbf{Coordinate di Intersezione Creedengo:}
-        \begin{itemize}
-            \item Linea 182: \texttt{creedengo-java:GCI72} -- \textit{Avoid SQL request in loop} (Critico).
-            \item Linee 29, 46, 82, 120, 137: \texttt{creedengo-java:GCI74} -- \textit{Don't use the query SELECT * FROM} (Critico).
-        \end{itemize}
-        \item \textbf{Azione Consigliata:} Creare la classe di benchmark \texttt{ProdottoDAOBenchmark} tramite JMH. Isolare ed analizzare i metodi corrispondenti alle linee 182 e 29/46/82/120/137. La rimozione della query SQL nidificata all'interno del ciclo (linea 182) e la specificazione di colonne esplicite al posto dell'operatore jolly \texttt{SELECT *} risolveranno direttamente il sovraccarico responsabile dei $36.089{,}51$ Joule consumati nel recupero dei dati.
-    \end{itemize}
-
-    \item \textbf{Target B: \texttt{RecensioneDAO} (Sottosistema delle Recensioni)}
-    \begin{itemize}
-        \item \textbf{Razionale Empirico:} La classe \texttt{RecensioniServlet} ha mostrato un severo decadimento prestazionale sotto picchi improvvisi di traffico (test di Spike), con tempi di risposta saliti a $43{,}22$ secondi e una potenza media di picco pari a $11{,}41$~W.
-        \item \textbf{Coordinate di Intersezione Creedengo:}
-        \begin{itemize}
-            \item Linee 33, 51: \texttt{creedengo-java:GCI74} -- \textit{Don't use the query SELECT * FROM} (Critico).
-        \end{itemize}
-        \item \textbf{Azione Consigliata:} Creare la classe di benchmark \texttt{RecensioneDAOBenchmark} tramite JMH. Eseguire il microbenchmarking dei metodi che avvolgono le linee 33 e 51 (es. \texttt{getRecensioniByProdotto}). Il recupero selettivo delle sole colonne indispensabili ridurrà immediatamente l'overhead di allocazione e processamento dei dati che causa il blocco della servlet sotto stress.
-    \end{itemize}
-
-    \item \textbf{Target C: \texttt{Carrello} \& \texttt{OrdineDAO} (Nucleo delle Transazioni)}
-    \begin{itemize}
-        \item \textbf{Razionale Empirico:} Le classi \texttt{AggiungiCarrelloServlet} e \texttt{CheckOutServlet} hanno contribuito in modo determinante all'innalzamento del picco di RAM fino a $23{,}01$~GB, saturando l'utilizzo della CPU al $100\%$ del picco sotto tracciamento prolungato.
-        \item \textbf{Coordinate di Intersezione Creedengo:}
-        \begin{itemize}
-            \item \texttt{Carrello.java} (Linee 28, 72, 101): \texttt{creedengo-java:GCI69} \& \texttt{GCI3} -- \textit{Do not call a function when declaring a for-type loop} (Critico).
-            \item \texttt{OrdineDAO.java} (Linea 248): \texttt{creedengo-java:GCI72} -- \textit{Avoid SQL request in loop} (Critico).
-            \item \texttt{OrdineDAO.java} (Linee 37, 83, 135, 295): \texttt{creedengo-java:GCI74} -- \textit{Don't use the query SELECT * FROM} (Critico).
-        \end{itemize}
-        \item \textbf{Azione Consigliata:} Creare il benchmark \texttt{OrdineDAOBenchmark}. La query SQL nidificata all'interno del ciclo alla linea 248 rappresenta un drenaggio energetico straordinariamente elevato. Isolarla unitamente ai cicli del carrello consentirà di verificare quantitativamente la riduzione dell'allocazione di memoria e l'abbassamento del carico elaborativo globale.
-    \end{itemize}
-\end{enumerate}
-
-\subsection{Componenti da Escludere (SKIP)}
-Si raccomanda di non implementare benchmark JMH per le seguenti componenti indicate nel report di Creedengo. Sebbene contengano segnalazioni strutturali di livello critico, esse non appartengono ai flussi d'uso reali tracciati nella telemetria dinamica.
-
-\begin{enumerate}
-    \item \textbf{Skip A: \texttt{AdminService.java} (Linee 95, 370)}
-    \begin{itemize}
-        \item \textbf{Razionale per l'esclusione:} La classe \texttt{AdminService} presenta violazioni legate ai limiti invarianti dei cicli (\texttt{GCI69/GCI3}), ma la telemetria mostra che le azioni amministrative sono eseguite molto raramente. Poiché non sono sollecitate negli scenari JMeter, lo sviluppo di un benchmark JMH associato produrrebbe una variazione pressoché nulla nel delta di risparmio energetico complessivo ($\Delta\%$). Questo problema va corretto staticamente nel codice, evitando lo sforzo di microbenchmarking.
-    \end{itemize}
-
-    \item \textbf{Skip B: \texttt{UtenteDAO.java} (Linee 25, 57, 102) \& \texttt{Utente.java} (Linee 71, 95, 119, 143, 199, 251)}
-    \begin{itemize}
-        \item \textbf{Razionale per l'esclusione:} La telemetria mostra che \texttt{UtenteServlet} consuma quantità di energia quasi non rilevabili (circa $23$~J totali nel test di Spike). Inoltre, come descritto nelle linee guida architetturali, i processi legati alla sicurezza e all'hashing delle password (\texttt{Utente.hashPassword}) sono progettati per essere computazionalmente onerosi al fine di contrastare attacchi brute-force. Ridurre questi cicli di calcolo per limare pochi Joule esporrebbe il sistema a gravi rischi di sicurezza.
-    \end{itemize}
-
-    \item \textbf{Skip C: \texttt{WishListDAO.java} (Linea 79) \& \texttt{Specifiche.java}}
-    \begin{itemize}
-        \item \textbf{Razionale per l'esclusione:} La servlet \texttt{WishlistServlet} e le classi ausiliarie delle specifiche mostrano tempi di risposta minimi (es. $19{,}94$~ms) e un'impronta di risorse globale trascurabile nei test a lungo termine. Il loro impatto globale sull'assorbimento hardware è irrilevante.
-    \end{itemize}
 \end{enumerate}
 
 \subsection{Analisi dei Benchmark JMH Realizzati per ProdottoDAO e RecensioneDAO}
