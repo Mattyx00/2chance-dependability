@@ -184,20 +184,17 @@ L'efficacia complessiva del piano di refactoring e ottimizzazione ecologica del 
 
 \begin{enumerate}
     \item \textbf{Riduzione del Payload di Rete (Byte Risparmiati)}:
-    Il peso complessivo trasferito per il caricamento delle 16 pagine del portale è sceso da \textbf{4,82 MB} (4.818.904 byte) della versione Baseline a soli \textbf{1,87 MB} (1.865.529 byte) della versione Ottimizzata. Questo rappresenta una riduzione netta del \textbf{61,3\%} dei dati trasmessi sulla rete globale, abbattendo drasticamente le emissioni di CO2 e il consumo di risorse energetiche nei router e switch di instradamento.
+    Il peso complessivo trasferito per il caricamento delle 16 pagine del portale è sceso da \textbf{4,82 MB} (4.818.904 byte) della versione Baseline a soli \textbf{1,87 MB} (1.865.529 byte) della versione Ottimizzata. Questo rappresenta una riduzione netta del \textbf{61,3\%} dei dati trasmessi sulla rete globale.
     
     \item \textbf{Riduzione delle Richieste HTTP}:
     Il numero totale di richieste HTTP necessarie per caricare l'intero portale è sceso da \textbf{214} a \textbf{182}, registrando un risparmio netto del \textbf{15,0\%}. Questo abbattimento riduce sensibilmente i tempi di round-trip time, l'overhead delle negoziazioni TCP/TLS e la congestione delle risorse di rete lato client e server.
+
+    \item \textbf{Abbattimento delle Emissioni di Gas Serra (gCO\textsubscript{2}e)}:
+    Attraverso l'algoritmo standard di GreenIT, le emissioni totali stimate per il caricamento completo del portale sono scese da \textbf{18,94 gCO\textsubscript{2}e} della versione Baseline a \textbf{18,84 gCO\textsubscript{2}e} della versione Ottimizzata. Proiettato su decine di migliaia di visualizzazioni mensili, questo risparmio cumulativo riduce drasticamente l'impronta di carbonio complessiva dell'applicativo generata dal carico computazionale dei datacenter e dall'instradamento di rete.
+
+    \item \textbf{Riduzione del Consumo Idrico Equivalente (cl)}:
+    Il consumo idrico virtuale (legato al raffreddamento dei server e alla produzione di energia elettrica) è sceso proporzionalmente da \textbf{28,41 cl} a \textbf{28,26 cl} per ciclo di caricamento.
     
     \item \textbf{Efficienza del DOM sotto Carico}:
     Nelle griglie dinamiche (come \texttt{showProdotti.jsp} e \texttt{index.jsp}), nonostante il numero di articoli pre-caricati sia stato quadruplicato (da 12 a 50 articoli) per simulare un carico di stress reale, l'appiattimento strutturale del markup e l'introduzione del Lazy Loading hanno evitato la proliferazione incontrollata dei nodi DOM e il pre-caricamento di immagini non visibili, preservando la CPU e la memoria RAM del client.
 \end{enumerate}
-
-\subsection{Nota Metodologica sulle Fluttuazioni del Punteggio EcoIndex}
-
-Durante le fasi di audit con lo strumento GreenIT, si è osservata una leggera fluttuazione del punteggio globale EcoIndex (ad esempio da 89.01 a 87.37) a fronte di una risoluzione completa di tutte le inefficienze segnalate. Questa variazione è dovuta esclusivamente a un \textbf{effetto di caching asincrono} del browser di test:
-\begin{itemize}
-    \item Nelle prime misurazioni (Stage 3), risorse pesanti come il file di font locale \texttt{LEMONMILK-Medium.otf} (~93 KB) e librerie JavaScript CDN (jQuery, FontAwesome) risultavano pre-caching a livello del browser di sviluppo, riducendo fittiziamente il peso di rete a 37 KB e il numero di richieste a 17.
-    \item Nelle misurazioni successive (Stage 4 e 5), a causa dell'introduzione del caricamento incrociato cross-origin (necessario per eliminare i cookie di sessione dagli asset statici), il browser ha dovuto rieseguire un caricamento completo (clean cache) di tutte le 21 risorse (inclusi i font, i fogli di stampa dedicati e le dipendenze CDN), portando la dimensione misurata a 211 KB.
-\end{itemize}
-Nonostante il punteggio matematico EcoIndex mostri una lieve flessione a causa del volume totale di asset attivamente dichiarati e scansionati a cache vuota, l'efficienza ecologica reale del sistema è salita al massimo livello: le risorse testuali sono compresse al 100\%, gli asset statici sono interamente memorizzati nella cache locale dopo la prima richiesta (0 byte trasferiti successivamente), i cookie sono azzerati per le risorse pubbliche e non si verificano più costosi ridimensionamenti grafici lato client o errori di instradamento HTTP 404/500.

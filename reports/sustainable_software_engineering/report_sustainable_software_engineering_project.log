@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2026.1.3)  2 JUN 2026 16:37
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2026.1.3)  3 JUN 2026 12:10
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1065,12 +1065,6 @@ Overfull \hbox (13.03839pt too wide) in paragraph at lines 479--479
  (./chapters/frontend_sustainability.tex
 Chapter 4.
 
-Overfull \hbox (5.04683pt too wide) in paragraph at lines 9--10
-\T1/cmr/m/n/12 dell'applicazione tramite il tool di au-dit \T1/cmr/bx/n/12 Gree
-nIT / EcoIn-dex\T1/cmr/m/n/12 . L'algoritmo quan-tifica l'impatto
- []
-
-
 Overfull \hbox (4.42194pt too wide) in paragraph at lines 16--16
 []\T1/cmr/bx/n/14.4 Metodologia di Va-l-u-tazione: Con-testo Reale (GreenIT-Ana
 lysis)
@@ -1081,216 +1075,143 @@ lysis)
 
 
 
-] [25]
-Overfull \hbox (11.73662pt too wide) in paragraph at lines 59--59
-[]\T1/cmr/bx/n/14.4 Dettaglio dell'Inefficienza: As-senza di un Foglio di Stile
- di Stampa
- []
-
-[26]
-Overfull \hbox (1.60681pt too wide) in paragraph at lines 82--83
-[]\T1/cmr/m/n/12 Decodificare l'intero file in memo-ria RAM come bitmap non com
--pressa. Un'immagine
- []
-
-(c:/Program Files/texlive/2025/texmf-dist/tex/latex/listings/lstlang1.sty
-File: lstlang1.sty 2025/11/14 1.11b listings language file
-)
-Overfull \hbox (35.92351pt too wide) in paragraph at lines 106--107
-\T1/cmr/m/n/12 classe bean Java \T1/cmtt/m/n/12 Prodotto \T1/cmr/m/n/12 (\T1/cm
-tt/m/n/12 Prodotto.java\T1/cmr/m/n/12 ) in-tro-ducendo il metodo get-ter \T1/cm
-tt/m/n/12 getImmagineThumbnail()\T1/cmr/m/n/12 : 
- []
-
-[27]
-Package hyperref Info: bookmark level for unknown lstlisting defaults to 0 on i
-nput line 107.
-
-Overfull \hbox (143.60541pt too wide) in paragraph at lines 114--115
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
- []
-
-
-Overfull \hbox (39.70021pt too wide) in paragraph at lines 136--137
-\T1/cmr/m/n/12 grafo \T1/cmtt/m/n/12 <p>\T1/cmr/m/n/12 , sono stati pro-mossi a
- in-tes-tazioni ger-ar-chiche \T1/cmtt/m/n/12 <h3> \T1/cmr/m/n/12 (\T1/cmtt/m/n
-/12 <h3 class="titolo-prodotto">\T1/cmr/m/n/12 ),
- []
-
-[28]
-Overfull \hbox (7.8859pt too wide) in paragraph at lines 156--156
-[]\T1/cmr/bx/n/14.4 Integrazione del Foglio di Stile di Stampa per l'Eco-Proget
-tazione 
- []
-
-(c:/Program Files/texlive/2025/texmf-dist/tex/latex/listings/lstlang1.sty
-File: lstlang1.sty 2025/11/14 1.11b listings language file
-)
-(c:/Program Files/texlive/2025/texmf-dist/tex/latex/listings/lstmisc.sty
-File: lstmisc.sty 2025/11/14 1.11b (Carsten Heinz)
-)
-Overfull \hbox (291.62054pt too wide) in paragraph at lines 160--161
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
-][][][][][][] 
- []
-
-[29]
-Overfull \hbox (4.00488pt too wide) in paragraph at lines 178--179
-\T1/cmr/m/n/12 statiche di-ret-ta-mente dalla cache di memo-ria o disco lo-cale
- (0 byte trasfer-iti sulla rete), azzerando
- []
-
-[30]
-Overfull \hbox (119.93222pt too wide) in paragraph at lines 201--202
-\T1/cmr/m/n/12 Durante l'analisi è stato riscon-trato un er-rore HTTP 500 in co
-r-rispon-denza del per-corso \T1/cmtt/m/n/12 http://localhost:8080/img/\T1/cmr/
-m/n/12 .
- []
-
-[31]
-Overfull \hbox (18.26067pt too wide) in paragraph at lines 219--220
-\T1/cmr/m/n/12 (\T1/cmtt/m/n/12 css/\T1/cmr/m/n/12 , \T1/cmtt/m/n/12 functions/
-\T1/cmr/m/n/12 , \T1/cmtt/m/n/12 img/\T1/cmr/m/n/12 , \T1/cmtt/m/n/12 favicon.i
-co\T1/cmr/m/n/12 ) viene forzato a \T1/cmtt/m/n/12 127.0.0.1\T1/cmr/m/n/12 . Se
- ac-cede da \T1/cmtt/m/n/12 127.0.0.1\T1/cmr/m/n/12 ,
- []
-
-
-Overfull \hbox (50.4585pt too wide) in paragraph at lines 219--220
-\T1/cmr/m/n/12 do-mini come orig-ini dis-tinte (cross-origin), l'associazione c
-on l'attributo \T1/cmtt/m/n/12 crossorigin="anonymous"
- []
-
-[32]
-Overfull \hbox (6.68631pt too wide) in paragraph at lines 250--251
-\T1/cmr/m/n/12 tografico auto-firmato tramite lo stru-mento \T1/cmtt/m/n/12 key
-tool \T1/cmr/m/n/12 del JDK e con-fig-u-rarlo nel \T1/cmtt/m/n/12 server.xml
- []
-
-[33]
-Overfull \hbox (47.54138pt too wide) in paragraph at lines 278--279
+]
+Overfull \hbox (47.54138pt too wide) in paragraph at lines 29--30
 []\T1/cmr/bx/n/12 Configurazione dell'Ambiente\T1/cmr/m/n/12 : È stata in-trodo
 tta la vari-abile d'ambiente \T1/cmtt/m/n/12 ECO_TEST_MODE=true
  []
 
-[34]
-Overfull \hbox (1.53317pt too wide) in paragraph at lines 285--286
+
+Overfull \hbox (1.53317pt too wide) in paragraph at lines 31--32
 []\T1/cmr/bx/n/12 Filtro di Iniezione Ses-sione (\T1/cmtt/m/n/12 SessionInjecti
 onFilter\T1/cmr/bx/n/12 )\T1/cmr/m/n/12 : È stato svilup-pato un servlet
  []
 
 
-Overfull \hbox (16.056pt too wide) in paragraph at lines 285--286
+Overfull \hbox (16.056pt too wide) in paragraph at lines 31--32
 \T1/cmr/m/n/12 fil-ter Java (\T1/cmtt/m/n/12 SessionInjectionFilter.java\T1/cmr
 /m/n/12 ) reg-is-trato a liv-ello glob-ale tramite l'annotazione
  []
 
 
-Overfull \hbox (3.51414pt too wide) in paragraph at lines 285--286
+Overfull \hbox (3.51414pt too wide) in paragraph at lines 31--32
 \T1/cmtt/m/n/12 @WebFilter(filterName = "SessionInjectionFilter", urlPatterns =
  "/*")\T1/cmr/m/n/12 . Il fil-
  []
 
 
-Overfull \hbox (56.73686pt too wide) in paragraph at lines 287--288
+Overfull \hbox (56.73686pt too wide) in paragraph at lines 33--34
 []\T1/cmr/m/n/12 Verifica se la modal-ità test è abil-i-tata leggendo la pro-pr
 i-età \T1/cmtt/m/n/12 System.getenv("ECO_TEST_MODE")\T1/cmr/m/n/12 . 
  []
 
 
-Overfull \hbox (53.82779pt too wide) in paragraph at lines 289--290
+Overfull \hbox (53.82779pt too wide) in paragraph at lines 35--36
 []\T1/cmr/m/n/12 Inietta in-oltre un bean \T1/cmtt/m/n/12 Carrello \T1/cmr/m/n/
 12 mock popo-lato con un prodotto di prova (\T1/cmtt/m/n/12 ProdottoCarrello\T1
 /cmr/m/n/12 ),
  []
 
+[25] [26]
+Overfull \hbox (45.73232pt too wide) in paragraph at lines 61--62
+[]\T1/cmr/bx/n/12 Problema\T1/cmr/m/n/12 : L'analisi ha ev-i-den-zi-ato che la 
+quasi to-tal-ità delle risorse statiche dell'applicazione
+ []
 
-Overfull \hbox (121.5333pt too wide) in paragraph at lines 296--348
+
+Overfull \hbox (16.47035pt too wide) in paragraph at lines 62--63
+\T1/cmr/m/n/12 statiche e ini-etta l'intestazione HTTP \T1/cmtt/m/n/12 Cache-Co
+ntrol: public, max-age=31536000,
+ []
+
+
+Overfull \hbox (34.57698pt too wide) in paragraph at lines 67--68
+[]\T1/cmr/bx/n/12 Soluzione\T1/cmr/m/n/12 : Per ab-bat-tere il peso dei file tr
+asfer-iti, è stato in-trodotto il \T1/cmtt/m/n/12 CompressionFilter\T1/cmr/m/n/
+12 .
+ []
+
+
+Overfull \hbox (12.47128pt too wide) in paragraph at lines 67--68
+\T1/cmr/m/n/12 Questo com-po-nente ver-i-fica il sup-porto del browser tramite 
+l'header \T1/cmtt/m/n/12 Accept-Encoding:
+ []
+
+[27]
+Overfull \hbox (1.66277pt too wide) in paragraph at lines 82--83
+\T1/cmr/m/n/12 CORS adeguate (\T1/cmtt/m/n/12 Access-Control-Allow-Origin: *\T1
+/cmr/m/n/12 ), dis-ac-cop-piando così i cookie
+ []
+
+[28]
+Overfull \hbox (121.5333pt too wide) in paragraph at lines 105--157
  [][] 
  []
 
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-[35] [36]
-Overfull \hbox (1.27882pt too wide) in paragraph at lines 369--370
-[]\T1/cmr/bx/n/12 dashboard.jsp\T1/cmr/m/n/12 : Nella ver-sione base-line l'ass
-enza di ses-sione at-tiva causava il blocco/crash
- []
-
-
-Overfull \hbox (81.09973pt too wide) in paragraph at lines 369--370
-\T1/cmr/m/n/12 dell'analisi per reind-i-riz-za-mento non gestito (N/A). Gra-zie
- all'introduzione del \T1/cmtt/m/n/12 SessionInjectionFilter\T1/cmr/m/n/12 ,
- []
-
-[37]
-Overfull \hbox (39.70024pt too wide) in paragraph at lines 391--392
-[]\T1/cmr/m/n/12 Nelle prime mis-urazioni (Stage 3), risorse pe-santi come il f
-ile di font lo-cale \T1/cmtt/m/n/12 LEMONMILK-Medium.otf
- []
-
-) [38]
+[29] [30] [31]) [32]
 \openout2 = `chapters/open_source_license_monitoring.aux'.
 
  (./chapters/open_source_license_monitoring.tex
 Chapter 5.
 
-LaTeX Warning: Citation `21' on page 39 undefined on input line 7.
+LaTeX Warning: Citation `21' on page 33 undefined on input line 7.
 
 
-LaTeX Warning: Citation `22' on page 39 undefined on input line 9.
+LaTeX Warning: Citation `22' on page 33 undefined on input line 9.
 
 
-LaTeX Warning: Citation `1' on page 39 undefined on input line 9.
+LaTeX Warning: Citation `1' on page 33 undefined on input line 9.
 
 
-LaTeX Warning: Citation `1' on page 39 undefined on input line 9.
+LaTeX Warning: Citation `1' on page 33 undefined on input line 9.
 
 
-LaTeX Warning: Citation `1' on page 39 undefined on input line 13.
+LaTeX Warning: Citation `1' on page 33 undefined on input line 13.
 
 
-LaTeX Warning: Citation `25' on page 39 undefined on input line 13.
+LaTeX Warning: Citation `25' on page 33 undefined on input line 13.
 
 
-LaTeX Warning: Citation `25' on page 39 undefined on input line 13.
+LaTeX Warning: Citation `25' on page 33 undefined on input line 13.
 
 
-LaTeX Warning: Citation `22' on page 39 undefined on input line 15.
+LaTeX Warning: Citation `22' on page 33 undefined on input line 15.
 
 
-LaTeX Warning: Citation `22' on page 39 undefined on input line 15.
+LaTeX Warning: Citation `22' on page 33 undefined on input line 15.
 
-[39
+[33
 
 
 
 
 ]
 
-LaTeX Warning: Citation `21' on page 40 undefined on input line 18.
+LaTeX Warning: Citation `21' on page 34 undefined on input line 18.
 
 
-LaTeX Warning: Citation `21' on page 40 undefined on input line 18.
+LaTeX Warning: Citation `21' on page 34 undefined on input line 18.
 
 
-LaTeX Warning: Citation `1' on page 40 undefined on input line 18.
+LaTeX Warning: Citation `1' on page 34 undefined on input line 18.
 
 
-LaTeX Warning: Citation `21' on page 40 undefined on input line 20.
+LaTeX Warning: Citation `21' on page 34 undefined on input line 20.
 
 
-LaTeX Warning: Citation `21' on page 40 undefined on input line 20.
+LaTeX Warning: Citation `21' on page 34 undefined on input line 20.
 
 
-LaTeX Warning: Citation `24' on page 40 undefined on input line 22.
+LaTeX Warning: Citation `24' on page 34 undefined on input line 22.
 
 
-LaTeX Warning: Citation `24' on page 40 undefined on input line 22.
+LaTeX Warning: Citation `24' on page 34 undefined on input line 22.
 
 
-LaTeX Warning: Citation `24' on page 40 undefined on input line 22.
+LaTeX Warning: Citation `24' on page 34 undefined on input line 22.
 
 
 Overfull \hbox (34.57254pt too wide) in paragraph at lines 29--30
@@ -1308,13 +1229,16 @@ File: lstlang2.sty 2025/11/14 1.11b listings language file
 (c:/Program Files/texlive/2025/texmf-dist/tex/latex/listings/lstlang3.sty
 File: lstlang3.sty 2025/11/14 1.11b listings language file
 )
-[40]
+Package hyperref Info: bookmark level for unknown lstlisting defaults to 0 on i
+nput line 31.
+
+[34]
 Overfull \hbox (24.29167pt too wide) in paragraph at lines 51--52
 \T1/cmr/m/n/12 mente solo tramite la pi-attaforma cloud --- è stato imp-ie-gato
  il plu-gin Maven \T1/cmtt/m/n/12 license-maven-plugin
  []
 
-[41]
+[35]
 Underfull \hbox (badness 10000) in paragraph at lines 107--107
 []|\T1/cmtt/m/n/10 commons-io:commons-io
  []
@@ -1439,32 +1363,32 @@ Overfull \hbox (26.13696pt too wide) in paragraph at lines 138--138
 []|\T1/cmtt/m/n/10 org.apiguardian:apiguardian-api
  []
 
-ignored error: Infinite glue shrinkage found in box being split [42]
+ignored error: Infinite glue shrinkage found in box being split [36]
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 
-LaTeX Warning: Citation `21' on page 43 undefined on input line 172.
+LaTeX Warning: Citation `21' on page 37 undefined on input line 172.
 
 
-LaTeX Warning: Citation `21' on page 43 undefined on input line 180.
+LaTeX Warning: Citation `21' on page 37 undefined on input line 180.
 
-[43]
+[37]
 
-LaTeX Warning: Citation `22' on page 44 undefined on input line 186.
+LaTeX Warning: Citation `22' on page 38 undefined on input line 186.
 
-[44]
+[38]
 Underfull \hbox (badness 10000) in paragraph at lines 211--212
 []|\T1/cmtt/m/n/12 jmh-generator-annprocess\T1/cmr/m/n/12 ,
  []
 
 
-LaTeX Warning: Citation `21' on page 45 undefined on input line 226.
+LaTeX Warning: Citation `21' on page 39 undefined on input line 226.
 
 
-LaTeX Warning: Citation `24' on page 45 undefined on input line 228.
+LaTeX Warning: Citation `24' on page 39 undefined on input line 228.
 
-[45]
+[39]
 Overfull \hbox (31.51826pt too wide) in paragraph at lines 249--250
 \T1/cmr/m/n/12 mark sit-uati nella di-rec-tory \T1/cmtt/m/n/12 src/jmh/java/ \T
 1/cmr/m/n/12 e in nes-sun file della di-rec-tory prin-ci-pale \T1/cmtt/m/n/12 s
@@ -1474,13 +1398,16 @@ rc/main/java/\T1/cmr/m/n/12 .
 (c:/Program Files/texlive/2025/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2025/11/14 1.11b listings language file
 )
-[46] [47]
+(c:/Program Files/texlive/2025/texmf-dist/tex/latex/listings/lstmisc.sty
+File: lstmisc.sty 2025/11/14 1.11b (Carsten Heinz)
+)
+[40] [41]
 Overfull \hbox (12.98318pt too wide) in paragraph at lines 315--316
 \T1/cmr/m/n/12 per es-sere anal-iz-zata in au-to-matico da stru-menti di vul-ne
 r-a-bil-ity man-age-ment o Dependency-
  []
 
-) [48] (./report_sustainable_software_engineering_project.aux
+) [42] (./report_sustainable_software_engineering_project.aux
 (./chapters/introduction_and_system_baseline.aux)
 (./chapters/software_architectural_overview.aux)
 (./chapters/backend_energy_sustainability.aux)
@@ -1496,16 +1423,16 @@ LaTeX Warning: There were undefined references.
 
 Package rerunfilecheck Info: File `report_sustainable_software_engineering_proj
 ect.out' has not changed.
-(rerunfilecheck)             Checksum: 107DA934587F79BA9DDE098C0ABF2D8D;24442.
+(rerunfilecheck)             Checksum: 370073900AA45E82697CF9E681DDB31F;17272.
  ) 
 Here is how much of TeX's memory you used:
- 24361 strings out of 467538
- 444933 string characters out of 5401323
- 1147048 words of memory out of 5000000
- 52516 multiletter control sequences out of 15000+600000
- 647306 words of font info for 80 fonts, out of 8000000 for 9000
+ 24028 strings out of 467538
+ 440850 string characters out of 5401323
+ 1144319 words of memory out of 5000000
+ 52247 multiletter control sequences out of 15000+600000
+ 648082 words of font info for 81 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 84i,12n,94p,1505b,2089s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 84i,11n,94p,1505b,2104s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <c:/Program Files/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmex
 10.pfb><c:/Program Files/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm
 /cmmi12.pfb><c:/Program Files/texlive/2025/texmf-dist/fonts/type1/public/amsfon
@@ -1514,28 +1441,29 @@ sfonts/cm/cmr12.pfb><c:/Program Files/texlive/2025/texmf-dist/fonts/type1/publi
 c/amsfonts/cm/cmr8.pfb><c:/Program Files/texlive/2025/texmf-dist/fonts/type1/pu
 blic/amsfonts/cm/cmsy10.pfb><c:/Program Files/texlive/2025/texmf-dist/fonts/typ
 e1/public/amsfonts/cm/cmsy8.pfb><c:/Program Files/texlive/2025/texmf-dist/fonts
-/type1/public/cm-super/sfbx1000.pfb><c:/Program Files/texlive/2025/texmf-dist/f
-onts/type1/public/cm-super/sfbx1200.pfb><c:/Program Files/texlive/2025/texmf-di
-st/fonts/type1/public/cm-super/sfbx1440.pfb><c:/Program Files/texlive/2025/texm
-f-dist/fonts/type1/public/cm-super/sfbx1728.pfb><c:/Program Files/texlive/2025/
-texmf-dist/fonts/type1/public/cm-super/sfbx2074.pfb><c:/Program Files/texlive/2
-025/texmf-dist/fonts/type1/public/cm-super/sfbx2488.pfb><c:/Program Files/texli
-ve/2025/texmf-dist/fonts/type1/public/cm-super/sfrm0700.pfb><c:/Program Files/t
-exlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm0800.pfb><c:/Program Fil
-es/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb><c:/Program
- Files/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb><c:/Pro
-gram Files/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1440.pfb><c:
-/Program Files/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfti1000.pfb
-><c:/Program Files/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfti1200
-.pfb><c:/Program Files/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sftt
-1000.pfb><c:/Program Files/texlive/2025/texmf-dist/fonts/type1/public/cm-super/
-sftt1200.pfb><c:/Program Files/texlive/2025/texmf-dist/fonts/type1/public/cm-su
-per/sftt1440.pfb>
-Output written on report_sustainable_software_engineering_project.pdf (49 pages
-, 593238 bytes).
+/type1/public/cm-super/sfbx0800.pfb><c:/Program Files/texlive/2025/texmf-dist/f
+onts/type1/public/cm-super/sfbx1000.pfb><c:/Program Files/texlive/2025/texmf-di
+st/fonts/type1/public/cm-super/sfbx1200.pfb><c:/Program Files/texlive/2025/texm
+f-dist/fonts/type1/public/cm-super/sfbx1440.pfb><c:/Program Files/texlive/2025/
+texmf-dist/fonts/type1/public/cm-super/sfbx1728.pfb><c:/Program Files/texlive/2
+025/texmf-dist/fonts/type1/public/cm-super/sfbx2074.pfb><c:/Program Files/texli
+ve/2025/texmf-dist/fonts/type1/public/cm-super/sfbx2488.pfb><c:/Program Files/t
+exlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm0700.pfb><c:/Program Fil
+es/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm0800.pfb><c:/Program
+ Files/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb><c:/Pro
+gram Files/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb><c:
+/Program Files/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1440.pfb
+><c:/Program Files/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfti1000
+.pfb><c:/Program Files/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfti
+1200.pfb><c:/Program Files/texlive/2025/texmf-dist/fonts/type1/public/cm-super/
+sftt1000.pfb><c:/Program Files/texlive/2025/texmf-dist/fonts/type1/public/cm-su
+per/sftt1200.pfb><c:/Program Files/texlive/2025/texmf-dist/fonts/type1/public/c
+m-super/sftt1440.pfb>
+Output written on report_sustainable_software_engineering_project.pdf (43 pages
+, 559371 bytes).
 PDF statistics:
- 989 PDF objects out of 1000 (max. 8388607)
- 881 compressed objects within 9 object streams
- 314 named destinations out of 1000 (max. 500000)
- 589 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 827 PDF objects out of 1000 (max. 8388607)
+ 724 compressed objects within 8 object streams
+ 253 named destinations out of 1000 (max. 500000)
+ 445 words of extra memory for PDF output out of 10000 (max. 10000000)
 
