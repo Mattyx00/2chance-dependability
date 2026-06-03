@@ -21,49 +21,45 @@ Per agevolare l'installazione e la configurazione di SonarQube con Creedengo su 
 \subsection{Selezione delle Regole di Eco-Design}
 Per massimizzare il ritorno ecologico delle attività di refactoring e ridurre il rumore nelle metriche di telemetria statica, sono state selezionate inizialmente 11 regole fondamentali del ruleset Creedengo Java. Ciascuna di queste regole è stata scelta in base alla sua pertinenza tecnologica con l'architettura MVC di 2Chance, un'applicazione web monolitica basata esclusivamente su Java Servlets e interazioni dirette con il database tramite pattern JDBC/DAO nativi (senza l'uso di framework pesanti come Spring).
 
-\subsection{Output dell'Analisi Statica (Baseline)}
-Dopo aver configurato l'ambiente di analisi statica ed eseguito la scansione iniziale (fase di \textit{baseline}), sono state rilevate complessivamente \textbf{64 violazioni di eco-design} distribuite unicamente su 4 delle 11 regole principali del ruleset Creedengo che rappresentano anti-pattern strutturali. Questi problemi interessavano in modo critico i Model Bean e i Data Access Object dell'applicazione 2Chance. Nell'ecosistema dell'architettura software di 2Chance, infatti, il livello di accesso ai dati (DAO) rappresenta il principale \textit{bottleneck} dal punto di vista del consumo energetico. A differenza dei Controller o dei Service, i quali si limitano all'orchestrazione di logiche prettamente in-memory, i DAO si fanno carico della comunicazione inter-processo con il database relazionale. Di conseguenza, vengono di seguito approfondite esclusivamente le regole realmente coinvolte nelle vulnerabilità riscontrate, integrando per ciascuna di esse le inefficienze strutturali scoperte durante la revisione del codice:
+\subsection{Output dell'Analisi Statica e Piano di Refactoring}
+Dopo aver configurato l'ambiente di analisi statica ed eseguito la scansione iniziale (fase di \textit{baseline}), sono state rilevate complessivamente \textbf{64 violazioni di eco-design} distribuite unicamente su 4 delle 11 regole principali del ruleset Creedengo che rappresentano anti-pattern strutturali. 
+
+Questi problemi interessavano in modo critico i Model Data Access Object. Nell'ecosistema dell'architettura software di 2Chance, infatti, il livello di accesso ai dati (DAO) rappresenta il principale \textit{bottleneck} dal punto di vista del consumo energetico. A differenza dei Controller o dei Service, i quali si limitano all'orchestrazione di logiche prettamente in-memory, i DAO si fanno carico della comunicazione inter-processo con il database relazionale.
+
+Per risolvere i problemi architetturali emersi durante la revisione del codice, sanare le violazioni critiche individuate dall'analisi statica di Creedengo e massimizzare l'efficienza ecologica, in particolar modo a livello di persistenza, si è deciso di procedere a un refactoring profondo di tutti i componenti del sistema, intervenendo sistematicamente sui Data Access Object (DAO) e sui Model Beans.
+
+Di conseguenza, vengono di seguito approfondite esclusivamente le regole realmente coinvolte nelle vulnerabilità riscontrate, integrando per ciascuna di esse sia le inefficienze strutturali scoperte durante la revisione del codice (\textbf{il Problema}) sia le relative soluzioni architetturali adottate (\textbf{la Soluzione}):
 
 \begin{enumerate}
     \item \textbf{Avoid getting the size of the collection in the loop (GCI3):}
-    Questa regola rappresenta una variante diretta delle specifiche di progetto relative all'efficienza computazionale. L'invocazione continua del metodo \texttt{.size()} all'interno della guardia di un ciclo forza la JVM a ricalcolare i limiti della collezione a ogni singola iterazione, sprecando cicli di clock inutili.
+    \begin{itemize}
+        \item \textbf{Problema:} Questa regola rappresenta una variante diretta delle specifiche di progetto relative all'efficienza computazionale. L'invocazione continua del metodo \texttt{.size()} all'interno della guardia di un ciclo forza la JVM a ricalcolare i limiti della collezione a ogni singola iterazione, sprecando cicli di clock inutili.
+        \item \textbf{Soluzione:} Per prevenire interrogazioni continue ad oggetti nell'area Heap, le invocazioni di metodi all'interno dei parametri di guardia dei cicli sono state estratte introducendo variabili primitive locali prima del ciclo. Questo semplice \textit{caching} permette alla CPU di memorizzare il valore limite in un registro fisico, abilitando ottimizzazioni Just-In-Time (JIT) e annullando gli sprechi computazionali.
+    \end{itemize}
     
     \item \textbf{Avoid SQL request in loop (GCI72):}
-    L'esecuzione di interrogazioni al database all'interno di cicli iterativi è un fattore altamente inefficiente. Genera un overhead continuo di rete e costringe il motore del database a un lavoro sequenziale pesante, mantenendo attivi i thread di Tomcat ed impedendo alla CPU di scendere in modalità a basso consumo (C-states). L'analisi di questa violazione ha portato alla luce due inefficienze critiche nei DAO:
     \begin{itemize}
-        \item \textbf{Assenza di Batch Processing nelle Scritture Iterative:} Le routine di inserimento multiplo, come \texttt{ProdottoDAO.aggiungiSpecifiche} e \texttt{OrdineDAO.addOrdine}, implementavano nella baseline una sequenza di \texttt{INSERT} all'interno di cicli iterativi, invocando \texttt{executeUpdate()} per ogni singolo record. Questo pattern comportava un overhead catastrofico causato dai continui \textit{round-trip} di rete e dalla negoziazione di transazioni isolate per ogni istruzione. Questa inefficienza è stata risolta adottando il costrutto \texttt{executeBatch()} di JDBC, supportato da una gestione manuale della transazione (\texttt{setAutoCommit(false)}). L'accorpamento delle scritture ha minimizzato il tempo di acquisizione delle connessioni, consentendo alla CPU di tornare rapidamente in stato di \textit{idle}.
-        \item \textbf{Risoluzione del Problema N+1 (Moltiplicazione delle Query):} Nella versione non ottimizzata, il metodo \texttt{OrdineDAO.getOrdiniByUtente} era affetto da una severa anomalia N+1. Nel corso dell'elaborazione del \texttt{ResultSet} principale degli ordini, il codice invocava ripetutamente un metodo secondario (\texttt{getProdottoOrdine(ordine)}) all'interno di un ciclo per estrarre gli articoli associati a ciascun acquisto. Se un utente possedeva $N$ ordini, il sistema eseguiva $1 + N$ query sincrone verso il database, mantenendo impegnati i thread applicativi in attesa bloccante. Questo spreco computazionale è stato risolto consolidando l'estrazione in un'unica query aggregata tramite \texttt{LEFT JOIN}, delegando l'onere dell'assemblaggio delle entità (\texttt{Ordine} e \texttt{Prodotto}) a una \texttt{LinkedHashMap} in memoria, abbattendo esponenzialmente l'overhead di rete e i picchi di consumo.
+        \item \textbf{Problema:} L'esecuzione di interrogazioni al database all'interno di cicli iterativi è un fattore altamente inefficiente. Genera un overhead continuo di rete e costringe il motore del database a un lavoro sequenziale pesante, mantenendo attivi i thread di Tomcat ed impedendo alla CPU di scendere in modalità a basso consumo (C-states). L'analisi di questa violazione ha portato alla luce due inefficienze critiche nei DAO: l'assenza di batch processing nelle scritture iterative (come in \texttt{ProdottoDAO} e \texttt{OrdineDAO}) e il problema della moltiplicazione delle query N+1 per le estrazioni collegate (come in \texttt{OrdineDAO.getOrdiniByUtente}).
+        \item \textbf{Soluzione:} Le sequenze di \texttt{INSERT} o \texttt{UPDATE} eseguite all'interno di cicli iterativi sono state sostituite con operazioni batch native del driver JDBC (\texttt{addBatch()} e \texttt{executeBatch()}). Il raggruppamento delle scritture in un'unica transazione ha minimizzato il tempo di acquisizione delle connessioni, prevenendo la saturazione del pool. Inoltre, per il problema del querying N+1, l'estrazione iterativa è stata consolidata in un'unica query aggregata tramite costrutti \texttt{LEFT JOIN}, delegando l'onere dell'assemblaggio delle entità a una \texttt{LinkedHashMap} in memoria e abbattendo i roundtrip con il database.
     \end{itemize}
     
     \item \textbf{Do not call a function when declaring a for-type loop (GCI69):}
-    Classificato a priorità elevata, questo fault identifica chiamate a funzioni invarianti all'interno dei parametri di inizializzazione o di guardia dei cicli. Risolvere questo anti-pattern richiede l'estrazione del risultato in variabili locali prima del ciclo, evitando migliaia di invocazioni ridondanti del medesimo metodo.
+    \begin{itemize}
+        \item \textbf{Problema:} Classificato a priorità elevata, questo fault identifica chiamate a funzioni invarianti all'interno dei parametri di inizializzazione o di guardia dei cicli, causando un inutile dispendio di CPU a causa delle continue rivalutazioni.
+        \item \textbf{Soluzione:} Analogamente alla regola GCI3, risolvere questo anti-pattern ha richiesto l'estrazione del risultato delle chiamate a funzione in variabili primitive locali prima dell'esecuzione del ciclo. In questo modo si evitano migliaia di invocazioni ridondanti del medesimo metodo, consentendo alla JVM di ottimizzare l'esecuzione del blocco iterativo.
+    \end{itemize}
     
     \item \textbf{Don't use the query SELECT * FROM (GCI74):}
-    Il recupero indiscriminato di tutte le colonne di una tabella costringe a trasferire byte inutili attraverso la connessione di rete e obbliga la JVM ad allocare massicciamente oggetti temporanei in memoria per campi non utilizzati durante la creazione dei Model Beans. La presenza sistematica di questa regola nei moduli di persistenza ha messo in luce \textbf{l'Anti-Pattern ``SELECT *'' e il Trasferimento Dati Incontrollato}: le query di recupero facevano un uso sistematico dell'operatore \texttt{SELECT *}. Dal punto di vista della sostenibilità, questo approccio costringeva il database engine a eseguire operazioni di I/O su disco per estrarre l'interezza dei campi, compresi quelli non necessari o molto pesanti (come le stringhe \textit{Base64} delle immagini), per poi serializzarli sulla rete. Il refactoring ha introdotto proiezioni di colonne esplicite, riducendo drasticamente il payload di rete trasferito e limitando l'allocazione di byte nella memoria Heap della JVM, alleggerendo di conseguenza il carico sul Garbage Collector.
+    \begin{itemize}
+        \item \textbf{Problema:} La presenza di questa regola nei moduli di persistenza ha messo in luce \textbf{l'Anti-Pattern ``SELECT *'' e il Trasferimento Dati Incontrollato}: le query di recupero facevano un uso sistematico dell'operatore \texttt{SELECT *}. Questo approccio costringeva il database engine a eseguire operazioni di I/O su disco per estrarre l'interezza dei campi, compresi quelli non necessari o molto pesanti (come le stringhe \textit{Base64} delle immagini), per poi serializzarli sulla rete, costringendo la JVM ad allocare massicciamente oggetti temporanei in memoria.
+        \item \textbf{Soluzione:} Tutte le query di lettura indiscriminate nei DAO sono state riscritte esplicitando unicamente le colonne necessarie nella proiezione SQL. Riducendo il payload di rete trasferito, si è alleggerita la fase di \textit{Object-Relational Mapping} (ORM), diminuendo le allocazioni temporanee nella memoria Heap della JVM e, di conseguenza, lo stress energetico dovuto ai cicli del \textit{Garbage Collector}. Parallelamente, il mapping dei risultati è stato allineato ai nomi simbolici delle colonne, aumentando la resilienza dello schema.
+    \end{itemize}
 \end{enumerate}
 
-\section{Piano di Refactoring ed Ottimizzazione}
-
-Per risolvere i problemi architetturali emersi durante la revisione del codice, sanare le violazioni critiche individuate dall'analisi statica di Creedengo e massimizzare l'efficienza ecologica, in particolar modo a livello di persistenza, si è deciso di procedere a un refactoring profondo di tutti i componenti del sistema, intervenendo sistematicamente sui Data Access Object (DAO) e sui Model Beans. Questa decisione è stata supportata dalle metriche di baseline raccolte, che hanno evidenziato la necessità di un piano operativo mirato ad abbattere il consumo energetico computazionale e di rete.
-
-Per risolvere le varie tipologie di inefficienze riscontrate, sono state adottate le seguenti soluzioni architetturali:
-
-\begin{itemize}
-    \item \textbf{Risoluzione del Querying $N+1$:} Nei metodi affetti da query iterative (come \texttt{getOrdiniByUtente} in \texttt{OrdineDAO}), l'estrazione è stata consolidata in un'unica query aggregata tramite costrutti \texttt{LEFT JOIN}. Questo ha permesso di ridurre drasticamente i roundtrip con il database, abbattendo l'overhead di connessione ed eliminando le attese bloccanti.
-    
-    \item \textbf{Batching degli Inserimenti e Scritture (GCI72):} Le sequenze di \texttt{INSERT} o \texttt{UPDATE} eseguite all'interno di cicli iterativi (ad esempio in \texttt{ProdottoDAO} e \texttt{OrdineDAO}) sono state sostituite con operazioni batch native del driver JDBC (\texttt{addBatch()} e \texttt{executeBatch()}). Il raggruppamento delle scritture in un'unica transazione ha minimizzato il tempo di acquisizione delle connessioni, prevenendo la saturazione del \textit{Connection Pool} sotto carico ed incrementando l'efficienza globale.
-    
-    \item \textbf{Rimozione delle Query \texttt{SELECT *} e Proiezioni Esplicite (GCI74):} Tutte le query di lettura indiscriminate nei DAO sono state riscritte esplicitando unicamente le colonne necessarie nella proiezione SQL. Riducendo il payload di rete trasferito, si è alleggerita la fase di \textit{Object-Relational Mapping} (ORM), diminuendo le allocazioni temporanee nella memoria Heap della JVM e, di conseguenza, lo stress energetico dovuto ai cicli del \textit{Garbage Collector}. Parallelamente, il mapping dei risultati è stato allineato ai nomi simbolici delle colonne, aumentando la resilienza dello schema.
-    
-    \item \textbf{Ottimizzazione delle Guardie dei Cicli nei Model Bean (GCI69 e GCI3):} Per prevenire salti di subroutine ed interrogazioni continue ad oggetti nell'area Heap, le invocazioni di metodi all'interno dei parametri di guardia dei cicli (come \texttt{size()} o \texttt{length()}) sono state estratte introducendo variabili primitive locali prima del ciclo. Questo semplice \textit{caching} permette alla CPU di memorizzare il valore limite in un registro fisico, abilitando ottimizzazioni Just-In-Time (JIT) e annullando gli sprechi computazionali.
-\end{itemize}
-
 \subsection{Unit e Integration Testing Iterativo}
-
 Ogni singola classe dell'applicazione è stata rifattorizzata singolarmente, seguendo un approccio incrementale e rigoroso. Al termine delle modifiche di ciascuna classe (Bean o DAO), è stata eseguita tramite Maven e JUnit 5 la specifica test suite di \textit{unit testing} relativa al solo componente modificato, in modo da isolare e correggere eventuali errori semantici o disallineamenti dei mock (ad esempio per l'uso di query batch e nomi di colonne al posto degli indici). Una volta validato con successo il componente isolato, si è proceduto all'esecuzione di una fase di \textit{integration testing} in cui è stata lanciata l'intera suite globale composta da oltre 500 test. Questo processo di verifica a doppio passaggio è stato fatto per ogni singola classe, garantendo la totale assenza di regressioni e certificando che la logica di business dell'applicazione 2Chance rimanesse del tutto inalterata prima di validare le ottimizzazioni in termini energetici.
 
 \subsection{Validazione dell'Analisi Statica (Creedengo Post-Refactoring)}
-
 In seguito alle attività di refactoring orientate alla sostenibilità energetica, è stata eseguita una nuova sessione di scansione con Creedengo su SonarQube. I risultati aggiornati confermano che \textbf{tutte le 64 eco-vulnerabilità sono state risolte ed i relativi fault sono stati chiusi con successo (stato CLOSED/FIXED)}. La completa risoluzione di questi fault garantisce che l'applicazione non presenti inefficienze strutturali latenti a livello di CPU-bound e I/O-bound, allineandosi con i requisiti di sostenibilità energetica previsti per il sistema 2Chance.
 
 \section{Validazione delle Ottimizzazioni: Baseline vs SSE-Improvements}
@@ -72,7 +68,7 @@ Al fine di validare l'efficacia del refactoring, il capitolo si articola ora nel
 
 \subsection{Introduzione a EnergiBridge per la Profilazione}
 
-Per la raccolta di metriche empiriche sul consumo energetico, il framework metodologico prevede l'integrazione di \textbf{EnergiBridge}. Tale strumento, orientato alla profilazione \textit{cross-platform}, monitora l'impatto energetico delle applicazioni interfacciandosi direttamente con i sensori hardware di architetture quali x86, AMD e Apple Silicon. Questa compatibilità risulta essenziale per il progetto 2Chance, le cui misurazioni saranno effettuate su piattaforma AMD Ryzen AI 9. Lo strumento opera tramite interfaccia a riga di comando, campionando il consumo energetico a intervalli regolari durante l'esecuzione di un processo \textit{target} ed esportando i dati aggregati in formato CSV.
+Per la raccolta di metriche empiriche sul consumo energetico, il framework metodologico prevede l'integrazione di \textbf{EnergiBridge}. Tale strumento, orientato alla profilazione \textit{cross-platform}, monitora l'impatto energetico delle applicazioni interfacciandosi direttamente con i sensori hardware di architetture quali x86, AMD e Apple Silicon. Questa compatibilità risulta essenziale per il progetto 2Chance, le cui misurazioni saranno effettuate su piattaforma AMD Ryzen AI 9 HX 370. Lo strumento opera tramite interfaccia a riga di comando, campionando il consumo energetico a intervalli regolari durante l'esecuzione di un processo \textit{target} ed esportando i dati aggregati in formato CSV.
 
 \subsection{Configurazione dell'Ambiente di Profilazione}
 
@@ -80,114 +76,17 @@ Per installare e configurare EnergiBridge su Windows, ho creato la directory di 
 
 \subsection{Microbenchmarking Energetico sui DAO (JMH + EnergiBridge)}
 
-Per convalidare sperimentalmente a livello di singolo metodo le inefficienze architetturali emerse dalla revisione del codice e dalle violazioni strutturali evidenziate dall'analisi statica (\textit{Creedengo}), sono emersi specifici anti-pattern architetturali concentrati in particolare in 3 classi DAO: \texttt{ProdottoDAO}, \texttt{RecensioneDAO} e \texttt{OrdineDAO}. A causa di questi anti-pattern che causavano un elevato footprint energetico nella versione di \textit{baseline}, queste 3 classi sono state scelte per effettuare una fase di microbenchmarking per tutti i loro metodi. L'isolamento di queste porzioni critiche di codice costituisce infatti il prerequisito fondamentale per il microbenchmarking effettuato con il framework JMH combinato con la profilazione di EnergiBridge, consentendo di misurare con estrema precisione le performance e l'assorbimento energetico (in Joule per operazione) prima e dopo il refactoring. Di seguito si documentano gli anti-pattern di sostenibilità notati in questi DAO:
+Per convalidare sperimentalmente a livello di singolo metodo le inefficienze architetturali emerse dalla revisione del codice e dalle violazioni strutturali evidenziate dall'analisi statica (\textit{Creedengo}), sono emersi specifici anti-pattern architetturali concentrati in particolare in 3 classi DAO: \texttt{ProdottoDAO}, \texttt{RecensioneDAO} e \texttt{OrdineDAO}. A causa di questi anti-pattern che causavano un elevato footprint energetico nella versione di \textit{baseline}, queste 3 classi sono state scelte per effettuare una fase di microbenchmarking per tutti i loro metodi. L'isolamento di queste porzioni critiche di codice costituisce infatti il prerequisito fondamentale per il microbenchmarking effettuato con il framework JMH combinato con la profilazione di EnergiBridge, consentendo di misurare con estrema precisione le performance e l'assorbimento energetico (in Joule per operazione) prima e dopo il refactoring.
 
 \subsubsection{Strumento di Profilazione Energetica Co-Sincronizzato}
 
 Per combinare la precisione temporale del microbenchmarking con la profilazione energetica dell'hardware, ho implementato uno script Python (\texttt{run\_jmh\_energy\_profiler.py}) che coordina l'esecuzione dei test JMH e l'acquisizione dei dati di EnergiBridge. Lo script compila prima il codice Java con Maven e individua tutti i metodi di benchmark disponibili nelle classi della directory fornita in input. Successivamente, per evitare interferenze tra i test, esegue i benchmark JMH in modalità isolata per ciascun metodo per evitare il fenomeno dell'inquinamento della memoria Heap e del cross-talk tra thread differenti. Ciascun processo EnergiBridge avvolge un'istanza JVM pulita, garantendo che le metriche di consumo non risentano dell'overhead di esecuzioni precedenti. Per eliminare il rumore e le anomalie di lettura tipiche dei registri hardware RAPL, i dati energetici vengono filtrati applicando le condizioni di validità energetica rispetto al tempo ($\Delta t$): $0 \le \Delta E_{\text{CPU}} \le 55{,}0 \times \Delta t$ e $0 \le \Delta E_{\text{Core}} \le 45{,}0 \times \Delta t$. Infine, lo script unisce le metriche temporali di JMH con quelle energetiche purificate di EnergiBridge, producendo un report finale che riassume il consumo energetico totale (J), la potenza media (W), il carico e la frequenza della CPU, e i picchi di memoria RAM allocata.
 
-\subsubsection{Risultati Sperimentali dei Benchmark (Baseline)}
-I test sono stati eseguiti impostando una configurazione a thread singolo (\texttt{@State(Scope.Thread)}), con 5 iterazioni di warmup e 5 iterazioni di misurazione per ciascun modulo isolato. Le metriche temporali sono espresse in millisecondi per operazione ($\text{ms/op}$), mentre le metriche di consumo energetico e memoria sono aggregate e filtrate tramite lo script di co-sincronizzazione. I dati consolidati estratti dalle misurazioni sono riportati nelle Tabelle~\ref{tab:jmh_results_prodotto},~\ref{tab:jmh_results_recensione} e~\ref{tab:jmh_results_ordine}.
+I test sono stati eseguiti impostando una configurazione a thread singolo (\texttt{@State(Scope.Thread)}), con 5 iterazioni di warmup e 5 iterazioni di misurazione per ciascun modulo isolato. Le metriche temporali fornite da JMH sono espresse in millisecondi per operazione ($\text{ms/op}$), mentre le metriche di consumo energetico fornite da EnergiBridge sono misurate in Joule (J).
 
-\begin{table}[h!]
-\centering
-\resizebox{\textwidth}{!}{
-\begin{tabular}{lcccccccc}
-\hline
-\textbf{Metodo Profilato (ProdottoDAOBenchmark)} & \textbf{Tempo Medio (ms/op)} & \textbf{CPU Energy (J)} & \textbf{Avg Power (W)} & \textbf{Core Energy (J)} & \textbf{CPU Media (\%)} & \textbf{CPU Picco (\%)} & \textbf{RAM Media (GB)} & \textbf{RAM Picco (GB)} \\ \hline
-\texttt{benchmarkAggiungiSpecifiche} & 23,6479 & 74,72 & 14,92 & 2,30 & 27,02 & 47,79 & 26,01 & 26,06 \\
-\texttt{benchmarkCercaProdottiInvalid} & 0,0008 & 90,06 & 16,65 & 3,41 & 27,61 & 46,45 & 26,16 & 26,29 \\
-\texttt{benchmarkCercaProdottiValid} & 1,2442 & 74,99 & 14,97 & 3,25 & 25,45 & 40,71 & 25,97 & 26,08 \\
-\texttt{benchmarkGetProdotti} & 1,4448 & 279,08 & 15,15 & 13,36 & 25,43 & 73,32 & 25,99 & 26,21 \\
-\texttt{benchmarkGetProdottiByCategoriaInvalid} & 0,0008 & 84,19 & 15,56 & 2,28 & 24,25 & 41,66 & 26,07 & 26,19 \\
-\texttt{benchmarkGetProdottiByCategoriaNonExistent} & 1,1278 & 76,26 & 15,23 & 2,09 & 26,32 & 50,01 & 25,95 & 26,08 \\
-\texttt{benchmarkGetProdottiByCategoriaValid} & 1,2043 & 77,42 & 15,46 & 2,71 & 27,10 & 45,34 & 25,96 & 26,09 \\
-\texttt{benchmarkGetProdottoByIdInvalid} & 0,0009 & 82,91 & 15,33 & 2,52 & 23,49 & 39,24 & 26,12 & 26,23 \\
-\texttt{benchmarkGetProdottoByIdNonExistent} & 1,0384 & 76,03 & 15,18 & 1,93 & 26,79 & 38,93 & 25,99 & 26,11 \\
-\texttt{benchmarkGetProdottoByIdValid} & 19,1854 & 81,32 & 16,24 & 2,18 & 29,28 & 42,06 & 25,98 & 26,05 \\
-\texttt{benchmarkGetUltimiProdotti} & 1,1066 & 87,18 & 17,41 & 2,50 & 30,49 & 65,14 & 26,07 & 26,18 \\ \hline
-\end{tabular}
-}
-\caption{Risultati temporali ed energetici per la classe ProdottoDAOBenchmark.}
-\label{tab:jmh_results_prodotto}
-\end{table}
+\subsection{Confronto dei Risultati dei Benchmark (Baseline vs Post-Refactoring)}
 
-\begin{table}[h!]
-\centering
-\resizebox{\textwidth}{!}{
-\begin{tabular}{lcccccccc}
-\hline
-\textbf{Metodo Profilato (RecensioneDAOBenchmark)} & \textbf{Tempo Medio (ms/op)} & \textbf{CPU Energy (J)} & \textbf{Avg Power (W)} & \textbf{Core Energy (J)} & \textbf{CPU Media (\%)} & \textbf{CPU Picco (\%)} & \textbf{RAM Media (GB)} & \textbf{RAM Picco (GB)} \\ \hline
-\texttt{benchmarkAddRecensione} & 7,5219 & 77,45 & 15,46 & 3,20 & 26,21 & 40,95 & 26,06 & 26,14 \\
-\texttt{benchmarkGetRecensioniByProdottoInvalid} & 0,0008 & 73,85 & 14,75 & 2,74 & 22,10 & 48,23 & 26,24 & 26,34 \\
-\texttt{benchmarkGetRecensioniByProdottoNonExistent} & 1,1259 & 75,78 & 15,13 & 2,43 & 25,90 & 38,03 & 26,12 & 26,26 \\
-\texttt{benchmarkGetRecensioniByProdottoValid} & 15,3983 & 76,26 & 15,23 & 3,30 & 25,36 & 55,45 & 26,06 & 26,12 \\
-\texttt{benchmarkGetRecensioniByUtenteInvalid} & 0,0008 & 82,31 & 16,44 & 2,57 & 29,29 & 54,12 & 26,12 & 26,23 \\
-\texttt{benchmarkGetRecensioniByUtenteNonExistent} & 1,0402 & 95,78 & 19,13 & 3,67 & 33,67 & 56,66 & 25,75 & 25,82 \\
-\texttt{benchmarkGetRecensioniByUtenteValid} & 15,0104 & 77,52 & 15,48 & 0,45 & 25,62 & 48,25 & 25,61 & 25,77 \\ \hline
-\end{tabular}
-}
-\caption{Risultati temporali ed energetici per la classe RecensioneDAOBenchmark.}
-\label{tab:jmh_results_recensione}
-\end{table}
-
-\begin{table}[h!]
-\centering
-\resizebox{\textwidth}{!}{
-\begin{tabular}{lcccccccc}
-\hline
-\textbf{Metodo Profilato (OrdineDAOBenchmark)} & \textbf{Tempo Medio (ms/op)} & \textbf{CPU Energy (J)} & \textbf{Avg Power (W)} & \textbf{Core Energy (J)} & \textbf{CPU Media (\%)} & \textbf{CPU Picco (\%)} & \textbf{RAM Media (GB)} & \textbf{RAM Picco (GB)} \\ \hline
-\texttt{benchmarkAddOrdineValid} & 13,5605 & 90,12 & 15,51 & 2,88 & 27,30 & 45,04 & 25,79 & 25,85 \\
-\texttt{benchmarkGetOrdineByIdInvalid} & 0,0009 & 93,15 & 16,03 & 2,48 & 22,74 & 33,03 & 25,96 & 26,09 \\
-\texttt{benchmarkGetOrdineByIdValid} & 1,0374 & 93,99 & 16,75 & 1,27 & 32,79 & 58,56 & 25,86 & 25,93 \\
-\texttt{benchmarkGetOrdiniByUtenteInvalid} & 0,0009 & 100,47 & 17,29 & 1,55 & 25,60 & 58,93 & 26,07 & 26,41 \\
-\texttt{benchmarkGetOrdiniByUtenteValid} & 41,3830 & 88,68 & 15,26 & 3,08 & 22,76 & 32,91 & 25,98 & 26,08 \\
-\texttt{benchmarkGetProdottoOrdineInvalid} & 0,0009 & 93,50 & 16,67 & 3,45 & 28,11 & 48,83 & 26,10 & 26,23 \\
-\texttt{benchmarkGetProdottoOrdineValid} & 14,9318 & 88,19 & 15,72 & 5,31 & 25,38 & 56,27 & 25,94 & 26,03 \\ \hline
-\end{tabular}
-}
-\caption{Risultati temporali ed energetici per la classe OrdineDAOBenchmark.}
-\label{tab:jmh_results_ordine}
-\end{table}
-
-\subsubsection{Risultati Sperimentali dei Benchmark Post-Refactoring}
-
-Al fine di verificare quantitativamente il guadagno prestazionale ed energetico ottenuto in seguito alle attività di refactoring, la suite di microbenchmark JMH + EnergiBridge è stata eseguita con successo sul sistema ottimizzato sul branch sse-improvements. 
-
-I risultati reali registrati consentono di confrontare sia i tempi medi per operazione (\textit{Average Time} espresso in ms/op) sia il consumo energetico cumulativo della CPU (\textit{CPU Energy} in Joule) registrato durante l'esecuzione controllata. Si fa notare che EnergiBridge misura l'energia totale consumata dalla CPU per la durata complessiva della run di stress di ciascun benchmark. Di conseguenza, nei metodi ad altissima ottimizzazione (come \texttt{getOrdiniByUtenteValid} o \texttt{getProdottoByIdValid}), il crollo drammatico del tempo di esecuzione determina un aumento altrettanto drastico del \textit{throughput} (numero di operazioni completate al secondo). Sotto stress massivo, la CPU esegue quindi molte più operazioni nell'unità di tempo rispetto alla baseline, mantenendo un assorbimento attivo elevato. Tuttavia, dividendo il consumo energetico totale per il numero di operazioni eseguite, l'energia consumata per singola transazione (\textit{Joules per operation}) si abbatte in modo esponenziale, portando a una reattività estrema ed a un risparmio netto sul server per transazione.
-
-Nelle tabelle seguenti viene presentato il confronto dettagliato delle metriche reali prima (baseline) e dopo il refactoring (sse-improvements).
-
-\subsubsection{1. Analisi Comparativa: OrdineDAOBenchmark}
-
-La Tabella~\ref{tab:jmh_comparison_ordine} riporta il confronto per la classe \texttt{OrdineDAOBenchmark}.
-
-\begin{table}[h!]
-\centering
-\renewcommand{\arraystretch}{1.3}
-\resizebox{\textwidth}{!}{
-\begin{tabular}{|l|c|c|r|c|c|r|}
-\hline
-\textbf{Metodo di Benchmark} & \textbf{Tempo Base (ms)} & \textbf{Tempo Post (ms)} & \textbf{Var. Tempo} & \textbf{Energia Base (J)} & \textbf{Energia Post (J)} & \textbf{Var. Energia} \\ \hline
-\texttt{benchmarkAddOrdineValid} & 13,5605 & 13,1136 & -3,30\% & 90,12 & 87,14 & -3,31\% \\ \hline
-\texttt{benchmarkCarrelloOperations} & 0,0000 & 0,0000 & N/A & 88,49 & 84,40 & -4,62\% \\ \hline
-\texttt{benchmarkGetOrdineByIdInvalid} & 0,0009 & 0,0007 & -22.22\% & 93,15 & 87,30 & -6,28\% \\ \hline
-\texttt{benchmarkGetOrdineByIdValid} & 1,0374 & 1,0376 & +0,02\% & 93,99 & 86,78 & -7,67\% \\ \hline
-\texttt{benchmarkGetOrdiniByUtenteInvalid} & 0,0009 & 0,0008 & -11,11\% & 100,47 & 93,48 & -6,96\% \\ \hline
-\textbf{\texttt{benchmarkGetOrdiniByUtenteValid}} & \textbf{41,3830} & \textbf{1,0195} & \textbf{-97,54\%} & \textbf{88,68} & \textbf{96,11} & \textbf{+8,38\%} \\ \hline
-\texttt{benchmarkGetProdottoOrdineInvalid} & 0,0009 & 0,0008 & -11,11\% & 93,50 & 88,88 & -4,94\% \\ \hline
-\texttt{benchmarkGetProdottoOrdineValid} & 14,9318 & 15,1640 & +1,56\% & 88,19 & 88,58 & +0,44\% \\ \hline
-\end{tabular}
-}
-\caption{Confronto temporale ed energetico per la classe OrdineDAOBenchmark.}
-\label{tab:jmh_comparison_ordine}
-\end{table}
-
-Il metodo principale \texttt{getOrdiniByUtenteValid} registra un abbattimento del tempo medio di esecuzione da $41{,}38$ ms/op a $1{,}01$ ms/op, pari a un **guadagno prestazionale del 97,54\%**. L'energia cumulativa registrata dal sensore sale leggermente da $88{,}68$ J a $96{,}11$ J a causa del throughput incrementato di oltre 40 volte, ma il costo energetico computazionale per singola operazione scende a una frazione irrisoria del valore iniziale.
-
-\subsubsection{2. Analisi Comparativa: ProdottoDAOBenchmark}
-
-La Tabella~\ref{tab:jmh_comparison_prodotto} riporta il confronto per la classe \texttt{ProdottoDAOBenchmark}.
+Al fine di verificare quantitativamente il guadagno prestazionale ed energetico ottenuto in seguito alle attività di refactoring, la suite è stata eseguita su entrambi i branch (\texttt{main} per la baseline e \texttt{sse-improvements} per la versione ottimizzata). Nelle tabelle seguenti viene presentato il confronto dettagliato delle metriche reali per ciascun DAO, evidenziando le variazioni percentuali del refactoring.
 
 \begin{table}[h!]
 \centering
@@ -213,16 +112,6 @@ La Tabella~\ref{tab:jmh_comparison_prodotto} riporta il confronto per la classe 
 \label{tab:jmh_comparison_prodotto}
 \end{table}
 
-I risultati reali evidenziano che:
-\begin{itemize}
-    \item \textbf{\texttt{benchmarkGetProdottoByIdValid}} riduce il tempo medio di esecuzione del **79,90%** (da $19{,}18$ ms/op a $3{,}85$ ms/op) grazie all'esplicitazione delle colonne nella query, diminuendo l'overhead di mapping in memoria RAM.
-    \item \textbf{\texttt{benchmarkAggiungiSpecifiche}} riduce il tempo di esecuzione del **45,96%** (da $23{,}64$ ms/op a $12{,}78$ ms/op) grazie all'adozione del JDBC Batching che ottimizza i roundtrip e l'attesa di I/O.
-\end{itemize}
-
-\subsubsection{3. Analisi Comparativa: RecensioneDAOBenchmark}
-
-La Tabella~\ref{tab:jmh_comparison_recensione} riporta il confronto per la classe \texttt{RecensioneDAOBenchmark}.
-
 \begin{table}[h!]
 \centering
 \renewcommand{\arraystretch}{1.3}
@@ -243,133 +132,86 @@ La Tabella~\ref{tab:jmh_comparison_recensione} riporta il confronto per la class
 \label{tab:jmh_comparison_recensione}
 \end{table}
 
-I metodi critici per la lettura delle recensioni (\texttt{getRecensioniByProdottoValid} e \texttt{getRecensioniByUtenteValid}) evidenziano entrambi un **abbattimento del tempo superiore al 92%** (scendendo da circa $15$ ms/op a circa $1{,}0$ ms/op). L'energia cumulativa per la run di benchmark rimane pressoché costante o ridotta (fino a **-4,76%**), confermando l'efficienza della rimozione delle JOIN superflue e del raddoppio della velocità elaborativa globale.
+\begin{table}[h!]
+\centering
+\renewcommand{\arraystretch}{1.3}
+\resizebox{\textwidth}{!}{
+\begin{tabular}{|l|c|c|r|c|c|r|}
+\hline
+\textbf{Metodo di Benchmark} & \textbf{Tempo Base (ms)} & \textbf{Tempo Post (ms)} & \textbf{Var. Tempo} & \textbf{Energia Base (J)} & \textbf{Energia Post (J)} & \textbf{Var. Energia} \\ \hline
+\texttt{benchmarkAddOrdineValid} & 13,5605 & 13,1136 & -3,30\% & 90,12 & 87,14 & -3,31\% \\ \hline
+\texttt{benchmarkCarrelloOperations} & 0,0000 & 0,0000 & N/A & 88,49 & 84,40 & -4,62\% \\ \hline
+\texttt{benchmarkGetOrdineByIdInvalid} & 0,0009 & 0,0007 & -22.22\% & 93,15 & 87,30 & -6,28\% \\ \hline
+\texttt{benchmarkGetOrdineByIdValid} & 1,0374 & 1,0376 & +0,02\% & 93,99 & 86,78 & -7,67\% \\ \hline
+\texttt{benchmarkGetOrdiniByUtenteInvalid} & 0,0009 & 0,0008 & -11,11\% & 100,47 & 93,48 & -6,96\% \\ \hline
+\textbf{\texttt{benchmarkGetOrdiniByUtenteValid}} & \textbf{41,3830} & \textbf{1,0195} & \textbf{-97,54\%} & \textbf{88,68} & \textbf{96,11} & \textbf{+8,38\%} \\ \hline
+\texttt{benchmarkGetProdottoOrdineInvalid} & 0,0009 & 0,0008 & -11,11\% & 93,50 & 88,88 & -4,94\% \\ \hline
+\texttt{benchmarkGetProdottoOrdineValid} & 14,9318 & 15,1640 & +1,56\% & 88,19 & 88,58 & +0,44\% \\ \hline
+\end{tabular}
+}
+\caption{Confronto temporale ed energetico per la classe OrdineDAOBenchmark.}
+\label{tab:jmh_comparison_ordine}
+\end{table}
+
+\paragraph{Considerazioni sulle Migliorie apportate ai DAO}
+\begin{itemize}
+    \item \textbf{ProdottoDAO:} Il refactoring ha prodotto impatti significativi sia in lettura che in scrittura. L'esplicitazione delle colonne nella proiezione SQL in \texttt{benchmarkGetProdottoByIdValid} ha ridotto il tempo medio di esecuzione del \textbf{79,90\%} (da 19,18 ms a 3,85 ms), limitando l'overhead di mapping in memoria RAM. In scrittura, l'adozione del JDBC Batching in \texttt{benchmarkAggiungiSpecifiche} ha abbattuto i roundtrip di rete e l'attesa I/O, riducendo il tempo del \textbf{45,96\%} (da 23,64 ms a 12,78 ms).
+    \item \textbf{RecensioneDAO:} I metodi critici per la lettura delle recensioni (\texttt{benchmarkGetRecensioniByProdottoValid} e \texttt{benchmarkGetRecensioniByUtenteValid}) evidenziano entrambi un drastico abbattimento del tempo superiore al \textbf{92\%} (scendendo da circa 15,0 ms a 1,0 ms). L'energia cumulativa assorbita per la run di benchmark si è ridotta fino al \textbf{-4,76\%}, confermando la notevole efficienza derivata dalla rimozione delle JOIN superflue e dalle proiezioni mirate che hanno decuplicato la velocità elaborativa globale del componente.
+    \item \textbf{OrdineDAO:} La risoluzione del problema delle query N+1 nel metodo \texttt{benchmarkGetOrdiniByUtenteValid} ha portato al risultato più eclatante, registrando un guadagno prestazionale del \textbf{97,54\%} con il tempo di esecuzione crollato da 41,38 ms a soli 1,02 ms. Sebbene l'energia cumulativa registrata da EnergiBridge nel periodo di test sia salita leggermente (da 88,68 J a 96,11 J) a causa dell'incremento drastico del throughput (oltre 40 volte più operazioni eseguite a parità di tempo sotto stress massivo), dividendo l'energia per il numero di operazioni completate, il costo energetico per singola transazione si abbatte in modo esponenziale.
+\end{itemize}
 
 \subsection{System Level Performance Testing (JMeter + EnergiBridge)}
 
 Al fine di garantire l'attendibilità delle rilevazioni, ho sottoposto il sistema a un carico di lavoro deterministico, riproducibile e costante, permettendo così una correlazione univoca tra le risorse computazionali impiegate e l'energia effettivamente assorbita. A tale scopo, ho utilizzato \textbf{Apache JMeter} per orchestrare simulazioni massive di traffico utente, eseguendo uno script \texttt{.jmx} in modalità \textit{non-GUI}. Questo script definisce il comportamento simultaneo delle azioni effettuate da ogni utente virtuale durante la simulazione, costringendo l'applicazione a reagire a un flusso di carico realistico. La tracciatura sincronizzata di tali eventi, combinata con l'uso del profilatore energetico \textit{EnergiBridge}, rappresenta la base della mia analisi di sostenibilità del sistema. L'architettura concettuale script \texttt{.jmx} è suddivisa dai seguenti componenti:
 
-\subsubsection{Astrazione del Contesto di Rete (Test Plan)}
-Il livello fondamentale del piano di test definisce la configurazione globale della simulazione. Per garantire flessibilità, ho adottato un approccio basato sull'uso intensivo di variabili globali per la gestione delle coordinate di rete, quali l'indirizzo dell'host, la porta e il contesto dell'applicazione. Questa astrazione disaccoppia la logica del test dallo specifico ambiente di esecuzione, consentendo di orientare la simulazione verso ambienti di \textit{staging} o di produzione in modo immediato e senza la necessità di modificare la struttura dello script.
-
-\subsubsection{Orchestrazione della Concorrenza (Thread Group)}
-La simulazione del traffico è governata da un gestore della concorrenza che istanzia gli utenti virtuali fino a raggiungere il target predefinito. Per evitare che i thread aggrediscano simultaneamente il sistema generando picchi artificiali e non rappresentativi del traffico organico, ho introdotto un periodo di \textit{ramp-up}. Questo meccanismo distribuisce linearmente le inizializzazioni degli utenti lungo una finestra temporale controllata, portando gradualmente il carico fino al picco desiderato; tale massimo viene poi mantenuto costante per una durata sufficiente a garantire una campionatura delle metriche statisticamente rilevante.
-
-\subsubsection{Mantenimento dello Stato e dell'Isolamento (Session Management)}
-Affinché un utente virtuale possa compiere un percorso navigazionale coerente, ho configurato il sistema per emulare il comportamento di un \textit{browser} reale nel mantenimento dello stato. A tale scopo, la simulazione intercetta e conserva i \textit{cookie} di sessione generati dal server (quali il \texttt{JSESSIONID}). Un aspetto cruciale di questa architettura è la garanzia di isolamento tra le iterazioni: ogni volta che un utente virtuale ricomincia il proprio ciclo, il relativo contesto viene azzerato. Questo meccanismo di pulizia assicura che le singole esecuzioni non subiscano interferenze dovute a \textit{cache} o \textit{cookie} persistenti ereditati dai cicli precedenti.
-
-\subsubsection{Campionamento delle Interazioni (HTTP Samplers)}
-Il nucleo operativo della simulazione è costituito dagli HTTP Samplers, che replicano fedelmente le richieste HTTP previste dallo \textit{User Journey}. Nel mio framework ho distinto due tipologie primarie di interazioni:
-
 \begin{itemize}
-\item \textbf{Lettura Informativa (GET)}: Operazioni finalizzate al recupero dei dati, tipiche dell'esplorazione del catalogo o della visualizzazione dei profili. Queste richieste impegnano la rete e le risorse computazionali per l'interrogazione del database, senza comportare alterazioni persistenti dello stato.
-\item \textbf{Mutazione di Stato (POST)}: Operazioni transazionali, come la registrazione dell'utente o il checkout. Un dettaglio ingegneristico essenziale che ho implementato in questa fase è l'introduzione dell'entropia. Al fine di evitare violazioni dei vincoli di unicità sul database durante la generazione simultanea del carico, ho configurato l'iniezione di stringhe pseudo-casuali per produrre dinamicamente indirizzi email e parametri univoci, scongiurando così collisioni deterministiche tra i thread.
+	\item \textbf{Astrazione del Contesto di Rete (Test Plan)}: Il livello fondamentale del piano di test definisce la configurazione globale della simulazione. Per garantire flessibilità, ho adottato un approccio basato sull'uso intensivo di variabili globali per la gestione delle coordinate di rete, quali l'indirizzo dell'host, la porta e il contesto dell'applicazione. Questa astrazione disaccoppia la logica del test dallo specifico ambiente di esecuzione, consentendo di orientare la simulazione verso ambienti di \textit{staging} o di produzione in modo immediato e senza la necessità di modificare la struttura dello script.
+
+	\item \textbf{Orchestrazione della Concorrenza (Thread Group)}: La simulazione del traffico è governata da un gestore della concorrenza che istanzia gli utenti virtuali fino a raggiungere il target predefinito. Per evitare che i thread aggrediscano simultaneamente il sistema generando picchi artificiali e non rappresentativi del traffico organico, ho introdotto un periodo di \textit{ramp-up}. Questo meccanismo distribuisce linearmente le inizializzazioni degli utenti lungo una finestra temporale controllata, portando gradualmente il carico fino al picco desiderato; tale massimo viene poi mantenuto costante per una durata sufficiente a garantire una campionatura delle metriche statisticamente rilevante.
+
+	\item \textbf{Mantenimento dello Stato e dell'Isolamento (Session Management)}: Affinché un utente virtuale possa compiere un percorso navigazionale coerente, ho configurato il sistema per emulare il comportamento di un \textit{browser} reale nel mantenimento dello stato. A tale scopo, la simulazione intercetta e conserva i \textit{cookie} di sessione generati dal server (quali il \texttt{JSESSIONID}). Un aspetto cruciale di questa architettura è la garanzia di isolamento tra le iterazioni: ogni volta che un utente virtuale ricomincia il proprio ciclo, il relativo contesto viene azzerato. Questo meccanismo di pulizia assicura che le singole esecuzioni non subiscano interferenze dovute a \textit{cache} o \textit{cookie} persistenti ereditati dai cicli precedenti.
+
+	\item \textbf{Campionamento delle Interazioni (HTTP Samplers)}: Il nucleo operativo della simulazione è costituito dagli HTTP Samplers, che replicano fedelmente le richieste HTTP previste dallo \textit{User Journey}. Nel mio framework ho distinto due tipologie primarie di interazioni:
+	\begin{itemize}
+		\item \textbf{Lettura Informativa (GET)}: Operazioni finalizzate al recupero dei dati, tipiche dell'esplorazione del catalogo o della visualizzazione dei profili. Queste richieste impegnano la rete e le risorse computazionali per l'interrogazione del database, senza comportare alterazioni persistenti dello stato.
+		\item \textbf{Mutazione di Stato (POST)}: Operazioni transazionali, come la registrazione dell'utente o il checkout. Un dettaglio ingegneristico essenziale che ho implementato in questa fase è l'introduzione dell'entropia. Al fine di evitare violazioni dei vincoli di unicità sul database durante la generazione simultanea del carico, ho configurato l'iniezione di stringhe pseudo-casuali per produrre dinamicamente indirizzi email e parametri univoci, scongiurando così collisioni deterministiche tra i thread.
+	\end{itemize}
 \end{itemize}
 
-Per valutare l'efficacia del refactoring, il comportamento energetico del sistema viene monitorato tramite \textbf{EnergiBridge} durante l'esecuzione degli scenari di carico orchestrati da \textbf{JMeter}. L'analisi comparativa si articola nel confronto tra i dati rilevati sul \textit{branch} \texttt{baseline} (sistema pre-intervento) e quelli ottenuti sul \textit{branch} \texttt{sse-improvements} (sistema ottimizzato). Tale metodologia consente di quantificare in modo oggettivo la riduzione del consumo energetico derivante dalle strategie di refactoring implementate.
+\subsubsection{Simulazione del Flusso Utente (User Journey e Servlet Coinvolte)}
 
-\subsubsection{Metriche di Sostenibilità Estrapolate}
-
-Le metriche chiave estratte ed elaborate dai file CSV di EnergiBridge sono strutturate nella Tabella~\ref{tab:metriche_energia}.
-
-\begin{table}[h]
-    \centering
-    \renewcommand{\arraystretch}{1.5}
-    \begin{tabular}{|p{0.25\textwidth}|p{0.55\textwidth}|p{0.15\textwidth}|}
-        \hline
-        \textbf{Metrica di Sostenibilità} & \textbf{Descrizione Analitica e Impatto Ecologico} & \textbf{Unità di Misura} \\ \hline
-        Energia CPU Package & Assorbimento energetico totale del processore durante l'esecuzione (inclusi core, cache L2/L3 e controller integrati). Indica il ``costo netto'' dell'operazione. & Joules (J) \\ \hline
-        Potenza Media CPU Package & Il tasso medio di consumo energetico nel tempo (Energia/Tempo). Un abbassamento indica un codice che permette al processore di operare in stati di risparmio energetico (C-states). & Watt (W) \\ \hline
-        Energia PPO (Core) & Consumo limitato ai soli core elaborativi, escludendo la porzione ``uncore'' (es. GPU integrata). È l'indicatore più diretto dell'efficienza algoritmica. & Joules (J) \\ \hline
-        CPU Usage (Media e Picco) & La percentuale di cicli di clock effettivamente impegnati. Picchi anomali o un uso medio costantemente elevato indicano inefficienze asintotiche o attese attive (spin-locks). & Percentuale (\%) \\ \hline
-        Frequenza Media CPU & La velocità di clock mantenuta dal processore. Algoritmi ottimizzati permettono l'esecuzione a frequenze inferiori, riducendo esponenzialmente la tensione applicata e il calore dissipato. & MHz \\ \hline
-        Memoria RAM Usata (Media e Picco) & L'impronta allocata nel sistema. In un ambiente basato su Java Virtual Machine (JVM) come 2Chance, il contenimento della memoria è cruciale per evitare cicli dispendiosi di Garbage Collection. & MB/GB \\ \hline
-    \end{tabular}
-    \caption{Metriche di sostenibilità hardware campionate.}
-    \label{tab:metriche_energia}
-\end{table}
-
-\subsubsection{Servlet Coinvolte e Progettazione degli Scenari}
-
-La strategia di simulazione si focalizza esclusivamente sulle \textit{servlet} destinate agli utenti finali. Tale approccio garantisce che l'individuazione di inefficienze e \textit{bottleneck} architetturali avvenga su carichi di lavoro realistici, permettendo di identificare eventuali degradazioni non lineari, come \textit{esplosioni combinatorie} di calcolo o \textit{query} inefficienti, che comprometterebbero la sostenibilità del sistema sotto stress. Sono state deliberatamente escluse le \textit{servlet} di amministrazione (\texttt{/AdminServlet/*} e \texttt{/InitServlet}), poiché, essendo accessibili a un'utenza privilegiata e numericamente limitata, non risultano soggette a traffico massivo o continuativo.
-
-Di seguito, le \textit{servlet} sottoposte a stress test, categorizzate per area funzionale:
-
-\begin{itemize}
-    \item \textbf{Navigazione e Catalogo (Lettura intensiva):}
-    \begin{itemize}
-        \item \texttt{/landingpage}: Carica la homepage e la vetrina iniziale.
-        \item \texttt{/ProdottiPerCategoriaServlet}: Filtra e mostra i prodotti in base alla categoria.
-        \item \texttt{/ProdottoServlet}: Mostra la pagina di dettaglio di un singolo articolo.
-        \item \texttt{/RicercaServlet}: Gestisce la barra di ricerca globale del catalogo.
-    \end{itemize}
-    \item \textbf{Autenticazione e Profilo (Transazionali/Lettura):}
-    \begin{itemize}
-        \item \texttt{/LoginServlet}: Gestisce il login degli utenti.
-        \item \texttt{/RegistrazioneServlet/*}: Gestisce la creazione degli account per i nuovi utenti.
-        \item \texttt{/logoutServlet}: Invalida la sessione utente in corso.
-        \item \texttt{/UtenteServlet}: Mostra la pagina del profilo utente.
-    \end{itemize}
-    \item \textbf{E-commerce: Carrello e Ordini (Transazionali):}
-    \begin{itemize}
-        \item \texttt{/AggiungiCarrelloServlet}: Aggiunge un nuovo articolo al carrello dell'utente autenticato.
-        \item \texttt{/EditCarrello}: Modifica le quantità degli articoli nel carrello.
-        \item \texttt{/CheckOutServlet}: Finalizza l'acquisto ed pubblica l'ordine sul database.
-    \end{itemize}
-    \item \textbf{Social e Funzionalità Aggiuntive:}
-    \begin{itemize}
-        \item \texttt{/WishlistServlet}: Gestisce la lista dei desideri dell'utente autenticato.
-        \item \texttt{/ConfrontaServlet}: Permette il confronto tra le caratteristiche tecniche di vari prodotti.
-        \item \texttt{/RecensioniServlet/*}: Gestisce l'inserimento e la lettura delle recensioni.
-    \end{itemize}
-\end{itemize}
-
-\subsubsection{Simulazione del Flusso Utente (User Journey)}
-
-Per orchestrare simulazioni di \textit{load, spike, soak testing} verosimili, è stato modellato un tipico percorso d'uso, o \textit{User Journey}, in grado di sollecitare orizzontalmente l'applicazione. Il flusso utente simulato segue una catena causale sequenziale di interazioni \textit{client-server}:
+La strategia di simulazione si focalizza esclusivamente sulle \textit{servlet} destinate agli utenti finali, escludendo deliberatamente quelle di amministrazione (\texttt{/AdminServlet/*} e \texttt{/InitServlet}) in quanto non soggette a traffico massivo o continuativo. Tale approccio garantisce che l'individuazione di inefficienze e \textit{bottleneck} architetturali avvenga su carichi di lavoro realistici. Per orchestrare simulazioni di \textit{load, spike, soak testing} attendibili, è stato modellato uno user journey all'interno dello script \texttt{.jmx} in grado di sollecitare l'applicazione seguendo una complessa catena causale di interazioni \textit{client-server}, coinvolgendo progressivamente tutte le aree funzionali dell'applicazione miscelando operazioni transazionali e di lettura intensiva.
 
 \begin{enumerate}
-    \item L'utente si iscrive alla \textit{web application} (\texttt{/RegistrazioneServlet/*}).
-    \item Approda sulla vetrina principale del portale (\texttt{/landingpage}).
-    \item Accede alla propria area riservata per gestire l'account (\texttt{/UtenteServlet}).
-    \item Esplora il catalogo visualizzando i prodotti per categoria (\texttt{/ProdottiPerCategoriaServlet}).
-    \item Analizza i dettagli di uno specifico prodotto di interesse (\texttt{/ProdottoServlet}).
-    \item Inserisce il prodotto nella propria lista dei desideri (\texttt{/WishlistServlet}).
-    \item Effettua una ricerca mirata per trovare un altro prodotto specifico (\texttt{/RicercaServlet}).
-    \item Accede alla pagina del nuovo prodotto cercato (\texttt{/ProdottoServlet}).
-    \item Esegue un confronto tecnico tra il nuovo prodotto e quello salvato in precedenza nella \textit{wishlist} (\texttt{/ConfrontaServlet}).
-    \item Aggiunge al carrello il prodotto ritenuto più adeguato (\texttt{/AggiungiCarrelloServlet}).
-    \item Modifica il carrello per incrementare le quantità di acquisto (\texttt{/EditCarrello}).
-    \item Finalizza la transazione d'acquisto (\texttt{/CheckOutServlet}).
-    \item Accede alla sezione recensioni e pubblica un feedback sull'articolo acquistato (\texttt{/RecensioniServlet/*}).
-    \item Termina la sessione per uscire dal proprio account (\texttt{/logoutServlet}).
-    \item L'utente si riautentica (\texttt{/LoginServlet}).
-    \item Approda nuovamente sulla vetrina principale del portale (\texttt{/landingpage}).
+    \item \textbf{Registrazione e Accesso (Transazionale):} L'utente virtuale avvia la propria sessione iscrivendosi alla piattaforma tramite le operazioni di \texttt{/RegistrazioneServlet/*}. Questa fase genera entropia nel database creando account univoci.
+    \item \textbf{Esplorazione Vetrina (Lettura intensiva):} Subito dopo l'autenticazione implicita, l'utente approda sulla vetrina principale del portale, sollecitando la \texttt{/landingpage} per il caricamento dei prodotti in evidenza.
+    \item \textbf{Gestione del Profilo (Lettura/Transazionale):} L'utente accede alla propria area riservata per gestire e confermare i dettagli dell'account, invocando la \texttt{/UtenteServlet}.
+    \item \textbf{Esplorazione del Catalogo (Lettura intensiva):} Inizia la fase di navigazione vera e propria. L'utente filtra e sfoglia gli articoli per categoria attraverso la \texttt{/ProdottiPerCategoriaServlet}.
+    \item \textbf{Visualizzazione Dettagliata (Lettura intensiva):} Incuriosito da un articolo, ne analizza i dettagli tecnici completi accedendo alla \texttt{/ProdottoServlet}.
+    \item \textbf{Salvataggio in Lista Desideri (Transazionale):} L'utente decide di mettere da parte il prodotto aggiungendolo alla propria lista personale tramite la \texttt{/WishlistServlet}.
+    \item \textbf{Ricerca Mirata (Lettura intensiva):} Per trovare un articolo alternativo, l'utente interroga la barra di ricerca globale del catalogo, azionando la \texttt{/RicercaServlet}.
+    \item \textbf{Valutazione dell'Alternativa (Lettura intensiva):} Accede alla pagina del nuovo prodotto cercato interrogando nuovamente la \texttt{/ProdottoServlet}.
+    \item \textbf{Confronto Tecnico (Lettura intensiva):} L'utente richiede un confronto incrociato delle specifiche tecniche tra il nuovo prodotto e quello salvato nella wishlist, eseguendo una chiamata complessa alla \texttt{/ConfrontaServlet}.
+    \item \textbf{Aggiunta al Carrello (Transazionale):} Selezionato il prodotto più adeguato, lo aggiunge al proprio carrello personale sfruttando la \texttt{/AggiungiCarrelloServlet}.
+    \item \textbf{Modifica delle Quantità (Transazionale):} L'utente aggiorna il carrello incrementando le quantità di acquisto attraverso la \texttt{/EditCarrello}.
+    \item \textbf{Checkout e Finalizzazione (Transazionale):} La fase \textit{core} dell'e-commerce si conclude con l'invocazione della \texttt{/CheckOutServlet}, che finalizza il pagamento fittizio e registra permanentemente l'ordine sul database relazionale.
+    \item \textbf{Interazione Sociale (Transazionale):} A transazione conclusa, l'utente accede alla sezione recensioni e pubblica un feedback testuale e valutativo sull'articolo acquistato utilizzando le funzionalità di \texttt{/RecensioniServlet/*}.
+    \item \textbf{Termine Sessione (Transazionale):} Il ciclo si chiude temporaneamente con l'invalidazione dei cookie e del contesto utente tramite la \texttt{/logoutServlet}.
+    \item \textbf{Riautenticazione (Transazionale):} L'utente accede nuovamente al portale immettendo le credenziali tramite la \texttt{/LoginServlet}.
+    \item \textbf{Ritorno alla Vetrina (Lettura intensiva):} L'utente riapproda infine sulla vetrina principale (\texttt{/landingpage}) pronto per un nuovo ciclo potenziale.
 \end{enumerate}
 
-\subsubsection{Step-Up Testing e Definizione delle Soglie di Accettabilità}
+\subsection{Step-Up Testing e Definizione delle Soglie di Accettabilità}
 
 \paragraph{Esperimento di Stress Preventivo}
 Prima della simulazione formale, ho eseguito un'analisi preliminare, definita \textit{Step-Up Testing}, con l'obiettivo di individuare il limite di tenuta dell'esecuzione dell'applicazione nell'infrastruttura ospitante. Questa valutazione si è resa necessaria per determinare il carico di lavoro ottimale da applicare durante le successive sessioni di \textit{load}, \textit{spike} e \textit{soak testing}. A tale scopo, ho incrementato linearmente il traffico di utenti partendo da $1$ fino a $120$ utenti concorrenti in un intervallo temporale di $10$ minuti, monitorando costantemente le metriche di latenza tramite \textit{JMeter} e la stabilità dei container \textit{Docker}.
 
-Quali sono le prossime fasi della validazione architetturale che intende documentare in seguito a questo test di carico?
-
 L'analisi dei risultati reali dello Step-Up ha evidenziato il seguente comportamento dinamico:
 \begin{itemize}
-    \item \textbf{Fase di Esecuzione Nominale (1-32 utenti):} La curva dei tempi di risposta si mantiene entro la soglia di accettabilità ($< 1200$ ms). Il tempo medio di risposta è di appena 269ms a 8 utenti, salendo gradualmente a 1145ms a 32 utenti concorrenti, con un tasso di errore pari allo 0.00\%. Il throughput cresce regolarmente fino a un picco di 33.4 richieste al secondo a 20 utenti, per poi assestarsi intorno alle 24.5 richieste al secondo a 32 utenti.
-    \item \textbf{Punto di Saturazione e Degradazione (38-80 utenti):} Oltre i 32 utenti, il sistema viola lo SLA di latenza prestabilito. A 38 utenti la latenza media sale a 1480ms (throughput 23.8/s). All'aumentare degli utenti la latenza sale progressivamente, raggiungendo i 2553ms a 80 utenti concorrenti (throughput di 30.1/s), sebbene il tasso di errore rimanga ancora dello 0.00\%.
-    \item \textbf{Punto di Rottura ($> 80$ utenti):} A 86 utenti concorrenti si registrano le prime anomalie con un tasso di errore dell'8.05\% (54 fallimenti) e una latenza media di 3347ms. Oltre questa soglia, al raggiungimento dei 92 utenti concorrenti, il tasso di errore sale drasticamente al 58.62\% con una latenza media di 7008ms, fino a concludere il test a 120 utenti con un tasso di errore del 70.60\% e oltre 8.4 secondi di latenza media, a causa della saturazione delle connessioni nel pool (\texttt{maxActive = 50}) e del timeout in coda.
+    \item \textbf{Fase di Esecuzione Nominale (1-32 utenti):} La curva dei tempi di risposta si mantiene entro la soglia di accettabilità ($< 1200$ ms). Il tempo medio di risposta è di appena 269ms a 8 utenti, salendo gradualmente a 1145ms a 32 utenti concorrenti, con un tasso di errore pari allo 0.00\%. Il throughput cresce regolarmente fino a un picco di 33.4 richieste al secondo a 20 utenti, per poi assestarsi intorno alle 24.5 richieste al secondo a 32 utenti. Sulla base di questi dati empirici, la capacità nominale massima gestibile in stabilità ($C$) per la configurazione attuale è stata impostata proprio a \textbf{32 utenti concorrenti}. Questo valore garantisce la responsività del sistema e il rispetto degli SLA prima che si inneschi il degrado indotto dal queuing nel connection pool.
+    \item \textbf{Punto di Saturazione e Degradazione (38-80 utenti):} Oltre i 32 utenti, si innesca un degrado non lineare delle prestazioni causato dalla parziale saturazione del pool di connessioni del database, gestito dalla classe \texttt{ConPool} con limite massimo di 50 slot attivi (\texttt{setMaxActive(50)}). A 38 utenti la latenza media sale a 1480ms (violando lo SLA), crescendo progressivamente fino a 2553ms a 80 utenti concorrenti. Teoricamente ci si potrebbe attendere l'insorgenza di anomalie superati i 50 utenti, ma i dati empirici mostrano un tasso di errore dello 0.00\% fino a 80. Questo scostamento tecnico si spiega col fatto che i thread di \textit{JMeter} non richiedono l'accesso al database in modo perfettamente simultaneo, ritardati dalle latenze di rete, dai tempi di CPU e dai passi dello \textit{User Journey} che non interrogano la persistenza.
+    \item \textbf{Punto di Rottura ($> 80$ utenti):} Il crollo strutturale si verifica a 86 utenti concorrenti, dove la frequenza di richieste simultanee supera stabilmente la capacità dei 50 canali del \texttt{ConPool}. I job in eccesso accumulati in coda attendono una connessione libera per un tempo superiore al parametro di \texttt{maxWait} ($10.000$ ms), generando inevitabili timeout. Questo fenomeno si traduce in un tasso di errore dell'8.05\% a 86 utenti (54 fallimenti, latenza media 3347ms), che scatta drasticamente al 58.62\% a 92 utenti (latenza 7008ms), concludendo il test a 120 utenti con il 70.60\% di errori (8.4 secondi di latenza). Tale collo di bottiglia costringe la CPU del server a una dispendiosa condizione di \textit{active waiting} e continue ritrasmissioni, penalizzando gravemente sia la reattività sia l'efficienza energetica dell'infrastruttura.
 \end{itemize}
-
-\paragraph{Analisi del Collo di Bottiglia sotto Carico Elevato}
-Durante lo \textit{Step-Up Testing}, ho osservato che l'applicazione mantiene un'ottima stabilità e tempi di risposta inferiori allo SLA di $1200$ ms fino a $32$ utenti concorrenti. Oltre questa soglia, si innesca un degrado non lineare delle prestazioni causato dalla saturazione del pool di connessioni del database, gestito dalla classe \texttt{ConPool} con un limite massimo di $50$ slot attivi (\texttt{setMaxActive(50)}).
-
-Teoricamente ci si potrebbe attendere l'insorgenza di anomalie non appena il carico supera le $50$ unità concorrenti. Tuttavia, i dati empirici mostrano un tasso di errore dello $0.00\%$ fino a $80$ utenti. Questo scostamento si spiega con il fatto che i thread di \textit{JMeter} non richiedono l'accesso al database in modo perfettamente simultaneo, a causa delle latenze di rete, dei tempi di calcolo della CPU e della presenza di passi dello \textit{User Journey} che non interrogano la persistenza.
-
-Il crollo strutturale si verifica quando il carico raggiunge gli $86$ utenti concorrenti: la frequenza di richieste simultanee supera stabilmente la capacità dei $50$ canali disponibili. Di conseguenza, i job in eccesso accumulati in coda attendono una connessione libera per un tempo superiore al parametro di \texttt{maxWait} ($10.000$ ms), generando inevitabili timeout. Questo fenomeno si traduce in un tasso di errore dell'$8.05\%$ a $86$ utenti, che scatta drasticamente al $58.62\%$ a $92$ utenti. Tale collo di bottiglia costringe la CPU del server a una condizione di \textit{active waiting} e a continue ritrasmissioni, penalizzando gravemente sia la reattività del sistema sia l'efficienza energetica dell'intera infrastruttura hardware.
-
-Sulla base di questo esperimento empirico, la capacità nominale massima gestibile in stabilità ($C$) rispettando lo SLA di latenza per la configurazione attuale è stata impostata a \textbf{32 utenti concorrenti}. Questo valore garantisce che il sistema risponda in tempi accettabili prima che inizi il degrado indotto dal queuing nel connection pool.
-
 Di conseguenza, per ciascuno scenario sono state stabilite le seguenti configurazioni e soglie operative:
 
 \subsubsection{Configurazione Scenari: Load, Soak e Spike Testing}
@@ -403,58 +245,66 @@ Si valuta la robustezza strutturale a fronte di un sovraccarico repentino superi
 
 \subsubsection{Automazione, Isolamento e Sincronizzazione dei Test}
 
-Al fine di garantire l'affidabilità scientifica, la riproducibilità e l'assenza di bias sperimentali durante le sessioni di misurazione dinamica del consumo energetico, ho sviluppato uno script di orchestrazione in PowerShell (\texttt{backend\_energy\_consumption\_analysis.ps1}). Dal punto di vista della metodologia di sperimentazione empirica, le scelte architetturali adottate in questo script rispondono a precisi requisiti teorici:
-
-\paragraph{Isolamento dell'Ambiente e Prevenzione del Software Aging}
-Durante l'esecuzione dei test di carico su macchine virtuali e container Java (JVM), ho riscontrato un progressivo degrado delle prestazioni dovuto al fenomeno del \textit{software aging}. Per mitigare questo fattore di distorsione e garantire la riproducibilità dei dati, ho configurato lo script di automazione affinché esegua il riavvio dei container Docker dell'applicazione e del database MySQL prima di ogni sessione sperimentale. Questa procedura consente di azzerare completamente lo stato della memoria Heap della JVM e di chiudere tempestivamente eventuali socket rimasti aperti o transazioni pendenti sul database, ripristinando così le condizioni ambientali ideali per l'esperimento successivo. Questo degrado è indotto da due fattori principali:
+Al fine di garantire l'affidabilità scientifica, la riproducibilità e l'assenza di bias sperimentali durante le sessioni di misurazione dinamica del consumo energetico, ho sviluppato una pipeline di automazione composta da due componenti principali: uno script di orchestrazione in PowerShell (\texttt{backend\_energy\_consumption\_analysis.ps1}) e uno script di post-elaborazione in Python (\texttt{energibridge\_metrics\_extractor.py}). Dal punto di vista della metodologia di sperimentazione empirica, le scelte architetturali adottate in questi script rispondono a precisi requisiti teorici e analitici:
 
 \begin{itemize}
-\item \textbf{Frammentazione della Memoria ed Accumulo di Garbage Collection (GC):} Test consecutivi eseguiti sulla stessa istanza del server Tomcat (container \texttt{webapp}) causano un progressivo accumulo di oggetti nella memoria Heap. Questo costringe la JVM a invocare con frequenza crescente cicli di \textit{Full Garbage Collection}, caratterizzati da pause di tipo \textit{stop-the-world}. Tali pause introducono latenze artificiali e aumentano l'overhead computazionale della CPU, contaminando le metriche di consumo energetico rilevate da \textit{EnergiBridge}.
-\item \textbf{Perdite di Connessioni al Database (Connection Leaks):} Sebbene il connection pool sia configurato per rilasciare i canali inattivi, eventuali anomalie applicative o eccezioni non gestite possono omettere la chiusura formale delle risorse JDBC (\texttt{Connection}, \texttt{Statement}, \texttt{ResultSet}), esaurendo i $50$ slot attivi di \texttt{ConPool}. Al raggiungimento di tale capacità massima, le richieste successive subiscono un ritardo di accodamento pari a \texttt{maxWait} ($10.000$ ms), sfociando infine in timeout.
+    \item \textbf{Isolamento dell'Ambiente e Prevenzione del Software Aging:} Durante l'esecuzione dei test di carico su macchine virtuali e container Java (JVM), ho riscontrato un progressivo degrado delle prestazioni dovuto al fenomeno del \textit{software aging}. Per mitigare questo fattore di distorsione e garantire la riproducibilità dei dati, ho configurato lo script di automazione affinché esegua il riavvio dei container Docker dell'applicazione e del database MySQL prima di ogni sessione sperimentale. Questa procedura consente di azzerare completamente lo stato della memoria Heap della JVM e di chiudere tempestivamente eventuali socket rimasti aperti o transazioni pendenti sul database, ripristinando così le condizioni ambientali ideali per l'esperimento successivo. Questo degrado è indotto da due fattori principali:
+    \begin{itemize}
+        \item \textbf{Frammentazione della Memoria ed Accumulo di Garbage Collection (GC):} Test consecutivi eseguiti sulla stessa istanza del server Tomcat (container \texttt{webapp}) causano un progressivo accumulo di oggetti nella memoria Heap. Questo costringe la JVM a invocare con frequenza crescente cicli di \textit{Full Garbage Collection}, caratterizzati da pause di tipo \textit{stop-the-world}. Tali pause introducono latenze artificiali e aumentano l'overhead computazionale della CPU, contaminando le metriche di consumo energetico rilevate da \textit{EnergiBridge}.
+        \item \textbf{Perdite di Connessioni al Database (Connection Leaks):} Sebbene il connection pool sia configurato per rilasciare i canali inattivi, eventuali anomalie applicative o eccezioni non gestite possono omettere la chiusura formale delle risorse JDBC (\texttt{Connection}, \texttt{Statement}, \texttt{ResultSet}), esaurendo i $50$ slot attivi di \texttt{ConPool}. Al raggiungimento di tale capacità massima, le richieste successive subiscono un ritardo di accodamento pari a \texttt{maxWait} ($10.000$ ms), sfociando infine in timeout.
+    \end{itemize}
+    
+    \item \textbf{Warm-Up del Server e Risoluzione dei Transitori:} La fase di bootstrap di un'applicazione web in ambiente Java comporta un carico computazionale transitorio molto intenso dovuto a operazioni di classloading, parsing del descrittore di deployment, inizializzazione dei framework interni e pre-popolamento delle connessioni del pool (configurato a una dimensione iniziale di 5 connessioni). Inviare traffico in questa fase comporterebbe un tasso di errore fittizio ed un picco di consumo energetico non correlato alle normali operazioni di business. L'integrazione di una istruzione di attesa (\texttt{Start-Sleep -Seconds 10}) permette al server Tomcat di completare la fase di warm-up e di stabilizzarsi in uno stato di \textit{idle} prima che inizi la profilazione.
+    
+    \item \textbf{Sincronizzazione della Profilazione ed Esecuzione Headless:} Per l'analisi del consumo energetico, ho configurato la telemetria affinché si focalizzi esclusivamente sulla finestra temporale di esecuzione del carico di lavoro simulato con JMeter. A tale scopo, utilizzo EnergiBridge come processo wrapper del comando JMeter: in questo modo, la raccolta dei dati sulla potenza (in Watt) e sull'uso delle risorse hardware coincide esattamente con la durata del test. Inoltre, invoco JMeter all'interno del container rigorosamente in modalità \textit{non-GUI} (tramite l'opzione \texttt{-n}). L'avvio dell'interfaccia grafica comporterebbe infatti un consumo energetico addizionale dovuto al rendering di Java Swing, introducendo un fattore di distorsione che contaminerebbe le misurazioni.
+    
+    \item \textbf{Organizzazione e Separazione degli Output:} Inoltre, lo script organizza gli output separando nettamente le metriche prestazionali dalla telemetria energetica. Questa separazione logica semplifica la successiva elaborazione dei dati e isola l'analisi prestazionale classica dal calcolo dell'impatto energetico.
+    \begin{itemize}
+        \item \textbf{Metriche Prestazionali (file \texttt{.jtl}):} Generati direttamente da Apache JMeter, questi log registrano i dati specifici dell'esecuzione, tra cui latenze di rete, tempi di risposta, throughput e codici di stato HTTP. Vengono archiviati nella directory \texttt{jmeter\_logs} per valutare la conformità con gli SLA.
+        \item \textbf{Telemetria Energetica (file \texttt{.csv}):} Registrati dal processo wrapper EnergiBridge, questi dataset catturano il consumo di potenza (espresso in Watt) e l'utilizzo delle risorse hardware durante l'esatta durata del test. Vengono isolati nella cartella \texttt{energibridge\_logs} per l'analisi di sostenibilità del software.
+    \end{itemize}
+    
+    \item \textbf{Analisi Energetica Post-Elaborazione ed Estrazione delle Metriche:} Al fine di tradurre i dati grezzi raccolti da EnergiBridge e Apache JMeter in informazioni utili per l'ingegneria del software sostenibile, è stata sviluppata una pipeline di post-elaborazione in Python (\texttt{energibridge\_metrics\_extractor.py}). Lo script si occupa di correlare le misurazioni fisiche del consumo energetico dell'hardware (file CSV di EnergiBridge) con le richieste HTTP intercettate dall'applicazione (file JTL di JMeter), consentendo di valutare sia l'efficienza energetica globale che quella specifica di ciascuna \textit{servlet}. L'orchestrazione dei test descritta in precedenza genera tracciati con marcatura temporale sincronizzata (\textit{timestamp}). Lo script Python riceve in input il percorso del file CSV di EnergiBridge, estrae il timestamp dal nome del file (formato \texttt{YYYY\_MM\_DD\_hh\_mm\_ss}) e ricerca nella directory \texttt{jmeter\_logs} il file JTL corrispondente.
+    
+    \item \textbf{Filtrazione del Rumore dei Sensori RAPL:} Per la misurazione dei consumi energetici ho riscontrato che i sensori fisici basati su Intel/AMD RAPL (\textit{Running Average Power Limit}) presentano un forte rumore hardware. Questo fenomeno si manifesta con oscillazioni fittizie e picchi repentini nei valori assoluti di energia, i quali passano istantaneamente da poche decine a migliaia di Joule. Di conseguenza, se calcolassi il consumo totale tramite una semplice differenza tra il valore finale e quello iniziale, ovvero:
+    \begin{equation}
+    E_{tot} = E_{end} - E_{start}
+    \end{equation}
+    la stima complessiva risulterebbe pesantemente sovrastimata o del tutto falsata. Per ovviare a questo problema e ripulire i dati, ho implementato nel mio script un filtro di soglia tarato sulla potenza fisica teorica massima del processore su cui ho eseguito i test, un AMD Ryzen AI 9 HX 370. La logica del filtro analizza ogni coppia di record consecutivi $k-1$ e $k$, calcolando l'intervallo temporale in secondi:
+    \begin{equation}
+    \Delta t = \frac{T_k - T_{k-1}}{1000}
+    \end{equation}
+    e la rispettiva variazione di energia:
+    \begin{equation}
+    \Delta E = E_k - E_{k-1}
+    \end{equation}
+    Nello specifico, la differenza viene considerata valida solo se rispetta le seguenti restrizioni, che ho derivato direttamente dalle specifiche tecniche dell'architettura AMD (cTDP Max pari a 54~W):
+    \begin{itemize}
+        \item \textbf{Package CPU Energy:} $0 \le \Delta E_{CPU} \le 55.0 \times \Delta t$. Una variazione di energia che sottintende una potenza superiore a 55~W (corrispondente al cTDP Max con l'aggiunta di 1~W di tolleranza) viene considerata un picco spurio e azzerata, poiché fisicamente impossibile per l'intero SoC.
+        \item \textbf{Core CPU Energy (PP0):} $0 \le \Delta E_{Core} \le 45.0 \times \Delta t$. Ho applicato una limitazione analoga per i soli core elaborativi, fissando la soglia a 45~W, valore che ho stimato come l'80\% del budget energetico complessivo del package.
+    \end{itemize}
 \end{itemize}
 
-\paragraph{Warm-Up del Server e Risoluzione dei Transitori}
-La fase di bootstrap di un'applicazione web in ambiente Java comporta un carico computazionale transitorio molto intenso dovuto a operazioni di classloading, parsing del descrittore di deployment, inizializzazione dei framework interni e pre-popolamento delle connessioni del pool (configurato a una dimensione iniziale di 5 connessioni). Inviare traffico in questa fase comporterebbe un tasso di errore fittizio ed un picco di consumo energetico non correlato alle normali operazioni di business. L'integrazione di una istruzione di attesa (\texttt{Start-Sleep -Seconds 10}) permette al server Tomcat di completare la fase di warm-up e di stabilizzarsi in uno stato di \textit{idle} prima che inizi la profilazione.
+\subsection{Metriche di Sostenibilità Estrapolate}
 
-\paragraph{Sincronizzazione della Profilazione ed Esecuzione Headless}
-Per l'analisi del consumo energetico, ho configurato la telemetria affinché si focalizzi esclusivamente sulla finestra temporale di esecuzione del carico di lavoro simulato con JMeter. A tale scopo, utilizzo EnergiBridge come processo wrapper del comando JMeter: in questo modo, la raccolta dei dati sulla potenza (in Watt) e sull'uso delle risorse hardware coincide esattamente con la durata del test. Inoltre, invoco JMeter all'interno del container rigorosamente in modalità \textit{non-GUI} (tramite l'opzione \texttt{-n}). L'avvio dell'interfaccia grafica comporterebbe infatti un consumo energetico addizionale dovuto al rendering di Java Swing, introducendo un fattore di distorsione che contaminerebbe le misurazioni. 
+Per valutare l'efficacia del refactoring, il comportamento energetico del sistema viene monitorato tramite \textbf{EnergiBridge} durante l'esecuzione degli scenari di carico orchestrati da \textbf{JMeter}. L'analisi comparativa si articola nel confronto tra i dati rilevati sul \textit{branch} \texttt{baseline} (sistema pre-intervento) e quelli ottenuti sul \textit{branch} \texttt{sse-improvements} (sistema ottimizzato). Tale metodologia consente di quantificare in modo oggettivo la riduzione del consumo energetico derivante dalle strategie di refactoring implementate. Le metriche chiave estratte ed elaborate dai file CSV di EnergiBridge sono strutturate nella Tabella~\ref{tab:metriche_energia}.
 
-Inoltre, lo script organizza gli output separando nettamente le metriche prestazionali dalla telemetria energetica. Questa separazione logica semplifica la successiva elaborazione dei dati e isola l'analisi prestazionale classica dal calcolo dell'impatto energetico.
-
-\begin{itemize}
-\item \textbf{Metriche Prestazionali (file \texttt{.jtl}):} Generati direttamente da Apache JMeter, questi log registrano i dati specifici dell'esecuzione, tra cui latenze di rete, tempi di risposta, throughput e codici di stato HTTP. Vengono archiviati nella directory \texttt{jmeter\_logs} per valutare la conformità con gli SLA.
-\item \textbf{Telemetria Energetica (file \texttt{.csv}):} Registrati dal processo wrapper EnergiBridge, questi dataset catturano il consumo di potenza (espresso in Watt) e l'utilizzo delle risorse hardware durante l'esatta durata del test. Vengono isolati nella cartella \texttt{energibridge\_logs} per l'analisi di sostenibilità del software.
-\end{itemize}
-
-\subsubsection{Analisi Energetica Post-Elaborazione ed Estrazione delle Metriche}
-
-Al fine di tradurre i dati grezzi raccolti da EnergiBridge e Apache JMeter in informazioni utili per l'ingegneria del software sostenibile, è stata sviluppata una pipeline di post-elaborazione in Python (\texttt{energibridge\_metrics\_extractor.py}). Lo script si occupa di correlare le misurazioni fisiche del consumo energetico dell'hardware (file CSV di EnergiBridge) con le richieste HTTP intercettate dall'applicazione (file JTL di JMeter), consentendo di valutare sia l'efficienza energetica globale che quella specifica di ciascuna \textit{servlet}. L'orchestrazione dei test descritta in precedenza genera tracciati con marcatura temporale sincronizzata (\textit{timestamp}). Lo script Python riceve in input il percorso del file CSV di EnergiBridge, estrae il timestamp dal nome del file (formato \texttt{YYYY\_MM\_DD\_hh\_mm\_ss}) e ricerca nella directory \texttt{jmeter\_logs} il file JTL corrispondente. 
-
-\paragraph{Filtrazione del Rumore dei Sensori RAPL}
-Per la misurazione dei consumi energetici ho riscontrato che i sensori fisici basati su Intel/AMD RAPL (\textit{Running Average Power Limit}) presentano un forte rumore hardware. Questo fenomeno si manifesta con oscillazioni fittizie e picchi repentini nei valori assoluti di energia, i quali passano istantaneamente da poche decine a migliaia di Joule. Di conseguenza, se calcolassi il consumo totale tramite una semplice differenza tra il valore finale e quello iniziale, ovvero:
-
-\begin{equation}
-E_{tot} = E_{end} - E_{start}
-\end{equation}
-
-la stima complessiva risulterebbe pesantemente sovrastimata o del tutto falsata. Per ovviare a questo problema e ripulire i dati, ho implementato nel mio script un filtro di soglia tarato sulla potenza fisica teorica massima del processore su cui ho eseguito i test, un AMD Ryzen AI 9 HX 370. La logica del filtro analizza ogni coppia di record consecutivi $k-1$ e $k$, calcolando l'intervallo temporale in secondi:
-
-\begin{equation}
-\Delta t = \frac{T_k - T_{k-1}}{1000}
-\end{equation}
-
-e la rispettiva variazione di energia:
-
-\begin{equation}
-\Delta E = E_k - E_{k-1}
-\end{equation}
-
-Nello specifico, la differenza viene considerata valida solo se rispetta le seguenti restrizioni, che ho derivato direttamente dalle specifiche tecniche dell'architettura AMD (cTDP Max pari a 54~W):
-
-\begin{itemize}
-\item \textbf{Package CPU Energy:} $0 \le \Delta E_{CPU} \le 55.0 \times \Delta t$. Una variazione di energia che sottintende una potenza superiore a 55~W (corrispondente al cTDP Max con l'aggiunta di 1~W di tolleranza) viene considerata un picco spurio e azzerata, poiché fisicamente impossibile per l'intero SoC.
-\item \textbf{Core CPU Energy (PP0):} $0 \le \Delta E_{Core} \le 45.0 \times \Delta t$. Ho applicato una limitazione analoga per i soli core elaborativi, fissando la soglia a 45~W, valore che ho stimato come l'80% del budget energetico complessivo del package.
-\end{itemize}
+\begin{table}[h]
+    \centering
+    \renewcommand{\arraystretch}{1.5}
+    \begin{tabular}{|p{0.25\textwidth}|p{0.55\textwidth}|p{0.15\textwidth}|}
+        \hline
+        \textbf{Metrica di Sostenibilità} & \textbf{Descrizione Analitica e Impatto Ecologico} & \textbf{Unità di Misura} \\ \hline
+        Energia CPU Package & Assorbimento energetico totale del processore durante l'esecuzione (inclusi core, cache L2/L3 e controller integrati). Indica il ``costo netto'' dell'operazione. & Joules (J) \\ \hline
+        Potenza Media CPU Package & Il tasso medio di consumo energetico nel tempo (Energia/Tempo). Un abbassamento indica un codice che permette al processore di operare in stati di risparmio energetico (C-states). & Watt (W) \\ \hline
+        Energia PPO (Core) & Consumo limitato ai soli core elaborativi, escludendo la porzione ``uncore'' (es. GPU integrata). È l'indicatore più diretto dell'efficienza algoritmica. & Joules (J) \\ \hline
+        CPU Usage (Media e Picco) & La percentuale di cicli di clock effettivamente impegnati. Picchi anomali o un uso medio costantemente elevato indicano inefficienze asintotiche o attese attive (spin-locks). & Percentuale (\%) \\ \hline
+        Frequenza Media CPU & La velocità di clock mantenuta dal processore. Algoritmi ottimizzati permettono l'esecuzione a frequenze inferiori, riducendo esponenzialmente la tensione applicata e il calore dissipato. & MHz \\ \hline
+        Memoria RAM Usata (Media e Picco) & L'impronta allocata nel sistema. In un ambiente basato su Java Virtual Machine (JVM) come 2Chance, il contenimento della memoria è cruciale per evitare cicli dispendiosi di Garbage Collection. & MB/GB \\ \hline
+    \end{tabular}
+    \caption{Metriche di sostenibilità hardware campionate.}
+    \label{tab:metriche_energia}
+\end{table}
 
 \paragraph{Calcolo delle Metriche Globali di Sistema}
 Le metriche di utilizzo CPU, frequenza e memoria RAM usata vengono aggregate calcolandone il valore medio e il picco massimo registrato durante la sessione. Le metriche di sostenibilità globali sono calcolate tramite sommatoria dei delta filtrati per l'intero set di record $M$:
