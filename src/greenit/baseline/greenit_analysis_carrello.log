@@ -8,12 +8,12 @@ GLOBAL METRICS:
 Metric                              | Value
 --------------------------------------------------------------------------------
 EcoIndex Grade                      | A
-EcoIndex Score                      | 84.00
-Water Consumption (cl)              | 2.03
-Greenhouse Gases Emission (gCO2e)   | 1.35
-Request Number                      | 21
-Page Size (KB)                      | 797
-DOM Size                            | 117
+EcoIndex Score                      | 93.00
+Water Consumption (cl)              | 1.72
+Greenhouse Gases Emission (gCO2e)   | 1.15
+Request Number                      | 11
+Page Size (KB)                      | 186
+DOM Size                            | 49
 --------------------------------------------------------------------------------
 
 BEST PRACTICES:
@@ -25,9 +25,9 @@ Compress ressources (>= 95%)        | FAILED  | Text resources transferred uncom
 Limit the number of domains (<6)    | PASSED  | Within limits
 Don't resize image in browser       | FAILED  | High-res images resized by client
 Externalize css and js              | PASSED  | No inline stylesheet found
-Avoid HTTP request errors           | FAILED  | HTTP 404 error (favicon)
-Limit the number of HTTP requests   | PASSED  | 21 HTTP request(s) (<=40)
-Do not download unecessary image    | FAILED  | Hidden carousel images preloaded
+Avoid HTTP request errors           | FAILED  | HTTP 404 error
+Limit the number of HTTP requests   | PASSED  | 11 HTTP request(s) (<=40)
+Do not download unecessary image    | FAILED  | Images downloaded but not displayed
 Minified cs and js                  | N/A     | Analyse not supported by this browser
 No cookie for static ressources     | FAILED  | JSESSIONID cookie sent for assets
 Avoid redirect                      | PASSED  | 0 redirect

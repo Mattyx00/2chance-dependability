@@ -8,12 +8,12 @@ GLOBAL METRICS:
 Metric                              | Value
 --------------------------------------------------------------------------------
 EcoIndex Grade                      | A
-EcoIndex Score                      | 84.00
-Water Consumption (cl)              | 2.03
-Greenhouse Gases Emission (gCO2e)   | 1.35
-Request Number                      | 21
-Page Size (KB)                      | 797
-DOM Size                            | 117
+EcoIndex Score                      | 90.00
+Water Consumption (cl)              | 1.80
+Greenhouse Gases Emission (gCO2e)   | 1.20
+Request Number                      | 13
+Page Size (KB)                      | 190
+DOM Size                            | 81
 --------------------------------------------------------------------------------
 
 BEST PRACTICES:
@@ -23,11 +23,11 @@ Best Practice                       | Status  | Details / Notes
 Add expires or cache-control headers| FAILED  | Static resources not cached
 Compress ressources (>= 95%)        | FAILED  | Text resources transferred uncompressed
 Limit the number of domains (<6)    | PASSED  | Within limits
-Don't resize image in browser       | FAILED  | High-res images resized by client
+Don't resize image in browser       | PASSED  | 0 image(s) resized in browser
 Externalize css and js              | PASSED  | No inline stylesheet found
-Avoid HTTP request errors           | FAILED  | HTTP 404 error (favicon)
-Limit the number of HTTP requests   | PASSED  | 21 HTTP request(s) (<=40)
-Do not download unecessary image    | FAILED  | Hidden carousel images preloaded
+Avoid HTTP request errors           | FAILED  | HTTP 404 error
+Limit the number of HTTP requests   | PASSED  | 13 HTTP request(s) (<=40)
+Do not download unecessary image    | PASSED  | 0 image(s) downloaded but not displayed
 Minified cs and js                  | N/A     | Analyse not supported by this browser
 No cookie for static ressources     | FAILED  | JSESSIONID cookie sent for assets
 Avoid redirect                      | PASSED  | 0 redirect
