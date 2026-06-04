@@ -8,9 +8,11 @@ La sostenibilità di un artefatto software non è misurabile esclusivamente in t
 
 \subsection{Monitoraggio delle Licenze Open Source tramite FOSSA}
 
-FOSSA è una piattaforma enterprise dedicata alla governance delle dipendenze e alla compliance delle licenze open source. Essa non si limita a leggere i metadati manifesti nei file \texttt{.pom}, ma offre una tecnologia di scansione full-text (Audit-Grade License Scanning) capace di analizzare il codice sorgente grezzo delle dipendenze con una precisione dichiarata del 99.8\%. Questo meccanismo permette di rilevare intestazioni di copyright, identificare stralci di codice copiato in modo improprio ed estrarre i vincoli normativi anche da varianti di licenze alterate o non standard (es. licenze MIT con clausole di attribuzione modificate).
+FOSSA è una piattaforma enterprise dedicata alla governance delle dipendenze e alla compliance delle licenze open source. Essa non si limita a leggere i metadati manifesti nei file \texttt{.pom}, ma offre una tecnologia di scansione full-text (Audit-Grade License Scanning) capace di analizzare il codice sorgente grezzo delle dipendenze con una precisione dichiarata del 99.8\%. Questo meccanismo permette di rilevare intestazioni di copyright, identificare stralci di codice copiato in modo improprio ed estrarre i vincoli normativi anche da varianti di licenze alterate o non standard (es. licenze MIT con clausole di attribuzione modificate). 
 
-Per garantire una sostenibilità legale ferrea, l'integrazione di FOSSA all'interno del progetto 2Chance avverrà sfruttando il plugin Maven nativo della piattaforma (\texttt{fossa-maven-plugin}) o la CLI dedicata. L'ecosistema di sviluppo Java, sul quale si erge l'intera piattaforma 2Chance, si appoggia strutturalmente su repository immensi di dipendenze esterne (Maven Central). Ogni libreria dichiarata nel file \texttt{pom.xml} eredita a sua volta decine di librerie transitive, creando un albero di dipendenze labirintico e opaco. Data la complessità degli alberi delle dipendenze in Java, FOSSA eseguirà un'analisi profonda intercettando il comando \texttt{mvn dependency:tree} o avvalendosi di versioni embedded del plugin per mappare accuratamente sia le dipendenze dirette (dichiarate esplicitamente dagli sviluppatori di 2Chance) sia quelle transitive (ereditate indirettamente). L'obiettivo strategico di questa imponente operazione di conformità è declinato su tre livelli:
+La risoluzione dei conflitti legali identificati da FOSSA, che spesso si traducono nella rimozione di una libreria con una licenza inadatta per sostituirla con un'alternativa funzionalmente equivalente ma dotata di licenza permissiva (MIT o Apache), rappresenta un intervento che, pur non modificando le funzionalità visibili all'utente, consolida l'integrità strutturale ed economica del software, rendendolo pronto per un'ipotetica adozione su scala enterprise.
+
+Per garantire una sostenibilità legale ferrea, l'integrazione di FOSSA all'interno del progetto 2Chance avverrà sfruttando un approccio moderno Cloud-Native tramite la CLI dedicata e la piattaforma Web. L'ecosistema di sviluppo Java, sul quale si erge l'intera piattaforma 2Chance, si appoggia strutturalmente su repository immensi di dipendenze esterne (Maven Central). Ogni libreria dichiarata nel file \texttt{pom.xml} eredita a sua volta decine di librerie transitive, creando un albero di dipendenze labirintico e opaco. Data la complessità degli alberi delle dipendenze in Java, la CLI di FOSSA analizzerà autonomamente il \texttt{pom.xml} per costruire il grafo completo e inviarlo al Cloud, mappando accuratamente sia le dipendenze dirette (dichiarate esplicitamente dagli sviluppatori) sia quelle transitive (ereditate indirettamente). L'obiettivo strategico di questa imponente operazione di conformità è declinato su tre livelli:
 
 \begin{enumerate}
     \item \textbf{Identificazione Sistematica del Rischio Copyleft}: Il nucleo del problema legale risiede nella classificazione delle licenze in due macro-categorie: permissive (es. MIT, Apache 2.0) e copyleft (es. GPL v2/v3, AGPL). Le licenze permissive impongono vincoli minimi (principalmente la citazione), mentre le licenze copyleft sono ``virali'': l'inclusione, anche accidentale, di una singola libreria GPL all'interno di un progetto proprietario closed-source può obbligare legalmente gli autori a rilasciare gratuitamente l'intero codice sorgente dell'applicazione, annullando ogni potenziale di monetizzazione e protezione del segreto industriale. FOSSA mapperà l'intero albero delle dipendenze ed evidenzierà con alert critici eventuali violazioni di policy legate alla presenza non desiderata di licenze copyleft.
@@ -20,71 +22,22 @@ Per garantire una sostenibilità legale ferrea, l'integrazione di FOSSA all'inte
     \item \textbf{Generazione della Software Bill of Materials (SBOM)}: Una compliance proattiva richiede la trasparenza della catena di approvvigionamento. FOSSA favorirà l'esportazione automatizzata di una SBOM (Distinta Base del Software) aderente agli standard industriali come SPDX o CycloneDX. La fornitura di una SBOM chiara è un requisito sempre più pressante nei bandi di gara governativi e costituisce un pilastro per l'ottenimento di certificazioni aziendali internazionali.
 \end{enumerate}
 
-La risoluzione dei conflitti legali identificati da FOSSA --- che spesso si traduce nella rimozione di una libreria utilitaristica viziata da una licenza virale e nella sua sostituzione con un'alternativa funzionalmente equivalente ma dotata di licenza permissiva (MIT o Apache) --- rappresenta un intervento che, pur non modificando le funzionalità visibili all'utente, consolida in modo formidabile l'integrità strutturale ed economica del sistema 2Chance, rendendolo pronto per un'ipotetica adozione su scala enterprise.
-
 \subsection{Esecuzione dell'Analisi FOSSA}
 
-L'analisi è stata eseguita mediante la CLI ufficiale di FOSSA (versione 3.17.8, revisione \texttt{e21170d20446}), installata in ambiente Windows tramite lo script di installazione ufficiale\footnote{\url{https://raw.githubusercontent.com/fossas/fossa-cli/master/install-latest.ps1}}. La CLI è stata invocata in modalità \texttt{--output}, che consente l'estrazione locale del grafo delle dipendenze e la serializzazione dei risultati in formato JSON senza necessitare di un'autenticazione remota verso i server della piattaforma FOSSA.
+L'analisi è stata eseguita adottando un approccio moderno e integrato che fa cooperare la CLI ufficiale di FOSSA (eseguibile localmente o in ambiente CI/CD) con il potente motore di calcolo della piattaforma cloud (FOSSA Web App).
 
-\begin{lstlisting}[language=command.com, caption={Comandi per l'installazione e l'esecuzione della CLI FOSSA}, label={lst:fossa_install}]
-# Installazione della CLI FOSSA (PowerShell)
-Set-ExecutionPolicy Bypass -Scope Process -Force
-iex ((New-Object System.Net.WebClient).DownloadString(
-  'https://raw.githubusercontent.com/fossas/fossa-cli/
-   master/install-latest.ps1'))
+Il nuovo approccio si basa sull'autenticazione sicura della CLI verso il servizio cloud tramite una API Key dedicata (isolata in un file \texttt{.fossa\_token} e gestita tramite i \textit{Secrets} in GitHub Actions). Questo supera i severi limiti di un approccio puramente offline, che costringerebbe all'uso combinato di plugin ausiliari limitati alla sola lettura dei metadati senza ispezione del codice sorgente.
 
-# Analisi delle dipendenze (output locale)
-fossa.exe analyze --output
+L'esecuzione coordinata avviene nei seguenti passaggi:
+\begin{enumerate}
+    \item \textbf{Risoluzione del Grafo (CLI)}: La FOSSA CLI, invocata tramite il comando \texttt{fossa analyze}, identifica automaticamente il progetto Maven parsando il file \texttt{pom.xml} e risolve l'intero albero delle dipendenze (dirette e transitive).
+    \item \textbf{Sincronizzazione Cloud}: La CLI comunica con i server remoti, inviando il grafo strutturato delle dipendenze in tempo reale alla dashboard di riferimento.
+    \item \textbf{Analisi Profonda (Web App)}: La piattaforma cloud prende in carico il grafo, scarica il codice sorgente grezzo di ciascuna libreria ed esegue una scansione \textit{Audit-Grade}. In questa fase vengono analizzati anche i \textit{copyright headers} e il codice sorgente annidato, scoprendo violazioni copyleft che non emergerebbero mai nei semplici manifesti \texttt{POM}.
+\end{enumerate}
 
-# Albero delle dipendenze Maven
-mvn dependency:tree
+\subsection{Albero delle Dipendenze e Inventario delle Licenze}
 
-# Download dei metadati delle licenze
-mvn org.codehaus.mojo:license-maven-plugin:2.4.0:
-    download-licenses
-\end{lstlisting}
-
-La CLI ha identificato automaticamente il progetto Maven dalla presenza del file \texttt{pom.xml} nella directory radice, rilevando il target \texttt{maven@.\textbackslash :groupId:2chance}. L'analisi è stata condotta mediante la strategia di parsing statico del file \texttt{pom.xml}, poiché la strategia dinamica basata sul \texttt{fossa-maven-plugin} embedded non è risultata disponibile nell'ambiente di esecuzione. La scansione ha restituito un esito positivo: \textbf{1 progetto analizzato, 1 riuscito, 0 falliti}, con 4 avvertimenti non bloccanti relativi alla strategia di analisi dinamica.
-
-Per completare l'inventario delle licenze --- informazione che la CLI FOSSA risolve integralmente solo tramite la piattaforma cloud --- è stato impiegato il plugin Maven \texttt{license-maven-plugin} (versione 2.4.0), il quale ha scaricato e catalogato i metadati di licenza per tutte le 23 dipendenze (dirette e transitive), persistendo i risultati nel file \texttt{licenses.xml} e le copie integrali dei testi di licenza nella directory \texttt{src/fossa/licenses/}.
-
-\subsection{Albero delle Dipendenze del Progetto 2Chance}
-
-L'analisi combinata di FOSSA CLI e del comando \texttt{mvn dependency:tree} ha mappato l'intero albero delle dipendenze del progetto \texttt{groupId:2chance:war:1.0-SNAPSHOT}, identificando \textbf{15 dipendenze dirette} (dichiarate esplicitamente nel \texttt{pom.xml}) e \textbf{8 dipendenze transitive} (ereditate indirettamente), per un totale di \textbf{23 artefatti}. Lo scope di ciascuna dipendenza è fondamentale ai fini dell'analisi legale: le dipendenze con scope \texttt{compile} vengono incluse nel pacchetto WAR distribuito, quelle con scope \texttt{provided} sono fornite dal container a runtime (Tomcat) e non distribuite, mentre quelle con scope \texttt{test} sono utilizzate esclusivamente durante la fase di testing e non vengono mai consegnate all'utente finale.
-
-\begin{lstlisting}[basicstyle=\ttfamily\footnotesize, caption={Albero delle dipendenze Maven del progetto 2Chance}, label={lst:dep_tree}]
-groupId:2chance:war:1.0-SNAPSHOT
-+- javax.servlet:javax.servlet-api:4.0.1 [provided]
-+- org.json:json:20231013 [compile]
-+- commons-io:commons-io:2.14.0 [compile]
-+- org.apache.tomcat:tomcat-jdbc:9.0.111 [compile]
-|  \- org.apache.tomcat:tomcat-juli:9.0.111 [compile]
-+- com.mysql:mysql-connector-j:9.5.0 [compile]
-|  \- com.google.protobuf:protobuf-java:4.31.1 [compile]
-+- org.apache.taglibs:taglibs-standard-spec:1.2.5 [compile]
-+- org.apache.taglibs:taglibs-standard-impl:1.2.5 [compile]
-+- org.junit.jupiter:junit-jupiter-api:5.9.1 [test]
-|  +- org.opentest4j:opentest4j:1.2.0 [test]
-|  +- org.junit.platform:junit-platform-commons:1.9.1 [test]
-|  \- org.apiguardian:apiguardian-api:1.1.2 [test]
-+- org.junit.jupiter:junit-jupiter-engine:5.9.1 [test]
-|  \- org.junit.platform:junit-platform-engine:1.9.1 [test]
-+- org.junit.jupiter:junit-jupiter-params:5.9.1 [test]
-+- org.mockito:mockito-core:5.11.0 [test]
-|  +- net.bytebuddy:byte-buddy:1.14.12 [test]
-|  +- net.bytebuddy:byte-buddy-agent:1.14.12 [test]
-|  \- org.objenesis:objenesis:3.3 [test]
-+- org.mockito:mockito-junit-jupiter:5.11.0 [test]
-+- org.pitest:pitest-parent:1.1.10 [compile]
-+- org.openjdk.jmh:jmh-core:1.37 [compile]
-|  +- net.sf.jopt-simple:jopt-simple:5.0.4 [compile]
-|  \- org.apache.commons:commons-math3:3.6.1 [compile]
-\- org.openjdk.jmh:jmh-generator-annprocess:1.37 [provided]
-\end{lstlisting}
-
-\subsection{Inventario Completo delle Licenze}
-
-La Tabella~\ref{tab:license_inventory} presenta l'inventario esaustivo delle licenze per ciascuna dipendenza del progetto 2Chance, classificando ogni artefatto secondo la categoria di rischio legale associata: \textbf{Permissiva} (rischio nullo), \textbf{Copyleft Debole} (rischio basso, generalmente limitato alle modifiche della libreria stessa) e \textbf{Copyleft con Eccezione} (rischio medio, mitigato da clausole specifiche che consentono il linking senza propagazione virale).
+FOSSA CLI ha mappato in autonomia l'intero albero delle dipendenze del progetto \texttt{groupId:2chance:war:1.0-SNAPSHOT}, identificando \textbf{15 dipendenze dirette} (dichiarate esplicitamente nel \texttt{pom.xml}) e \textbf{8 dipendenze transitive} (ereditate indirettamente), per un totale di \textbf{23 artefatti}.
 
 \begin{longtable}{>{\ttfamily\footnotesize}p{4.8cm} c >{\footnotesize}p{4.2cm} l}
 \caption{Inventario delle licenze delle dipendenze del progetto 2Chance.} \label{tab:license_inventory} \\
@@ -136,9 +89,21 @@ org.opentest4j:opentest4j 1.2.0 & test & Apache-2.0 & Permissiva \\
 org.apiguardian:apiguardian-api 1.1.2 & test & Apache-2.0 & Permissiva \\
 \end{longtable}
 
-\subsection{Distribuzione delle Licenze}
+Ogni dipendenza ha uno \textit{scope} definito che è fondamentale ai fini dell'analisi legale. In ambiente Maven, i principali \textit{scope} rilevati nel progetto si dividono in:
+\begin{itemize}
+    \item \textbf{\texttt{compile}}: le dipendenze vengono incluse fisicamente nel pacchetto WAR distribuito, esponendo direttamente l'intero progetto ai vincoli della loro licenza.
+    \item \textbf{\texttt{provided}}: le dipendenze sono fornite dal container a runtime (es. Tomcat) e non vengono pacchettizzate nell'artefatto finale, mitigando drasticamente il rischio legale di distribuzione.
+    \item \textbf{\texttt{test}}: le dipendenze sono utilizzate esclusivamente durante la fase di testing locale. Non venendo mai consegnate all'utente finale, sono di fatto esenti da vincoli o obblighi di distribuzione copyleft.
+\end{itemize}
 
-L'analisi rivela una distribuzione favorevole delle licenze nell'ecosistema delle dipendenze di 2Chance. La Tabella~\ref{tab:license_distribution} riassume la distribuzione per tipologia di licenza, evidenziando una netta prevalenza di licenze permissive.
+La Tabella~\ref{tab:license_inventory} presenta l'inventario esaustivo estratto dalla scansione. L'analisi rivela una distribuzione quantitativa molto favorevole delle licenze, che possono essere classificate in quattro macro-categorie di rischio legale (riassunte statisticamente nella Tabella~\ref{tab:license_distribution}):
+
+\begin{itemize}
+    \item \textbf{Permissive} (18 dipendenze, 69,2\% del totale): rischio nullo (es. MIT, Apache 2.0). Impongono vincoli minimi, come la conservazione dell'attribuzione del copyright originale, e consentono la libera integrazione in software proprietario chiuso. Rappresentano la netta maggioranza dell'ecosistema di 2Chance.
+    \item \textbf{Copyleft Debole} (5 dipendenze, 19,2\% del totale): rischio basso (es. EPL-2.0, LGPL). L'obbligo virale di rilasciare il codice sorgente è generalmente limitato alle sole modifiche effettuate direttamente sulla libreria stessa, senza intaccare il codice del progetto principale che ne fa uso.
+    \item \textbf{Copyleft con Eccezioni} (3 dipendenze, 11,5\% del totale): rischio medio (es. GPLv2 con Classpath Exception o FOSS Exception). Il rischio virale intrinseco della licenza GPL pura è esplicitamente disinnescato da clausole aggiuntive che ne consentono il linking dinamico o l'integrazione con altre licenze open source compatibili.
+    \item \textbf{Copyleft senza Eccezioni} (0 dipendenze, 0,0\% del totale): rischio critico (es. GPL/AGPL pura). Questa categoria imporrebbe il rilascio open source dell'intero codice proprietario. L'assenza totale di queste licenze nel progetto rappresenta il dato più rilevante dell'analisi, confermando che \textbf{nessuna violazione critica è stata rilevata}.
+\end{itemize}
 
 \begin{table}[h]
     \centering
@@ -167,36 +132,6 @@ L'analisi rivela una distribuzione favorevole delle licenze nell'ecosistema dell
     \label{tab:license_distribution}
 \end{table}
 
-Il dato più rilevante è l'assenza totale di licenze copyleft pure (GPL o AGPL senza eccezioni): \textbf{nessuna violazione critica è stata rilevata}. Tutte le licenze appartenenti alla famiglia GPL presenti nel progetto includono eccezioni esplicite (Universal FOSS Exception o Classpath Exception) che permettono il linking con codice proprietario o FOSS senza innescare l'effetto virale caratteristico della GPL.
-
-\subsection{Valutazione del Rischio Copyleft}
-
-L'analisi FOSSA ha identificato quattro dipendenze che richiedono un'attenzione specifica a causa della natura copyleft delle loro licenze. Di seguito si presenta la valutazione dettagliata per ciascuna di esse.
-
-\subsubsection{mysql-connector-j (GPLv2 + Universal FOSS Exception v1.0) --- Rischio Medio}
-
-Il connettore MySQL per Java (\texttt{com.mysql:mysql-connector-j:9.5.0}), dichiarato con scope \texttt{compile} e quindi incluso nel pacchetto WAR distribuito, è rilasciato sotto licenza \textbf{GNU General Public License v2} con la \textbf{Universal FOSS Exception v1.0}. La GPLv2 è una licenza copyleft forte che, in assenza di eccezioni, imporrebbe il rilascio dell'intero codice sorgente dell'applicazione collegata. Tuttavia, la Universal FOSS Exception concede esplicitamente il permesso di linkare il connettore con qualsiasi software rilasciato sotto una licenza riconosciuta dalla Free Software Foundation o dall'Open Source Initiative, senza attivare gli obblighi copyleft della GPL.
-
-Poiché il progetto 2Chance utilizza esclusivamente dipendenze con licenze FOSS riconosciute (Apache-2.0, MIT, BSD-3-Clause, EPL-2.0), l'eccezione si applica integralmente e il rischio legale è \textbf{mitigato}. Tuttavia, qualora il progetto venisse in futuro distribuito come software proprietario closed-source, questa dipendenza dovrebbe essere sostituita con un'alternativa compatibile, come il MariaDB Connector/J rilasciato sotto licenza LGPL-2.1.
-
-\subsubsection{jmh-core (GPLv2 + Classpath Exception) --- Rischio Medio}
-
-La libreria Java Microbenchmark Harness (\texttt{org.openjdk.jmh:jmh-core:1.37}), attualmente dichiarata con scope \texttt{compile}, è rilasciata sotto \textbf{GPLv2 con Classpath Exception}. La Classpath Exception è una clausola standard adottata dall'ecosistema OpenJDK che permette di creare applicazioni che utilizzano le librerie senza essere soggette agli obblighi di distribuzione del codice sorgente imposti dalla GPL.
-
-Il rischio principale risiede nel fatto che JMH è uno strumento di benchmarking, concepito esclusivamente per la profilazione delle prestazioni durante lo sviluppo, e \textbf{non dovrebbe essere incluso nel pacchetto WAR di produzione}. La sua presenza con scope \texttt{compile} rappresenta un'anomalia architetturale: la modifica dello scope a \texttt{test} nel file \texttt{pom.xml} eliminerebbe completamente qualsiasi rischio di distribuzione, poiché le dipendenze con scope \texttt{test} non vengono mai incluse nell'artefatto finale.
-
-\subsubsection{jmh-generator-annprocess (GPLv2 + Classpath Exception) --- Rischio Basso}
-
-Il processore di annotazioni di JMH (\texttt{org.openjdk.jmh:jmh-generator-annprocess:1.37}) condivide la stessa licenza GPLv2 + Classpath Exception del core di JMH. Tuttavia, essendo già correttamente dichiarato con scope \texttt{provided}, non viene incluso nel pacchetto WAR distribuito. Il rischio legale è pertanto \textbf{nullo} per questa dipendenza.
-
-\subsubsection{javax.servlet-api (CDDL + GPLv2 con Classpath Exception) --- Rischio Nullo}
-
-La Servlet API (\texttt{javax.servlet:javax.servlet-api:4.0.1}) è rilasciata sotto doppia licenza: \textbf{CDDL} (Common Development and Distribution License, una licenza permissiva) e \textbf{GPLv2 con Classpath Exception}. Essendo dichiarata con scope \texttt{provided}, viene fornita dal server Tomcat a runtime e non è inclusa nel pacchetto WAR. Il rischio legale è pertanto \textbf{nullo}.
-
-\subsection{Sintesi del Rischio e Raccomandazioni}
-
-La Tabella~\ref{tab:risk_summary} riassume la valutazione complessiva del rischio legale per il progetto 2Chance.
-
 \begin{table}[h]
     \centering
     \renewcommand{\arraystretch}{1.4}
@@ -214,6 +149,39 @@ La Tabella~\ref{tab:risk_summary} riassume la valutazione complessiva del rischi
     \label{tab:risk_summary}
 \end{table}
 
+Dall'incrocio tra la topologia del grafo delle dipendenze e l'inventario delle licenze emergono cinque macro-aree architetturali, ciascuna con un differente impatto teorico e pratico sul profilo di rischio legale del software:
+
+\begin{itemize}
+    \item \textbf{Infrastruttura Web e Servlet (\texttt{provided}):} 
+    Include le API fondamentali come \texttt{javax.servlet-api}. Essendo dichiarate con scope \textit{provided}, l'applicazione si aspetta che siano già fornite dall'Application Server (Apache Tomcat) a runtime. L'assenza fisica di queste librerie nel pacchetto WAR distribuito abbatte drasticamente il rischio di violazioni copyleft, poiché non vi è alcuna distribuzione di terze parti verso l'utente finale.
+    
+    \item \textbf{Connettività Database e Persistenza (\texttt{compile}):}
+    Comprende \texttt{com.mysql:mysql-connector-j} (che eredita transitivamente \texttt{protobuf-java}) e il pool di connessioni \texttt{tomcat-jdbc} (che eredita \texttt{tomcat-juli}). Questi artefatti sono vitali per l'applicazione e vengono compressi direttamente nel pacchetto finale distribuito. Essi rappresentano il \textbf{vettore di rischio legale più critico}: l'eventuale presenza di licenze copyleft forti (come la GPL) associate al connettore del database innesterebbe obblighi virali sull'intero codice proprietario del progetto.
+
+    \item \textbf{Utilità Generiche e Manipolazione Dati (\texttt{compile}):}
+    Raggruppa le librerie utilizzate trasversalmente nel codice, come \texttt{commons-io}, \texttt{org.json} e le \texttt{taglibs} di Apache. Trattandosi di componenti storici dell'ecosistema open source Java, possiedono quasi sempre licenze permissive (Apache 2.0, MIT), rendendo la loro inclusione nel WAR distribuito sicura dal punto di vista commerciale.
+    
+    \item \textbf{Ecosistema di Testing e Mocking (\texttt{test}):}
+    Include i framework \texttt{junit-jupiter} e \texttt{mockito-core}, i quali a loro volta trascinano un folto gruppo di dipendenze transitive (es. \texttt{byte-buddy}, \texttt{objenesis}). Dal punto di vista della compliance legale, questa vasta ramificazione dell'albero è \textbf{intrinsecamente sicura}: lo scope \textit{test} garantisce al livello di build system che Maven escluda questi file dall'artefatto di produzione, annullando alla radice ogni rischio di distribuzione copyleft.
+    
+    \item \textbf{Strumenti di Benchmarking e Qualità (\texttt{compile} / \texttt{provided}):}
+    Rileva la presenza di strumenti diagnostici avanzati utilizzati nel progetto, quali la profilazione energetica (\texttt{jmh-core}, che eredita \texttt{jopt-simple} e \texttt{commons-math3}) e il mutation testing (\texttt{pitest-parent}). L'albero fa emergere un'\textbf{anomalia architetturale significativa}: \texttt{jmh-core} e \texttt{pitest-parent} risultano mappati con scope \textit{compile}. Dal punto di vista teorico e pratico, l'inclusione di framework diagnostici nel WAR finale di produzione è un errore: non solo appesantisce ingiustificatamente l'artefatto e il consumo di banda, ma espone inutilmente l'azienda ai vincoli legali delle licenze associate a questi tool.
+\end{itemize}
+
+\subsection{Valutazione del Rischio Copyleft}
+
+L'analisi FOSSA ha identificato quattro dipendenze che richiedono un'attenzione specifica a causa della natura copyleft delle loro licenze. Di seguito si presenta la valutazione dettagliata per ciascuna di esse.
+
+\begin{itemize}
+    \item \textbf{mysql-connector-j (GPLv2 + Universal FOSS Exception v1.0) --- Rischio Medio}: Il connettore MySQL per Java (\texttt{com.mysql:mysql-connector-j:9.5.0}), dichiarato con scope \texttt{compile} e quindi incluso nel pacchetto WAR distribuito, è rilasciato sotto licenza \textbf{GNU General Public License v2} con la \textbf{Universal FOSS Exception v1.0}. La GPLv2 è una licenza copyleft forte che, in assenza di eccezioni, imporrebbe il rilascio dell'intero codice sorgente dell'applicazione collegata. Tuttavia, la Universal FOSS Exception concede esplicitamente il permesso di linkare il connettore con qualsiasi software rilasciato sotto una licenza riconosciuta dalla Free Software Foundation o dall'Open Source Initiative, senza attivare gli obblighi copyleft della GPL. Poiché il progetto 2Chance utilizza esclusivamente dipendenze con licenze FOSS riconosciute (Apache-2.0, MIT, BSD-3-Clause, EPL-2.0), l'eccezione si applica integralmente e il rischio legale è \textbf{mitigato}. Tuttavia, qualora il progetto venisse in futuro distribuito come software proprietario closed-source, questa dipendenza dovrebbe essere sostituita con un'alternativa compatibile, come il MariaDB Connector/J rilasciato sotto licenza LGPL-2.1.
+
+    \item \textbf{jmh-core (GPLv2 + Classpath Exception) --- Rischio Medio}: La libreria Java Microbenchmark Harness (\texttt{org.openjdk.jmh:jmh-core:1.37}), attualmente dichiarata con scope \texttt{compile}, è rilasciata sotto \textbf{GPLv2 con Classpath Exception}. La Classpath Exception è una clausola standard adottata dall'ecosistema OpenJDK che permette di creare applicazioni che utilizzano le librerie senza essere soggette agli obblighi di distribuzione del codice sorgente imposti dalla GPL. Il rischio principale risiede nel fatto che JMH è uno strumento di benchmarking, concepito esclusivamente per la profilazione delle prestazioni durante lo sviluppo, e \textbf{non dovrebbe essere incluso nel pacchetto WAR di produzione}. La sua presenza con scope \texttt{compile} rappresenta un'anomalia architetturale: la modifica dello scope a \texttt{test} nel file \texttt{pom.xml} eliminerebbe completamente qualsiasi rischio di distribuzione, poiché le dipendenze con scope \texttt{test} non vengono mai incluse nell'artefatto finale.
+
+    \item \textbf{jmh-generator-annprocess (GPLv2 + Classpath Exception) --- Rischio Basso}: Il processore di annotazioni di JMH (\texttt{org.openjdk.jmh:jmh-generator-annprocess:1.37}) condivide la stessa licenza GPLv2 + Classpath Exception del core di JMH. Tuttavia, essendo già correttamente dichiarato con scope \texttt{provided}, non viene incluso nel pacchetto WAR distribuito. Il rischio legale è pertanto \textbf{nullo} per questa dipendenza.
+
+    \item \textbf{javax.servlet-api (CDDL + GPLv2 con Classpath Exception) --- Rischio Nullo}: La Servlet API (\texttt{javax.servlet:javax.servlet-api:4.0.1}) è rilasciata sotto doppia licenza: \textbf{CDDL} (Common Development and Distribution License, una licenza permissiva) e \textbf{GPLv2 con Classpath Exception}. Essendo dichiarata con scope \texttt{provided}, viene fornita dal server Tomcat a runtime e non è inclusa nel pacchetto WAR. Il rischio legale è pertanto \textbf{nullo}.
+\end{itemize}
+
 Sulla base dei risultati dell'analisi FOSSA e della catalogazione delle licenze, si formulano le seguenti raccomandazioni operative:
 
 \begin{enumerate}
@@ -223,8 +191,55 @@ Sulla base dei risultati dell'analisi FOSSA e della catalogazione delle licenze,
 
     \item \textbf{Generazione del file THIRD-PARTY-NOTICES}: I testi integrali delle 8 licenze uniche sono stati scaricati nella directory \texttt{src/fossa/licenses/}. Si raccomanda la compilazione di un documento di attribuzione formale (\texttt{THIRD-PARTY-NOTICES.txt}) da includere nella distribuzione, al fine di soddisfare gli obblighi di attribuzione imposti dalle licenze Apache-2.0, MIT e BSD-3-Clause.
 
-    \item \textbf{Integrazione di FOSSA nel pipeline CI/CD}: Per garantire un monitoraggio proattivo e continuo, si raccomanda la registrazione di un account sulla piattaforma FOSSA (\url{https://app.fossa.com}) e la configurazione di una API key nel workflow GitHub Actions del progetto. Ciò abiliterebbe la scansione automatizzata ad ogni commit, la generazione di SBOM in formato SPDX/CycloneDX e il blocco automatico delle pull request che introducono dipendenze con licenze non conformi alla policy del progetto.
 \end{enumerate}
+
+\textbf{Integrazione di FOSSA nel pipeline CI/CD}: Per garantire un monitoraggio proattivo e continuo, è stato registrato un account sulla piattaforma FOSSA (\url{https://app.fossa.com}) e configurata una API key nel workflow GitHub Actions del progetto. Ciò abilita la scansione automatizzata ad ogni commit, la generazione di SBOM in formato SPDX/CycloneDX e il blocco automatico delle pull request che introducono dipendenze con licenze non conformi alla policy del progetto.
+
+\subsection{Integrazione Cloud e Continuous Compliance}
+
+Per superare i limiti dell'analisi esclusivamente locale e statica (basata sul \texttt{license-maven-plugin}, che si limita alla lettura dei metadati senza ispezionare il codice), è stata effettuata la transizione al \textbf{FOSSA Web Service}. Questo approccio garantisce non solo la risoluzione automatica delle licenze, ma anche uno scan approfondito del codice sorgente delle dipendenze per intercettare violazioni nascoste (Audit-Grade Scanning) e la verifica automatica delle policy aziendali.
+
+L'integrazione è stata implementata attraverso i seguenti step operativi:
+\begin{itemize}
+    \item \textbf{Configurazione FOSSA API Key}: È stata generata una API Key dedicata (Push-Only) dalla dashboard web di FOSSA. Per gli ambienti di sviluppo locale, la chiave è stata isolata all'interno di un file \texttt{.fossa\_token}, ignorato dal controllo di versione tramite \texttt{.gitignore}. Sulla piattaforma GitHub, la chiave è stata memorizzata in modo sicuro tra i \textit{Repository Secrets} (\texttt{FOSSA\_API\_KEY}).
+    \item \textbf{Automazione nella Pipeline (GitHub Actions)}: Il file di workflow \texttt{main.yml} è stato esteso introducendo lo step di \textit{License Compliance Scan} subito dopo l'analisi delle vulnerabilità (Snyk). Avvalendosi dell'azione ufficiale \texttt{fossas/fossa-action@v1}, ogni nuova \textit{Pull Request} e operazione di \textit{Push} invia automaticamente il grafo delle dipendenze alla piattaforma cloud di FOSSA.
+    \item \textbf{Validazione delle Policy su Cloud}: Il Web Service analizza il codice di ciascuna dipendenza ereditata dal \texttt{pom.xml}. In caso di rilevamento di licenze copyleft non consentite (o di violazioni degli obblighi di attribuzione), la pipeline CI/CD fallisce (Fail on Violation), impedendo il merge di codice legalmente rischioso nel branch di produzione.
+\end{itemize}
+
+\subsubsection{Risultati della Scansione Cloud (Policy Scan)}
+
+L'efficacia del passaggio alla piattaforma FOSSA Web Service è stata immediatamente dimostrata dall'esecuzione del \textit{Policy Scan} avanzato. A fronte dell'apparente conformità evidenziata dall'analisi locale (basata sulla mera ispezione dei manifesti Maven), la scansione cloud \textit{Audit-Grade} ha applicato un set di policy di default molto più rigoroso, restituendo un totale di \textbf{10 issue} di licenza, suddivise in \textit{Flagged} e \textit{Denied}. L'intero progetto, essendo destinato a scopi puramente didattici e non prevedendo alcuna distribuzione commerciale, consente un approccio flessibile alla risoluzione di queste segnalazioni.
+
+\paragraph{Le ``Flagged License Issues''} 
+I \textit{Flag} rappresentano licenze identificate come potenzialmente problematiche e ambigue da FOSSA. Non causano necessariamente un blocco immediato, ma richiedono obbligatoriamente una \textit{review} manuale da parte del team di sviluppo per certificare che il contesto d'uso (es. linking dinamico, ambito di test) non vìoli i termini legali. Sono state rilevate 8 issue di tipo Flagged su tre dipendenze transitive:
+
+\begin{itemize}
+    \item \textbf{\texttt{javax.servlet:javax.servlet-api:4.0.1}}
+    \begin{itemize}
+        \item \textbf{Licenze Flagged:} \textit{GPL-2.0-with-classpath-exception, GPL-2.0-only, CDDL-1.1}.
+        \item \textbf{Problema:} La GPL-2.0 pura imporrebbe vincoli copyleft virali in fase di distribuzione.
+        \item \textbf{Soluzione Didattica:} Essendo l'API Servlet fornita dal container a runtime (Tomcat), la libreria possiede scope \texttt{provided} e non viene inclusa nel pacchetto finale. Marcate come ``Approvate''.
+        \item \textbf{Scenario Commerciale (Produzione):} L'approccio rimane identico. Poiché le dipendenze \texttt{provided} non sono distribuite nel binario proprietario finale, non innescano obblighi copyleft. Un legal team aziendale procederebbe ugualmente all'approvazione del flag.
+    \end{itemize}
+    
+    \item \textbf{\texttt{com.mysql:mysql-connector-j:9.5.0}}
+    \begin{itemize}
+        \item \textbf{Licenze Flagged/Denied:} \textit{GPL-2.0-only, LGPL-2.1-only, gpl-2.0 WITH universal-foss-exception-1.0}.
+        \item \textbf{Problema:} Licenze fortemente copyleft bloccate di default (Denied) dalle policy corporate di FOSSA, poiché vincolano teoricamente l'intero codice dipendente al medesimo rilascio open source.
+        \item \textbf{Soluzione Didattica:} Progetto accademico open source. Applicazione dell'opzione \textit{``Create Exception''} tramite la dashboard.
+        \item \textbf{Scenario Commerciale (Produzione):} In caso di software proprietario closed-source, la \textit{Universal FOSS Exception} decadrebbe immediatamente. Il rischio di cause milionarie per violazione del copyright obbligherebbe l'azienda a una soluzione drastica nel codice sorgente: la \textbf{rimozione della libreria MySQL} dal \texttt{pom.xml} e la sua sostituzione con il connettore \texttt{org.mariadb.jdbc:mariadb-java-client} (rilasciato sotto licenza LGPL-2.1, che permette il dynamic linking in app commerciali), oppure l'acquisto di una licenza commerciale a pagamento direttamente da Oracle.
+    \end{itemize}
+
+    \item \textbf{\texttt{org.openjdk.jmh:jmh-generator-annprocess:1.37}}
+    \begin{itemize}
+        \item \textbf{Licenze Flagged/Denied:} Blocco di policy per l'ecosistema JMH/GPL e \textit{GPL-2.0-with-classpath-exception}.
+        \item \textbf{Problema:} La licenza virale della libreria potrebbe impattare irrimediabilmente il codice del progetto principale se erroneamente compilata e distribuita al cliente.
+        \item \textbf{Soluzione Didattica:} Approvazione manuale (\textit{``Approve as Exception''}) motivata dall'uso per profilazione energetica accademica.
+        \item \textbf{Scenario Commerciale (Produzione):} In un'azienda non si affiderebbe la sicurezza a un'approvazione manuale per la GPL. La soluzione aziendale consiste nell'imporre un enforcing tecnologico rigoroso: assicurarsi, tramite controlli automatizzati del \texttt{pom.xml}, che tutte le dipendenze di benchmarking abbiano categoricamente scope \texttt{test}. In questo modo, l'inclusione accidentale della libreria nel pacchetto WAR di produzione diventa tecnicamente impossibile.
+    \end{itemize}
+\end{itemize}
+
+Questi risultati confermano il valore cruciale dell'integrazione CI/CD e di uno strumento di \textit{Software Composition Analysis} moderno: sebbene le licenze individuate si siano rivelate gestibili nel contesto didattico specifico di 2Chance, in un contesto industriale reale la pipeline FOSSA avrebbe efficacemente sventato il rilascio in produzione del connettore MySQL, salvando l'azienda da gravissime implicazioni legali e ingiunzioni di distribuzione.
 
 \subsection{Artefatti dell'Analisi}
 
@@ -294,25 +309,21 @@ Il risultato complessivo è una riduzione del 50\% delle dipendenze a rischio me
 
 \subsection{Automazione degli Obblighi di Attribuzione}
 
-Per soddisfare pienamente il secondo obiettivo di conformità legale (Automazione Assoluta degli Obblighi di Attribuzione), si è provveduto a configurare e lanciare il plugin Maven dedicato alla gestione delle licenze per generare i documenti richiesti per la distribuzione del software. 
+Per soddisfare pienamente il secondo obiettivo di conformità legale (Automazione Assoluta degli Obblighi di Attribuzione), l'intero processo è stato delegato alla suite di \textit{Reporting} nativa della FOSSA Web App. 
 
-Sono stati prodotti due artefatti chiave all'interno della directory \texttt{src/fossa/}:
-\begin{itemize}
-    \item \textbf{\texttt{THIRD-PARTY-NOTICES.txt}}: File di testo contenente l'elenco completo di tutte le dipendenze di terze parti, con la rispettiva classificazione della licenza e il testo integrale del copyright e dei termini di licenza per ciascuna di esse. Questo file è pronto per essere incluso nella directory di distribuzione dell'applicazione per adempiere agli obblighi legali di attribuzione delle licenze permissive (quali Apache 2.0, MIT, BSD).
-    \item \textbf{\texttt{third-party-report.html}}: Un report visuale in formato HTML che offre un'interfaccia interattiva per navigare l'inventario delle dipendenze e i relativi dettagli legali.
-\end{itemize}
+Invece di appoggiarsi a limitati plugin Maven locali, la piattaforma cloud compila e aggiorna dinamicamente la lista completa delle dipendenze, delle licenze associate e dei testi di copyright necessari ricavandoli dall'analisi profonda del codice sorgente. Con un singolo click dalla dashboard aziendale, è possibile generare on-demand il documento ufficiale di \textbf{Third-Party Notices} in molteplici formati (Testo puro, HTML per l'integrazione frontend, PDF o Markdown). 
 
-L'adozione di questa pipeline automatizzata garantisce che ad ogni build di rilascio, la documentazione sulle licenze venga rigenerata coerentemente con le dipendenze effettivamente introdotte o aggiornate nel \texttt{pom.xml}, sollevando il team di sviluppo da controlli manuali inclini all'errore umano e garantendo la conformità legale al 100\% in modo continuo.
+L'adozione di questa generazione automatizzata in cloud garantisce che la documentazione sulle licenze sia sempre perfettamente allineata con l'ultimo commit validato tramite la pipeline CI/CD, sollevando il team di sviluppo da controlli manuali inclini all'errore umano e garantendo la conformità legale in modo continuo.
 
 \subsection{Generazione della Software Bill of Materials (SBOM)}
 
-Al fine di garantire la trasparenza della catena di approvvigionamento del software (\textit{software supply chain}) ed adempiere alle moderne richieste di conformità legale (quali l'ISO/IEC 5230 dell'OpenChain Project o i requisiti in materia di cybersecurity per i bandi governativi), è stata automatizzata la generazione della \textbf{Software Bill of Materials (SBOM)} per l'applicazione 2Chance.
+Al fine di garantire la trasparenza della catena di approvvigionamento del software (\textit{software supply chain}) ed adempiere alle moderne richieste di conformità legale (quali l'ISO/IEC 5230 dell'OpenChain Project o i requisiti in materia di cybersecurity per i bandi governativi), la generazione della \textbf{Software Bill of Materials (SBOM)} è stata completamente integrata nel flusso FOSSA.
 
-L'operazione è stata implementata integrando e lanciando il plugin Maven ufficiale per lo standard \textbf{CycloneDX} (uno standard industriale leader per la specifica di SBOM). Sono stati generati con successo due formati dello stesso documento all'interno della directory \texttt{src/fossa/}:
+La piattaforma cloud offre funzionalità di esportazione native conformi agli standard industriali leader. Per il progetto 2Chance, è possibile generare ed esportare report dettagliati in formati strutturati quali:
 \begin{itemize}
-    \item \textbf{\texttt{sbom.json}}: La distinta base completa in formato JSON (CycloneDX v1.4), strutturata per essere analizzata in automatico da strumenti di vulnerability management o Dependency-Track.
-    \item \textbf{\texttt{sbom.xml}}: Lo stesso report in formato XML, per la massima compatibilità e integrazione con altri parser aziendali standard.
+    \item \textbf{CycloneDX (JSON/XML)}: Formato ottimizzato per la sicurezza e l'analisi automatica da parte di strumenti di Vulnerability Management esterni.
+    \item \textbf{SPDX}: Standard ISO ufficiale per la condivisione delle informazioni sulle licenze software.
 \end{itemize}
 
-Questi file descrivono in modo univoco e strutturato ciascun componente software incluso nel build, specificando per ognuno di essi: identificativi univoci (Package URL - \textit{purl}), versione precisa, hash SHA-1/SHA-256 del binario e la classificazione delle licenze applicate. Questo consente ai clienti e agli auditor di effettuare controlli rapidi sulla sicurezza e sulla conformità delle licenze distribuite.
+Questi artefatti, generati dinamicamente dal cloud senza necessitare di ulteriori plugin Maven aggiuntivi nel \texttt{pom.xml}, descrivono in modo univoco e strutturato ciascun componente software incluso nel build, specificando per ognuno di essi: identificativi univoci (Package URL - \textit{purl}), versione precisa, e classificazione delle licenze applicate. Questo approccio \textit{zero-configuration} lato codice consente ad auditor esterni o clienti aziendali di effettuare controlli rapidi e certificati sulla sicurezza del prodotto distribuito.
 
