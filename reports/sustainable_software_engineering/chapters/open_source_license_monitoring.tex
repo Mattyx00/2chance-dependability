@@ -184,37 +184,44 @@ I \textit{Flag} rappresentano licenze identificate come potenzialmente problemat
 
 Questi risultati confermano il valore cruciale dell'integrazione CI/CD e di uno strumento di \textit{Software Composition Analysis} moderno: sebbene le licenze individuate si siano rivelate gestibili nel contesto didattico specifico di 2Chance, in un contesto industriale reale la pipeline FOSSA avrebbe efficacemente sventato il rilascio in produzione del connettore MySQL, salvando l'azienda da gravissime implicazioni legali e ingiunzioni di distribuzione.
 
-Dall'incrocio tra la topologia del grafo delle dipendenze e l'inventario delle licenze emergono cinque macro-aree architetturali, ciascuna con un differente impatto teorico e pratico sul profilo di rischio legale del software:
+\subsection{Valutazione del Rischio Legale per Macro-Aree Architetturali}
+
+Dall'incrocio tra la topologia del grafo delle dipendenze e l'inventario delle licenze emergono cinque macro-aree architetturali, ciascuna con un differente impatto teorico e pratico sul profilo di rischio legale del software. Di seguito si presenta la valutazione dettagliata per ciascuna area, integrando l'analisi delle specifiche dipendenze che richiedono un'attenzione particolare a causa della natura copyleft delle loro licenze:
 
 \begin{itemize}
-    \item \textbf{Infrastruttura Web e Servlet (\texttt{provided}):} 
-    Include le API fondamentali come \texttt{javax.servlet-api}. Essendo dichiarate con scope \textit{provided}, l'applicazione si aspetta che siano già fornite dall'Application Server (Apache Tomcat) a runtime. L'assenza fisica di queste librerie nel pacchetto WAR distribuito abbatte drasticamente il rischio di violazioni copyleft, poiché non vi è alcuna distribuzione di terze parti verso l'utente finale.
+    \item \textbf{Infrastruttura Web e Servlet (\texttt{provided}) --- Rischio Nullo}: 
+    Include le API fondamentali fornite dall'Application Server (Apache Tomcat) a runtime. L'assenza fisica di queste librerie nel pacchetto WAR distribuito abbatte drasticamente il rischio di violazioni copyleft.
+    \begin{itemize}
+        \item \textbf{\texttt{javax.servlet:javax.servlet-api:4.0.1} (CDDL + GPLv2 con Classpath Exception)}: Rilasciata sotto doppia licenza (CDDL, permissiva, e GPLv2 con Classpath Exception). Essendo dichiarata con scope \texttt{provided}, non viene inclusa nel pacchetto WAR e non genera obblighi distributivi. Il rischio legale è pertanto \textbf{nullo}.
+    \end{itemize}
     
-    \item \textbf{Connettività Database e Persistenza (\texttt{compile}):}
-    Comprende \texttt{com.mysql:mysql-connector-j} (che eredita transitivamente \texttt{protobuf-java}) e il pool di connessioni \texttt{tomcat-jdbc} (che eredita \texttt{tomcat-juli}). Questi artefatti sono vitali per l'applicazione e vengono compressi direttamente nel pacchetto finale distribuito. Essi rappresentano il \textbf{vettore di rischio legale più critico}: l'eventuale presenza di licenze copyleft forti (come la GPL) associate al connettore del database innesterebbe obblighi virali sull'intero codice proprietario del progetto.
+    \item \textbf{Connettività Database e Persistenza (\texttt{compile}) --- Rischio Medio}:
+    Questi artefatti sono vitali per l'applicazione e vengono compressi direttamente nel pacchetto finale distribuito. Rappresentano il vettore di rischio legale più critico.
+    \begin{itemize}
+        \item \textbf{\texttt{com.mysql:mysql-connector-j:9.5.0} (GPLv2 + Universal FOSS Exception v1.0)}: Il connettore MySQL è rilasciato sotto licenza copyleft forte (GPLv2) che, in assenza di eccezioni, imporrebbe il rilascio dell'intero codice sorgente dell'applicazione collegata. Tuttavia, la Universal FOSS Exception concede esplicitamente il permesso di linkare il connettore con qualsiasi software rilasciato sotto una licenza FOSS riconosciuta. Poiché il progetto 2Chance utilizza esclusivamente dipendenze compatibili (Apache-2.0, MIT, BSD-3-Clause, EPL-2.0), l'eccezione si applica integralmente e il rischio legale è \textbf{mitigato} (Rischio Medio). Qualora il progetto venisse in futuro distribuito come software proprietario closed-source, questa dipendenza dovrebbe essere sostituita con un'alternativa (es. MariaDB Connector/J).
+        \item \textbf{\texttt{org.apache.tomcat:tomcat-jdbc} e dipendenze transitive (Apache-2.0 / BSD-3-Clause)}: Il pool di connessioni (che eredita \texttt{tomcat-juli}) e la libreria \texttt{protobuf-java} sono rilasciati sotto licenze permissive che non impongono vincoli virali al codice. Il rischio legale è \textbf{nullo}.
+    \end{itemize}
 
-    \item \textbf{Utilità Generiche e Manipolazione Dati (\texttt{compile}):}
-    Raggruppa le librerie utilizzate trasversalmente nel codice, come \texttt{commons-io}, \texttt{org.json} e le \texttt{taglibs} di Apache. Trattandosi di componenti storici dell'ecosistema open source Java, possiedono quasi sempre licenze permissive (Apache 2.0, MIT), rendendo la loro inclusione nel WAR distribuito sicura dal punto di vista commerciale.
+    \item \textbf{Utilità Generiche e Manipolazione Dati (\texttt{compile}) --- Rischio Nullo}:
+    Raggruppa le librerie utilizzate trasversalmente nel codice.
+    \begin{itemize}
+        \item \textbf{\texttt{commons-io}, \texttt{org.json}, \texttt{taglibs} (Apache 2.0 / MIT / Public Domain)}: Trattandosi di componenti storici dell'ecosistema open source Java, possiedono quasi sempre licenze permissive, rendendo la loro inclusione nel WAR distribuito sicura dal punto di vista commerciale. Nessun vincolo virale o rischio copyleft è associato a queste librerie (\textbf{Rischio Nullo}).
+    \end{itemize}
     
-    \item \textbf{Ecosistema di Testing e Mocking (\texttt{test}):}
-    Include i framework \texttt{junit-jupiter} e \texttt{mockito-core}, i quali a loro volta trascinano un folto gruppo di dipendenze transitive (es. \texttt{byte-buddy}, \texttt{objenesis}). Dal punto di vista della compliance legale, questa vasta ramificazione dell'albero è \textbf{intrinsecamente sicura}: lo scope \textit{test} garantisce al livello di build system che Maven escluda questi file dall'artefatto di produzione, annullando alla radice ogni rischio di distribuzione copyleft.
+    \item \textbf{Ecosistema di Testing e Mocking (\texttt{test}) --- Rischio Nullo}:
+    Dal punto di vista della compliance legale, questa vasta ramificazione dell'albero è intrinsecamente sicura grazie allo scope isolato.
+    \begin{itemize}
+        \item \textbf{\texttt{org.junit.jupiter} (EPL-2.0)}: Il framework di testing adotta una licenza copyleft debole. Tuttavia, lo scope \textit{test} garantisce al livello di build system che Maven escluda questi file dall'artefatto di produzione, annullando alla radice ogni rischio di distribuzione copyleft (\textbf{Rischio Nullo}).
+        \item \textbf{\texttt{org.mockito:mockito-core} e dipendenze transitive (MIT / Apache 2.0)}: Strumenti di mocking (incluso \texttt{byte-buddy}) rilasciati sotto licenze puramente permissive (\textbf{Rischio Nullo}).
+    \end{itemize}
     
-    \item \textbf{Strumenti di Benchmarking e Qualità (\texttt{compile} / \texttt{provided}):}
-    Rileva la presenza di strumenti diagnostici avanzati utilizzati nel progetto, quali la profilazione energetica (\texttt{jmh-core}, che eredita \texttt{jopt-simple} e \texttt{commons-math3}) e il mutation testing (\texttt{pitest-parent}). L'albero fa emergere un'\textbf{anomalia architetturale significativa}: \texttt{jmh-core} e \texttt{pitest-parent} risultano mappati con scope \textit{compile}. Dal punto di vista teorico e pratico, l'inclusione di framework diagnostici nel WAR finale di produzione è un errore: non solo appesantisce ingiustificatamente l'artefatto e il consumo di banda, ma espone inutilmente l'azienda ai vincoli legali delle licenze associate a questi tool.
-\end{itemize}
-
-\subsection{Valutazione del Rischio Copyleft}
-
-L'analisi FOSSA ha identificato quattro dipendenze che richiedono un'attenzione specifica a causa della natura copyleft delle loro licenze. Di seguito si presenta la valutazione dettagliata per ciascuna di esse.
-
-\begin{itemize}
-    \item \textbf{mysql-connector-j (GPLv2 + Universal FOSS Exception v1.0) --- Rischio Medio}: Il connettore MySQL per Java (\texttt{com.mysql:mysql-connector-j:9.5.0}), dichiarato con scope \texttt{compile} e quindi incluso nel pacchetto WAR distribuito, è rilasciato sotto licenza \textbf{GNU General Public License v2} con la \textbf{Universal FOSS Exception v1.0}. La GPLv2 è una licenza copyleft forte che, in assenza di eccezioni, imporrebbe il rilascio dell'intero codice sorgente dell'applicazione collegata. Tuttavia, la Universal FOSS Exception concede esplicitamente il permesso di linkare il connettore con qualsiasi software rilasciato sotto una licenza riconosciuta dalla Free Software Foundation o dall'Open Source Initiative, senza attivare gli obblighi copyleft della GPL. Poiché il progetto 2Chance utilizza esclusivamente dipendenze con licenze FOSS riconosciute (Apache-2.0, MIT, BSD-3-Clause, EPL-2.0), l'eccezione si applica integralmente e il rischio legale è \textbf{mitigato}. Tuttavia, qualora il progetto venisse in futuro distribuito come software proprietario closed-source, questa dipendenza dovrebbe essere sostituita con un'alternativa compatibile, come il MariaDB Connector/J rilasciato sotto licenza LGPL-2.1.
-
-    \item \textbf{jmh-core (GPLv2 + Classpath Exception) --- Rischio Medio}: La libreria Java Microbenchmark Harness (\texttt{org.openjdk.jmh:jmh-core:1.37}), attualmente dichiarata con scope \texttt{compile}, è rilasciata sotto \textbf{GPLv2 con Classpath Exception}. La Classpath Exception è una clausola standard adottata dall'ecosistema OpenJDK che permette di creare applicazioni che utilizzano le librerie senza essere soggette agli obblighi di distribuzione del codice sorgente imposti dalla GPL. Il rischio principale risiede nel fatto che JMH è uno strumento di benchmarking, concepito esclusivamente per la profilazione delle prestazioni durante lo sviluppo, e \textbf{non dovrebbe essere incluso nel pacchetto WAR di produzione}. La sua presenza con scope \texttt{compile} rappresenta un'anomalia architetturale: la modifica dello scope a \texttt{test} nel file \texttt{pom.xml} eliminerebbe completamente qualsiasi rischio di distribuzione, poiché le dipendenze con scope \texttt{test} non vengono mai incluse nell'artefatto finale.
-
-    \item \textbf{jmh-generator-annprocess (GPLv2 + Classpath Exception) --- Rischio Basso}: Il processore di annotazioni di JMH (\texttt{org.openjdk.jmh:jmh-generator-annprocess:1.37}) condivide la stessa licenza GPLv2 + Classpath Exception del core di JMH. Tuttavia, essendo già correttamente dichiarato con scope \texttt{provided}, non viene incluso nel pacchetto WAR distribuito. Il rischio legale è pertanto \textbf{nullo} per questa dipendenza.
-
-    \item \textbf{javax.servlet-api (CDDL + GPLv2 con Classpath Exception) --- Rischio Nullo}: La Servlet API (\texttt{javax.servlet:javax.servlet-api:4.0.1}) è rilasciata sotto doppia licenza: \textbf{CDDL} (Common Development and Distribution License, una licenza permissiva) e \textbf{GPLv2 con Classpath Exception}. Essendo dichiarata con scope \texttt{provided}, viene fornita dal server Tomcat a runtime e non è inclusa nel pacchetto WAR. Il rischio legale è pertanto \textbf{nullo}.
+    \item \textbf{Strumenti di Benchmarking e Qualità (\texttt{compile} / \texttt{provided}) --- Rischio Medio / Basso}:
+    L'albero fa emergere un'anomalia architetturale significativa: l'inclusione di framework diagnostici nel WAR finale di produzione è un errore che espone inutilmente l'azienda a vincoli legali.
+    \begin{itemize}
+        \item \textbf{\texttt{org.openjdk.jmh:jmh-core:1.37} (GPLv2 + Classpath Exception)}: Strumento di benchmarking rilasciato sotto \textbf{GPLv2 con Classpath Exception}. Sebbene l'eccezione permetta di creare applicazioni senza essere soggetti agli obblighi virali, la sua presenza con scope \texttt{compile} rappresenta un rischio. La modifica dello scope a \texttt{test} nel file \texttt{pom.xml} eliminerebbe completamente qualsiasi rischio di distribuzione (\textbf{Rischio Medio}).
+        \item \textbf{\texttt{org.openjdk.jmh:jmh-generator-annprocess:1.37} (GPLv2 + Classpath Exception)}: Condivide la stessa licenza del core di JMH. Tuttavia, essendo già correttamente dichiarato con scope \texttt{provided}, non viene incluso nel pacchetto WAR distribuito (\textbf{Rischio Nullo} per la distribuzione).
+        \item \textbf{\texttt{org.pitest:pitest-parent} (Apache 2.0)}: Framework di mutation testing. Pur avendo una licenza permissiva, il suo mapping con scope \textit{compile} appesantisce inutilmente l'artefatto di produzione senza fornire funzionalità runtime (\textbf{Rischio Nullo}, ma anomalia architetturale).
+    \end{itemize}
 \end{itemize}
 
 Sulla base dei risultati dell'analisi FOSSA e della catalogazione delle licenze, si formulano le seguenti raccomandazioni operative:
