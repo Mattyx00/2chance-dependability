@@ -8,71 +8,55 @@
 \contentsline {subsection}{\numberline {2.1.5}The Model Beans (Data Representation)}{5}{subsection.2.1.5}%
 \contentsline {section}{\numberline {2.2}Dynamic Behavior: The Authentication Workflow}{6}{section.2.2}%
 \contentsline {chapter}{\numberline {3}Sostenibilità Energetica del Back-End}{7}{chapter.3}%
-\contentsline {section}{\numberline {3.1}Misurazione Dinamica dell'Energia tramite EnergiBridge e JMeter}{7}{section.3.1}%
-\contentsline {subsection}{\numberline {3.1.1}Configurazione dell'Ambiente di Profilazione}{7}{subsection.3.1.1}%
-\contentsline {subsection}{\numberline {3.1.2}Strategia di Monitoraggio e Workload Deterministico}{7}{subsection.3.1.2}%
-\contentsline {paragraph}{Astrazione del Contesto di Rete (Test Plan)}{8}{section*.2}%
-\contentsline {paragraph}{Orchestrazione della Concorrenza (Thread Group)}{8}{section*.3}%
-\contentsline {paragraph}{Mantenimento dello Stato e dell'Isolamento (Session Management)}{8}{section*.4}%
-\contentsline {paragraph}{Campionamento delle Interazioni (HTTP Samplers)}{8}{section*.5}%
-\contentsline {subsection}{\numberline {3.1.3}Progettazione degli Scenari di Test JMeter}{9}{subsection.3.1.3}%
-\contentsline {subsubsection}{Simulazione del Flusso Utente (User Journey)}{10}{section*.6}%
-\contentsline {subsection}{\numberline {3.1.4}Definizione delle Soglie di Accettabilità (SLAs) e Dimensionamento dei Test}{11}{subsection.3.1.4}%
-\contentsline {subsubsection}{Esperimento di Stress Preventivo: Determinazione del Punto di Rottura (Capacità Nominale $C$)}{11}{section*.7}%
-\contentsline {subsubsection}{Analisi del Collo di Bottiglia sotto Carico Elevato}{11}{section*.8}%
-\contentsline {subsubsection}{1. Scenario di Load Testing (Carico di Picco Sostenibile)}{12}{section*.9}%
-\contentsline {subsubsection}{2. Scenario di Soak Testing (Resistenza e Memory Leak)}{12}{section*.10}%
-\contentsline {subsubsection}{3. Scenario di Spike Testing (Tolleranza ai Picchi Improvvisi)}{12}{section*.11}%
-\contentsline {subsection}{\numberline {3.1.5}Automazione, Isolamento e Sincronizzazione dei Test (\texttt {backend\_energy\_consumption\_analysis.ps1})}{13}{subsection.3.1.5}%
-\contentsline {subsubsection}{Isolamento dell'Ambiente e Prevenzione del Software Aging}{13}{section*.12}%
-\contentsline {subsubsection}{Warm-Up del Server e Risoluzione dei Transitori}{13}{section*.13}%
-\contentsline {subsubsection}{Sincronizzazione della Profilazione ed Esecuzione Headless}{13}{section*.14}%
-\contentsline {subsection}{\numberline {3.1.6}Analisi Energetica Post-Elaborazione ed Estrazione delle Metriche (\texttt {energibridge\_metrics\_extractor.py})}{14}{subsection.3.1.6}%
-\contentsline {subsubsection}{Filtrazione del Rumore dei Sensori RAPL}{14}{section*.15}%
-\contentsline {subsubsection}{Calcolo delle Metriche Globali di Sistema}{15}{section*.16}%
-\contentsline {section}{\numberline {3.2}Analisi Statica del Codice (Creedengo)}{15}{section.3.2}%
-\contentsline {subsection}{\numberline {3.2.1}Configurazione di SonarQube con il Plugin Creedengo}{16}{subsection.3.2.1}%
-\contentsline {subsection}{\numberline {3.2.2}Selezione delle Regole di Eco-Design}{16}{subsection.3.2.2}%
-\contentsline {subsection}{\numberline {3.2.3}Risultati dell'Analisi Statica e Risoluzione dei Fault}{17}{subsection.3.2.3}%
-\contentsline {section}{\numberline {3.3}Microbenchmarking Energetico (JMH)}{17}{section.3.3}%
-\contentsline {subsection}{\numberline {3.3.1}Anti-Pattern di Sostenibilità Identificati}{17}{subsection.3.3.1}%
-\contentsline {subsection}{\numberline {3.3.2}Microbenchmarking Energetico (JMH)}{18}{subsection.3.3.2}%
-\contentsline {subsection}{\numberline {3.3.3}Strumento di Profilazione Energetica Co-Sincronizzato: Architettura e Teoria Operativa}{18}{subsection.3.3.3}%
-\contentsline {subsection}{\numberline {3.3.4}Risultati Sperimentali dei Benchmark (Smoke Runs)}{18}{subsection.3.3.4}%
-\contentsline {section}{\numberline {3.4}Piano di Refactoring ed Ottimizzazione}{19}{section.3.4}%
-\contentsline {section}{\numberline {3.5}Validazione delle Ottimizzazioni}{20}{section.3.5}%
-\contentsline {subsection}{\numberline {3.5.1}Validazione dell'Analisi Statica (Creedengo)}{20}{subsection.3.5.1}%
-\contentsline {subsection}{\numberline {3.5.2}Risultati Sperimentali dei Benchmark Post-Refactoring}{20}{subsection.3.5.2}%
-\contentsline {subsubsection}{1. Analisi Comparativa: OrdineDAOBenchmark}{20}{section*.17}%
-\contentsline {subsubsection}{2. Analisi Comparativa: ProdottoDAOBenchmark}{21}{section*.18}%
-\contentsline {subsubsection}{3. Analisi Comparativa: RecensioneDAOBenchmark}{21}{section*.19}%
-\contentsline {section}{\numberline {3.6}Confronto Energetico di Sistema Post-Refactoring (JMeter)}{21}{section.3.6}%
-\contentsline {subsection}{\numberline {3.6.1}Correlazione delle Ottimizzazioni con i Consumi Energetici di Sistema}{22}{subsection.3.6.1}%
-\contentsline {chapter}{\numberline {4}Valutazione e Ottimizzazione Ambientale del Livello Front-End}{24}{chapter.4}%
-\contentsline {section}{\numberline {4.1}Analisi Ambientale del Baseline (GreenIT ed EcoIndex)}{24}{section.4.1}%
-\contentsline {subsection}{\numberline {4.1.1}Metodologia di Valutazione: Contesto Reale (GreenIT-Analysis) vs Contesto Laboratorio (EcoIndex)}{25}{subsection.4.1.1}%
-\contentsline {section}{\numberline {4.2}Interventi di Refactoring e Ottimizzazione Ambientale}{26}{section.4.2}%
-\contentsline {section}{\numberline {4.3}Bypass dell'Autenticazione nei Test Ambientali (Test Mode Session Injector)}{29}{section.4.3}%
-\contentsline {section}{\numberline {4.4}Validazione dell'Impatto del Refactoring}{29}{section.4.4}%
-\contentsline {subsection}{\numberline {4.4.1}Quantificazione dell'Ottimizzazione Globale}{31}{subsection.4.4.1}%
-\contentsline {chapter}{\numberline {5}Monitoraggio Licenze Open Source}{33}{chapter.5}%
-\contentsline {section}{\numberline {5.1}Analisi della Compliance e dei Rischi Legali (FOSSA)}{33}{section.5.1}%
-\contentsline {subsection}{\numberline {5.1.1}Sostenibilità Legale ed Economica: Software Composition Analysis e Conformità delle Licenze}{33}{subsection.5.1.1}%
-\contentsline {subsection}{\numberline {5.1.2}Monitoraggio delle Licenze Open Source tramite FOSSA}{33}{subsection.5.1.2}%
-\contentsline {subsection}{\numberline {5.1.3}Esecuzione dell'Analisi FOSSA}{34}{subsection.5.1.3}%
-\contentsline {subsection}{\numberline {5.1.4}Albero delle Dipendenze del Progetto 2Chance}{35}{subsection.5.1.4}%
-\contentsline {subsection}{\numberline {5.1.5}Inventario Completo delle Licenze}{36}{subsection.5.1.5}%
-\contentsline {subsection}{\numberline {5.1.6}Distribuzione delle Licenze}{37}{subsection.5.1.6}%
-\contentsline {subsection}{\numberline {5.1.7}Valutazione del Rischio Copyleft}{37}{subsection.5.1.7}%
-\contentsline {subsubsection}{mysql-connector-j (GPLv2 + Universal FOSS Exception v1.0) --- Rischio Medio}{37}{section*.20}%
-\contentsline {subsubsection}{jmh-core (GPLv2 + Classpath Exception) --- Rischio Medio}{38}{section*.21}%
-\contentsline {subsubsection}{jmh-generator-annprocess (GPLv2 + Classpath Exception) --- Rischio Basso}{38}{section*.22}%
-\contentsline {subsubsection}{javax.servlet-api (CDDL + GPLv2 con Classpath Exception) --- Rischio Nullo}{39}{section*.23}%
-\contentsline {subsection}{\numberline {5.1.8}Sintesi del Rischio e Raccomandazioni}{39}{subsection.5.1.8}%
-\contentsline {subsection}{\numberline {5.1.9}Artefatti dell'Analisi}{40}{subsection.5.1.9}%
-\contentsline {subsection}{\numberline {5.1.10}Interventi Correttivi Applicati}{40}{subsection.5.1.10}%
-\contentsline {subsubsection}{Modifica dello Scope di \texttt {jmh-core} (compile $\rightarrow $ test)}{40}{section*.24}%
-\contentsline {subsubsection}{Modifica dello Scope di \texttt {pitest-parent} (compile $\rightarrow $ test)}{41}{section*.25}%
-\contentsline {subsection}{\numberline {5.1.11}Impatto degli Interventi Correttivi}{41}{subsection.5.1.11}%
-\contentsline {subsection}{\numberline {5.1.12}Automazione degli Obblighi di Attribuzione}{41}{subsection.5.1.12}%
-\contentsline {subsection}{\numberline {5.1.13}Generazione della Software Bill of Materials (SBOM)}{42}{subsection.5.1.13}%
+\contentsline {section}{\numberline {3.1}Analisi Statica del Codice (Creedengo)}{7}{section.3.1}%
+\contentsline {subsection}{\numberline {3.1.1}Configurazione di SonarQube con il Plugin Creedengo}{7}{subsection.3.1.1}%
+\contentsline {subsection}{\numberline {3.1.2}Selezione delle Regole di Eco-Design}{8}{subsection.3.1.2}%
+\contentsline {subsection}{\numberline {3.1.3}Output dell'Analisi Statica e Piano di Refactoring}{8}{subsection.3.1.3}%
+\contentsline {subsection}{\numberline {3.1.4}Unit e Integration Testing Iterativo}{9}{subsection.3.1.4}%
+\contentsline {subsection}{\numberline {3.1.5}Validazione dell'Analisi Statica (Creedengo Post-Refactoring)}{10}{subsection.3.1.5}%
+\contentsline {section}{\numberline {3.2}Validazione delle Ottimizzazioni: Baseline vs SSE-Improvements}{10}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}Introduzione a EnergiBridge per la Profilazione}{10}{subsection.3.2.1}%
+\contentsline {subsection}{\numberline {3.2.2}Configurazione dell'Ambiente di Profilazione}{10}{subsection.3.2.2}%
+\contentsline {subsection}{\numberline {3.2.3}Microbenchmarking Energetico sui DAO (JMH + EnergiBridge)}{10}{subsection.3.2.3}%
+\contentsline {subsubsection}{Strumento di Profilazione Energetica Co-Sincronizzato}{11}{section*.2}%
+\contentsline {subsection}{\numberline {3.2.4}Confronto dei Risultati dei Benchmark (Baseline vs Post-Refactoring)}{11}{subsection.3.2.4}%
+\contentsline {paragraph}{Considerazioni sulle Migliorie apportate ai DAO}{12}{section*.3}%
+\contentsline {subsection}{\numberline {3.2.5}System Level Performance Testing (JMeter + EnergiBridge)}{12}{subsection.3.2.5}%
+\contentsline {subsubsection}{Simulazione del Flusso Utente (User Journey e Servlet Coinvolte)}{13}{section*.4}%
+\contentsline {subsection}{\numberline {3.2.6}Step-Up Testing e Definizione delle Soglie di Accettabilità}{15}{subsection.3.2.6}%
+\contentsline {paragraph}{Esperimento di Stress Preventivo}{15}{section*.5}%
+\contentsline {subsubsection}{Configurazione Scenari: Load, Soak e Spike Testing}{15}{section*.6}%
+\contentsline {paragraph}{1. Scenario di Load Testing (Carico di Picco Sostenibile)}{15}{section*.7}%
+\contentsline {paragraph}{2. Scenario di Soak Testing (Resistenza e Memory Leak)}{16}{section*.8}%
+\contentsline {paragraph}{3. Scenario di Spike Testing (Tolleranza ai Picchi Improvvisi)}{16}{section*.9}%
+\contentsline {subsection}{\numberline {3.2.7}Automazione, Isolamento e Sincronizzazione dei Test}{16}{subsection.3.2.7}%
+\contentsline {subsubsection}{Confronto Energetico di Sistema Post-Refactoring}{19}{section*.10}%
+\contentsline {subsubsection}{Correlazione delle Ottimizzazioni con i Consumi Energetici di Sistema}{19}{section*.11}%
+\contentsline {chapter}{\numberline {4}Valutazione e Ottimizzazione Ambientale del Livello Front-End}{22}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Analisi Ambientale del Baseline (GreenIT ed EcoIndex)}{22}{section.4.1}%
+\contentsline {subsection}{\numberline {4.1.1}Metodologia di Valutazione: Contesto Reale (GreenIT-Analysis) vs Contesto Laboratorio (EcoIndex)}{23}{subsection.4.1.1}%
+\contentsline {section}{\numberline {4.2}Interventi di Refactoring e Ottimizzazione Ambientale}{24}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Bypass dell'Autenticazione nei Test Ambientali (Test Mode Session Injector)}{27}{section.4.3}%
+\contentsline {section}{\numberline {4.4}Validazione dell'Impatto del Refactoring}{27}{section.4.4}%
+\contentsline {subsection}{\numberline {4.4.1}Quantificazione dell'Ottimizzazione Globale}{29}{subsection.4.4.1}%
+\contentsline {chapter}{\numberline {5}Monitoraggio Licenze Open Source}{31}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Analisi della Compliance e dei Rischi Legali (FOSSA)}{31}{section.5.1}%
+\contentsline {subsection}{\numberline {5.1.1}Sostenibilità Legale ed Economica: Software Composition Analysis e Conformità delle Licenze}{31}{subsection.5.1.1}%
+\contentsline {subsection}{\numberline {5.1.2}Monitoraggio delle Licenze Open Source tramite FOSSA}{31}{subsection.5.1.2}%
+\contentsline {subsection}{\numberline {5.1.3}Esecuzione dell'Analisi FOSSA}{32}{subsection.5.1.3}%
+\contentsline {subsection}{\numberline {5.1.4}Albero delle Dipendenze del Progetto 2Chance}{33}{subsection.5.1.4}%
+\contentsline {subsection}{\numberline {5.1.5}Inventario Completo delle Licenze}{34}{subsection.5.1.5}%
+\contentsline {subsection}{\numberline {5.1.6}Distribuzione delle Licenze}{35}{subsection.5.1.6}%
+\contentsline {subsection}{\numberline {5.1.7}Valutazione del Rischio Copyleft}{35}{subsection.5.1.7}%
+\contentsline {subsubsection}{mysql-connector-j (GPLv2 + Universal FOSS Exception v1.0) --- Rischio Medio}{35}{section*.12}%
+\contentsline {subsubsection}{jmh-core (GPLv2 + Classpath Exception) --- Rischio Medio}{36}{section*.13}%
+\contentsline {subsubsection}{jmh-generator-annprocess (GPLv2 + Classpath Exception) --- Rischio Basso}{36}{section*.14}%
+\contentsline {subsubsection}{javax.servlet-api (CDDL + GPLv2 con Classpath Exception) --- Rischio Nullo}{37}{section*.15}%
+\contentsline {subsection}{\numberline {5.1.8}Sintesi del Rischio e Raccomandazioni}{37}{subsection.5.1.8}%
+\contentsline {subsection}{\numberline {5.1.9}Artefatti dell'Analisi}{38}{subsection.5.1.9}%
+\contentsline {subsection}{\numberline {5.1.10}Interventi Correttivi Applicati}{38}{subsection.5.1.10}%
+\contentsline {subsubsection}{Modifica dello Scope di \texttt {jmh-core} (compile $\rightarrow $ test)}{38}{section*.16}%
+\contentsline {subsubsection}{Modifica dello Scope di \texttt {pitest-parent} (compile $\rightarrow $ test)}{39}{section*.17}%
+\contentsline {subsection}{\numberline {5.1.11}Impatto degli Interventi Correttivi}{39}{subsection.5.1.11}%
+\contentsline {subsection}{\numberline {5.1.12}Automazione degli Obblighi di Attribuzione}{39}{subsection.5.1.12}%
+\contentsline {subsection}{\numberline {5.1.13}Generazione della Software Bill of Materials (SBOM)}{40}{subsection.5.1.13}%

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2026.1.3)  3 JUN 2026 12:10
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2026.1.3)  4 JUN 2026 10:52
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -823,21 +823,7 @@ Package hyperref Info: Option `pageanchor' set `false' on input line 47.
 /Program Files/texlive/2025/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc
 }]
 Package hyperref Info: Option `pageanchor' set `true' on input line 49.
- (./report_sustainable_software_engineering_project.toc
-Overfull \hbox (135.25337pt too wide) in paragraph at lines 26--26
- [][] [][][]\T1/cmr/m/n/12 Automazione, Iso-la-mento e Sin-croniz-zazione dei T
-est (\T1/cmtt/m/n/12 backend_energy_consumption_analysis.ps1\T1/cmr/m/n/12 )[][
-] [][]  
- []
-
-
-Overfull \hbox (164.9017pt too wide) in paragraph at lines 30--30
- [][] [][][]\T1/cmr/m/n/12 Analisi En-er-get-ica Post-Elaborazione ed Es-trazio
-ne delle Met-riche (\T1/cmtt/m/n/12 energibridge_metrics_extractor.py\T1/cmr/m/
-n/12 )[][] [][]  
- []
-
-[1
+ (./report_sustainable_software_engineering_project.toc [1
 
 ])
 \tf@toc=\write5
@@ -846,7 +832,8 @@ n/12 )[][] [][]
  [2]
 \openout2 = `chapters/introduction_and_system_baseline.aux'.
 
- (./chapters/introduction_and_system_baseline.tex
+
+(./chapters/introduction_and_system_baseline.tex
 Chapter 1.
 ) [3
 
@@ -891,175 +878,120 @@ Underfull \hbox (badness 10000) in paragraph at lines 46--47
 
  (./chapters/backend_energy_sustainability.tex
 Chapter 3.
-
-Overfull \hbox (14.07468pt too wide) in paragraph at lines 11--12
-\T1/cmr/m/n/12 Per in-stal-lare e con-fig-u-rare En-ergiB-ridge su Win-dows, ho
- cre-ato la di-rec-tory di sis-tema \T1/cmtt/m/n/12 C:\Program
- []
-
 [7
 
 
 
 
 ]
-Overfull \hbox (45.33342pt too wide) in paragraph at lines 30--31
-[]\T1/cmr/bx/n/12 Lettura In-for-ma-tiva (GET)\T1/cmr/m/n/12 : Op-er-azioni fi-
-nal-iz-zate al re-cu-pero dei dati, tipiche dell'esplorazione
+Overfull \hbox (12.89137pt too wide) in paragraph at lines 36--37
+\T1/cmr/m/n/12 getto rel-a-tive all'efficienza com-putazionale. L'invocazione c
+on-tinua del metodo \T1/cmtt/m/n/12 .size()
  []
-
-
-Overfull \hbox (3.56168pt too wide) in paragraph at lines 31--32
-[]\T1/cmr/bx/n/12 Mutazione di Stato (POST)\T1/cmr/m/n/12 : Op-er-azioni transa
-zion-ali, come la reg-is-trazione dell'utente
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 43--43
-[]|\T1/cmr/bx/n/12 Unità di
- []
-
-
-Underfull \hbox (badness 1466) in paragraph at lines 44--44
-\T1/cmr/m/n/12 rante l'esecuzione (in-clusi core, cache L2/L3 e
- []
-
-
-Underfull \hbox (badness 3623) in paragraph at lines 44--44
-\T1/cmr/m/n/12 con-troller in-te-grati). In-dica il ``costo netto''
- []
-
-
-Underfull \hbox (badness 5847) in paragraph at lines 45--45
-[]|\T1/cmr/m/n/12 Potenza Me-dia CPU
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 47--47
-[]|\T1/cmr/m/n/12 Percentuale
- []
-
-
-Underfull \hbox (badness 1552) in paragraph at lines 49--49
-[]|\T1/cmr/m/n/12 Memoria RAM Us-ata
- []
-
-
-Underfull \hbox (badness 1087) in paragraph at lines 49--49
-[]|\T1/cmr/m/n/12 L'impronta al-lo-cata nel sis-tema. In un am-bi-
- []
-
-
-Overfull \hbox (13.41364pt too wide) in paragraph at lines 41--51
- [][] 
- []
-
-
-LaTeX Warning: `h' float specifier changed to `ht'.
 
 [8{c:/Program Files/texlive/2025/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t
-s1.enc}] [9]
-Overfull \hbox (16.09477pt too wide) in paragraph at lines 98--99
-[]\T1/cmr/m/n/12 Esplora il cat-a-l-ogo vi-su-al-iz-zando i prodotti per cat-e-
-go-ria (\T1/cmtt/m/n/12 /ProdottiPerCategoriaServlet\T1/cmr/m/n/12 ). 
+s1.enc}]
+Overfull \hbox (2.13902pt too wide) in paragraph at lines 49--50
+[]\T1/cmr/bx/n/12 Soluzione: \T1/cmr/m/n/12 Analoga-mente alla re-gola GCI3, ri
+-sol-vere questo anti-pattern ha richiesto
+ []
+
+[9]
+Overfull \hbox (76.60806pt too wide) in paragraph at lines 65--65
+[]\T1/cmr/bx/n/17.28 Validazione delle Ot-timiz-zazioni: Base-line vs SSE-Impro
+vements 
  []
 
 
-Overfull \hbox (66.19644pt too wide) in paragraph at lines 107--108
-[]\T1/cmr/m/n/12 Accede alla sezione re-cen-sioni e pub-blica un feed-back sull
-'articolo ac-quis-tato (\T1/cmtt/m/n/12 /RecensioniServlet/*\T1/cmr/m/n/12 ). 
+Overfull \hbox (14.07468pt too wide) in paragraph at lines 75--76
+\T1/cmr/m/n/12 Per in-stal-lare e con-fig-u-rare En-ergiB-ridge su Win-dows, ho
+ cre-ato la di-rec-tory di sis-tema \T1/cmtt/m/n/12 C:\Program
  []
 
 
-Overfull \hbox (8.18141pt too wide) in paragraph at lines 116--117
-\T1/cmr/m/n/12 con l'obiettivo di in-di-vid-uare il lim-ite di tenuta dell'esec
-uzione dell'applicazione nell'infrastruttura
+Overfull \hbox (3.59271pt too wide) in paragraph at lines 77--77
+[]\T1/cmr/bx/n/14.4 Microbenchmarking En-er-getico sui DAO (JMH + En-ergiB-ridg
+e) 
  []
 
-[10] [11]
-LaTeX Font Info:    Font shape `T1/cmtt/bx/n' in size <14.4> not available
-(Font)              Font shape `T1/cmtt/m/n' tried instead on input line 165.
+[10]
+Overfull \hbox (32.38687pt too wide) in paragraph at lines 85--86
+[]\T1/cmr/m/n/12 I test sono stati es-e-guiti im-po-stando una con-fig-u-razion
+e a thread sin-golo (\T1/cmtt/m/n/12 @State(Scope.Thread)\T1/cmr/m/n/12 ),
+ []
 
-Overfull \hbox (225.16306pt too wide) in paragraph at lines 165--165
-[]\T1/cmr/bx/n/14.4 Automazione, Iso-la-mento e Sin-croniz-zazione dei Test (\T
-1/cmtt/m/n/14.4 backend_energy_consumption_analysis.ps1\T1/cmr/bx/n/14.4 ) 
+
+Overfull \hbox (39.39055pt too wide) in paragraph at lines 87--87
+[]\T1/cmr/bx/n/14.4 Confronto dei Risul-tati dei Bench-mark (Base-line vs Post-
+Refactoring) 
+ []
+
+LaTeX Font Info:    Font shape `T1/cmtt/bx/n' in size <12> not available
+(Font)              Font shape `T1/cmtt/m/n' tried instead on input line 110.
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+
+Overfull \hbox (21.60146pt too wide) in paragraph at lines 158--159
+\T1/cmr/m/n/12 tura. L'esplicitazione delle colonne nella proiezione SQL in \T1
+/cmtt/m/n/12 benchmarkGetProdottoByIdValid
+ []
+
+[11]
+Overfull \hbox (104.54pt too wide) in paragraph at lines 159--160
+[]\T1/cmr/bx/n/12 RecensioneDAO: \T1/cmr/m/n/12 I metodi crit-ici per la let-tu
+ra delle re-cen-sioni (\T1/cmtt/m/n/12 benchmarkGetRecensioniByProdottoValid
+ []
+
+
+Overfull \hbox (96.69745pt too wide) in paragraph at lines 160--161
+[]\T1/cmr/bx/n/12 OrdineDAO: \T1/cmr/m/n/12 La risoluzione del prob-lema delle 
+query N+1 nel metodo \T1/cmtt/m/n/12 benchmarkGetOrdiniByUtenteValid
  []
 
 [12]
-Overfull \hbox (1.3249pt too wide) in paragraph at lines 178--179
-\T1/cmr/m/n/12 La fase di boot-strap di un'applicazione web in am-bi-ente Java 
-com-porta un carico com-putazionale
+Overfull \hbox (19.62404pt too wide) in paragraph at lines 183--184
+\T1/cmr/m/n/12 quanto non soggette a traf-fico mas-sivo o con-tin-u-a-tivo. Tal
+e ap-proc-cio garan-tisce che l'individuazione
  []
 
 [13]
-LaTeX Font Info:    Font shape `T1/cmtt/bx/n' in size <12> not available
-(Font)              Font shape `T1/cmtt/m/n' tried instead on input line 186.
+Overfull \hbox (70.15341pt too wide) in paragraph at lines 189--190
+\T1/cmr/m/n/12 pro-pria. L'utente fil-tra e sfoglia gli ar-ti-coli per cat-e-go
+-ria at-traverso la \T1/cmtt/m/n/12 /ProdottiPerCategoriaServlet\T1/cmr/m/n/12 
+. 
+ []
 
-Overfull \hbox (10.62915pt too wide) in paragraph at lines 187--188
-\T1/cmr/m/n/12 hard-ware du-rante l'esatta du-rata del test. Ven-gono iso-lati 
-nella cartella \T1/cmtt/m/n/12 energibridge_logs
+
+Overfull \hbox (16.00162pt too wide) in paragraph at lines 199--200
+[]\T1/cmr/bx/n/12 Termine Ses-sione (Transazionale): \T1/cmr/m/n/12 Il ci-clo s
+i chi-ude tem-po-ranea-mente con l'invalidazione
+ []
+
+
+Overfull \hbox (19.48431pt too wide) in paragraph at lines 207--208
+\T1/cmr/m/n/12 pre-lim-inare, definita \T1/cmr/m/it/12 Step-Up Test-ing\T1/cmr/
+m/n/12 , con l'obiettivo di in-di-vid-uare il lim-ite di tenuta dell'esecuzione
+
  []
 
 [14] [15]
-Overfull \hbox (148.68419pt too wide) in paragraph at lines 252--253
-\T1/cmr/m/n/12 ate nel log \T1/cmtt/m/n/12 src\sonarqube-creedengo\baseline\cre
-edengo_logs\log_creedengo_analysis_2026_05_22_10_59_24.md\T1/cmr/m/n/12 )
+Overfull \hbox (2.61745pt too wide) in paragraph at lines 251--252
+[]\T1/cmr/bx/n/12 Isolamento dell'Ambiente e Pre-ven-zione del Soft-ware Ag-ing
+: \T1/cmr/m/n/12 Du-rante l'esecuzione
  []
 
 [16]
-Overfull \hbox (3.31473pt too wide) in paragraph at lines 281--283
-\T1/cmr/m/n/12 di JDBC, sup-por-t-ato da una ges-tione man-uale della transazio
-ne (\T1/cmtt/m/n/12 setAutoCommit(false)\T1/cmr/m/n/12 ).
+Overfull \hbox (28.30002pt too wide) in paragraph at lines 257--258
+[]\T1/cmr/bx/n/12 Warm-Up del Server e Risoluzione dei Tran-si-tori: \T1/cmr/m/
+n/12 La fase di boot-strap di un'applicazione
  []
 
-[17]
-Overfull \hbox (10.87083pt too wide) in paragraph at lines 292--292
-[]\T1/cmr/bx/n/14.4 Strumento di Pro-fi-lazione En-er-get-ica Co-Sincronizzato:
- Ar-chitet-
- []
-
-
-Overfull \hbox (14.76205pt too wide) in paragraph at lines 297--298
-\T1/cmr/m/n/12 I test sono stati es-e-guiti im-po-stando una con-fig-u-razione 
-a thread sin-golo (\T1/cmtt/m/n/12 @State(Scope.Thread)\T1/cmr/m/n/12 ),
- []
-
+[17] [18]
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-
-LaTeX Warning: `!h' float specifier changed to `!ht'.
-
-[18]
-Overfull \hbox (48.42224pt too wide) in paragraph at lines 367--368
-[]\T1/cmr/bx/n/12 Risoluzione del Query-ing $\OML/cmm/m/it/12 N \OT1/cmr/m/n/12
- + 1$\T1/cmr/bx/n/12 : \T1/cmr/m/n/12 Nei metodi af-fetti da query it-er-a-tive
- (come \T1/cmtt/m/n/12 getOrdiniByUtente
- []
-
-
-Overfull \hbox (6.77629pt too wide) in paragraph at lines 367--368
-\T1/cmr/m/n/12 in \T1/cmtt/m/n/12 OrdineDAO\T1/cmr/m/n/12 ), l'estrazione è sta
-ta con-sol-i-data in un'unica query ag-gre-gata tramite costrutti
- []
-
-[19]
-
-LaTeX Warning: `!h' float specifier changed to `!ht'.
-
-[20]
-Overfull \hbox (111.10936pt too wide) in paragraph at lines 477--478
-[]\T1/cmr/m/n/12 I metodi crit-ici per la let-tura delle re-cen-sioni (\T1/cmtt
-/m/n/12 getRecensioniByProdottoValid \T1/cmr/m/n/12 e \T1/cmtt/m/n/12 getRecens
-ioniByUtenteValid\T1/cmr/m/n/12 )
- []
-
-
-Overfull \hbox (13.03839pt too wide) in paragraph at lines 479--479
-[]\T1/cmr/bx/n/17.28 Confronto En-er-getico di Sis-tema Post-Refactoring (JMe-
- []
-
-[21] [22]) [23]
+[19] [20]) [21]
 \openout2 = `chapters/frontend_sustainability.aux'.
 
  (./chapters/frontend_sustainability.tex
@@ -1070,7 +1002,7 @@ Overfull \hbox (4.42194pt too wide) in paragraph at lines 16--16
 lysis)
  []
 
-[24
+[22
 
 
 
@@ -1112,7 +1044,7 @@ Overfull \hbox (53.82779pt too wide) in paragraph at lines 35--36
 /cmr/m/n/12 ),
  []
 
-[25] [26]
+[23] [24]
 Overfull \hbox (45.73232pt too wide) in paragraph at lines 61--62
 []\T1/cmr/bx/n/12 Problema\T1/cmr/m/n/12 : L'analisi ha ev-i-den-zi-ato che la 
 quasi to-tal-ità delle risorse statiche dell'applicazione
@@ -1137,13 +1069,13 @@ Overfull \hbox (12.47128pt too wide) in paragraph at lines 67--68
 l'header \T1/cmtt/m/n/12 Accept-Encoding:
  []
 
-[27]
+[25]
 Overfull \hbox (1.66277pt too wide) in paragraph at lines 82--83
 \T1/cmr/m/n/12 CORS adeguate (\T1/cmtt/m/n/12 Access-Control-Allow-Origin: *\T1
 /cmr/m/n/12 ), dis-ac-cop-piando così i cookie
  []
 
-[28]
+[26]
 Overfull \hbox (121.5333pt too wide) in paragraph at lines 105--157
  [][] 
  []
@@ -1151,67 +1083,67 @@ Overfull \hbox (121.5333pt too wide) in paragraph at lines 105--157
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-[29] [30] [31]) [32]
+[27] [28] [29]) [30]
 \openout2 = `chapters/open_source_license_monitoring.aux'.
 
  (./chapters/open_source_license_monitoring.tex
 Chapter 5.
 
-LaTeX Warning: Citation `21' on page 33 undefined on input line 7.
+LaTeX Warning: Citation `21' on page 31 undefined on input line 7.
 
 
-LaTeX Warning: Citation `22' on page 33 undefined on input line 9.
+LaTeX Warning: Citation `22' on page 31 undefined on input line 9.
 
 
-LaTeX Warning: Citation `1' on page 33 undefined on input line 9.
+LaTeX Warning: Citation `1' on page 31 undefined on input line 9.
 
 
-LaTeX Warning: Citation `1' on page 33 undefined on input line 9.
+LaTeX Warning: Citation `1' on page 31 undefined on input line 9.
 
 
-LaTeX Warning: Citation `1' on page 33 undefined on input line 13.
+LaTeX Warning: Citation `1' on page 31 undefined on input line 13.
 
 
-LaTeX Warning: Citation `25' on page 33 undefined on input line 13.
+LaTeX Warning: Citation `25' on page 31 undefined on input line 13.
 
 
-LaTeX Warning: Citation `25' on page 33 undefined on input line 13.
+LaTeX Warning: Citation `25' on page 31 undefined on input line 13.
 
 
-LaTeX Warning: Citation `22' on page 33 undefined on input line 15.
+LaTeX Warning: Citation `22' on page 31 undefined on input line 15.
 
 
-LaTeX Warning: Citation `22' on page 33 undefined on input line 15.
+LaTeX Warning: Citation `22' on page 31 undefined on input line 15.
 
-[33
+[31
 
 
 
 
 ]
 
-LaTeX Warning: Citation `21' on page 34 undefined on input line 18.
+LaTeX Warning: Citation `21' on page 32 undefined on input line 18.
 
 
-LaTeX Warning: Citation `21' on page 34 undefined on input line 18.
+LaTeX Warning: Citation `21' on page 32 undefined on input line 18.
 
 
-LaTeX Warning: Citation `1' on page 34 undefined on input line 18.
+LaTeX Warning: Citation `1' on page 32 undefined on input line 18.
 
 
-LaTeX Warning: Citation `21' on page 34 undefined on input line 20.
+LaTeX Warning: Citation `21' on page 32 undefined on input line 20.
 
 
-LaTeX Warning: Citation `21' on page 34 undefined on input line 20.
+LaTeX Warning: Citation `21' on page 32 undefined on input line 20.
 
 
-LaTeX Warning: Citation `24' on page 34 undefined on input line 22.
+LaTeX Warning: Citation `24' on page 32 undefined on input line 22.
 
 
-LaTeX Warning: Citation `24' on page 34 undefined on input line 22.
+LaTeX Warning: Citation `24' on page 32 undefined on input line 22.
 
 
-LaTeX Warning: Citation `24' on page 34 undefined on input line 22.
+LaTeX Warning: Citation `24' on page 32 undefined on input line 22.
 
 
 Overfull \hbox (34.57254pt too wide) in paragraph at lines 29--30
@@ -1232,13 +1164,13 @@ File: lstlang3.sty 2025/11/14 1.11b listings language file
 Package hyperref Info: bookmark level for unknown lstlisting defaults to 0 on i
 nput line 31.
 
-[34]
+[32]
 Overfull \hbox (24.29167pt too wide) in paragraph at lines 51--52
 \T1/cmr/m/n/12 mente solo tramite la pi-attaforma cloud --- è stato imp-ie-gato
  il plu-gin Maven \T1/cmtt/m/n/12 license-maven-plugin
  []
 
-[35]
+[33]
 Underfull \hbox (badness 10000) in paragraph at lines 107--107
 []|\T1/cmtt/m/n/10 commons-io:commons-io
  []
@@ -1363,32 +1295,32 @@ Overfull \hbox (26.13696pt too wide) in paragraph at lines 138--138
 []|\T1/cmtt/m/n/10 org.apiguardian:apiguardian-api
  []
 
-ignored error: Infinite glue shrinkage found in box being split [36]
+ignored error: Infinite glue shrinkage found in box being split [34]
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 
-LaTeX Warning: Citation `21' on page 37 undefined on input line 172.
+LaTeX Warning: Citation `21' on page 35 undefined on input line 172.
 
 
-LaTeX Warning: Citation `21' on page 37 undefined on input line 180.
+LaTeX Warning: Citation `21' on page 35 undefined on input line 180.
 
-[37]
+[35]
 
-LaTeX Warning: Citation `22' on page 38 undefined on input line 186.
+LaTeX Warning: Citation `22' on page 36 undefined on input line 186.
 
-[38]
+[36]
 Underfull \hbox (badness 10000) in paragraph at lines 211--212
 []|\T1/cmtt/m/n/12 jmh-generator-annprocess\T1/cmr/m/n/12 ,
  []
 
 
-LaTeX Warning: Citation `21' on page 39 undefined on input line 226.
+LaTeX Warning: Citation `21' on page 37 undefined on input line 226.
 
 
-LaTeX Warning: Citation `24' on page 39 undefined on input line 228.
+LaTeX Warning: Citation `24' on page 37 undefined on input line 228.
 
-[39]
+[37]
 Overfull \hbox (31.51826pt too wide) in paragraph at lines 249--250
 \T1/cmr/m/n/12 mark sit-uati nella di-rec-tory \T1/cmtt/m/n/12 src/jmh/java/ \T
 1/cmr/m/n/12 e in nes-sun file della di-rec-tory prin-ci-pale \T1/cmtt/m/n/12 s
@@ -1401,13 +1333,13 @@ File: lstlang1.sty 2025/11/14 1.11b listings language file
 (c:/Program Files/texlive/2025/texmf-dist/tex/latex/listings/lstmisc.sty
 File: lstmisc.sty 2025/11/14 1.11b (Carsten Heinz)
 )
-[40] [41]
+[38] [39]
 Overfull \hbox (12.98318pt too wide) in paragraph at lines 315--316
 \T1/cmr/m/n/12 per es-sere anal-iz-zata in au-to-matico da stru-menti di vul-ne
 r-a-bil-ity man-age-ment o Dependency-
  []
 
-) [42] (./report_sustainable_software_engineering_project.aux
+) [40] (./report_sustainable_software_engineering_project.aux
 (./chapters/introduction_and_system_baseline.aux)
 (./chapters/software_architectural_overview.aux)
 (./chapters/backend_energy_sustainability.aux)
@@ -1423,14 +1355,14 @@ LaTeX Warning: There were undefined references.
 
 Package rerunfilecheck Info: File `report_sustainable_software_engineering_proj
 ect.out' has not changed.
-(rerunfilecheck)             Checksum: 370073900AA45E82697CF9E681DDB31F;17272.
+(rerunfilecheck)             Checksum: 7BE080A0B2522361C3C6263849708FEF;14307.
  ) 
 Here is how much of TeX's memory you used:
- 24028 strings out of 467538
- 440850 string characters out of 5401323
- 1144319 words of memory out of 5000000
- 52247 multiletter control sequences out of 15000+600000
- 648082 words of font info for 81 fonts, out of 8000000 for 9000
+ 23996 strings out of 467538
+ 440374 string characters out of 5401323
+ 1143851 words of memory out of 5000000
+ 52233 multiletter control sequences out of 15000+600000
+ 647769 words of font info for 80 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  84i,11n,94p,1505b,2104s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <c:/Program Files/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmex
@@ -1457,13 +1389,12 @@ gram Files/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb><c:
 .pfb><c:/Program Files/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfti
 1200.pfb><c:/Program Files/texlive/2025/texmf-dist/fonts/type1/public/cm-super/
 sftt1000.pfb><c:/Program Files/texlive/2025/texmf-dist/fonts/type1/public/cm-su
-per/sftt1200.pfb><c:/Program Files/texlive/2025/texmf-dist/fonts/type1/public/c
-m-super/sftt1440.pfb>
-Output written on report_sustainable_software_engineering_project.pdf (43 pages
-, 559371 bytes).
+per/sftt1200.pfb>
+Output written on report_sustainable_software_engineering_project.pdf (41 pages
+, 520847 bytes).
 PDF statistics:
- 827 PDF objects out of 1000 (max. 8388607)
- 724 compressed objects within 8 object streams
- 253 named destinations out of 1000 (max. 500000)
- 445 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 752 PDF objects out of 1000 (max. 8388607)
+ 654 compressed objects within 7 object streams
+ 236 named destinations out of 1000 (max. 500000)
+ 381 words of extra memory for PDF output out of 10000 (max. 10000000)
 
