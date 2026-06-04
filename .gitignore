@@ -4,4 +4,5 @@ out
 .smarttomcat
 .vscode/settings.json
 db_exports
-.sonarqube_token
+.sonarqube_token
+.fossa_token
