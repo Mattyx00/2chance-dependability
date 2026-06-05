@@ -70,8 +70,6 @@ Al fine di validare l'efficacia del refactoring, il capitolo si articola ora nel
 
 Per la raccolta di metriche empiriche sul consumo energetico, il framework metodologico prevede l'integrazione di \textbf{EnergiBridge}. Tale strumento, orientato alla profilazione \textit{cross-platform}, monitora l'impatto energetico delle applicazioni interfacciandosi direttamente con i sensori hardware di architetture quali x86, AMD e Apple Silicon. Questa compatibilità risulta essenziale per il progetto 2Chance, le cui misurazioni saranno effettuate su piattaforma AMD Ryzen AI 9 HX 370. Lo strumento opera tramite interfaccia a riga di comando, campionando il consumo energetico a intervalli regolari durante l'esecuzione di un processo \textit{target} ed esportando i dati aggregati in formato CSV.
 
-\subsection{Configurazione dell'Ambiente di Profilazione}
-
 Per installare e configurare EnergiBridge su Windows, ho creato la directory di sistema \texttt{C:\textbackslash Program Files\textbackslash EnergiBridge}. Ho quindi scaricato l'ultima versione stabile, la 0.0.7, dal repository ufficiale GitHub (\texttt{tdurieux/EnergiBridge}) e ho integrato \texttt{LibreHardwareMonitor}, un plugin necessario per permettere al software di leggere i dati dai registri della CPU su Windows.
 
 \subsection{Microbenchmarking Energetico sui DAO (JMH + EnergiBridge)}
@@ -84,7 +82,7 @@ Per combinare la precisione temporale del microbenchmarking con la profilazione 
 
 I test sono stati eseguiti impostando una configurazione a thread singolo (\texttt{@State(Scope.Thread)}), con 5 iterazioni di warmup e 5 iterazioni di misurazione per ciascun modulo isolato. Le metriche temporali fornite da JMH sono espresse in millisecondi per operazione ($\text{ms/op}$), mentre le metriche di consumo energetico fornite da EnergiBridge sono misurate in Joule (J).
 
-\subsection{Confronto dei Risultati dei Benchmark (Baseline vs Post-Refactoring)}
+\subsubsection{Confronto dei Risultati dei Benchmark (Baseline vs Post-Refactoring)}
 
 Al fine di verificare quantitativamente il guadagno prestazionale ed energetico ottenuto in seguito alle attività di refactoring, la suite è stata eseguita su entrambi i branch (\texttt{main} per la baseline e \texttt{sse-improvements} per la versione ottimizzata). Nelle tabelle seguenti viene presentato il confronto dettagliato delle metriche reali per ciascun DAO, evidenziando le variazioni percentuali del refactoring.
 
@@ -201,7 +199,7 @@ La strategia di simulazione si focalizza esclusivamente sulle \textit{servlet} d
     \item \textbf{Ritorno alla Vetrina (Lettura intensiva):} L'utente riapproda infine sulla vetrina principale (\texttt{/landingpage}) pronto per un nuovo ciclo potenziale.
 \end{enumerate}
 
-\subsection{Step-Up Testing e Definizione delle Soglie di Accettabilità}
+\subsubsection{Step-Up Testing e Definizione delle Soglie di Accettabilità}
 
 \paragraph{Esperimento di Stress Preventivo}
 Prima della simulazione formale, ho eseguito un'analisi preliminare, definita \textit{Step-Up Testing}, con l'obiettivo di individuare il limite di tenuta dell'esecuzione dell'applicazione nell'infrastruttura ospitante. Questa valutazione si è resa necessaria per determinare il carico di lavoro ottimale da applicare durante le successive sessioni di \textit{load}, \textit{spike} e \textit{soak testing}. A tale scopo, ho incrementato linearmente il traffico di utenti partendo da $1$ fino a $120$ utenti concorrenti in un intervallo temporale di $10$ minuti, monitorando costantemente le metriche di latenza tramite \textit{JMeter} e la stabilità dei container \textit{Docker}.

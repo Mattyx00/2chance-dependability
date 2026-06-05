@@ -149,7 +149,7 @@ La Tabella~\ref{tab:license_inventory} presenta l'inventario esaustivo estratto 
     \label{tab:risk_summary}
 \end{table}
 
-\subsection{Integrazione Cloud e Continuous Compliance}
+\section{Integrazione Cloud e Continuous Compliance}
 
 Per superare i limiti dell'analisi esclusivamente locale e statica basata sul \texttt{license-maven-plugin}, che si limita alla lettura dei metadati senza ispezionare il codice (producendo semplicemente il manifesto \texttt{licenses.xml} e scaricando i testi in chiaro all'interno della cartella \texttt{licenses/}), è stata effettuata la transizione a \textbf{FOSSA Web Service}. Questo approccio con la scansione cloud avanzata (\textit{Policy Scan}), garantisce non solo la risoluzione automatica delle licenze, ma anche uno scan approfondito del codice sorgente delle dipendenze per intercettare violazioni nascoste (Audit-Grade Scanning) e la verifica automatica delle policy aziendali.
 
@@ -272,7 +272,7 @@ Questi artefatti vengono generati dinamicamente dal cloud senza necessitare di u
     \item \textbf{SPDX}: Standard ISO ufficiale per la condivisione delle informazioni sulle licenze software. Questo viene esportato nel file \texttt{sbom.spdx} utilizzando la sintassi Tag:Value universalmente riconosciuta nell'industria.
 \end{itemize}
 
-\subsection{Integrazione di FOSSA nel pipeline CI/CD} 
+\section{Integrazione di FOSSA nel pipeline CI/CD} 
 
 Per garantire un monitoraggio proattivo e continuo, è stata configurata l'API key di FOSSA Web Service nel workflow GitHub Actions di 2chance. Ciò abilita la scansione automatizzata di ogni dipendenza ereditata dal \texttt{pom.xml} ad ogni commit, la generazione di SBOM in formato SPDX/CycloneDX e un quality gate che, causando il fallimento della pipeline CI/CD, blocca automaticamente le pull request. In questo modo si impedisce il merge nel branch di produzione di codice legalmente rischioso, ossia quello che introduce dipendenze con licenze non conformi alla policy del progetto (come copyleft non consentite o violazioni degli obblighi di attribuzione).
 
