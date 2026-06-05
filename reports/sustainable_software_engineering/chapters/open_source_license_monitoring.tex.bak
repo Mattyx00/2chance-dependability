@@ -30,14 +30,14 @@ Il nuovo approccio si basa sull'autenticazione sicura della CLI verso il servizi
 
 L'esecuzione coordinata avviene nei seguenti passaggi:
 \begin{enumerate}
-    \item \textbf{Risoluzione del Grafo (CLI)}: La FOSSA CLI, invocata tramite il comando \texttt{fossa analyze}, identifica automaticamente il progetto Maven parsando il file \texttt{pom.xml} e risolve l'intero albero delle dipendenze (dirette e transitive).
-    \item \textbf{Sincronizzazione Cloud}: La CLI comunica con i server remoti, inviando il grafo strutturato delle dipendenze in tempo reale alla dashboard di riferimento.
+    \item \textbf{Risoluzione del Grafo (CLI)}: La FOSSA CLI, invocata tramite il comando \texttt{fossa analyze}, identifica automaticamente il progetto Maven parsando il file \texttt{pom.xml} e risolve l'intero albero delle dipendenze (dirette e transitive). L'output di questa operazione genera due artefatti diagnostici locali nella directory \texttt{src/fossa}: il payload grezzo JSON \texttt{fossa-analyze-output.json} e il log testuale \texttt{fossa-scan-summary.txt}.
+    \item \textbf{Sincronizzazione Cloud}: La CLI comunica con i server remoti, inviando il payload JSON del grafo strutturato delle dipendenze in tempo reale alla dashboard di riferimento.
     \item \textbf{Analisi Profonda (Web App)}: La piattaforma cloud prende in carico il grafo, scarica il codice sorgente grezzo di ciascuna libreria ed esegue una scansione \textit{Audit-Grade}. In questa fase vengono analizzati anche i \textit{copyright headers} e il codice sorgente annidato, scoprendo violazioni copyleft che non emergerebbero mai nei semplici manifesti \texttt{POM}.
 \end{enumerate}
 
 \subsection{Albero delle Dipendenze e Inventario delle Licenze}
 
-FOSSA CLI ha mappato in autonomia l'intero albero delle dipendenze del progetto \texttt{groupId:2chance:war:1.0-SNAPSHOT}, identificando \textbf{15 dipendenze dirette} (dichiarate esplicitamente nel \texttt{pom.xml}) e \textbf{8 dipendenze transitive} (ereditate indirettamente), per un totale di \textbf{23 artefatti}.
+FOSSA CLI ha mappato in autonomia l'intero albero delle dipendenze del progetto \texttt{groupId:2chance:war:1.0-SNAPSHOT}, identificando \textbf{15 dipendenze dirette} (dichiarate esplicitamente nel \texttt{pom.xml}) e \textbf{8 dipendenze transitive} (ereditate indirettamente), per un totale di \textbf{23 artefatti}. A supporto di questa mappatura visiva, è stato inoltre estratto il file \texttt{dependency-tree.txt} tramite il comando \texttt{mvn dependency:tree}, che fornisce una chiara gerarchia testuale di chi importa cosa e con quale \textit{scope}.
 
 \begin{longtable}{>{\ttfamily\footnotesize}p{4.8cm} c >{\footnotesize}p{4.2cm} l}
 \caption{Inventario delle licenze delle dipendenze del progetto 2Chance.} \label{tab:license_inventory} \\
@@ -151,7 +151,7 @@ La Tabella~\ref{tab:license_inventory} presenta l'inventario esaustivo estratto 
 
 \subsection{Integrazione Cloud e Continuous Compliance}
 
-Per superare i limiti dell'analisi esclusivamente locale e statica basata sul \texttt{license-maven-plugin}, che si limita alla lettura dei metadati senza ispezionare il codice, è stata effettuata la transizione a \textbf{FOSSA Web Service}. Questo approccio con la scansione cloud avanzata (\textit{Policy Scan}), garantisce non solo la risoluzione automatica delle licenze, ma anche uno scan approfondito del codice sorgente delle dipendenze per intercettare violazioni nascoste (Audit-Grade Scanning) e la verifica automatica delle policy aziendali.
+Per superare i limiti dell'analisi esclusivamente locale e statica basata sul \texttt{license-maven-plugin}, che si limita alla lettura dei metadati senza ispezionare il codice (producendo semplicemente il manifesto \texttt{licenses.xml} e scaricando i testi in chiaro all'interno della cartella \texttt{licenses/}), è stata effettuata la transizione a \textbf{FOSSA Web Service}. Questo approccio con la scansione cloud avanzata (\textit{Policy Scan}), garantisce non solo la risoluzione automatica delle licenze, ma anche uno scan approfondito del codice sorgente delle dipendenze per intercettare violazioni nascoste (Audit-Grade Scanning) e la verifica automatica delle policy aziendali.
 
 Per l'integrazione di FOSSA CLI e FOSSA Web Service è stato registrato un account sulla piattaforma FOSSA (\url{https://app.fossa.com}), poi è stata generata una API Key dedicata dalla dashboard web di FOSSA. All'interno dello workspace di 2chance locale, la chiave è stata salvata ed isolata all'interno di un file \texttt{.fossa\_token}, ignorato dal Versioning Control System tramite \texttt{.gitignore}. Sulla piattaforma GitHub, la chiave è stata memorizzata in modo sicuro tra i \textit{Repository Secrets} (\texttt{FOSSA\_API\_KEY}).
 
@@ -262,27 +262,16 @@ Dall'incrocio tra la topologia del grafo delle dipendenze e l'inventario delle l
     \end{itemize}
 \end{itemize}
 
-\subsection{Integrazione di FOSSA nel pipeline CI/CD} 
-
-Per garantire un monitoraggio proattivo e continuo, è stata configurata l'API key di FOSSA Web Service nel workflow GitHub Actions di 2chance. Ciò abilita la scansione automatizzata di ogni dipendenza ereditata dal \texttt{pom.xml} ad ogni commit, la generazione di SBOM in formato SPDX/CycloneDX e un quality gate che, causando il fallimento della pipeline CI/CD, blocca automaticamente le pull request. In questo modo si impedisce il merge nel branch di produzione di codice legalmente rischioso, ossia quello che introduce dipendenze con licenze non conformi alla policy del progetto (come copyleft non consentite o violazioni degli obblighi di attribuzione).
-
-Il file di workflow \texttt{main.yml} è stato esteso introducendo lo step di \textit{License Compliance Scan} subito dopo l'analisi delle vulnerabilità (Snyk). Avvalendosi dell'azione ufficiale \texttt{fossas/fossa-action@v1}, ogni nuova \textit{Pull Request} e operazione di \textit{Push} invia automaticamente il grafo delle dipendenze alla piattaforma cloud di FOSSA.
-
-L'intero progetto, essendo destinato a scopi puramente didattici e non prevedendo alcuna distribuzione commerciale, ha consentito un approccio flessibile alla risoluzione di queste segnalazioni. Tuttavia, questi risultati confermano il valore cruciale dell'integrazione CI/CD e di uno strumento di \textit{Software Composition Analysis} moderno: sebbene le licenze individuate si siano rivelate gestibili nel contesto didattico specifico di 2Chance, in un contesto industriale reale la pipeline FOSSA avrebbe efficacemente sventato il rilascio in produzione del connettore MySQL, salvando l'azienda da gravissime implicazioni legali e ingiunzioni di distribuzione.
-
 \subsection{Automazione degli Obblighi di Attribuzione}
 
-Per soddisfare pienamente il secondo obiettivo di conformità legale (Automazione Assoluta degli Obblighi di Attribuzione), l'intero processo è stato delegato alla suite di \textit{Reporting} nativa della FOSSA Web App che compila e aggiorna dinamicamente la lista completa delle dipendenze, delle licenze associate e dei testi di copyright necessari ricavandoli dall'analisi profonda del codice sorgente. L'adozione di questa generazione automatizzata in cloud garantisce che la documentazione sulle licenze sia sempre perfettamente allineata con l'ultimo commit validato tramite la pipeline CI/CD, sollevando il team di sviluppo da controlli manuali inclini all'errore umano e garantendo la conformità legale in modo continuo.
+Per soddisfare pienamente il secondo obiettivo di conformità legale, ovvero l'automazione assoluta degli obblighi di attribuzione, l'intero processo è stato delegato alla suite di \textit{Reporting} nativa di FOSSA Web Service che compila e aggiorna dinamicamente la lista completa delle dipendenze, delle licenze associate e dei testi di copyright necessari ricavandoli dall'analisi profonda del codice sorgente. Questa fase culmina nella generazione del documento formale di attribuzione \texttt{THIRD-PARTY-NOTICES.txt} (da distribuire nel progetto a garanzia di compliance) e della sua controparte web interattiva \texttt{third-party-report.html}. L'adozione di questa generazione automatizzata in cloud garantisce che la documentazione sulle licenze sia sempre perfettamente allineata con l'ultimo commit validato tramite la pipeline CI/CD, sollevando il team di sviluppo da controlli manuali inclini all'errore umano e garantendo la conformità legale in modo continuo.
 
 \subsection{Generazione della Software Bill of Materials (SBOM)}
 
-Al fine di garantire la trasparenza della catena di approvvigionamento del software (\textit{software supply chain}) ed adempiere alle moderne richieste di conformità legale (quali l'ISO/IEC 5230 dell'OpenChain Project o i requisiti in materia di cybersecurity per i bandi governativi), la generazione della \textbf{Software Bill of Materials (SBOM)} è stata completamente integrata nel flusso FOSSA.
+Al fine di garantire la trasparenza della catena di approvvigionamento del software (\textit{software supply chain}) ed adempiere alle moderne richieste di conformità legale, la generazione della \textbf{Software Bill of Materials (SBOM)} consente di descrivere in modo univoco e strutturato ciascun componente software incluso nel build, specificando per ognuno di essi: identificativi univoci, versione precisa, e classificazione delle licenze applicate.
 
-La piattaforma cloud offre funzionalità di esportazione native conformi agli standard industriali leader. Per il progetto 2Chance, è possibile generare ed esportare report dettagliati in formati strutturati quali:
+Questi artefatti vengono generati dinamicamente dal cloud senza necessitare di ulteriori plugin Maven aggiuntivi nel \texttt{pom.xml}, grazie a FOSSA Web Service che offre funzionalità di esportazione native conformi agli standard industriali. Per il progetto 2Chance, è possibile generare ed esportare report dettagliati in formati strutturati quali:
 \begin{itemize}
-    \item \textbf{CycloneDX (JSON/XML)}: Formato ottimizzato per la sicurezza e l'analisi automatica da parte di strumenti di Vulnerability Management esterni.
-    \item \textbf{SPDX}: Standard ISO ufficiale per la condivisione delle informazioni sulle licenze software.
+    \item \textbf{CycloneDX (JSON/XML)}: Formato ottimizzato per la sicurezza e l'analisi automatica da parte di strumenti di Vulnerability Management esterni. Viene esportato il file \texttt{sbom.json}, contenente l'inventario completo e gli hash crittografici dei pacchetti.
+    \item \textbf{SPDX}: Standard ISO ufficiale per la condivisione delle informazioni sulle licenze software. Questo viene esportato nel file \texttt{sbom.spdx} utilizzando la sintassi Tag:Value universalmente riconosciuta nell'industria.
 \end{itemize}
-
-Questi artefatti, generati dinamicamente dal cloud senza necessitare di ulteriori plugin Maven aggiuntivi nel \texttt{pom.xml}, descrivono in modo univoco e strutturato ciascun componente software incluso nel build, specificando per ognuno di essi: identificativi univoci (Package URL - \textit{purl}), versione precisa, e classificazione delle licenze applicate. Questo approccio \textit{zero-configuration} lato codice consente ad auditor esterni o clienti aziendali di effettuare controlli rapidi e certificati sulla sicurezza del prodotto distribuito.
-
