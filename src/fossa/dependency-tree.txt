@@ -28,14 +28,14 @@
 [INFO] |  +- net.bytebuddy:byte-buddy-agent:jar:1.14.12:test
 [INFO] |  \- org.objenesis:objenesis:jar:3.3:test
 [INFO] +- org.mockito:mockito-junit-jupiter:jar:5.11.0:test
-[INFO] +- org.pitest:pitest-parent:pom:1.1.10:compile
-[INFO] +- org.openjdk.jmh:jmh-core:jar:1.37:compile
-[INFO] |  +- net.sf.jopt-simple:jopt-simple:jar:5.0.4:compile
-[INFO] |  \- org.apache.commons:commons-math3:jar:3.6.1:compile
+[INFO] +- org.pitest:pitest-parent:pom:1.1.10:test
+[INFO] +- org.openjdk.jmh:jmh-core:jar:1.37:test
+[INFO] |  +- net.sf.jopt-simple:jopt-simple:jar:5.0.4:test
+[INFO] |  \- org.apache.commons:commons-math3:jar:3.6.1:test
 [INFO] \- org.openjdk.jmh:jmh-generator-annprocess:jar:1.37:provided
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  1.844 s
-[INFO] Finished at: 2026-05-29T12:18:48+02:00
+[INFO] Total time:  1.546 s
+[INFO] Finished at: 2026-05-29T16:18:49+02:00
 [INFO] ------------------------------------------------------------------------

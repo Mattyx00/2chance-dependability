@@ -1,0 +1,214 @@
+SPDXVersion: SPDX-2.3
+DataLicense: CC0-1.0
+SPDXID: SPDXRef-DOCUMENT
+DocumentName: 62640/github.com/Mattyx00/2chance-dependability-83fa9bb6c84e657668353dd62044b72218987b12
+DocumentNamespace: 62640/github.com/Mattyx00/2chance-dependability-83fa9bb6c84e657668353dd62044b72218987b12
+Creator: Organization: aldo.manco@protonmail.ch
+Creator: Tool: FOSSA 4.33.83
+Created: 2026-06-05T13:36:57Z
+LicenseListVersion: 3.23
+DocumentDescribes: SPDXRef-mvn-groupId-2chance-1.0-SNAPSHOT
+DocumentDescribes: SPDXRef-custom-62640-github.com-Mattyx00-2chance-dependability-83fa9bb6c84e657668353dd62044b72218987b12
+
+#### Packages
+
+PackageName: groupId:2chance
+SPDXID: SPDXRef-mvn-groupId-2chance-1.0-SNAPSHOT
+PackageVersion: 1.0-SNAPSHOT
+FilesAnalyzed: true
+PackageOriginator: Organization: Maven
+PackageSupplier: Organization: Maven
+PackageLicenseDeclared: NONE
+PackageCopyrightText: NONE
+PackageDownloadLocation: NOASSERTION
+PackageHomePage: NOASSERTION
+PackageLicenseConcluded: NOASSERTION
+ExternalRef: PACKAGE-MANAGER purl pkg:maven/groupId/2chance@1.0-SNAPSHOT
+PackageChecksum: MD5: 2784efd81a7872b86f47613db20c4645
+PackageChecksum: SHA1: 2b5d86f44e7eb2bd4dabec7d619fe72205e4ef95
+PackageChecksum: SHA256: 1170b57f71520a0b5cbb31777d446625bb78343b6804049f34dc93bc8449765e
+
+PackageName: https://github.com/Mattyx00/2chance-dependability.git
+SPDXID: SPDXRef-custom-62640-github.com-Mattyx00-2chance-dependability-83fa9bb6c84e657668353dd62044b72218987b12
+PackageVersion: 83fa9bb6c84e657668353dd62044b72218987b12
+FilesAnalyzed: true
+PackageFileName: custom+62640/github.com/Mattyx00/2chance-dependability$83fa9bb6c84e657668353dd62044b72218987b12
+PackageOriginator: NOASSERTION
+PackageSupplier: Organization: aldo.manco@protonmail.ch
+PackageSummary: NOASSERTION
+PackageLicenseDeclared: NONE
+PackageCopyrightText: NONE
+PackageDownloadLocation: NOASSERTION
+PackageHomePage: NOASSERTION
+PackageLicenseConcluded: NOASSERTION
+PackageChecksum: MD5: 0ab00bb6cf69a2b9256c484780987f53
+PackageChecksum: SHA1: f1a4770c74947059718ab2be72a4fb2a5a7eaedc
+PackageChecksum: SHA256: cf9a39fe2595766dc6e37008a4e7560bf486b3abd46838be065081212bf38792
+
+PackageName: javax.servlet:javax.servlet-api
+SPDXID: SPDXRef-mvn-javax.servlet-javax.servlet-api-4.0.1
+PackageVersion: 4.0.1
+FilesAnalyzed: true
+PackageOriginator: NOASSERTION
+PackageSupplier: NOASSERTION
+PackageLicenseDeclared: NONE
+PackageCopyrightText: NONE
+PackageDownloadLocation: NOASSERTION
+PackageHomePage: NOASSERTION
+PackageLicenseConcluded: NOASSERTION
+ExternalRef: PACKAGE-MANAGER purl pkg:maven/javax.servlet/javax.servlet-api@4.0.1?type=jar
+PackageChecksum: MD5: b80414033bf3397de334b95e892a2f44
+PackageChecksum: SHA1: a27082684a2ff0bf397666c3943496c44541d1ca
+PackageChecksum: SHA256: 83a03dd877d3674576f0da7b90755c8524af099ccf0607fc61aa971535ad7c60
+
+PackageName: org.json:json
+SPDXID: SPDXRef-mvn-org.json-json-20231013
+PackageVersion: 20231013
+FilesAnalyzed: true
+PackageOriginator: NOASSERTION
+PackageSupplier: NOASSERTION
+PackageLicenseDeclared: NONE
+PackageCopyrightText: NONE
+PackageDownloadLocation: NOASSERTION
+PackageHomePage: NOASSERTION
+PackageLicenseConcluded: NOASSERTION
+ExternalRef: PACKAGE-MANAGER purl pkg:maven/org.json/json@20231013?type=jar
+PackageChecksum: MD5: 1a0702c57783ce9e948252c34644f328
+PackageChecksum: SHA1: e22e0c040fe16f04ffdb85d851d77b07fc05ea52
+PackageChecksum: SHA256: 0f18192df289114e17aa1a0d0a7f8372cc9f5c7e4f7e39adcf8906fe714fa7d3
+
+PackageName: commons-io:commons-io
+SPDXID: SPDXRef-mvn-commons-io-commons-io-2.14.0
+PackageVersion: 2.14.0
+FilesAnalyzed: true
+PackageOriginator: NOASSERTION
+PackageSupplier: NOASSERTION
+PackageLicenseDeclared: NONE
+PackageCopyrightText: NONE
+PackageDownloadLocation: NOASSERTION
+PackageHomePage: NOASSERTION
+PackageLicenseConcluded: NOASSERTION
+ExternalRef: PACKAGE-MANAGER purl pkg:maven/commons-io/commons-io@2.14.0?type=jar
+PackageChecksum: MD5: 4259c0bc6078e53a09883b521c1d53af
+PackageChecksum: SHA1: a4c6e1f6c196339473cd2e1b037f0eb97c62755b
+PackageChecksum: SHA256: e35d1df7232568ed4b81d9a9ed94a0159b3ff6cf1915cc21eef5cb55d7b157a2
+
+PackageName: org.apache.tomcat:tomcat-jdbc
+SPDXID: SPDXRef-mvn-org.apache.tomcat-tomcat-jdbc-9.0.111
+PackageVersion: 9.0.111
+FilesAnalyzed: true
+PackageOriginator: NOASSERTION
+PackageSupplier: NOASSERTION
+PackageLicenseDeclared: NONE
+PackageCopyrightText: NONE
+PackageDownloadLocation: NOASSERTION
+PackageHomePage: NOASSERTION
+PackageLicenseConcluded: NOASSERTION
+ExternalRef: PACKAGE-MANAGER purl pkg:maven/org.apache.tomcat/tomcat-jdbc@9.0.111?type=jar
+PackageChecksum: MD5: ffc33bc85e53a4aaa43c1e2a3fb515cb
+PackageChecksum: SHA1: 4cdfa31013999155a4b0568cdb715f448a6d1b44
+PackageChecksum: SHA256: 3d59d325741baff57078626a56a29be6c966783a6506a3ff535edb246a440062
+
+PackageName: org.apache.tomcat:tomcat-juli
+SPDXID: SPDXRef-mvn-org.apache.tomcat-tomcat-juli-9.0.111
+PackageVersion: 9.0.111
+FilesAnalyzed: true
+PackageOriginator: NOASSERTION
+PackageSupplier: NOASSERTION
+PackageLicenseDeclared: NONE
+PackageCopyrightText: NONE
+PackageDownloadLocation: NOASSERTION
+PackageHomePage: NOASSERTION
+PackageLicenseConcluded: NOASSERTION
+ExternalRef: PACKAGE-MANAGER purl pkg:maven/org.apache.tomcat/tomcat-juli@9.0.111?type=jar
+PackageChecksum: MD5: 828d067f63a8be317407cf800df2af57
+PackageChecksum: SHA1: b13bc9d4c1dbd54e7d818a3749c3b24fede49a76
+PackageChecksum: SHA256: bdab06c931f2886edb0ae838ca2ac840bfb2cfbfaae427261c32d37ac4b29fe7
+
+PackageName: com.mysql:mysql-connector-j
+SPDXID: SPDXRef-mvn-com.mysql-mysql-connector-j-9.5.0
+PackageVersion: 9.5.0
+FilesAnalyzed: true
+PackageOriginator: NOASSERTION
+PackageSupplier: NOASSERTION
+PackageLicenseDeclared: NONE
+PackageCopyrightText: NONE
+PackageDownloadLocation: NOASSERTION
+PackageHomePage: NOASSERTION
+PackageLicenseConcluded: NOASSERTION
+ExternalRef: PACKAGE-MANAGER purl pkg:maven/com.mysql/mysql-connector-j@9.5.0?type=jar
+PackageChecksum: MD5: f18b3756c4b8c6c2d82e3819ae085fbe
+PackageChecksum: SHA1: 64153d7488bbf25c040f3b0f004177bc05b36b22
+PackageChecksum: SHA256: f2ca3dfaf00d4aa311470db7ea3051962944ba0cb60005a2f75467549c39f425
+
+PackageName: com.google.protobuf:protobuf-java
+SPDXID: SPDXRef-mvn-com.google.protobuf-protobuf-java-4.31.1
+PackageVersion: 4.31.1
+FilesAnalyzed: true
+PackageOriginator: NOASSERTION
+PackageSupplier: NOASSERTION
+PackageLicenseDeclared: NONE
+PackageCopyrightText: NONE
+PackageDownloadLocation: NOASSERTION
+PackageHomePage: NOASSERTION
+PackageLicenseConcluded: NOASSERTION
+ExternalRef: PACKAGE-MANAGER purl pkg:maven/com.google.protobuf/protobuf-java@4.31.1?type=jar
+PackageChecksum: MD5: 4987ffc8ba1965e5546bdcf49dcfffe2
+PackageChecksum: SHA1: 1828b20315b63d5f71b3c61b094494a8f1acdc5a
+PackageChecksum: SHA256: d60dfe7c68a0d38a248cca96924f289dc7e1966a887ee7cae397701af08575ae
+
+PackageName: org.apache.taglibs:taglibs-standard-spec
+SPDXID: SPDXRef-mvn-org.apache.taglibs-taglibs-standard-spec-1.2.5
+PackageVersion: 1.2.5
+FilesAnalyzed: true
+PackageOriginator: NOASSERTION
+PackageSupplier: NOASSERTION
+PackageLicenseDeclared: NONE
+PackageCopyrightText: NONE
+PackageDownloadLocation: NOASSERTION
+PackageHomePage: NOASSERTION
+PackageLicenseConcluded: NOASSERTION
+ExternalRef: PACKAGE-MANAGER purl pkg:maven/org.apache.taglibs/taglibs-standard-spec@1.2.5?type=jar
+PackageChecksum: MD5: 671c434560d04e8f06aac02a413d11e4
+PackageChecksum: SHA1: c3bb98c30f75fef1e229d1d03cf8457de22f1ba0
+PackageChecksum: SHA256: 81a195f8acab3f072fe4d6c279b7c29575bcac49081076e3d08bbda829275189
+
+PackageName: org.apache.taglibs:taglibs-standard-impl
+SPDXID: SPDXRef-mvn-org.apache.taglibs-taglibs-standard-impl-1.2.5
+PackageVersion: 1.2.5
+FilesAnalyzed: true
+PackageOriginator: NOASSERTION
+PackageSupplier: NOASSERTION
+PackageLicenseDeclared: NONE
+PackageCopyrightText: NONE
+PackageDownloadLocation: NOASSERTION
+PackageHomePage: NOASSERTION
+PackageLicenseConcluded: NOASSERTION
+ExternalRef: PACKAGE-MANAGER purl pkg:maven/org.apache.taglibs/taglibs-standard-impl@1.2.5?type=jar
+PackageChecksum: MD5: 8e5c8db242fbef3db1acfcbb3bc8ec8b
+PackageChecksum: SHA1: 9b9783ccb2a323383e6e20e36d368f8997b71967
+PackageChecksum: SHA256: d075cb77d94e2d115b4d90a897b57d65cc31ed8e1b95d65361da324642705728
+
+#### Relationships
+
+SPDXRef-DOCUMENT DESCRIBES SPDXRef-custom-62640-github.com-Mattyx00-2chance-dependability-83fa9bb6c84e657668353dd62044b72218987b12
+SPDXRef-custom-62640-github.com-Mattyx00-2chance-dependability-83fa9bb6c84e657668353dd62044b72218987b12 DEPENDS_ON SPDXRef-mvn-groupId-2chance-1.0-SNAPSHOT
+SPDXRef-mvn-groupId-2chance-1.0-SNAPSHOT DEPENDENCY_OF SPDXRef-custom-62640-github.com-Mattyx00-2chance-dependability-83fa9bb6c84e657668353dd62044b72218987b12
+SPDXRef-mvn-javax.servlet-javax.servlet-api-4.0.1 DEPENDENCY_OF SPDXRef-mvn-groupId-2chance-1.0-SNAPSHOT
+SPDXRef-mvn-groupId-2chance-1.0-SNAPSHOT DEPENDS_ON SPDXRef-mvn-javax.servlet-javax.servlet-api-4.0.1
+SPDXRef-mvn-org.json-json-20231013 DEPENDENCY_OF SPDXRef-mvn-groupId-2chance-1.0-SNAPSHOT
+SPDXRef-mvn-groupId-2chance-1.0-SNAPSHOT DEPENDS_ON SPDXRef-mvn-org.json-json-20231013
+SPDXRef-mvn-commons-io-commons-io-2.14.0 DEPENDENCY_OF SPDXRef-mvn-groupId-2chance-1.0-SNAPSHOT
+SPDXRef-mvn-groupId-2chance-1.0-SNAPSHOT DEPENDS_ON SPDXRef-mvn-commons-io-commons-io-2.14.0
+SPDXRef-mvn-org.apache.tomcat-tomcat-jdbc-9.0.111 DEPENDENCY_OF SPDXRef-mvn-groupId-2chance-1.0-SNAPSHOT
+SPDXRef-mvn-groupId-2chance-1.0-SNAPSHOT DEPENDS_ON SPDXRef-mvn-org.apache.tomcat-tomcat-jdbc-9.0.111
+SPDXRef-mvn-org.apache.tomcat-tomcat-juli-9.0.111 DEPENDENCY_OF SPDXRef-mvn-groupId-2chance-1.0-SNAPSHOT
+SPDXRef-mvn-groupId-2chance-1.0-SNAPSHOT DEPENDS_ON SPDXRef-mvn-org.apache.tomcat-tomcat-juli-9.0.111
+SPDXRef-mvn-com.mysql-mysql-connector-j-9.5.0 DEPENDENCY_OF SPDXRef-mvn-groupId-2chance-1.0-SNAPSHOT
+SPDXRef-mvn-groupId-2chance-1.0-SNAPSHOT DEPENDS_ON SPDXRef-mvn-com.mysql-mysql-connector-j-9.5.0
+SPDXRef-mvn-com.google.protobuf-protobuf-java-4.31.1 DEPENDENCY_OF SPDXRef-mvn-groupId-2chance-1.0-SNAPSHOT
+SPDXRef-mvn-groupId-2chance-1.0-SNAPSHOT DEPENDS_ON SPDXRef-mvn-com.google.protobuf-protobuf-java-4.31.1
+SPDXRef-mvn-org.apache.taglibs-taglibs-standard-spec-1.2.5 DEPENDENCY_OF SPDXRef-mvn-groupId-2chance-1.0-SNAPSHOT
+SPDXRef-mvn-groupId-2chance-1.0-SNAPSHOT DEPENDS_ON SPDXRef-mvn-org.apache.taglibs-taglibs-standard-spec-1.2.5
+SPDXRef-mvn-org.apache.taglibs-taglibs-standard-impl-1.2.5 DEPENDENCY_OF SPDXRef-mvn-groupId-2chance-1.0-SNAPSHOT
+SPDXRef-mvn-groupId-2chance-1.0-SNAPSHOT DEPENDS_ON SPDXRef-mvn-org.apache.taglibs-taglibs-standard-impl-1.2.5

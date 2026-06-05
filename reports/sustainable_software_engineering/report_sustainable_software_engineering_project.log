@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2026.1.3)  4 JUN 2026 17:14
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2026.1.3)  4 JUN 2026 20:05
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1242,70 +1242,45 @@ Overfull \hbox (9.84169pt too wide) in paragraph at lines 105--106
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 
-Overfull \hbox (63.30836pt too wide) in paragraph at lines 138--140
-[]\T1/cmr/bx/n/12 Infrastruttura Web e Servlet (\T1/cmtt/m/n/12 provided\T1/cmr
-/bx/n/12 ): \T1/cmr/m/n/12 In-clude le API fon-da-men-tali come \T1/cmtt/m/n/12
- javax.servlet-api\T1/cmr/m/n/12 .
- []
-
-
-Overfull \hbox (49.10484pt too wide) in paragraph at lines 141--143
-[]\T1/cmr/bx/n/12 Connettività Database e Per-sis-tenza (\T1/cmtt/m/n/12 compil
-e\T1/cmr/bx/n/12 ): \T1/cmr/m/n/12 Com-prende \T1/cmtt/m/n/12 com.mysql:mysql-c
-onnector-j
- []
-
-[34]
-Overfull \hbox (24.8179pt too wide) in paragraph at lines 150--152
-\T1/cmr/m/n/12 (\T1/cmtt/m/n/12 jmh-core\T1/cmr/m/n/12 , che ered-ita \T1/cmtt/
-m/n/12 jopt-simple \T1/cmr/m/n/12 e \T1/cmtt/m/n/12 commons-math3\T1/cmr/m/n/12
- ) e il mu-ta-tion test-ing (\T1/cmtt/m/n/12 pitest-parent\T1/cmr/m/n/12 ).
- []
-
-
-Overfull \hbox (23.20155pt too wide) in paragraph at lines 150--152
-\T1/cmr/m/n/12 L'albero fa emerg-ere un'\T1/cmr/bx/n/12 anomalia ar-chitet-tura
-le sig-ni-fica-tiva\T1/cmr/m/n/12 : \T1/cmtt/m/n/12 jmh-core \T1/cmr/m/n/12 e \
-T1/cmtt/m/n/12 pitest-parent
- []
-
-[35]
-Underfull \hbox (badness 10000) in paragraph at lines 192--193
+Underfull \hbox (badness 10000) in paragraph at lines 144--145
 []|\T1/cmtt/m/n/12 jmh-generator-annprocess\T1/cmr/m/n/12 ,
  []
-
-[36]
-Overfull \hbox (13.36215pt too wide) in paragraph at lines 214--215
-\T1/cmr/m/n/12 Per su-per-are i lim-iti dell'analisi es-clu-si-va-mente lo-cale
- e stat-ica (basata sul \T1/cmtt/m/n/12 license-maven-plugin\T1/cmr/m/n/12 ,
- []
-
-[37]
-Overfull \hbox (4.80872pt too wide) in paragraph at lines 241--242
-[]\T1/cmr/bx/n/12 Licenze Flagged/Denied: \T1/cmr/m/it/12 GPL-2.0-only, LGPL-2.
-1-only, gpl-2.0 WITH universal-
- []
-
-[38] [39]
-Overfull \hbox (31.51826pt too wide) in paragraph at lines 276--277
-\T1/cmr/m/n/12 mark sit-uati nella di-rec-tory \T1/cmtt/m/n/12 src/jmh/java/ \T
-1/cmr/m/n/12 e in nes-sun file della di-rec-tory prin-ci-pale \T1/cmtt/m/n/12 s
-rc/main/java/\T1/cmr/m/n/12 .
- []
-
-(c:/Program Files/texlive/2025/texmf-dist/tex/latex/listings/lstlang1.sty
-File: lstlang1.sty 2025/11/14 1.11b listings language file
-)
-(c:/Program Files/texlive/2025/texmf-dist/tex/latex/listings/lstmisc.sty
-File: lstmisc.sty 2025/11/14 1.11b (Carsten Heinz)
-)
-Package hyperref Info: bookmark level for unknown lstlisting defaults to 0 on i
-nput line 278.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[40] [41]) [42] (./report_sustainable_software_engineering_project.aux
+[34] [35]
+Overfull \hbox (31.18596pt too wide) in paragraph at lines 192--193
+\T1/cmr/m/n/12 dovrebbe es-sere sos-ti-tuita nel \T1/cmtt/m/n/12 pom.xml \T1/cm
+r/m/n/12 con \T1/cmtt/m/n/12 org.mariadb.jdbc:mariadb-java-client
+ []
+
+[36]
+Overfull \hbox (5.80746pt too wide) in paragraph at lines 195--196
+[]\T1/cmtt/m/n/12 org.apache.tomcat:tomcat-jdbc \T1/cmr/bx/n/12 e dipen-denze t
+ran-si-tive (Apache-2.0 / BSD-
+ []
+
+
+Overfull \hbox (0.87378pt too wide) in paragraph at lines 199--200
+[]\T1/cmr/bx/n/12 Utilizzo: \T1/cmr/m/n/12 Pool di con-nes-sioni (\T1/cmtt/m/n/
+12 tomcat-juli\T1/cmr/m/n/12 ) e se-ri-al-iz-zazione (\T1/cmtt/m/n/12 protobuf-
+java\T1/cmr/m/n/12 ). 
+ []
+
+
+Overfull \hbox (21.39934pt too wide) in paragraph at lines 200--201
+\T1/cmr/bx/n/12 azione di un doc-u-mento di at-tribuzione for-male (\T1/cmtt/m/
+n/12 THIRD-PARTY-NOTICES.txt\T1/cmr/bx/n/12 )
+ []
+
+[37] [38]
+Overfull \hbox (13.36215pt too wide) in paragraph at lines 270--271
+\T1/cmr/m/n/12 Per su-per-are i lim-iti dell'analisi es-clu-si-va-mente lo-cale
+ e stat-ica (basata sul \T1/cmtt/m/n/12 license-maven-plugin\T1/cmr/m/n/12 ,
+ []
+
+[39]) [40] (./report_sustainable_software_engineering_project.aux
 (./chapters/introduction_and_system_baseline.aux)
 (./chapters/software_architectural_overview.aux)
 (./chapters/backend_energy_sustainability.aux)
@@ -1317,16 +1292,16 @@ L3 programming layer <2025-12-29>
  ***********
 Package rerunfilecheck Info: File `report_sustainable_software_engineering_proj
 ect.out' has not changed.
-(rerunfilecheck)             Checksum: A17F2EFFABC1AE6B3B34F8524A9C0F35;14184.
+(rerunfilecheck)             Checksum: 16B2E0793BDC5F78F81636E8B3673107;13602.
  ) 
 Here is how much of TeX's memory you used:
- 23752 strings out of 467538
- 437032 string characters out of 5401323
- 1127572 words of memory out of 5000000
- 52037 multiletter control sequences out of 15000+600000
- 646774 words of font info for 78 fonts, out of 8000000 for 9000
+ 23367 strings out of 467538
+ 433188 string characters out of 5401323
+ 943270 words of memory out of 5000000
+ 51689 multiletter control sequences out of 15000+600000
+ 646397 words of font info for 77 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 84i,11n,94p,1505b,1212s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 84i,11n,94p,1505b,709s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <c:/Program Files/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmex
 10.pfb><c:/Program Files/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm
 /cmmi12.pfb><c:/Program Files/texlive/2025/texmf-dist/fonts/type1/public/amsfon
@@ -1351,11 +1326,11 @@ gram Files/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sfrm1440.pfb><c:
 .pfb><c:/Program Files/texlive/2025/texmf-dist/fonts/type1/public/cm-super/sftt
 1000.pfb><c:/Program Files/texlive/2025/texmf-dist/fonts/type1/public/cm-super/
 sftt1200.pfb>
-Output written on report_sustainable_software_engineering_project.pdf (43 pages
-, 524993 bytes).
+Output written on report_sustainable_software_engineering_project.pdf (41 pages
+, 514099 bytes).
 PDF statistics:
- 700 PDF objects out of 1000 (max. 8388607)
- 602 compressed objects within 7 object streams
- 197 named destinations out of 1000 (max. 500000)
- 373 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 637 PDF objects out of 1000 (max. 8388607)
+ 543 compressed objects within 6 object streams
+ 166 named destinations out of 1000 (max. 500000)
+ 349 words of extra memory for PDF output out of 10000 (max. 10000000)
 
