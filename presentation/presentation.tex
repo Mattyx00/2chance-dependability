@@ -351,4 +351,388 @@
     \end{center}
 \end{frame}
 
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\Large \textbf{Model DAO Bottleneck Consumo Energetico}}
+        \vspace{0.6cm}
+        
+        \begin{tikzpicture}[
+            box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\footnotesize, text width=12.5cm, inner sep=0.25cm},
+            arrow/.style={->, thick, FooterGreen, >=Latex}
+        ]
+            
+            \node[box] (bottleneck) {
+                \textbf{Collo di Bottiglia Energetico: i Model DAO} \\[1ex]
+                I \textbf{Model DAO} registrano i maggiori consumi energetici poiché si occupano della complessa \textbf{comunicazione inter-processo} (IPC) tra l'applicazione e il DBMS.
+            };
+            
+            \node[box, below=0.6cm of bottleneck] (refactoring) {
+                \textbf{Soluzione: Refactoring Profondo} \\[1ex]
+                Per sanare le violazioni di Creedengo, risolvere problemi architetturali e massimizzare l'efficienza ecologica, si è optato per un \textbf{refactoring profondo} del sistema, concentrandosi specialmente sui \textbf{Model DAO} e sui \textbf{Model Beans} in cui sono state riscontrate la maggior parte delle problematiche di ecodesign.
+            };
+            
+            \draw[arrow] (bottleneck) -- (refactoring);
+            
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\Large \textbf{Avoid getting the size of the collection in the loop (GCI3)}}
+        \vspace{0.4cm}
+        
+        \begin{tikzpicture}[
+            box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\footnotesize, text width=12cm, inner sep=0.25cm},
+            arrow/.style={->, thick, FooterGreen, >=Latex}
+        ]
+            
+            \node[box] (problema) {
+                \textbf{Problema} \\[1ex]
+                Invocare ripetutamente \texttt{.size()} nella guardia di un ciclo costringe la JVM a ricalcolare i limiti della collezione ad ogni iterazione, sprecando cicli di clock.
+            };
+            
+            \node[box, below=0.6cm of problema] (soluzione) {
+                \textbf{Soluzione} \\[1ex]
+                Estrarre l'invocazione in una variabile primitiva locale prima del ciclo agisce come \textit{caching}. Ciò previene continue letture nell'Heap e permette alla CPU di usare i registri fisici, abilitando le ottimizzazioni JIT e annullando gli sprechi computazionali.
+            };
+            
+            \draw[arrow] (problema) -- (soluzione);
+            
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\Large \textbf{Avoid SQL request in loop (GCI72)}}
+        \vspace{0.4cm}
+        
+        \begin{tikzpicture}[
+            box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\scriptsize, text width=12.5cm, inner sep=0.2cm},
+            arrow/.style={->, thick, FooterGreen, >=Latex}
+        ]
+            
+            \node[box] (problema) {
+                \textbf{Problema} \\[1ex]
+                Query SQL in cicli iterativi generano enorme overhead DBMS, bloccando i thread Tomcat e impedendo il basso consumo della CPU. Inefficienze rilevate:\\[0.5ex]
+                $\bullet$ \textbf{Assenza Batch Processing}: singole \texttt{INSERT/UPDATE} in ciclo forzano transazioni e commit continui per ogni record, frammentando l'I/O su disco e saturando la rete.\\
+                $\bullet$ \textbf{Problema N+1}: recuperare \textit{N} ordini e i loro prodotti costa \textit{1+N} query distinte (1 per ordini, \textit{N} per prodotti), moltiplicando roundtrip e attese I/O.
+            };
+            
+            \node[box, below=0.3cm of problema] (soluzione) {
+                \textbf{Soluzione} \\[1ex]
+                $\bullet$ \textbf{Risoluzione Scritture}: introdotte operazioni \textbf{batch native JDBC} (\texttt{addBatch()}, \texttt{executeBatch()}). I comandi accodati vengono inviati in un singolo pacchetto di rete ed eseguiti in un'unica transazione atomica, abbattendo lock e costi di connessione.\\[0.5ex]
+                $\bullet$ \textbf{Risoluzione N+1}: le \textit{1+N} query sono state ridotte a \textbf{1 query aggregata} (\texttt{LEFT JOIN}) in un solo roundtrip. L'assemblaggio senza duplicati è delegato alla RAM tramite \texttt{LinkedHashMap}, annullando del tutto gli sprechi di rete.
+            };
+            
+            \draw[arrow] (problema) -- (soluzione);
+            
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\Large \textbf{Do not call a function when declaring a for-type loop (GCI69)}}
+        \vspace{0.4cm}
+        
+        \begin{tikzpicture}[
+            box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\footnotesize, text width=12cm, inner sep=0.25cm},
+            arrow/.style={->, thick, FooterGreen, >=Latex}
+        ]
+            
+            \node[box] (problema) {
+                \textbf{Problema} \\[1ex]
+                Invocare funzioni \textbf{invarianti} (il cui risultato non cambia mai durante l'esecuzione) all'interno dei parametri di dichiarazione o di guardia di un ciclo forza la CPU a ricalcolare l'intero metodo ad ogni singola iterazione, causando un enorme e inutile dispendio di calcolo.
+            };
+            
+            \node[box, below=0.6cm of problema] (soluzione) {
+                \textbf{Soluzione} \\[1ex]
+                I risultati di queste funzioni sono stati estratti e salvati in \textbf{variabili primitive locali} \textit{prima} dell'inizio del ciclo.\\[1ex]
+                Ciò elimina alla radice migliaia di invocazioni ridondanti, fungendo da vero e proprio \textit{caching} preventivo e consentendo alla JVM di ottimizzare pienamente l'esecuzione del blocco iterativo.
+            };
+            
+            \draw[arrow] (problema) -- (soluzione);
+            
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\Large \textbf{Don't use the query SELECT * FROM (GCI74)}}
+        \vspace{0.4cm}
+        
+        \begin{tikzpicture}[
+            box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\footnotesize, text width=12cm, inner sep=0.25cm},
+            arrow/.style={->, thick, FooterGreen, >=Latex}
+        ]
+            
+            \node[box] (problema) {
+                \textbf{Problema} \\[1ex]
+                L'uso sistematico di \texttt{SELECT *} costringe il database a pesanti operazioni di I/O su disco per estrarre \textbf{tutti i campi}, inclusi quelli inutili o enormi (es. immagini in \textit{Base64}). Ciò genera traffico di rete sprecato e satura la JVM con massicce allocazioni di oggetti temporanei.
+            };
+            
+            \node[box, below=0.6cm of problema] (soluzione) {
+                \textbf{Soluzione} \\[1ex]
+                Le query sono state riscritte esplicitando nella proiezione SQL \textbf{unicamente le colonne necessarie}.\\[1ex]
+                Il taglio del \textit{payload} di rete alleggerisce la fase di mappatura ad oggetti (ORM), abbattendo le allocazioni nella memoria Heap e minimizzando l'intenso stress energetico causato dai cicli continui di \textbf{Garbage Collection}. L'allineamento dei risultati ai nomi simbolici delle colonne aumenta inoltre la resilienza strutturale del codice.
+            };
+            
+            \draw[arrow] (problema) -- (soluzione);
+            
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\Large \textbf{Unit \& Integration Testing Incrementali}}
+        \vspace{0.4cm}
+        
+        \begin{tikzpicture}[
+            box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\footnotesize, text width=12cm, inner sep=0.25cm},
+            arrow/.style={->, thick, FooterGreen, >=Latex}
+        ]
+            
+            \node[box] (unit) {
+                \textbf{Unit Testing Incrementale} \\[1ex]
+                Ogni classe è stata rifattorizzata singolarmente seguendo un approccio incrementale. Al termine delle modifiche, la relativa suite di \textbf{unit testing} è stata eseguita tramite Maven e JUnit 5 per isolare e correggere immediatamente eventuali errori semantici o disallineamenti nei mock (es. per l'introduzione di query batch o letture per nome colonna).
+            };
+            
+            \node[box, below=0.6cm of unit] (integration) {
+                \textbf{Integration Testing Incrementale} \\[1ex]
+                Una volta validato il singolo componente, è stata lanciata l'intera suite globale di \textbf{integration testing} (composta da oltre 500 test).\\[1ex]
+                Questo rigoroso processo di verifica a doppio passaggio, ripetuto per ogni classe, ha scongiurato qualsiasi regressione e certificato l'assoluta integrità della logica di business prima di validare le ottimizzazioni energetiche.
+            };
+            
+            \draw[arrow] (unit) -- (integration);
+            
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\Large \textbf{Verifica Risoluzione Anti-Pattern Energetici}}\\[0.5ex]
+        \textcolor{FooterGreen}{\large \textbf{Post-Refactoring con Creedengo}}
+        \vspace{0.4cm}
+        
+        \begin{tikzpicture}[
+            titlebox/.style={draw=FooterGreen, thick, rounded corners, text=white, align=center, fill=BgGreen!70!black, font=\bfseries\small, text width=12cm, inner sep=0.25cm},
+            descbox/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\footnotesize, text width=12cm, inner sep=0.3cm},
+            arrow/.style={->, thick, FooterGreen, >=Latex}
+        ]
+            
+            \node[descbox] (risultati1) {
+                Tutte le \textbf{64 eco-vulnerabilità} sono state risolte ed i relativi fault sono stati chiusi con successo, venendo contrassegnati da Creedengo con lo stato \textbf{CLOSED/FIXED}.
+            };
+            
+            \node[descbox, below=0.6cm of risultati1] (risultati2) {
+                La completa risoluzione di questi fault garantisce che l'applicazione non presenti inefficienze strutturali latenti a livello di CPU-bound e I/O-bound, allineandosi con i rigorosi \textbf{requisiti di sostenibilità energetica} previsti per il sistema 2Chance.
+            };
+            
+            \draw[arrow] (risultati1) -- (risultati2);
+            
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\Large \textbf{Verifica Ottimizzazioni Energetiche e Performance}}\\[0.5ex]
+        \vspace{0.6cm}
+        
+        \begin{tikzpicture}[
+            box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=center, fill=BgGreen!50!black, font=\small, text width=12cm, inner sep=0.3cm},
+            arrow/.style={->, thick, FooterGreen, >=Latex}
+        ]
+            
+            \node[box, fill=BgGreen!70!black, font=\bfseries] (branch) {
+                branch \texttt{baseline} \quad \Large VS \normalsize \quad branch \texttt{sse-improvements}
+            };
+            
+            \node[box, below=0.6cm of branch] (micro) {
+                \textbf{Microbenchmarking (JMH)} \\[1ex]
+                Profilazione Consumo Energetico (EnergiBridge)
+            };
+            
+            \node[box, below=0.6cm of micro] (system) {
+                \textbf{System Performance Testing (JMeter)} \\[1ex]
+                Profilazione Consumo Energetico (EnergiBridge)
+            };
+            
+            \draw[arrow] (branch) -- (micro);
+            \draw[arrow] (micro) -- (system);
+            
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\Large \textbf{EnergiBridge - Profilazione Consumo Energetico}}
+        \vspace{0.4cm}
+        
+        \begin{tikzpicture}[
+            box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\footnotesize, text width=12cm, inner sep=0.25cm},
+            arrow/.style={->, thick, FooterGreen, >=Latex}
+        ]
+            
+            \node[box] (caratteristiche) {
+                \textbf{EnergiBridge} \\[1ex]
+                $\bullet$ \textbf{Scopo}: raccolta empirica delle metriche energetiche, campionando il consumo a intervalli regolari durante l'esecuzione di un processo.\\
+                $\bullet$ \textbf{Interfaccia}: riga di comando (CLI), snella e programmabile.\\
+                $\bullet$ \textbf{Output}: esportazione dei dati aggregati in formato \textbf{CSV}.
+            };
+            
+            \node[box, below=0.5cm of caratteristiche] (hardware) {
+                \textbf{Interazione Hardware su Windows} \\[1ex]
+                Il tool monitora l'impatto energetico interfacciandosi direttamente con i sensori fisici dell'architettura. Per farlo su Windows, integra il plugin \textbf{LibreHardwareMonitor}, un componente essenziale che permette al software di leggere a basso livello i dati estratti dai registri della CPU.\\[1ex]
+                Questa compatibilità risulta fondamentale per il progetto 2Chance, le cui rigorose misurazioni verranno effettuate su sistema operativo Windows con processore \textbf{AMD Ryzen AI 9 HX 370}.
+            };
+            
+            \draw[arrow] (caratteristiche) -- (hardware);
+            
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\Large \textbf{Microbenchmarking Energetico sui DAO}}\\[0.5ex]
+        \textcolor{FooterGreen}{\large \textbf{JMH + EnergiBridge}}
+        \vspace{0.4cm}
+        
+        \begin{tikzpicture}[
+            box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\footnotesize, text width=12.5cm, inner sep=0.25cm},
+            arrow/.style={->, thick, FooterGreen, >=Latex}
+        ]
+            
+            \node[box] (selezione) {
+                \textbf{Selezione dei Target (DAO)} \\[1ex]
+                Dall'analisi di \textit{Creedengo} è emerso che gli anti-pattern responsabili dell'elevato consumo energetico erano concentrati in tre classi: \texttt{ProdottoDAO}, \texttt{RecensioneDAO} e \texttt{OrdineDAO}. Queste sono state scelte come target per il microbenchmarking.
+            };
+            
+            \node[box, below=0.5cm of selezione] (script) {
+                \textbf{Sincronizzazione Automatizzata in Python} \\[1ex]
+                Per misurare simultaneamente le performance temporali (\textbf{JMH}) e l'assorbimento energetico (\textbf{EnergiBridge}) di ogni metodo di queste classi, è stato sviluppato lo script Python \texttt{run\_jmh\_energy\_profiler.py} che orchestra l'intero processo di isolamento e profilazione hardware attraverso \textbf{4 fasi sequenziali}.
+            };
+            
+            \draw[arrow] (selezione) -- (script);
+            
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\Large \textbf{Fase 1: Isolamento Totale con Nuova JVM}}
+        \vspace{0.4cm}
+        
+        \begin{tikzpicture}[
+            box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\footnotesize, text width=12.5cm, inner sep=0.25cm},
+            arrow/.style={->, thick, FooterGreen, >=Latex}
+        ]
+            
+            \node[box] (problema) {
+                \textbf{Il Problema delle Interferenze} \\[1ex]
+                JMH normalmente esegue test multipli all'interno della stessa \textit{Java Virtual Machine} (JVM). Questo rischia di alterare severamente i consumi energetici, perché un test potrebbe subire il carico del \textit{Garbage Collector} innescato dal test precedente, sporcando i dati.
+            };
+            
+            \node[box, below=0.5cm of problema] (soluzione) {
+                \textbf{Avvio Isolato} \\[1ex]
+                Lo script impone l'avvio di una JVM \textbf{completamente nuova e pulita} per ogni singolo metodo testato, incapsulandola all'interno del processo di EnergiBridge.\\[1ex]
+                Ciò previene l'inquinamento della memoria \textit{Heap} e l'accavallamento dei thread, garantendo che i Joule registrati appartengano \textbf{esclusivamente} al frammento di codice in esame.
+            };
+            
+            \draw[arrow] (problema) -- (soluzione);
+            
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\Large \textbf{Fase 2: Configurazione Microbenchmarking}}
+        \vspace{0.4cm}
+        
+        \begin{tikzpicture}[
+            box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\footnotesize, text width=12.5cm, inner sep=0.25cm},
+            arrow/.style={->, thick, FooterGreen, >=Latex}
+        ]
+            
+            \node[box] (problema) {
+                \textbf{L'Ottimizzazione JIT del Bytecode} \\[1ex]
+                Il codice Java è pre-compilato in un formato intermedio (\textit{bytecode}). Durante l'avvio, il compilatore JIT (\textit{Just-In-Time}) della JVM lo traduce al volo in linguaggio macchina, applicando pesanti ottimizzazioni per l'hardware. Questo intenso processo di analisi e ottimizzazione del codice assorbe enormi quantità di energia che falsificherebbero i risultati.
+            };
+            
+            \node[box, below=0.4cm of problema] (soluzione) {
+                \textbf{Warmup e Misurazione a Singolo Thread} \\[1ex]
+                Lo script imposta JMH per eseguire prima \textbf{5 iterazioni a vuoto} (\textit{warmup}). Queste iterazioni servono esclusivamente a concedere alla JVM il tempo e l'energia per profilare e ottimizzare a fondo il \textit{bytecode} in background.\\[1ex]
+                Solo quando il codice è stato completamente ottimizzato dal JIT, lo script lancia le \textbf{5 iterazioni di misurazione reale} a singolo thread, registrando il vero costo energetico dell'algoritmo a regime.
+            };
+            
+            \draw[arrow] (problema) -- (soluzione);
+            
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\Large \textbf{Fase 3: Pulizia Dati e Filtro RAPL}}
+        \vspace{0.4cm}
+        
+        \begin{tikzpicture}[
+            box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\footnotesize, text width=12.5cm, inner sep=0.25cm},
+            arrow/.style={->, thick, FooterGreen, >=Latex}
+        ]
+            
+            \node[box] (problema) {
+                \textbf{Rumore dei Sensori Hardware} \\[1ex]
+                I sensori fisici integrati nel processore (registri \textit{RAPL}) possono generare rumore, cioé valori anomali matematicamente impossibili, come misurazioni con energia negativa, o picchi anomali di assorbimento in Watt che vanno oltre le capacità fisiche della CPU e dei singoli Core.
+            };
+            
+            \node[box, below=0.4cm of problema] (soluzione) {
+                \textbf{Filtraggio Matematico (TDP)} \\[1ex]
+                Lo script applica un rigoroso filtro, scartando le letture in cui l'energia registrata ($\Delta E$) divisa per il tempo ($\Delta t$) supera il TDP (\textit{Thermal Design Power}) massimo fisicamente erogabile dalla CPU AMD usata per i test:\\[0.5ex]
+                \hspace*{1cm} $0 \le \Delta E_{\text{CPU}} \le \textbf{55{,}0} \times \Delta t \quad \text{e} \quad 0 \le \Delta E_{\text{Core}} \le \textbf{45{,}0} \times \Delta t$\\[0.5ex]
+                Ciò garantisce la totale \textbf{affidabilità empirica} dei misuramenti.
+            };
+            
+            \draw[arrow] (problema) -- (soluzione);
+            
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\Large \textbf{Fase 4: Merging e Report Finale}}
+        \vspace{0.4cm}
+        
+        \begin{tikzpicture}[
+            box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\footnotesize, text width=12.5cm, inner sep=0.25cm},
+            arrow/.style={->, thick, FooterGreen, >=Latex}
+        ]
+            
+            \node[box] (problema) {
+                \textbf{Disallineamento delle Metriche} \\[1ex]
+                Le metriche estratte dai due strumenti possiedono nature differenti: JMH produce log misurando il tempo di esecuzione in \textbf{millisecondi per operazione}, mentre EnergiBridge genera file isolati misurando l'assorbimento in \textbf{Joule e Watt}.
+            };
+            
+            \node[box, below=0.5cm of problema] (soluzione) {
+                \textbf{Riconciliazione ed Export CSV} \\[1ex]
+                L'ultima mansione dello script Python è quella di scansionare ed unire temporalmente e matematicamente i log isolati dei due software.\\[1ex]
+                Viene generato un \textbf{singolo report CSV finale} che quantifica con precisione assoluta il consumo netto per operazione (\textbf{Joule/op}), affiancato dalla potenza media erogata (W), dai picchi di RAM allocata e dal carico della CPU.
+            };
+            
+            \draw[arrow] (problema) -- (soluzione);
+            
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
 \end{document}
