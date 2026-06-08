@@ -1,14 +1,17 @@
 \documentclass[aspectratio=169]{beamer}
 
 \usepackage{xcolor}
+\usepackage{colortbl}
 \usepackage[T1]{fontenc}
 \usepackage{tikz}
 \usepackage{array}
+\usepackage{booktabs}
 \usetikzlibrary{positioning, arrows.meta, shapes.multipart}
 
 % Define custom colors as requested
 \definecolor{BgGreen}{HTML}{005D1E}
 \definecolor{FooterGreen}{HTML}{88E788}
+\colorlet{DarkBgGreen}{BgGreen!50!black}
 
 % Apply colors to beamer elements
 \setbeamercolor{background canvas}{bg=BgGreen}
@@ -50,7 +53,12 @@
         An Empirical Analysis of \\
         Energy Patterns and Performance}}
         
-        \vspace{1.5cm}
+        \vspace{1.0cm}
+        
+        \textcolor{FooterGreen}{\textbf{Aldo Manco} \\
+        \small NF22500064}
+        
+        \vspace{1.0cm}
         
         \textcolor{FooterGreen}{\small Sustainable Software Engineering \\
         Green-in-Software Project}
@@ -217,6 +225,14 @@
             
         \end{tikzpicture}
     \end{center}
+\end{frame}
+
+\begin{frame}
+    \vfill
+    \begin{center}
+        \textcolor{FooterGreen}{\Huge \textbf{Backend Energy Sustainability}}
+    \end{center}
+    \vfill
 \end{frame}
 
 \begin{frame}
@@ -730,6 +746,1617 @@
             };
             
             \draw[arrow] (problema) -- (soluzione);
+            
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\Large \textbf{Confronto dei Risultati dei Benchmark}}\\[0.5ex]
+        \textcolor{FooterGreen}{\large \textbf{Analisi Prestazionale (Tempo)}}
+        \vspace{0.1cm}
+        
+        \renewcommand{\arraystretch}{1.2}
+        \resizebox{\textwidth}{!}{
+        \begin{tabular}{|l|c|c|r|c|c|r|}
+        \hline
+        \rowcolor{FooterGreen}
+        \textcolor{white}{\textbf{Metodo di Benchmark (Target)}} & \textcolor{white}{\textbf{Tempo Base}} & \textcolor{white}{\textbf{Tempo Post}} & \textcolor{white}{\textbf{Var. Tempo}} & \textcolor{white}{\textbf{Energia Base}} & \textcolor{white}{\textbf{Energia Post}} & \textcolor{white}{\textbf{Var. Energia}} \\ \hline
+        \texttt{AggiungiSpecifiche} (ProdottoDAO) & 23,64 ms & 12,78 ms & \textcolor{green!80!black}{\textbf{-45,96\%}} & 74,72 J & 80,41 J & \textcolor{red}{\textbf{+7,62\%}} \\ \hline
+        \texttt{GetProdottoByIdValid} (ProdottoDAO) & 19,18 ms & 3,85 ms & \textcolor{green!80!black}{\textbf{-79,90\%}} & 81,32 J & 93,89 J & \textcolor{red}{\textbf{+15,46\%}} \\ \hline
+        \texttt{GetRecensioniByProdotto} (RecensioneDAO) & 15,39 ms & 1,08 ms & \textcolor{green!80!black}{\textbf{-92,94\%}} & 76,26 J & 77,56 J & \textcolor{red}{\textbf{+1,70\%}} \\ \hline
+        \texttt{GetRecensioniByUtente} (RecensioneDAO) & 15,01 ms & 1,02 ms & \textcolor{green!80!black}{\textbf{-93,17\%}} & 77,52 J & 73,83 J & \textcolor{green!80!black}{\textbf{-4,76\%}} \\ \hline
+        \texttt{GetOrdiniByUtenteValid} (OrdineDAO) & 41,38 ms & 1,01 ms & \textcolor{green!80!black}{\textbf{-97,54\%}} & 88,68 J & 96,11 J & \textcolor{red}{\textbf{+8,38\%}} \\ \hline
+        \end{tabular}
+        }
+        
+        \vspace{0.2cm}
+        
+        \begin{tikzpicture}[
+            box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\tiny, text width=12.5cm, inner sep=0.15cm}
+        ]
+            \node[box] (prodotto) {
+                \textbf{ProdottoDAO} \\[0.5ex]
+                $\bullet$ \textit{JDBC Batching}: l'aggregazione di \texttt{INSERT} multiple in un'unica singola transazione ha annullato la latenza dei \textit{roundtrip} di rete in scrittura (\textbf{-45,96\%}).\\
+                $\bullet$ \textit{Proiezioni Esplicite}: sostituendo le query \textit{catch-all} (\texttt{SELECT *}) con campi mirati (\texttt{SELECT a,b}) è stato eliminato l'overhead di allocazione oggetti in RAM (\textbf{-79,90\%}).
+            };
+            
+            \node[box, below=0.15cm of prodotto] (recensione) {
+                \textbf{RecensioneDAO} \\[0.5ex]
+                $\bullet$ L'eliminazione delle pesanti \textit{JOIN} SQL superflue (che interrogavano il DB per estrarre inutilmente intere entità Utente e Prodotto per ogni recensione) ha drasticamente alleggerito il \textit{ResultSet}, decuplicando la velocità (\textbf{-93\%}).
+            };
+            
+            \node[box, below=0.15cm of recensione] (ordine) {
+                \textbf{OrdineDAO} \\[0.5ex]
+                $\bullet$ La risoluzione del \textit{Problema N+1} è avvenuta estraendo le query annidate dai cicli iterativi e sostituendole con un'unica interrogazione basata su \textbf{\texttt{LEFT JOIN}}. L'aver rimosso migliaia di chiamate I/O a cascata ha generato un guadagno stratosferico (\textbf{-97,54\%}).
+            };
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\Large \textbf{Confronto dei Risultati dei Benchmark}}\\[0.5ex]
+        \textcolor{FooterGreen}{\large \textbf{Analisi del Consumo Energetico (Joule)}}
+        \vspace{0.1cm}
+        
+        \renewcommand{\arraystretch}{1.2}
+        \resizebox{\textwidth}{!}{
+        \begin{tabular}{|l|c|c|r|c|c|r|}
+        \hline
+        \rowcolor{FooterGreen}
+        \textcolor{white}{\textbf{Metodo di Benchmark (Target)}} & \textcolor{white}{\textbf{Tempo Base}} & \textcolor{white}{\textbf{Tempo Post}} & \textcolor{white}{\textbf{Var. Tempo}} & \textcolor{white}{\textbf{Energia Base}} & \textcolor{white}{\textbf{Energia Post}} & \textcolor{white}{\textbf{Var. Energia}} \\ \hline
+        \texttt{AggiungiSpecifiche} (ProdottoDAO) & 23,64 ms & 12,78 ms & \textcolor{green!80!black}{\textbf{-45,96\%}} & 74,72 J & 80,41 J & \textcolor{red}{\textbf{+7,62\%}} \\ \hline
+        \texttt{GetProdottoByIdValid} (ProdottoDAO) & 19,18 ms & 3,85 ms & \textcolor{green!80!black}{\textbf{-79,90\%}} & 81,32 J & 93,89 J & \textcolor{red}{\textbf{+15,46\%}} \\ \hline
+        \texttt{GetRecensioniByProdotto} (RecensioneDAO) & 15,39 ms & 1,08 ms & \textcolor{green!80!black}{\textbf{-92,94\%}} & 76,26 J & 77,56 J & \textcolor{red}{\textbf{+1,70\%}} \\ \hline
+        \texttt{GetRecensioniByUtente} (RecensioneDAO) & 15,01 ms & 1,02 ms & \textcolor{green!80!black}{\textbf{-93,17\%}} & 77,52 J & 73,83 J & \textcolor{green!80!black}{\textbf{-4,76\%}} \\ \hline
+        \texttt{GetOrdiniByUtenteValid} (OrdineDAO) & 41,38 ms & 1,01 ms & \textcolor{green!80!black}{\textbf{-97,54\%}} & 88,68 J & 96,11 J & \textcolor{red}{\textbf{+8,38\%}} \\ \hline
+        \end{tabular}
+        }
+        
+        \vspace{0.2cm}
+        
+        \begin{tikzpicture}[
+            box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\tiny, text width=12.5cm, inner sep=0.15cm}
+        ]
+            \node[box] (energia) {
+                \textbf{Il Paradosso dell'Aumento Energetico Assoluto} \\[1ex]
+                Come visibile in tabella, il consumo energetico assoluto è \textbf{aumentato nella maggior parte dei metodi} (es. +15\%, +8\%). Questo è un falso negativo causato dalla meccanica di misurazione di JMH:\\[0.5ex]
+                
+                $\bullet$ \textbf{Finestra Temporale vs Stato di Idle}: JMH lancia il metodo in \textit{loop} per un tempo fisso (es. 10 sec). Nella \textit{baseline}, a causa della lentezza I/O, la CPU rimaneva spesso ferma in attesa (\textit{idle}), completando solo poche decine di transazioni ed assorbendo meno Joule.\\[0.5ex]
+                
+                $\bullet$ \textbf{Impennata del Throughput}: Con il refactoring, i colli di bottiglia sono spariti. Nei medesimi 10 secondi, la CPU non va mai in \textit{idle} e macina l'algoritmo a velocità estreme, elaborando fino a 40 volte il numero originario di richieste.\\[0.5ex]
+                
+                $\bullet$ \textbf{Costo per Transazione}: Poiché la CPU lavora costantemente al massimo delle prestazioni senza pause, brucia più Joule \textit{complessivi}. Tuttavia, riparametrando quell'energia per l'immenso numero di iterazioni servite nello stesso lasso di tempo, \textbf{il vero costo energetico per singola transazione è crollato esponenzialmente}.
+            };
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\Large \textbf{System Level Performance Testing}}\\[0.5ex]
+        \textcolor{FooterGreen}{\large \textbf{JMeter + EnergiBridge}}
+        \vspace{0.4cm}
+        
+        \begin{tikzpicture}[
+            box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\tiny, text width=12cm, inner sep=0.15cm},
+            arrow/.style={->, thick, FooterGreen, >=Latex}
+        ]
+            
+            \node[box] (energibridge) {
+                \textbf{EnergiBridge (Sincronizzazione HW/SW)} \\[1ex]
+                \textbf{EnergiBridge} acquisisce il profilo di consumo energetico del sistema durante la sua esecuzione. Sincronizzando il traffico transazionale con i sensori hardware, è stato possibile creare una \textit{correlazione univoca e rigorosa} tra lo sforzo computazionale richiesto al server e l'energia effettivamente assorbita.
+            };
+            
+            \node[box, below=0.2cm of energibridge] (jmeter) {
+                \textbf{Apache JMeter (Carico Deterministico)} \\[1ex]
+                Per garantire l'attendibilità dell'analisi, il sistema è stato sottoposto a un carico di lavoro \textit{costante e riproducibile}. \textbf{Apache JMeter} ha orchestrato simulazioni massive di traffico in modalità \textit{non-GUI}, azzerando l'overhead di rendering grafico locale che avrebbe falsato le misurazioni.
+            };
+            
+            \node[box, below=0.2cm of jmeter] (jmx) {
+                \textbf{Script JMX (Simulazione Realistica)} \\[1ex]
+                Lo stress test è governato da uno \textbf{script .jmx} personalizzato. Questo file modella matematicamente il comportamento concorrente di migliaia di \textit{utenti virtuali} (Thread), costringendo l'applicazione a reagire a un flusso di richieste web altamente realistico e stratificato.
+            };
+            
+            \draw[arrow] (energibridge) -- (jmeter);
+            \draw[arrow] (jmeter) -- (jmx);
+            
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\Large \textbf{Fase 1: Astrazione del Contesto di Rete}}\\[0.5ex]
+        \textcolor{FooterGreen}{\large \textbf{Test Plan (JMeter)}}
+        \vspace{0.4cm}
+        
+        \begin{tikzpicture}[
+            box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\tiny, text width=12cm, inner sep=0.15cm},
+            snippet/.style={draw=white, thick, rounded corners, text=green!80!white, align=left, fill=black!80!white, font=\ttfamily\tiny, text width=10.5cm, inner sep=0.15cm},
+            arrow/.style={->, thick, FooterGreen, >=Latex}
+        ]
+            
+            \node[box] (config) {
+                \textbf{Variabili Globali e Flessibilità} \\[1ex]
+                La configurazione globale della simulazione nel file \texttt{.jmx} sfrutta intensivamente \textit{variabili globali}. Ciò permette di parametrizzare centralmente le coordinate di rete (host, porta, context), evitandone del tutto l'\textit{hardcoding}.
+            };
+            
+            \node[snippet, below=0.2cm of config] (codice) {
+                <stringProp name="Argument.name">HOST</stringProp> \\
+                <stringProp name="Argument.value">\$\{\_\_P(host, localhost)\}</stringProp> \\[0.5ex]
+                <stringProp name="Argument.name">PORT</stringProp> \\
+                <stringProp name="Argument.value">\$\{\_\_P(port, 8080)\}</stringProp>
+            };
+            
+            \node[box, below=0.2cm of codice] (decoupling) {
+                \textbf{Disaccoppiamento dell'Ambiente di Esecuzione} \\[1ex]
+                Questa astrazione \textit{disaccoppia totalmente} la logica del test dallo specifico ambiente. Grazie alle property dinamiche (\texttt{\_\_P}), l'intera simulazione può essere ri-orientata istantaneamente verso server di \textit{staging} o \textit{produzione} passandole da riga di comando, annullando la necessità di alterare l'XML dello script.
+            };
+            
+            \draw[arrow] (config) -- (codice);
+            \draw[arrow] (codice) -- (decoupling);
+            
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\Large \textbf{Fase 2: Orchestrazione della Concorrenza}}\\[0.5ex]
+        \textcolor{FooterGreen}{\large \textbf{Thread Group (JMeter)}}
+        \vspace{0.4cm}
+        
+        \begin{tikzpicture}[
+            box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\tiny, text width=12cm, inner sep=0.15cm},
+            arrow/.style={->, thick, FooterGreen, >=Latex}
+        ]
+            
+            \node[box] (thread) {
+                \textbf{Gestore della Concorrenza (Thread Group)} \\[1ex]
+                La simulazione del traffico è interamente governata da un gestore della concorrenza (\textit{Thread Group}). Questo modulo \textit{core} si occupa di istanziare dinamicamente in memoria gli utenti virtuali (Thread), gestendone il ciclo di vita in parallelo fino al raggiungimento del target di carico predefinito.
+            };
+            
+            \node[box, below=0.2cm of thread] (rampup) {
+                \textbf{Meccanismo di Ramp-up (Carico Graduale)} \\[1ex]
+                Per evitare che l'avvio simultaneo e massiccio di tutti i thread generi picchi anomali di rete non rappresentativi del traffico organico reale (effetto \textit{DDoS artificiale}), ho introdotto un periodo controllato di \textit{ramp-up}. Questo algoritmo distribuisce linearmente le inizializzazioni degli utenti lungo una finestra temporale, portando il carico al picco in modo scalare e graduale.
+            };
+            
+            \node[box, below=0.2cm of rampup] (steady) {
+                \textbf{Steady State (Campionatura Statistica)} \\[1ex]
+                Una volta terminato il \textit{ramp-up} e raggiunto il picco di concorrenza, tale massimo viene mantenuto rigorosamente costante per un intervallo di tempo prestabilito. Mantenere l'infrastruttura sotto uno \textit{stress ininterrotto} garantisce l'estrazione di metriche energetiche e prestazionali estremamente stabili, pulite e \textit{statisticamente rilevanti}.
+            };
+            
+            \draw[arrow] (thread) -- (rampup);
+            \draw[arrow] (rampup) -- (steady);
+            
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\Large \textbf{Fase 3: Mantenimento dello Stato e dell'Isolamento}}\\[0.5ex]
+        \textcolor{FooterGreen}{\large \textbf{Session Management (JMeter)}}
+        \vspace{0.4cm}
+        
+        \begin{tikzpicture}[
+            box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\tiny, text width=12cm, inner sep=0.15cm},
+            arrow/.style={->, thick, FooterGreen, >=Latex}
+        ]
+            
+            \node[box] (emulazione) {
+                \textbf{Emulazione del Browser (Stateful Navigation)} \\[1ex]
+                Affinché un utente virtuale possa compiere un percorso applicativo coerente (ad esempio simulando l'autenticazione o il carrello), il motore di test è stato configurato per emulare fedelmente e in modo trasparente il comportamento di un \textit{browser} reale nel mantenimento dello stato.
+            };
+            
+            \node[box, below=0.2cm of emulazione] (sessione) {
+                \textbf{Gestione della Sessione (Cookie Manager)} \\[1ex]
+                A tale scopo, la simulazione intercetta dinamicamente e conserva nella memoria allocata al singolo Thread i \textit{cookie} di sessione generati dal Web Server (come il classico \texttt{JSESSIONID}), iniettandoli automaticamente negli header di tutte le richieste HTTP successive di quello specifico utente.
+            };
+            
+            \node[box, below=0.2cm of sessione] (isolamento) {
+                \textbf{Isolamento delle Iterazioni (Clean Context)} \\[1ex]
+                Un aspetto architetturale cruciale è la rigorosa garanzia di \textit{isolamento}. Ogni volta che un utente virtuale conclude e ricomincia il proprio ciclo di test, il suo contesto locale viene completamente azzerato. Questo meccanismo di pulizia automatica assicura che le singole esecuzioni non subiscano mai interferenze dovute a \textit{cache} o \textit{cookie} inquinati ed ereditati dai cicli precedenti.
+            };
+            
+            \draw[arrow] (emulazione) -- (sessione);
+            \draw[arrow] (sessione) -- (isolamento);
+            
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\Large \textbf{Fase 4: Campionamento delle Interazioni}}\\[0.5ex]
+        \textcolor{FooterGreen}{\large \textbf{HTTP Samplers (JMeter)}}
+        \vspace{0.4cm}
+        
+        \begin{tikzpicture}[
+            boxWide/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\tiny, text width=12cm, inner sep=0.15cm},
+            boxHalf/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\tiny, text width=5.6cm, inner sep=0.15cm},
+            arrow/.style={->, thick, FooterGreen, >=Latex}
+        ]
+            
+            \node[boxWide] (samplers) {
+                \textbf{Motore Operativo (HTTP Samplers)} \\[1ex]
+                Il nucleo esecutivo della simulazione è costituito dagli \textit{HTTP Samplers}. Questi componenti replicano meccanicamente le richieste HTTP che compongono lo \textit{User Journey} dell'utente, suddividendo il carico di lavoro in due tipologie primarie di interazione architetturale.
+            };
+            
+            \node[boxHalf, below=0.4cm of samplers, xshift=-3.1cm] (get) {
+                \textbf{Lettura Informativa (Metodo GET)} \\[1ex]
+                Operazioni in sola lettura finalizzate al recupero dei dati (es. esplorazione del catalogo). Queste richieste stressano la rete e impongono un massiccio sforzo computazionale al Database per le fasi di \textit{querying}, senza però comportare alterazioni o mutazioni persistenti dello stato.
+            };
+            
+            \node[boxHalf, below=0.4cm of samplers, xshift=3.1cm] (post) {
+                \textbf{Mutazione di Stato ed Entropia (POST)} \\[1ex]
+                Operazioni transazionali di scrittura (es. registrazione). Per prevenire violazioni dei \textit{vincoli di unicità} sul DB a causa della forte concorrenza, ho implementato un fattore di \textit{entropia}: l'iniezione dinamica di stringhe pseudo-casuali genera parametri univoci per ogni Thread, annullando le collisioni deterministiche.
+            };
+            
+            \draw[arrow] (samplers) -- (get);
+            \draw[arrow] (samplers) -- (post);
+            
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\Large \textbf{Simulazione del Flusso Utente}}\\[0.5ex]
+        \textcolor{FooterGreen}{\large \textbf{User Journey e Servlet Coinvolte}}
+        \vspace{0.4cm}
+        
+        \begin{tikzpicture}[
+            box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\scriptsize, text width=12cm, inner sep=0.25cm},
+            arrow/.style={->, thick, FooterGreen, >=Latex}
+        ]
+            
+            \node[box] (target) {
+                \textbf{Isolamento del Perimetro di Test (Target Selection)} \\[1ex]
+                La strategia di profilazione si focalizza esclusivamente sulle \textit{servlet} destinate all'utenza finale. Componenti di amministrazione o di setup (come \texttt{/AdminServlet/*} e \texttt{/InitServlet}) sono stati deliberatamente esclusi in quanto non soggetti a traffico massivo o continuativo. Questo rigido isolamento garantisce che l'individuazione di inefficienze e \textit{bottleneck} architetturali avvenga testando carichi di lavoro empiricamente realistici.
+            };
+            
+            \node[box, below=0.4cm of target] (journey) {
+                \textbf{Orchestrazione dello User Journey} \\[1ex]
+                Per garantire validità scientifica a simulazioni complesse come \textit{load, spike} e \textit{soak testing}, lo script \texttt{.jmx} modella un intero \textit{User Journey}. L'applicazione viene sollecitata seguendo una catena causale coerente di interazioni \textit{client-server}, coinvolgendo progressivamente tutte le macro-aree funzionali del sistema e miscelando dinamicamente operazioni transazionali a letture intensive del Database.
+            };
+            
+            \draw[arrow] (target) -- (journey);
+            
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\Large \textbf{Simulazione del Flusso Utente}}\\[0.5ex]
+        \textcolor{FooterGreen}{\large \textbf{Fasi Operative dello User Journey}}
+        \vspace{0.4cm}
+        
+        \begin{tikzpicture}[
+            box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\tiny, text width=5.6cm, inner sep=0.15cm}
+        ]
+            
+            \node[box] (left) {
+                \begin{enumerate}
+                    \setlength{\itemsep}{1.5pt}
+                    \setlength{\leftmargini}{12pt}
+                    \item \textbf{Registrazione:} L'utente crea un account iniettando entropia (\texttt{/Registrazione...}).
+                    \item \textbf{Vetrina:} Approda sul portale caricando i prodotti (\texttt{/landingpage}).
+                    \item \textbf{Profilo:} Accede all'area riservata per gestire i dati (\texttt{/UtenteServlet}).
+                    \item \textbf{Catalogo:} Sfoglia e filtra gli articoli per categoria (\texttt{/ProdottiPer...}).
+                    \item \textbf{Dettagli:} Analizza le specifiche tecniche di un articolo (\texttt{/ProdottoServlet}).
+                    \item \textbf{Wishlist:} Salva l'articolo nella lista desideri (\texttt{/WishlistServlet}).
+                    \item \textbf{Ricerca:} Cerca un prodotto nella barra di ricerca globale (\texttt{/RicercaServlet}).
+                    \item \textbf{Alternativa:} Visualizza i dettagli del nuovo prodotto (\texttt{/ProdottoServlet}).
+                \end{enumerate}
+            };
+            
+            \node[box, right=0.2cm of left] (right) {
+                \begin{enumerate}
+                    \setcounter{enumi}{8}
+                    \setlength{\itemsep}{1.5pt}
+                    \setlength{\leftmargini}{12pt}
+                    \item \textbf{Confronto:} Compara tecnicamente gli articoli (\texttt{/ConfrontaServlet}).
+                    \item \textbf{Carrello:} Aggiunge il prodotto selezionato al carrello (\texttt{/AggiungiCarrello...}).
+                    \item \textbf{Quantità:} Aggiorna i volumi d'acquisto del prodotto nel carrello (\texttt{/EditCarrello}).
+                    \item \textbf{Checkout:} Finalizza il pagamento fittizio sul DB (\texttt{/CheckOutServlet}).
+                    \item \textbf{Recensioni:} Pubblica una recensione sul prodotto (\texttt{/RecensioniServlet...}).
+                    \item \textbf{Logout:} Invalida i cookie azzerando il contesto (\texttt{/logoutServlet}).
+                    \item \textbf{Login:} Simula un nuovo accesso al sistema (\texttt{/LoginServlet}).
+                    \item \textbf{Vetrina:} Torna alla home (\texttt{/landingpage}).
+                \end{enumerate}
+            };
+            
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\Large \textbf{Step-Up Testing}}\\[0.5ex]
+        \textcolor{FooterGreen}{\large \textbf{Definizione delle Soglie di Accettabilità}}
+        \vspace{0.4cm}
+        
+        \begin{tikzpicture}[
+            box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\scriptsize, text width=12cm, inner sep=0.25cm},
+            arrow/.style={->, thick, FooterGreen, >=Latex}
+        ]
+            
+            \node[box] (obiettivo) {
+                \textbf{Obiettivo dell'Analisi Preliminare} \\[1ex]
+                Prima della simulazione formale, ho eseguito un'indagine preliminare, definita \textit{Step-Up Testing}, con lo scopo di individuare il limite di tenuta dell'applicazione nell'infrastruttura ospitante. Questa valutazione si è resa necessaria per determinare empiricamente il carico di lavoro ottimale da applicare nelle successive sessioni di \textit{load}, \textit{spike} e \textit{soak testing}.
+            };
+            
+            \node[box, below=0.4cm of obiettivo] (metodologia) {
+                \textbf{Escalation del Traffico (Ramp-Up Lineare)} \\[1ex]
+                A tale scopo, ho incrementato linearmente il traffico partendo da $1$ fino a $120$ utenti concorrenti in un intervallo temporale di $10$ minuti. Durante questa iniezione progressiva di carico, ho monitorato costantemente le metriche di latenza tramite \textit{JMeter} e la stabilità computazionale dei container \textit{Docker}, potendo così definire in modo rigoroso la soglia di rottura del sistema.
+            };
+            
+            \draw[arrow] (obiettivo) -- (metodologia);
+            
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\Large \textbf{Configurazione Scenari}}\\[0.5ex]
+        \textcolor{FooterGreen}{\large \textbf{Load, Soak e Spike Testing}}
+        \vspace{0.2cm}
+        
+        \begin{tikzpicture}[
+            box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\tiny, text width=12cm, inner sep=0.15cm},
+            arrow/.style={->, thick, FooterGreen, >=Latex}
+        ]
+            
+            \node[box] (load) {
+                \textbf{1. Load Testing (Carico Nominale di Picco Sostenibile)} \\[0.5ex]
+                \textbf{Razionale:} I risultati dello \textit{Step-Up} indicano a 32 utenti il limite di efficienza. Oltre questa soglia il \textit{connection pool} (limite di 50 slot) va in saturazione, innescando un degrado di latenza.\\
+                \textbf{Setup:} 32 Thread concorrenti per 10 minuti (Ramp-up di 32s).\\
+                \textbf{SLA \& Green:} Errore < 1.0\%; Latenza < 1200ms (P95 < 2200ms); Potenza CPU Package < 25W.
+            };
+            
+            \node[box, below=0.15cm of load] (soak) {
+                \textbf{2. Soak Testing (Resistenza e Memory Leak)} \\[0.5ex]
+                \textbf{Razionale:} Indagine sul lungo periodo con carico dimezzato (50\% della capacità nominale), mirata a individuare \textit{memory leak} ed esaurimento risorse senza generare congestione strutturale.\\
+                \textbf{Setup:} 16 Thread concorrenti per 2 ore (Ramp-up di 16s).\\
+                \textbf{SLA \& Green:} Errore < 0.1\%; Latenza stabile < 600ms (var. $\pm 10\%$); Potenza CPU Package < 18W.
+            };
+            
+            \node[box, below=0.15cm of soak] (spike) {
+                \textbf{3. Spike Testing (Tolleranza ai Picchi Improvvisi)} \\[0.5ex]
+                \textbf{Razionale:} Valuta la resilienza a un sovraccarico improvviso (oltre la capacità nominale). Il picco aggredisce la coda del DB e induce timeout fisiologici innescati dal parametro \texttt{maxWait}.\\
+                \textbf{Setup:} 48 Thread concorrenti per 2 minuti (Ramp-up brutale di 5s).\\
+                \textbf{SLA \& Green:} Errore tollerato < 25\%; Latenza < 12000ms (code DB incluse); Picco CPU fino a 54W.
+            };
+            
+            \draw[arrow] (load) -- (soak);
+            \draw[arrow] (soak) -- (spike);
+            
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\Large \textbf{Automazione e Riproducibilità del Test}}\\[0.5ex]
+        \textcolor{FooterGreen}{\large \textbf{Pipeline di Orchestrazione ed Elaborazione}}
+        \vspace{0.4cm}
+        
+        \begin{tikzpicture}[
+            box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\scriptsize, text width=12cm, inner sep=0.25cm},
+            arrow/.style={->, thick, FooterGreen, >=Latex}
+        ]
+            
+            \node[box] (ps) {
+                \textbf{1. Orchestrazione e Sincronizzazione (PowerShell)} \\[1ex]
+                Per garantire rigore scientifico, riproducibilità empirica e assenza di \textit{bias} operativi durante le misurazioni, ho ingegnerizzato una pipeline automatizzata. Lo script \texttt{backend\_energy\_consumption\_analysis.ps1} orchestra dinamicamente l'avvio dell'infrastruttura, innescando in perfetta sincronia il traffico \textit{JMeter} e la profilazione hardware di \textit{EnergiBridge}.
+            };
+            
+            \node[box, below=0.4cm of ps] (py) {
+                \textbf{2. Post-Elaborazione delle Metriche (Python)} \\[1ex]
+                L'estrazione del dato energetico dai \textit{log} grezzi ad alta frequenza è demandata allo script \texttt{energibridge\_metrics\_extractor.py}. Questo componente analitico processa i campionamenti hardware ed esegue il \textit{parsing} dei dati, restituendo un calcolo esatto della potenza media assorbita in Watt (es. \textit{CPU Package}), rendendo il risultato immediatamente intellegibile.
+            };
+            
+            \draw[arrow] (ps) -- (py);
+            
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\Large \textbf{Fase 1: Isolamento dell'Ambiente}}\\[0.5ex]
+        \textcolor{FooterGreen}{\large \textbf{Prevenzione del Software Aging}}
+        \vspace{0.4cm}
+        
+        \begin{tikzpicture}[
+            box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\scriptsize, text width=12cm, inner sep=0.25cm},
+            arrow/.style={->, thick, FooterGreen, >=Latex}
+        ]
+            
+            \node[box] (sintomi) {
+                \textbf{Il Problema: Il Degrado da Software Aging} \\[1ex]
+                L'esecuzione di \textit{stress test} consecutivi senza azzeramento induce derive architetturali:\\[0.5ex]
+                $\bullet$ \textbf{Accumulo in Heap (Garbage Collection):} L'aumento degli oggetti in RAM forza la JVM a frequenti cicli di \textit{Full Garbage Collector}. Queste pause generano latenze artificiali ed \textit{overhead} per la CPU.\\[0.5ex]
+                $\bullet$ \textbf{Connection Leaks:} Transazioni pendenti e risorse JDBC non chiuse consumano rapidamente i 50 slot del DB, costringendo le richieste in coda (\texttt{maxWait} di 10s) fino al \textit{timeout}.
+            };
+            
+            \node[box, below=0.4cm of sintomi] (soluzione) {
+                \textbf{La Soluzione: Reset Architetturale tramite Docker} \\[1ex]
+                Per evitare che questo degrado contamini le misurazioni di \textit{EnergiBridge} con falsi picchi di consumo, la pipeline automatizzata esegue il \textbf{riavvio forzato dei container} (App e MySQL) prima di ogni sessione. Questa procedura distrugge integralmente l'Heap della JVM e recide i socket pendenti, ripristinando le condizioni sperimentali perfette e prive di \textit{bias} accumulati.
+            };
+            
+            \draw[arrow] (sintomi) -- (soluzione);
+            
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\Large \textbf{Fase 2: Warm-Up del Server}}\\[0.5ex]
+        \textcolor{FooterGreen}{\large \textbf{Risoluzione dei Transitori}}
+        \vspace{0.4cm}
+        
+        \begin{tikzpicture}[
+            box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\scriptsize, text width=12cm, inner sep=0.25cm},
+            arrow/.style={->, thick, FooterGreen, >=Latex}
+        ]
+            
+            \node[box] (problema) {
+                \textbf{Il Problema: I Transitori Computazionali di Bootstrap} \\[1ex]
+                La fase di \textit{bootstrap} di una Web App su JVM genera un intenso carico transitorio dovuto al \textit{classloading}, all'inizializzazione dei framework interni e al pre-popolamento del \textit{connection pool} (5 slot iniziali). Inviare traffico in questa finestra temporale contaminerebbe i dati, producendo falsi tassi di errore e picchi energetici scorrelati dalle logiche di \textit{business}.
+            };
+            
+            \node[box, below=0.4cm of problema] (soluzione) {
+                \textbf{La Soluzione: Pausa Tattica e Stabilizzazione in Idle} \\[1ex]
+                Per neutralizzare queste fluttuazioni iniziali, la pipeline di automazione inietta un'istruzione di attesa bloccante (\texttt{Start-Sleep -Seconds 10}). Questo espediente tecnico garantisce a \textit{Tomcat} il tempo necessario per smaltire il \textit{warm-up} e assestarsi in uno stato di assoluto \textit{idle}, assicurando che la profilazione inizi solo a regime termodinamico raggiunto.
+            };
+            
+            \draw[arrow] (problema) -- (soluzione);
+            
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\Large \textbf{Fase 3: Profilazione ed Esecuzione Headless}}\\[0.5ex]
+        \textcolor{FooterGreen}{\large \textbf{Sincronizzazione della Telemetria}}
+        \vspace{0.4cm}
+        
+        \begin{tikzpicture}[
+            box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\scriptsize, text width=12cm, inner sep=0.25cm},
+            arrow/.style={->, thick, FooterGreen, >=Latex}
+        ]
+            
+            \node[box] (sincro) {
+                \textbf{1. Sincronizzazione della Telemetria (EnergiBridge Wrapper)} \\[1ex]
+                Per l'analisi energetica, la rilevazione deve focalizzarsi chirurgicamente sulla finestra temporale del test. A tale scopo, \textit{EnergiBridge} è invocato come processo \textit{wrapper} del comando \textit{JMeter}: in questo modo, la profilazione hardware inizia e si interrompe in totale sincronia con la simulazione di carico, evitando la raccolta di dati spuri fuori dal perimetro di test.
+            };
+            
+            \node[box, below=0.4cm of sincro] (headless) {
+                \textbf{2. Esecuzione Headless (Modalità Non-GUI)} \\[1ex]
+                \textit{JMeter} viene eseguito all'interno del container rigorosamente in modalità \textit{headless} (tramite il \textit{flag} \texttt{-n}). L'avvio dell'interfaccia grafica comporterebbe un inutile \textit{overhead} energetico e computazionale legato al \textit{rendering} di \textit{Java Swing}. Questa accortezza annulla un grave fattore di distorsione che avrebbe compromesso l'affidabilità delle misurazioni.
+            };
+            
+            \draw[arrow] (sincro) -- (headless);
+            
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\Large \textbf{Fase 4: Pulizia Dati e Filtro RAPL}}
+        \vspace{0.4cm}
+        
+        \begin{tikzpicture}[
+            box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\footnotesize, text width=12.5cm, inner sep=0.25cm},
+            arrow/.style={->, thick, FooterGreen, >=Latex}
+        ]
+            
+            \node[box] (problema) {
+                \textbf{Rumore dei Sensori Hardware} \\[1ex]
+                I sensori fisici integrati nel processore (registri \textit{RAPL}) possono generare rumore, cioé valori anomali matematicamente impossibili, come misurazioni con energia negativa, o picchi anomali di assorbimento in Watt che vanno oltre le capacità fisiche della CPU e dei singoli Core.
+            };
+            
+            \node[box, below=0.4cm of problema] (soluzione) {
+                \textbf{Filtraggio Matematico (TDP)} \\[1ex]
+                Lo script applica un rigoroso filtro, scartando le letture in cui l'energia registrata ($\Delta E$) divisa per il tempo ($\Delta t$) supera il TDP (\textit{Thermal Design Power}) massimo fisicamente erogabile dalla CPU AMD usata per i test:\\[0.5ex]
+                \hspace*{1cm} $0 \le \Delta E_{\text{CPU}} \le \textbf{55{,}0} \times \Delta t \quad \text{e} \quad 0 \le \Delta E_{\text{Core}} \le \textbf{45{,}0} \times \Delta t$\\[0.5ex]
+                Ciò garantisce la totale \textbf{affidabilità empirica} delle misurazioni.
+            };
+            
+            \draw[arrow] (problema) -- (soluzione);
+            
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\Large \textbf{Fase 5: Organizzazione e Correlazione degli Output}}\\[0.5ex]
+        \textcolor{FooterGreen}{\large \textbf{Unione e Formule delle Metriche di Sostenibilità}}
+        \vspace{0.4cm}
+        
+        \begin{tikzpicture}[
+            box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\tiny, text width=12cm, inner sep=0.2cm},
+            arrow/.style={->, thick, FooterGreen, >=Latex}
+        ]
+            
+            \node[box] (log) {
+                \textbf{1. Unione delle Metriche Prestazionali ed Energetiche} \\[0.5ex]
+                Lo script unisce le \textbf{Metriche Prestazionali} (file \texttt{.jtl} di \textit{JMeter} per \textit{throughput} e SLA) con la \textbf{Telemetria Energetica} (file \texttt{.csv} di \textit{EnergiBridge} in Watt), correlando il costo hardware all'impatto delle richieste HTTP, consentendo di misurare l'efficienza globale.
+            };
+            
+            \node[box, below=0.2cm of log] (metriche) {
+                \textbf{2. Formule e Metriche di Sostenibilità Estratte} \\[0.5ex]
+                \begin{minipage}[t]{0.48\textwidth}
+                    \vspace{0pt}
+                    $\bullet$ \textbf{Durata Totale ($T_{global}$, s):} L'esatta finestra di simulazione:
+                    \[ T_{global} = \sum_{k=1}^{M} \Delta t_k \]
+                    
+                    $\bullet$ \textbf{Energia CPU Package ($E_{CPU}$, J):} Il costo energetico "netto" dell'operazione (inclusi \textit{core}, \textit{cache} e controller):
+                    \[ E_{CPU} = \sum_{k=1}^{M} \Delta E_{CPU, k} \]
+                    
+                    $\bullet$ \textbf{Energia Core ($E_{Core}$, J):} L'assorbimento limitato ai soli \textit{core}. È l'indicatore principe dell'efficienza algoritmica:
+                    \[ E_{Core} = \sum_{k=1}^{M} \Delta E_{Core, k} \]
+                \end{minipage}%
+                \hfill
+                \begin{minipage}[t]{0.48\textwidth}
+                    \vspace{0pt}
+                    $\bullet$ \textbf{Potenza Media ($P_{avg}$, W):} Il tasso medio di consumo. Un abbassamento indica maggiore permanenza nei \textit{C-states}:
+                    \[ P_{avg} = \frac{E_{CPU}}{T_{global}} \]
+                    
+                    $\bullet$ \textbf{CPU Usage \& Freq (\% e MHz):} Medie e picchi. Algoritmi snelli abbassano la frequenza operativa e il voltaggio, smorzando il calore e l'\textit{active waiting} (\textit{spin-locks}).\\[2ex]
+                    
+                    $\bullet$ \textbf{RAM Usage (Media e Picco, MB):} L'impronta allocata nel sistema. Contenere la RAM nella JVM è l'unica via per scongiurare onerosi cicli di \textit{Garbage Collection}.
+                \end{minipage}
+            };
+            
+            \draw[arrow] (log) -- (metriche);
+            
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\Large \textbf{Confronto Energetico del Sistema}}\\[0.5ex]
+        \textcolor{FooterGreen}{\large \textbf{\texttt{baseline} (Pre-Refactoring) vs \texttt{sse-improvements} (Post-Refactoring)}}
+        \vspace{0.1cm}
+        
+        \renewcommand{\arraystretch}{1.0}
+        \resizebox{12.5cm}{!}{
+        \begin{tabular}{|l|c|c|c|c|c|}
+            \hline
+            \rowcolor{FooterGreen}
+            \textcolor{white}{\textbf{Scenario / Branch}} & \textcolor{white}{\textbf{$E_{CPU}$ (J)}} & \textcolor{white}{\textbf{$P_{avg}$ (W)}} & \textcolor{white}{\textbf{$E_{Core}$ (J)}} & \textcolor{white}{\textbf{CPU Avg (\%)}} & \textcolor{white}{\textbf{RAM Avg (GB)}} \\ \hline
+            \multicolumn{6}{|l|}{\textbf{1. Scenario di Load Testing (32 Utenti - 10 Minuti)}} \\ \hline
+            Baseline & 17.838,25 & 29,59 & 269,38 & 45,98 & 20,80 \\ \hline
+            SSE-Improvements & 17.264,64 & 28,64 & 260,71 & 44,46 & 20,16 \\ \hline
+            \textbf{Variazione} & \textcolor{green!80!black}{\textbf{-3,22\%}} & \textcolor{green!80!black}{\textbf{-3,21\%}} & \textcolor{green!80!black}{\textbf{-3,22\%}} & \textcolor{green!80!black}{\textbf{-3,31\%}} & \textcolor{green!80!black}{\textbf{-3,08\%}} \\ \hline
+            \multicolumn{6}{|l|}{\textbf{2. Scenario di Soak Testing (16 Utenti - 2 Ore)}} \\ \hline
+            Baseline & 168.300,46 & 23,36 & 2.886,16 & 37,14 & 21,64 \\ \hline
+            SSE-Improvements & 162.909,35 & 22,61 & 2.792,60 & 35,93 & 20,93 \\ \hline
+            \textbf{Variazione} & \textcolor{green!80!black}{\textbf{-3,20\%}} & \textcolor{green!80!black}{\textbf{-3,21\%}} & \textcolor{green!80!black}{\textbf{-3,24\%}} & \textcolor{green!80!black}{\textbf{-3,26\%}} & \textcolor{green!80!black}{\textbf{-3,28\%}} \\ \hline
+            \multicolumn{6}{|l|}{\textbf{3. Scenario di Spike Testing (48 Utenti - 2 Minuti)}} \\ \hline
+            Baseline & 6.763,45 & 16,74 & 153,11 & 36,07 & 26,32 \\ \hline
+            SSE-Improvements & 6.549,98 & 16,22 & 148,13 & 34,86 & 25,47 \\ \hline
+            \textbf{Variazione} & \textcolor{green!80!black}{\textbf{-3,16\%}} & \textcolor{green!80!black}{\textbf{-3,11\%}} & \textcolor{green!80!black}{\textbf{-3,25\%}} & \textcolor{green!80!black}{\textbf{-3,35\%}} & \textcolor{green!80!black}{\textbf{-3,23\%}} \\ \hline
+        \end{tabular}
+        }
+        
+        \vspace{0.2cm}
+        
+        \begin{tikzpicture}[
+            box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\tiny, text width=12.5cm, inner sep=0.15cm}
+        ]
+            \node[box] (testo) {
+                Confrontando i dati pre-intervento (\texttt{baseline}) con il sistema ottimizzato (\texttt{sse-improvements}), la tabella quantifica una \textbf{riduzione sistemica ed estremamente coerente di tutte le metriche hardware}, confermando l'assoluta bontà delle strategie di sostenibilità adottate.
+            };
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \vfill
+    \begin{center}
+        \textcolor{FooterGreen}{\Huge \textbf{Frontend Sustainability}}
+    \end{center}
+    \vfill
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\Large \textbf{Valutazione e Ottimizzazione Ambientale}}\\[0.5ex]
+        \textcolor{FooterGreen}{\large \textbf{Il Livello Front-End}}
+        \vspace{0.4cm}
+        
+        \begin{tikzpicture}[
+            box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\scriptsize, inner sep=0.2cm},
+            arrow/.style={->, thick, FooterGreen, >=Latex}
+        ]
+            
+            \node[box, text width=5.6cm] (spa) {
+                \textbf{Paradigma Single Page Application} \\[1ex]
+                Il \textit{backend} fornisce \textit{payload} agili (JSON). Il pesante \textit{rendering} visivo del DOM viene delegato al \textit{browser}, consumando direttamente l'energia e la batteria del dispositivo dell'utente finale.
+            };
+            
+            \node[box, text width=5.6cm, right=0.3cm of spa] (jsp) {
+                \textbf{Paradigma JavaServer Pages} \\[1ex]
+                Sfrutta il \textit{Server-Side Rendering}. È il \textit{container Tomcat} a interpolare i dati estratti dai \textit{Model Beans} e ad assemblare iterativamente l'HTML prima di trasmetterlo, confinando il calcolo nel \textit{Data Center}.
+            };
+            
+            \path (spa.south) -- (jsp.south) coordinate[midway] (center_bottom);
+            
+            \node[box, text width=12cm, below=0.4cm of center_bottom, anchor=north] (rete) {
+                \textbf{Sostenibilità dell'Architettura} \\[1ex]
+                L'elaborazione dei carichi di lavoro nei \textit{Data Center}, anche se alimentati da fonti rinnovabili non migliora la questione ambientaleperché il \textit{Server-Side Rendering} produce \textit{payload} di testo HTML completi e ridondanti, che risultano significativamente più pesanti, in byte, rispetto alle agili risposte JSON.\\
+                Il trasferimento continuo di questi \textit{byte} aggiuntivi attraverso l'infrastruttura di rete globale (\textit{router}, \textit{switch}, reti mobili, ponti radio) genera un \textbf{impatto ecologico massiccio}.
+            };
+            
+            \draw[<->, thick, FooterGreen, dashed] (spa.east) -- (jsp.west);
+            \draw[arrow] (center_bottom) -- (rete.north);
+            
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\Large \textbf{Analisi Ambientale del Baseline}}\\[0.5ex]
+        \textcolor{FooterGreen}{\large \textbf{I Parametri Fisici di GreenIT ed EcoIndex}}
+        \vspace{0.4cm}
+        
+        \begin{tikzpicture}[
+            box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\scriptsize, inner sep=0.2cm},
+            arrow/.style={->, thick, FooterGreen, >=Latex}
+        ]
+            
+            \node[box, text width=12cm] (header) {
+                \textbf{Metodologia di Misurazione: L'Algoritmo EcoIndex} \\[1ex]
+                L'analisi dell'efficienza ecologica del \textit{front-end} è stata condotta sulla \textit{landing page} tramite i \textit{tool} \textbf{GreenIT} ed \textbf{EcoIndex}. Entrambi si basano sull'algoritmo globale \textbf{EcoIndex}, che quantifica oggettivamente l'impatto ambientale di una pagina web elaborando tre parametri fisici fondamentali legati al \textit{Document Object Model} (DOM) e all'infrastruttura di rete:
+            };
+            
+            \node[box, text width=3.7cm, below=0.6cm of header] (size) {
+                \textbf{2. Dimensione Pagina (KB)} \\[1ex]
+                La quantità fisica di dati. Un \textit{payload} massiccio deve essere instradato nell'infrastruttura globale, consumando pesantemente l'energia di \textit{router}, \textit{switch} e ponti radio.
+            };
+            
+            \node[box, text width=3.7cm, left=0.2cm of size] (http) {
+                \textbf{1. Richieste HTTP} \\[1ex]
+                Definisce l'\textit{overhead} puro di comunicazione di rete. Più richieste comportano continui \textit{round-trip time}, \textit{handshake} TCP e onerose negoziazioni crittografiche SSL/TLS.
+            };
+            
+            \node[box, text width=3.7cm, right=0.2cm of size] (dom) {
+                \textbf{3. Complessità del DOM} \\[1ex]
+                Il numero totale di nodi HTML. Più il DOM è complesso, maggiore sarà l'immane sforzo computazionale richiesto alla CPU del \textit{client} per \textit{parsing}, \textit{layouting} e \textit{painting}.
+            };
+            
+            \draw[arrow] (header.south) -- (size.north);
+            \draw[->, thick, FooterGreen] (header.south) -- ++(0,-0.3) -| (http.north);
+            \draw[->, thick, FooterGreen] (header.south) -- ++(0,-0.3) -| (dom.north);
+            
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\Large \textbf{Analisi Ambientale del Baseline}}\\[0.5ex]
+        \textcolor{FooterGreen}{\large \textbf{I Contesti di Misurazione: GreenIT vs EcoIndex}}
+        \vspace{0.6cm}
+        
+        \begin{tikzpicture}[
+            box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\scriptsize, inner sep=0.2cm},
+            arrow/.style={->, thick, FooterGreen, >=Latex}
+        ]
+            
+            \node[box, text width=5.7cm] (greenit) {
+                \textbf{GreenIT-Analysis\\(Contesto Reale / Inquinato)} \\[1.5ex]
+                Opera nel \textit{browser} nativo, subendo pesanti distorsioni dal contesto (\textit{cache} attiva, \textit{ad-blocker}, dimensioni della finestra). Fornisce una visione empirica ma instabile.\\[1.5ex]
+                \textbf{Uso Operativo:} Va utilizzato \textbf{esclusivamente} come guida diagnostica per applicare le \textit{Best Practices} e raggiungere il \textit{"100\% rules passed"}. Il punteggio \textit{EcoIndex} riportato da questo \textit{tool} deve essere ignorato, in quanto irrimediabilmente falsato dall'ambiente locale.
+            };
+            
+            \node[box, text width=5.7cm, right=0.3cm of greenit] (ecoindex) {
+                \textbf{EcoIndex CLI\\(Contesto di Laboratorio / Asettico)} \\[1.5ex]
+                Istanzia uno scenario di esecuzione rigorosamente controllato e standardizzato, sfruttando un \textit{browser headless Chrome}.\\[1.5ex]
+                \textbf{Uso Operativo:} Azzera totalmente l'influenza e i \textit{bias} del \textit{client} locale (\textit{cache}, \textit{plugin}). Restituisce una misurazione asettica, scientifica e \textbf{globalmente confrontabile} dei 3 parametri chiave (DOM, KB, HTTP). Tutte le attività di analisi e monitoraggio devono essere validate tramite questo strumento.
+            };
+            
+            \draw[<->, thick, FooterGreen, dashed] (greenit.east) -- (ecoindex.west);
+            
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\Large \textbf{Problema Browser Headless di EcoIndex CLI}}\\[0.5ex]
+        \textcolor{FooterGreen}{\large \textbf{Autenticazione e Falsi Positivi Ambientali}}
+        \vspace{0.2cm}
+        
+        \begin{tikzpicture}[
+            box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\tiny, text width=12cm, inner sep=0.15cm},
+            arrow/.style={->, thick, FooterGreen, >=Latex}
+        ]
+            
+            \node[box] (problema) {
+                \textbf{1. Il Problema: Redirezione e Falsi Positivi (Punteggio ``A'')} \\[1ex]
+                Quando l'analizzatore \textit{headless} tenta di valutare pagine riservate (\texttt{carrello.jsp}, \texttt{dashboard.jsp}), Tomcat rileva l'assenza del \textit{cookie} \texttt{JSESSIONID} e forza un \textit{redirect} (HTTP 302) verso \texttt{login.jsp}. EcoIndex finisce per scansionare una pagina vuota, assegnando un punteggio fittizio di Classe ``A'' che maschera la reale impronta ecologica.
+            };
+            
+            \node[box, below=0.3cm of problema] (soluzione) {
+                \textbf{2. La Soluzione: \texttt{SessionInjectionFilter} Architetturale} \\[1ex]
+                Per superare il blocco senza creare vulnerabilità nel sistema reale, è stato sviluppato un meccanismo di iniezione isolato:\\[1ex]
+                $\bullet$ \textbf{1. Sicurezza e Isolamento:} L'attivazione è vincolata alla variabile \texttt{ECO\_TEST\_MODE=true} introdotta nel docker compose, garantendo che questo accesso simulato avvenga esclusivamente nell'ambiente di \textit{test} chiuso nei \textit{container}.\\
+                $\bullet$ \textbf{2. Creazione della Sessione (\texttt{@WebFilter}):} Una nuova servlet \textit{filtro} intercetta le richieste al server. Se l'analizzatore non è autenticato e \texttt{ECO\_TEST\_MODE=true}, il filtro non lo respinge, ma crea istantaneamente una sessione temporanea inserendovi un \textit{Utente} di prova.\\
+                $\bullet$ \textbf{3. Popolamento Visivo (Carrello):} Il filtro inserisce nella sessione anche un \textit{Carrello} con dei prodotti. Questo obbliga il server a generare e trasmettere l'intera pagina HTML completa di tutti i suoi elementi pesanti, passaggio essenziale per una misurazione ecologica veritiera.
+            };
+            
+            \draw[arrow] (problema.south) -- (soluzione.north);
+            
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\Large \textbf{Interventi di Refactoring}}\\[0.5ex]
+        \textcolor{FooterGreen}{\large \textbf{Il Piano di Ottimizzazione Ambientale Front-End}}
+        \vspace{0.4cm}
+        
+        \begin{tikzpicture}[
+            box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\scriptsize, inner sep=0.2cm},
+            arrow/.style={->, thick, FooterGreen, >=Latex}
+        ]
+            
+            \node[box, text width=12cm] (header) {
+                \textbf{Il Piano di Refactoring Strutturato} \\[1ex]
+                Una volta completata l'analisi di dettaglio del \textit{front-end} con GreenIT e EcoIndex CLI, è stato implementato un piano di \textit{refactoring} per risolvere sistematicamente le inefficienze ecologiche e computazionali rilevate. L'obiettivo di questi interventi è alleviare il carico sull'infrastruttura di rete e sui dispositivi \textit{client}, applicando strategie di ottimizzazione mirate su tre vettori principali:
+            };
+            
+            \node[box, text width=3.7cm, below=0.6cm of header] (req) {
+                \textbf{2. Abbattere le Richieste HTTP} \\[1ex]
+                Fondere e razionalizzare le risorse per tagliare alla radice l'\textit{overhead} puro di comunicazione di rete (riducendo \textit{round-trip}, \textit{handshake} TCP e negoziazioni).
+            };
+            
+            \node[box, text width=3.7cm, left=0.2cm of req] (pay) {
+                \textbf{1. Minimizzare il Payload} \\[1ex]
+                Ridurre drasticamente il peso in \textit{byte} dei dati trasmessi (immagini, script, fogli di stile), alleggerendo lo stress energetico sull'infrastruttura di rete globale.
+            };
+            
+            \node[box, text width=3.7cm, right=0.2cm of req] (dom) {
+                \textbf{3. Ridurre l'Overhead \textit{Client}} \\[1ex]
+                Semplificare la complessità strutturale (DOM) per sgravare la CPU dell'utente finale dalle onerose operazioni di \textit{parsing}, \textit{layouting} e \textit{rendering} visivo.
+            };
+            
+            \draw[arrow] (header.south) -- (req.north);
+            \draw[->, thick, FooterGreen] (header.south) -- ++(0,-0.3) -| (pay.north);
+            \draw[->, thick, FooterGreen] (header.south) -- ++(0,-0.3) -| (dom.north);
+            
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\Large \textbf{Ridimensionamento Immagini nel Browser}}\\[0.5ex]
+        \textcolor{FooterGreen}{\large \textbf{Eliminazione del \textit{Transmission Bloat} e \textit{Decoding Overhead}}}
+        \vspace{0.4cm}
+        
+        \begin{tikzpicture}[
+            box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\scriptsize, text width=12cm, inner sep=0.15cm},
+            arrow/.style={->, thick, FooterGreen, >=Latex}
+        ]
+            
+            \node[box] (problema) {
+                \textbf{1. Il Problema: \textit{Resizing Client-Side}} \\[1ex]
+                L'invio di immagini ad alta risoluzione per produrre miniature in CSS causa un duplice spreco:\\[0.5ex]
+                $\bullet$ \textbf{\textit{Transmission Bloat}:} Trasferire \textit{payload} massicci dissipa banda ed energia nell'infrastruttura di rete.\\
+                $\bullet$ \textbf{\textit{Decoding \& Rendering Overhead}:} Il \textit{browser} decodifica enormi \textit{bitmap} in RAM e applica costosi algoritmi di interpolazione, drenando la batteria e surriscaldando la CPU del \textit{client}.
+            };
+            
+            \node[box, below=0.3cm of problema] (soluzione) {
+                \textbf{2. La Soluzione: Razionalizzazione e \textit{Refactoring}} \\[1ex]
+                Le risorse sono state ottimizzate alla radice per annullare lo sforzo \textit{client-side}:\\[0.5ex]
+                $\bullet$ \textbf{Elaborazione \textit{Asset}:} \textit{Script} Python per ridimensionare le immagini e generare miniature leggere.\\
+                $\bullet$ \textbf{\textit{Refactoring}:} Aggiunto \texttt{getImmagineThumbnail()} in Java; la View (JSP) usa nativamente le miniature.\\
+                $\bullet$ \textbf{Ottimizzazione DOM:} Dimensioni \texttt{width} e \texttt{height} forzate nell'HTML per prevenire ricalcoli grafici.
+            };
+            
+            \draw[arrow] (problema.south) -- (soluzione.north);
+            
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\Large \textbf{Download di Risorse Nascoste}}\\[0.5ex]
+        \textcolor{FooterGreen}{\large \textbf{Prevenzione degli \textit{Unnecessary Downloads}}}
+        \vspace{0.4cm}
+        
+        \begin{tikzpicture}[
+            box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\scriptsize, text width=12cm, inner sep=0.2cm},
+            arrow/.style={->, thick, FooterGreen, >=Latex}
+        ]
+            
+            \node[box] (problema) {
+                \textbf{1. Il Problema: Download Avido di Immagini Nascoste} \\[1ex]
+                Il \textit{browser} scarica immediatamente ogni \texttt{<img>} con attributo \texttt{src}, \textbf{ignorando il CSS} (es. \texttt{display: none}).\\[0.5ex]
+                Questo forza il download inutile delle immagini invisibili nel carosello (\textit{Unnecessary Downloads}), sprecando banda ed energia per risorse che l'utente potrebbe non vedere mai.
+            };
+            
+            \node[box, below=0.4cm of problema] (soluzione) {
+                \textbf{2. La Soluzione: \textit{Lazy Loading} (Caricamento Ritardato)} \\[1ex]
+                Implementato per bloccare i download superflui degli \textit{asset off-screen}:\\[0.5ex]
+                $\bullet$ \textbf{Carosello (JavaScript):} Sostituito l'\texttt{src} con \texttt{data-src}. Lo \textit{script} inietta l'\texttt{src} reale solo quando la slide diventa visibile.\\
+                $\bullet$ \textbf{Catalogo (Nativo):} Aggiunto \texttt{loading="lazy"} alle immagini. Il \textit{browser} ne ritarda il download in prossimità del \textit{viewport} (durante lo \textit{scroll}).
+            };
+            
+            \draw[arrow] (problema.south) -- (soluzione.north);
+            
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\Large \textbf{Mancanza di Direttive di Caching}}\\[0.5ex]
+        \textcolor{FooterGreen}{\large \textbf{Iniezione degli \textit{HTTP Caching Headers}}}
+        \vspace{0.4cm}
+        
+        \begin{tikzpicture}[
+            box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\scriptsize, text width=12cm, inner sep=0.2cm},
+            arrow/.style={->, thick, FooterGreen, >=Latex}
+        ]
+            
+            \node[box] (problema) {
+                \textbf{1. Il Problema: Assenza di Direttive Caching} \\[1ex]
+                Risorse statiche (CSS, JS, Immagini) trasmesse senza header HTTP di \textit{caching} (es. \texttt{Cache-Control}).\\[0.5ex]
+                Il \textit{browser} era costretto a \textbf{riscaricare sempre gli stessi file} ad ogni click. Questo moltiplicava i costosi \textit{handshake} TCP, causando un \textbf{grave e inutile sovraccarico di rete} su Tomcat e spreco energetico infrastrutturale.
+            };
+            
+            \node[box, below=0.4cm of problema] (soluzione) {
+                \textbf{2. La Soluzione: \texttt{CachingFilter} Globale} \\[1ex]
+                Per eliminare il traffico ridondante, il \textit{caching} è stato forzato sul \textit{server}:\\[0.5ex]
+                $\bullet$ \textbf{Asset Statici:} Un nuovo filtro intercetta le richieste e inietta le direttive \texttt{Cache-Control: immutable, max-age} e \texttt{Expires}.\\
+                $\bullet$ \textbf{Asset Dinamici (\texttt{FileServlet}):} Logica estesa ai file multimediali. Ora il \textit{browser} riutilizza gli asset dalla \textbf{cache locale a costo di rete ed energetico nullo}.
+            };
+            
+            \draw[arrow] (problema.south) -- (soluzione.north);
+            
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\Large \textbf{Mancata Compressione GZIP delle Risorse}}\\[0.5ex]
+        \textcolor{FooterGreen}{\large \textbf{Riduzione del \textit{Payload} e Ottimizzazione della Banda}}
+        \vspace{0.4cm}
+        
+        \begin{tikzpicture}[
+            box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\scriptsize, text width=12cm, inner sep=0.2cm},
+            arrow/.style={->, thick, FooterGreen, >=Latex}
+        ]
+            
+            \node[box] (problema) {
+                \textbf{1. Il Problema: Trasferimento in \textit{Plain-Text}} \\[1ex]
+                Risorse testuali (HTML, CSS, JS) trasmesse in chiaro senza compressione.\\[0.5ex]
+                Inviare file non compressi \textbf{satura la larghezza di banda}. L'instradamento di \textit{payload} massicci e ridondanti (\textit{Transmission Bloat}) causa un \textbf{enorme consumo energetico} sui nodi dell'infrastruttura di rete (\textit{router, switch}).
+            };
+            
+            \node[box, below=0.4cm of problema] (soluzione) {
+                \textbf{2. La Soluzione: \texttt{CompressionFilter} GZIP} \\[1ex]
+                Sviluppato un filtro per snellire i trasferimenti di rete:\\[0.5ex]
+                $\bullet$ \textbf{Negoziazione:} Verifica il supporto alla compressione del \textit{browser} leggendo l'header \texttt{Accept-Encoding: gzip}.\\
+                $\bullet$ \textbf{Compressione \textit{On-The-Fly}:} Incapsula dinamicamente la risposta in un \texttt{GZIPOutputStream}. Questo comprime le risorse al volo, \textbf{abbattendo fino all'80\% i byte trasferiti} e l'impatto ecologico.
+            };
+            
+            \draw[arrow] (problema.south) -- (soluzione.north);
+            
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\Large \textbf{Errore HTTP 404 per il Favicon}}\\[0.5ex]
+        \textcolor{FooterGreen}{\large \textbf{Risoluzione dello Spreco Energetico Passivo}}
+        \vspace{0.4cm}
+        
+        \begin{tikzpicture}[
+            box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\scriptsize, text width=12cm, inner sep=0.2cm},
+            arrow/.style={->, thick, FooterGreen, >=Latex}
+        ]
+            
+            \node[box] (problema) {
+                \textbf{1. Il Problema: Spreco Energetico da Errore HTTP 404} \\[1ex]
+                Il \textit{browser} richiede automaticamente l'icona del sito (\texttt{favicon.ico}) dalla \textit{root}. Poiché assente, il sistema generava un \textbf{errore HTTP 404 Not Found}.\\[0.5ex]
+                Questo \textit{fault} silente è uno \textbf{spreco energetico passivo}. Tomcat e l'infrastruttura di rete elaborano, loggano e instradano un'intera transazione HTTP a vuoto, consumando cicli di CPU e larghezza di banda senza restituire contenuto.
+            };
+            
+            \node[box, below=0.4cm of problema] (soluzione) {
+                \textbf{2. La Soluzione: Creazione e Mappatura dell'Icona} \\[1ex]
+                Per eliminare questo inutile consumo di risorse:\\[0.5ex]
+                $\bullet$ \textbf{Generazione \textit{Asset}:} Creata una \texttt{favicon.ico} ottimizzata ($32\times32$\,px) dal logo aziendale.\\
+                $\bullet$ \textbf{Risoluzione HTTP:} Posizionata la risorsa nella \textit{root}. Ora il \textit{browser} riceve istantaneamente un HTTP 200 OK, \textbf{eliminando ogni risposta d'errore} e azzerando il carico di elaborazione passivo sul server.
+            };
+            
+            \draw[arrow] (problema.south) -- (soluzione.north);
+            
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\Large \textbf{Errori HTTP 500 per la Directory Immagini}}\\[0.5ex]
+        \textcolor{FooterGreen}{\large \textbf{Gestione Eccezioni e Sanitizzazione delle Richieste}}
+        \vspace{0.4cm}
+        
+        \begin{tikzpicture}[
+            box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\scriptsize, text width=12cm, inner sep=0.2cm},
+            arrow/.style={->, thick, FooterGreen, >=Latex}
+        ]
+            
+            \node[box] (problema) {
+                \textbf{1. Il Problema: Eccezioni su Percorsi Incompleti} \\[1ex]
+                Riscontrato un \textbf{HTTP 500 Internal Server Error} interrogando il percorso \texttt{/img/}.\\[0.5ex]
+                In mancanza di un \textit{file} specifico, il \textit{servlet} cercava di processare l'intera cartella causando un'\textbf{eccezione Java non gestita}. L'elaborazione del \textit{crash} e del relativo \textit{StackTrace} sprecava pesantemente la capacità di calcolo (\textit{CPU time}) sul server Tomcat.
+            };
+            
+            \node[box, below=0.4cm of problema] (soluzione) {
+                \textbf{2. La Soluzione: Sanitizzazione nel \texttt{FileServlet}} \\[1ex]
+                Il difetto è stato mitigato aggiungendo un blocco preventivo al codice:\\[0.5ex]
+                $\bullet$ \textbf{Controllo di Sicurezza:} Introdotta la verifica esplicita \texttt{file.isDirectory()}.\\
+                $\bullet$ \textbf{Risoluzione HTTP:} Le richieste ambigue vengono bloccate, restituendo un semplice \textbf{HTTP 404 Not Found}. Questo azzera il sollevamento di \textbf{pesanti eccezioni interne (HTTP 500)}, preservando l'efficienza computazionale dell'applicativo.
+            };
+            
+            \draw[arrow] (problema.south) -- (soluzione.north);
+            
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\Large \textbf{Trasmissione di Cookie nelle Risorse Statiche}}\\[0.5ex]
+        \textcolor{FooterGreen}{\large \textbf{Eliminazione dell'\textit{Overhead} tramite Architettura \textit{Cookie-less}}}
+        \vspace{0.4cm}
+        
+        \begin{tikzpicture}[
+            box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\scriptsize, text width=12cm, inner sep=0.2cm},
+            arrow/.style={->, thick, FooterGreen, >=Latex}
+        ]
+            
+            \node[box] (problema) {
+                \textbf{1. Il Problema: \textit{Cookie Overhead} su Asset Pubblici} \\[1ex]
+                I \textit{browser} trasmettevano costantemente l'header HTTP \texttt{Cookie} (contenente il \texttt{JSESSIONID}) anche per richiedere risorse statiche pubbliche (CSS, JS, immagini).\\[0.5ex]
+                Essendo file slegati dalla sessione utente, l'invio del \textit{cookie} comportava circa \textbf{0.9 KB di \textit{overhead} per singola richiesta}. Moltiplicato per ogni risorsa, ciò generava un inutile spreco di banda sulla rete globale.
+            };
+            
+            \node[box, below=0.4cm of problema] (soluzione) {
+                \textbf{2. La Soluzione: \textit{Cross-Origin Resource Sharing} (CORS)} \\[1ex]
+                Per inibire l'invio dei \textit{cookie} (\texttt{JSESSIONID}) sugli \textit{asset} statici:\\[0.5ex]
+                $\bullet$ \textbf{Configurazione \textit{Client-side}:} Nelle JSP, i \textit{tag} includono domini alternativi e l'attributo \texttt{crossorigin="anonymous"} per forzare richieste esterne.\\
+                $\bullet$ \textbf{Abilitazione \textit{Server-side}:} Il \texttt{CachingFilter} inietta l'header \texttt{Access-Control-Allow-Origin: *}. Questo trucco forza un traffico \textit{cookie-less}, \textbf{azzerando completamente il peso dell'\textit{overhead}} di sessione.
+            };
+            
+            \draw[arrow] (problema.south) -- (soluzione.north);
+            
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\Large \textbf{Eccessiva Complessità del DOM (\textit{DOM Size})}}\\[0.5ex]
+        \textcolor{FooterGreen}{\large \textbf{Semplificazione Strutturale per l'Efficienza \textit{Client-Side}}}
+        \vspace{0.4cm}
+        
+        \begin{tikzpicture}[
+            box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\scriptsize, text width=12cm, inner sep=0.2cm},
+            arrow/.style={->, thick, FooterGreen, >=Latex}
+        ]
+            
+            \node[box] (problema) {
+                \textbf{1. Il Problema: Eccessiva Profondità dell'Albero DOM} \\[1ex]
+                L'abuso di \textit{container} nidificati per impaginare le griglie dinamiche generava un albero DOM inutilmente complesso.\\[0.5ex]
+                Una struttura sovrabbondante di nodi HTML \textbf{appesantisce il \textit{client}}. Costringe la CPU a sostenere un alto sforzo computazionale ed energetico durante le fasi di \textit{parsing}, ricalcolo del \textit{layout} e \textit{rendering} grafico.
+            };
+            
+            \node[box, below=0.4cm of problema] (soluzione) {
+                \textbf{2. La Soluzione: \textit{DOM Flattening} e Tag Semantici} \\[1ex]
+                Per snellire l'architettura della pagina e minimizzare l'impatto sul \textit{browser}:\\[0.5ex]
+                $\bullet$ \textbf{Rimozione Ridondanze:} I \texttt{<div>} annidati all'interno dei cicli JSP sono stati collassati e sostituiti da singoli \textit{tag} semantici nativi HTML5 (es. \texttt{<article>}).\\
+                $\bullet$ \textbf{Riduzione Nodi:} L'abbattimento del volume del DOM alleggerisce drasticamente l'elaborazione locale, garantendo efficienza anche sotto \textit{stress-test} (es. rendering di 50 prodotti).
+            };
+            
+            \draw[arrow] (problema.south) -- (soluzione.north);
+            
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\Large \textbf{Mancato Utilizzo del Protocollo HTTP/2}}\\[0.5ex]
+        \textcolor{FooterGreen}{\large \textbf{Limiti dell'Ambiente di Sviluppo e Prospettive di Produzione}}
+        \vspace{0.4cm}
+        
+        \begin{tikzpicture}[
+            box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\scriptsize, text width=12cm, inner sep=0.2cm},
+            arrow/.style={->, thick, FooterGreen, >=Latex}
+        ]
+            
+            \node[box] (problema) {
+                \textbf{1. Il Problema: Limiti del Protocollo HTTP/1.1} \\[1ex]
+                Il trasferimento degli \textit{asset} avveniva tramite il protocollo \textit{legacy} HTTP/1.1.\\[0.5ex]
+                Tale standard impone l'apertura di \textbf{connessioni TCP ridondanti e dispendiose}. Mancando di funzionalità moderne (come il \textit{multiplexing} su singola connessione e la compressione \textit{HPACK} degli \textit{header}), genera un inesorabile \textbf{\textit{overhead} sull'infrastruttura di rete}.
+            };
+            
+            \node[box, below=0.4cm of problema] (soluzione) {
+                \textbf{2. La Soluzione: \textit{Reverse Proxy} in Produzione} \\[1ex]
+                I \textit{browser} attuali bloccano l'attivazione di HTTP/2 se la connessione non è protetta da un certificato TLS (HTTPS) autorevole, incompatibile col \textit{localhost}.\\[0.5ex]
+                L'aggiornamento è stato quindi \textbf{demandato all'ambiente di produzione}. Un \textit{reverse proxy} (es. Nginx o Caddy) gestirà la \textit{TLS Termination}, consentendo a Tomcat di beneficiare istantaneamente di HTTP/2 \textbf{senza necessità di modifiche applicative}.
+            };
+            
+            \draw[arrow] (problema.south) -- (soluzione.north);
+            
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\Large \textbf{Validazione dell'Impatto del Refactoring}}\\[0.5ex]
+        \vspace{0.2cm}
+        
+        \begin{columns}[T]
+            \begin{column}{0.6\textwidth}
+                \vspace{0pt}
+                \resizebox{\linewidth}{!}{
+                    \begin{tabular}{|l|c|c|c|c|c|c|}
+                        \hline 
+                        \textbf{Pagina / Vista} & \textbf{Ramo} & \textbf{Peso (KB)} & \textbf{DOM} & \textbf{HTTP} & \textbf{Grade} & \textbf{EcoIdx} \\ \hline \hline 
+                        \rowcolor{BgGreen!50!black} \textbf{\texttt{login}} & Baseline & 98.5 & 22 & 8 & A & 95.0 \\ 
+                        \rowcolor{BgGreen!50!black} & Optimized & \textbf{3.3} & \textbf{20} & \textbf{5} & A & \textbf{96.0} \\ \hline 
+                        \rowcolor{BgGreen} \textbf{\texttt{registrazione}} & Baseline & 104.9 & 26 & 9 & A & 95.0 \\ 
+                        \rowcolor{BgGreen} & Optimized & \textbf{3.4} & \textbf{23} & \textbf{5} & A & \textbf{96.0} \\ \hline 
+                        \rowcolor{BgGreen!50!black} \textbf{\texttt{showProdotti}} & Baseline & 634.1 & 85 & 18 & A & 87.0 \\ 
+                        \rowcolor{BgGreen!50!black} & Optimized & \textbf{168.2} & 345 & \textbf{13} & A & 81.0 \\ \hline 
+                        \rowcolor{BgGreen} \textbf{\texttt{index}} & Baseline & 797.2 & 117 & 21 & A & 84.0 \\ 
+                        \rowcolor{BgGreen} & Optimized & \textbf{284.1} & \textbf{107} & \textbf{19} & A & \textbf{88.0} \\ \hline 
+                        \rowcolor{BgGreen!50!black} \textbf{\texttt{dashboard}} & Baseline & 796.8 & 118 & 20 & A & 84.0 \\ 
+                        \rowcolor{BgGreen!50!black} & Optimized & \textbf{283.9} & \textbf{107} & \textbf{18} & A & \textbf{88.0} \\ \hline
+                        \rowcolor{BgGreen} \textbf{\texttt{visOrdineAdmin}} & Baseline & 96.3 & 6 & 16 & A & 95.0 \\ 
+                        \rowcolor{BgGreen} & Optimized & \textbf{19.1} & 8 & \textbf{15} & A & 95.0 \\ \hline 
+                        \rowcolor{BgGreen!50!black} \textbf{\texttt{modificaProdotto}} & Baseline & 100.0 & 6 & 16 & A & 95.0 \\ 
+                        \rowcolor{BgGreen!50!black} & Optimized & \textbf{21.3} & 8 & 16 & A & 95.0 \\ \hline 
+                        \rowcolor{BgGreen} \textbf{\texttt{paginaProdotto}} & Baseline & 196.7 & 100 & 12 & A & 89.0 \\ 
+                        \rowcolor{BgGreen} & Optimized & \textbf{112.2} & 125 & \textbf{10} & A & 89.0 \\ \hline 
+                        \rowcolor{BgGreen!50!black} \textbf{\texttt{categorie}} & Baseline & 189.5 & 66 & 11 & A & 91.0 \\ 
+                        \rowcolor{BgGreen!50!black} & Optimized & \textbf{108.4} & \textbf{64} & \textbf{8} & A & \textbf{92.0} \\ \hline 
+                        \rowcolor{BgGreen} \textbf{\texttt{aggiuntaProdotto}} & Baseline & 187.6 & 82 & 12 & A & 90.0 \\ 
+                        \rowcolor{BgGreen} & Optimized & \textbf{110.8} & 87 & \textbf{11} & A & 90.0 \\ \hline 
+                        \rowcolor{BgGreen!50!black} \multicolumn{7}{|c|}{\textbf{... e altre 6 JSP ottimizzate}} \\ \hline
+                    \end{tabular}
+                }
+            \end{column}
+            \begin{column}{0.38\textwidth}
+                \vspace{0pt}
+                \begin{tikzpicture}[
+                    box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\tiny, text width=0.9\linewidth, inner sep=0.2cm}
+                ]
+                    \node[box] {
+                        \textbf{Impatto Globale sull'Intero Applicativo} \\[1ex]
+                        L'aggregazione delle metriche evidenzia risultati concreti:\\[0.5ex]
+                        $\bullet$ \textbf{Payload Globale:} Il traffico di rete totale scende da 4,82 MB a \textbf{1,87 MB} (\textbf{-61,3\%}), liberando banda.\\
+                        $\bullet$ \textbf{Richieste HTTP:} Calano da 214 a \textbf{182} (\textbf{-15,0\%}), riducendo tempi di \textit{round-trip} e l'\textit{overhead} delle negoziazioni TCP/TLS.\\
+                        $\bullet$ \textbf{Gas Serra (gCO\textsubscript{2}e):} Le stime GreenIT mostrano un calo da 18,94 a \textbf{18,84 gCO\textsubscript{2}e} per ciclo. Su decine di migliaia di visualizzazioni, abbatte l'impronta carbonica dei \textit{datacenter}.\\
+                        $\bullet$ \textbf{Consumo Idrico (cl):} L'acqua impiegata virtualmente per il raffreddamento dei server scende proporzionalmente da 28,41 a \textbf{28,26 cl}.\\
+                        $\bullet$ \textbf{Efficienza DOM sotto Carico:} Nelle griglie dinamiche in \textit{stress-test} (es. 50 prodotti), il \textit{DOM Flattening} e il \textit{Lazy Loading} evitano di sovraccaricare il \textit{client}, preservandone RAM e CPU.
+                    };
+                \end{tikzpicture}
+            \end{column}
+        \end{columns}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \vspace*{2cm}
+        \textcolor{FooterGreen}{\Huge \textbf{Open Source License Monitoring}}
+    \end{center}
+    \vfill
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\Large \textbf{Sostenibilità Legale ed Economica}}\\[0.5ex]
+        \textcolor{FooterGreen}{\large \textbf{Software Composition Analysis e Conformità delle Licenze}}
+        \vspace{0.6cm}
+        
+        \begin{tikzpicture}[
+            box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\small, text width=12.5cm, inner sep=0.35cm}
+        ]
+            
+            \node[box] {
+                \textbf{Oltre le Metriche Ambientali: La Sopravvivenza del Prodotto} \\[1.5ex]
+                La vera \textit{sostenibilità} di un \textit{software} non si calcola esclusivamente in Watt consumati o emissioni di CO\textsubscript{2}. Essa è profondamente legata alla \textbf{vitalità economica} a lungo termine e alla scrupolosa \textbf{mitigazione dei rischi legali}.\\[1.5ex]
+                Un'architettura ambientalmente impeccabile è inevitabilmente destinata al \textbf{collasso finanziario} qualora violi le licenze \textit{Open Source} di terze parti. L'incuria verso le proprietà intellettuali espone l'applicativo a sanzioni, cause legali distruttive e ingiunzioni di blocco della distribuzione.
+            };
+            
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\Large \textbf{Monitoraggio Licenze \textit{Open Source} con FOSSA}}\\[0.5ex]
+        \textcolor{FooterGreen}{\large \textbf{\textit{Governance} e Conformità Legale in Ambito \textit{Enterprise}}}
+        \vspace{0.2cm}
+        
+        \begin{tikzpicture}[
+            box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\tiny, text width=12cm, inner sep=0.2cm},
+            arrow/.style={->, thick, FooterGreen, >=Latex}
+        ]
+            
+            \node[box] (problema) {
+                \textbf{1. FOSSA e l'\textit{Audit-Grade License Scanning}} \\[1ex]
+                FOSSA è una piattaforma \textit{enterprise} per la \textit{compliance} \textit{Open Source}. Non si ferma alla lettura superficiale dei metadati \texttt{.pom}, ma esegue una \textbf{scansione \textit{full-text}} del codice sorgente grezzo delle dipendenze (precisione del \textbf{99.8\%}).\\[0.5ex]
+                Questo motore semantico rileva intestazioni di \textit{copyright}, frammenti di codice plagiati e vincoli normativi insidiosi annidati in \textbf{licenze alterate} o non standard (es. MIT con clausole modificate).
+            };
+            
+            \node[box, below=0.25cm of problema] (soluzione) {
+                \textbf{2. Risoluzione dei Conflitti e Integrità Strutturale} \\[1ex]
+                La risoluzione delle violazioni legali impone la sostituzione delle librerie non conformi in favore di \textbf{alternative funzionalmente equivalenti} ma dalle \textbf{licenze altamente permissive} (come MIT o Apache).\\[0.5ex]
+                Sebbene trasparente per l'utente finale, questo \textit{refactoring} \textbf{blinda l'integrità strutturale ed economica} dell'applicativo, mettendolo in piena regola per una distribuzione su vasta scala.
+            };
+            
+            \draw[arrow] (problema.south) -- (soluzione.north);
+            
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\Large \textbf{Strategia di Conformità con FOSSA}}\\[0.5ex]
+        \textcolor{FooterGreen}{\large \textbf{Rischio \textit{Copyleft}, Attribuzioni Automatiche e \textit{SBOM}}}
+        \vspace{0.2cm}
+        
+        \begin{tikzpicture}[
+            box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\tiny, text width=12cm, inner sep=0.18cm}
+        ]
+            
+            \node[box] (copyleft) {
+                \textbf{1. Mitigazione Sistematica del Rischio \textit{Copyleft}} \\[1ex]
+                Il nucleo critico risiede nelle licenze \textbf{copyleft} o ``virali'' (es. GPL, AGPL). Includere inavvertitamente una singola libreria GPL in un progetto \textit{closed-source} costringe legalmente l'azienda a \textbf{rilasciare l'intero sorgente gratuitamente}, annullando ogni potenziale di monetizzazione e segreto industriale. FOSSA scansionerà l'albero per bloccare tali violazioni con \textit{alert} mirati.
+            };
+            
+            \node[box, below=0.15cm of copyleft] (attribuzioni) {
+                \textbf{2. Automazione Assoluta degli Obblighi di Attribuzione} \\[1ex]
+                Anche le licenze \textbf{permissive} (es. Apache 2.0, MIT) impongono rigorosi obblighi normativi, come la conservazione dei file di NOTA (\texttt{NOTICE}) e la visibilità dei \textit{copyright}. Le \textbf{\textit{Automated Attributions}} di FOSSA generano e aggiornano dinamicamente questo registro legale, sollevando gli sviluppatori da una prassi manuale tediosa e ad altissimo rischio di errore.
+            };
+            
+            \node[box, below=0.15cm of attribuzioni] (sbom) {
+                \textbf{3. Generazione della \textit{Software Bill of Materials} (SBOM)} \\[1ex]
+                La \textit{compliance} proattiva esige trasparenza assoluta nella \textit{supply chain}. FOSSA abiliterà l'esportazione automatizzata di una \textbf{SBOM (Distinta Base del Software)} in formati \textit{standard} (SPDX o CycloneDX). Questa distinta è oggi un requisito normativo ineludibile per l'accesso a bandi governativi e l'ottenimento di certificazioni aziendali internazionali.
+            };
+            
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\Large \textbf{Utilizzo di FOSSA in 2Chance}}\\[0.5ex]
+        \textcolor{FooterGreen}{\large \textbf{Approccio \textit{Cloud-Native} per l'Analisi delle Dipendenze}}
+        \vspace{0.2cm}
+        
+        \begin{tikzpicture}[
+            box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\tiny, text width=12cm, inner sep=0.18cm},
+            arrow/.style={->, thick, FooterGreen, >=Latex}
+        ]
+            
+            \node[box] (cli) {
+                \textbf{1. Opacità Maven e Risoluzione del Grafo (CLI)} \\[1ex]
+                2Chance eredita da \textbf{Maven Central} un labirintico albero di \textbf{dipendenze transitive}, impossibile da validare manualmente. Per dominarlo, il comando \texttt{fossa analyze} risolve l'intero grafo parsando il \texttt{pom.xml}. L'operazione esporta in locale (\texttt{src/fossa}) due artefatti: il \textit{payload} JSON \texttt{fossa-analyze-output.json} e il log \texttt{fossa-scan-summary.txt}.
+            };
+            
+            \node[box, below=0.2cm of cli] (sync) {
+                \textbf{2. Sincronizzazione \textit{Cloud}} \\[1ex]
+                FOSSA CLI comunica in tempo reale con i \textit{server} remoti della piattaforma cloud di FOSSA, trasmettendo l'esatto \textit{payload} JSON contenente il grafo strutturato delle dipendenze direttamente alla \textit{dashboard} di riferimento, mantenendo il \textit{cloud} costantemente allineato all'ambiente locale.
+            };
+            
+            \node[box, below=0.2cm of sync] (web) {
+                \textbf{3. Analisi Profonda (\textit{Web App})} \\[1ex]
+                La piattaforma \textit{cloud} prende in carico il grafo e scarica il \textbf{codice sorgente grezzo} di ciascuna libreria per eseguire una scansione \textit{Audit-Grade}. Vengono setacciati a fondo \textit{copyright headers} e codice annidato, scoprendo violazioni \textit{copyleft} silenti che non emergerebbero mai dai soli manifesti \texttt{POM}.
+            };
+            
+            \draw[arrow] (cli.south) -- (sync.north);
+            \draw[arrow] (sync.south) -- (web.north);
+            
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\Large \textbf{Albero delle Dipendenze e Inventario Licenze}}\\[0.5ex]
+        \textcolor{FooterGreen}{\large \textbf{Mappatura degli Artefatti Java e Classificazione Legale}}
+        \vspace{0.2cm}
+        
+        \begin{tikzpicture}[
+            box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\tiny, text width=12cm, inner sep=0.15cm}
+        ]
+            \node[box] {
+                \textbf{Estrazione dell'Albero e Mappatura (23 Artefatti Totali)}\\[1ex]
+                FOSSA CLI ha mappato in autonomia l'intero albero del progetto (\texttt{2chance:war:1.0-SNAPSHOT}), identificando \textbf{15 dipendenze dirette} (dichiarate nel \texttt{pom.xml}) e \textbf{8 dipendenze transitive} (ereditate). A supporto, il comando \texttt{mvn dependency:tree} ha generato l'artefatto testuale \texttt{dependency-tree.txt}, offrendo una chiara gerarchia di chi importa cosa e con quale \textit{scope}.
+            };
+        \end{tikzpicture}
+        \vspace{0.15cm}
+
+        \renewcommand{\arraystretch}{0.85}
+        \tiny
+        \begin{tabular}{lllc}
+        \toprule
+        \rowcolor{DarkBgGreen}
+        \textcolor{white}{\textbf{Componente / Framework}} & \textcolor{white}{\textbf{Scope}} & \textcolor{white}{\textbf{Licenza}} & \textcolor{white}{\textbf{Categoria}} \\
+        \midrule
+        \rowcolor{DarkBgGreen} \textbf{Apache Commons (IO \& Math)} & compile & Apache-2.0 & Permissiva \\
+        \rowcolor{BgGreen} \textbf{Apache Tomcat (JDBC Pool)} & compile & Apache-2.0 & Permissiva \\
+        \rowcolor{DarkBgGreen} \textbf{Apache JSTL (Taglibs)} & compile & Apache-2.0 & Permissiva \\
+        \rowcolor{BgGreen} \textbf{Protocol Buffers (Google)} & compile & BSD-3-Clause & Permissiva \\
+        \rowcolor{DarkBgGreen} \textbf{JSON in Java} & compile & Public Domain & Permissiva \\
+        \rowcolor{BgGreen} \textbf{PIT Mutation Testing} & compile & Apache-2.0 & Permissiva \\
+        \rowcolor{DarkBgGreen} \textbf{JOpt Simple (CLI Parser)} & compile & MIT & Permissiva \\
+        \rowcolor{BgGreen} \textcolor{yellow}{\textbf{MySQL Connector/J}} & \textcolor{yellow}{compile} & \textcolor{yellow}{GPLv2 + FOSS Exc.} & \textcolor{yellow}{\textbf{Copyleft+Exc.}} \\
+        \rowcolor{DarkBgGreen} \textcolor{yellow}{\textbf{Java Microbenchmark Harness (JMH)}} & \textcolor{yellow}{compile} & \textcolor{yellow}{GPLv2 + CE} & \textcolor{yellow}{\textbf{Copyleft+Exc.}} \\
+        \rowcolor{BgGreen} \textcolor{yellow}{\textbf{Java Servlet API}} & \textcolor{yellow}{provided} & \textcolor{yellow}{CDDL + GPLv2 + CE} & \textcolor{yellow}{\textbf{Copyleft+Exc.}} \\
+        \rowcolor{DarkBgGreen} \textcolor{yellow}{\textbf{JMH Annotation Processor}} & \textcolor{yellow}{provided} & \textcolor{yellow}{GPLv2 + CE} & \textcolor{yellow}{\textbf{Copyleft+Exc.}} \\
+        \rowcolor{BgGreen} \textcolor{orange}{\textbf{JUnit 5 Framework (Jupiter)}} & \textcolor{orange}{test} & \textcolor{orange}{EPL-2.0} & \textcolor{orange}{\textbf{Copyleft Debole}} \\
+        \rowcolor{DarkBgGreen} \textbf{Mockito Framework} & test & MIT & Permissiva \\
+        \rowcolor{BgGreen} \textbf{Byte Buddy (Code Generation)} & test & Apache-2.0 & Permissiva \\
+        \rowcolor{DarkBgGreen} \textbf{Test Utilities (Objenesis, OpenTest4J)} & test & Apache-2.0 & Permissiva \\
+        \bottomrule
+        \end{tabular}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\Large \textbf{Scope e Tipologia delle Licenze}}\\[0.5ex]
+        \textcolor{FooterGreen}{\large \textbf{Impatto Architetturale e Categorie di Rischio Legale}}
+        \vspace{0.2cm}
+        
+        \begin{tikzpicture}[
+            box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\tiny, text width=12cm, inner sep=0.18cm}
+        ]
+            
+            \node[box] (scopes) {
+                \textbf{1. Definizione e Impatto degli \textit{Scope} Maven} \\[1ex]
+                Ogni dipendenza possiede uno \textit{scope} che ne delimita il raggio d'azione e, di conseguenza, il perimetro legale:
+                \begin{itemize}
+                    \item \textbf{\texttt{compile}}: le librerie vengono incluse fisicamente nel pacchetto \texttt{WAR} distribuito, esponendo direttamente l'intero progetto proprietario ai vincoli della loro licenza.
+                    \item \textbf{\texttt{provided}}: le librerie sono fornite dal \textit{container} a \textit{runtime} (es. Tomcat) e non pacchettizzate nell'artefatto, mitigando drasticamente i rischi legali legati alla distribuzione.
+                    \item \textbf{\texttt{test}}: librerie usate unicamente per il \textit{testing} locale. Non venendo mai consegnate all'utente finale, sono di fatto immuni da obblighi di distribuzione \textit{copyleft}.
+                \end{itemize}
+            };
+            
+            \node[box, below=0.15cm of scopes] (rischio) {
+                \textbf{2. Classificazione del Rischio Legale} \\[1ex]
+                L'analisi rivela una distribuzione classificabile in quattro macro-categorie di rischio:
+                \begin{itemize}
+                    \item \textbf{Permissive (18 dipend. - 69,2\%)}: \textbf{Rischio Nullo} (es. MIT, Apache 2.0). Impongono vincoli minimi (attribuzione) e sono perfette per software \textit{closed-source}. Dominano l'ecosistema 2Chance.
+                    \item \textbf{Copyleft Debole (5 dipend. - 19,2\%)}: \textbf{Rischio Basso} (es. EPL-2.0). L'obbligo "virale" di rilasciare il sorgente è limitato alle sole modifiche fatte alla libreria, senza intaccare il progetto principale.
+                    \item \textbf{Copyleft con Eccezioni (3 dipend. - 11,5\%)}: \textbf{Rischio Medio} (es. GPLv2 + CE). Il rischio virale della GPL pura è disinnescato da clausole aggiuntive legali che ne consentono il \textit{linking} dinamico.
+                    \item \textbf{Copyleft senza Eccezioni (0 dipend. - 0,0\%)}: \textbf{Rischio Critico} (es. AGPL). Costringerebbe al rilascio \textit{open-source} dell'intera App. \textbf{L'assoluta assenza di queste licenze conferma la conformità totale!}
+                \end{itemize}
+            };
+            
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\Large \textbf{Integrazione FOSSA CLI e Piattaforma Cloud}}\\[0.5ex]
+        \textcolor{FooterGreen}{\large \textbf{Gestione Credenziali e \textit{Policy Scan} Avanzato}}
+        \vspace{0.2cm}
+        
+        \begin{tikzpicture}[
+            box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\tiny, text width=12cm, inner sep=0.18cm}
+        ]
+            
+            \node[box] (security) {
+                \textbf{1. Configurazione e Sicurezza delle Credenziali} \\[1ex]
+                L'autenticazione tra l'ambiente di sviluppo e i server FOSSA (\url{https://app.fossa.com}) avviene tramite una \textit{API Key} dedicata, protetta rigorosamente su due livelli:
+                \begin{itemize}
+                    \item \textbf{Locale}: isolata nel file \texttt{.fossa\_token} ed esclusa dal tracciamento Git tramite \texttt{.gitignore}, azzerando il rischio di \textit{leak} involontari.
+                    \item \textbf{Remoto}: memorizzata in modo crittografato su GitHub all'interno dei \textit{Repository Secrets} (\texttt{FOSSA\_API\_KEY}), inaccessibile in chiaro.
+                \end{itemize}
+            };
+            
+            \node[box, below=0.15cm of security] (scan) {
+                \textbf{2. \textit{Policy Scan} nel Cloud: \textit{Flagged} e \textit{Denied}} \\[1ex]
+                L'infrastruttura Cloud applica \textit{policy} legali estremamente più rigorose della semplice scansione locale dei manifesti Maven. L'analisi ha restituito un totale di \textbf{10 \textit{issue}}, classificati per severità:
+                \begin{itemize}
+                    \item \textbf{\textit{Flagged}}: Licenze ambigue o a \textit{copyleft} mitigato. Non rompono immediatamente la \textit{pipeline}, ma impongono una \textbf{revisione manuale} obbligatoria del \textit{team} per validare il contesto d'uso specifico (es. \textit{linking} dinamico o esecuzione in fase di \textit{test}).
+                    \item \textbf{\textit{Denied}}: Violazioni critiche assolute (es. GPL pura). Innescano il \textbf{blocco automatico della build} (\textit{Fail on Violation}) costringendo il \textit{team} a rimuovere la libreria infetta o a istituire una deroga legale esplicita.
+                \end{itemize}
+            };
+            
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\Large \textbf{Integrazione FOSSA CLI e Piattaforma Cloud}}\\[0.5ex]
+        \textcolor{FooterGreen}{\large \textbf{Analisi del Rischio per Macro-Aree Architetturali}}
+        \vspace{0.4cm}
+        
+        \begin{tikzpicture}[
+            box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=center, fill=BgGreen!50!black, font=\small, text width=11.5cm, inner sep=0.3cm}
+        ]
+            
+            \node[box] {
+                Dall'incrocio tra la topologia del \textbf{grafo delle dipendenze} e l'\textbf{inventario delle licenze} estratti da FOSSA, emergono diverse \textbf{macro-aree architetturali} all'interno del progetto 2Chance.\\[1.5ex]
+                
+                Ciascuna di queste aree presenta un \textbf{differente impatto teorico e pratico} sul profilo di rischio legale complessivo del \textit{software}.\\[1.5ex]
+                
+                Nelle prossime sezioni verrà esposta la \textbf{valutazione dettagliata per ciascuna area}, analizzando nello specifico le dipendenze coinvolte e giustificando formalmente la risoluzione delle \textit{policy flaggate} sollevate dalla scansione \textit{cloud}.
+            };
+            
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\large \textbf{Macro-Area: Infrastruttura \textit{Web} e \textit{Servlet}}}
+        \vspace{0.2cm}
+        
+        \begin{tikzpicture}[
+            box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\tiny, text width=12cm, inner sep=0.18cm}
+        ]
+            
+            \node[box] (dati) {
+                \textbf{1. Contesto e Dati Rilevati dal \textit{Cloud}} \\[1ex]
+                Questa macro-area include le API fondamentali (\texttt{javax.servlet-api:4.0.1}) necessarie all'esecuzione, fornite fisicamente a \textit{runtime} dall'\textit{Application Server} (Apache Tomcat).
+                \begin{itemize}
+                    \item \textbf{Dati FOSSA:} Tipo: Maven $\vert$ \textit{Scope}: \texttt{provided} $\vert$ Profondità: \textit{Transitive}
+                    \item \textbf{\textit{Issue Flagged}:} \texttt{GPL-2.0-only}, \texttt{GPL-2.0-with-classpath-exception}, \texttt{CDDL-1.1}
+                    \item \textbf{Categoria di Rischio Apparente:} \textit{Copyleft} con Eccezioni.
+                \end{itemize}
+            };
+            
+            \node[box, below=0.15cm of dati] (soluzione) {
+                \textbf{2. Analisi Legale e Mitigazione del Rischio (\textit{Compliance} Approvata)} \\[1ex]
+                La piattaforma Cloud ha bloccato (\textit{Flagged}) preventivamente l'artefatto a causa della rilevazione della licenza \textbf{GPLv2 pura}, che imporrebbe legalmente vincoli \textit{copyleft} virali. 
+                \begin{itemize}
+                    \item \textbf{Inibizione del Rischio (\textit{Scope Provided}):} Poiché la libreria è dichiarata come \texttt{provided}, essa \textbf{non viene fisicamente inclusa nel pacchetto \texttt{WAR} finale}. 
+                    \item \textbf{Risoluzione dell'\textit{Issue}:} L'assenza di distribuzione annulla radicalmente l'innesco virale della GPL. Di conseguenza, il rischio legale è \textbf{totalmente nullo}. Il \textit{team} interviene sulla \textit{dashboard} di FOSSA per marcare esplicitamente il \textit{flag} come \textbf{Approvato}, certificando la \textit{compliance} perfetta per ambienti commerciali.
+                \end{itemize}
+            };
+            
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\large \textbf{Macro-Area: Connettività \textit{Database} e Persistenza}}
+        \vspace{0.2cm}
+        
+        \begin{tikzpicture}[
+            box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\tiny, text width=12cm, inner sep=0.18cm}
+        ]
+            
+            \node[box] (mysql) {
+                \textbf{1. Vettore di Rischio Critico: MySQL Connector/J} \\[1ex]
+                Essendo in \textit{scope} \texttt{compile}, queste librerie vitali sono incluse nel \texttt{WAR} finale ed espongono direttamente il \textit{software} a vincoli distributivi. FOSSA ha bloccato (\textbf{\textit{Denied}}) la dipendenza \texttt{mysql-connector-j:9.5.0} a causa della licenza \textbf{GPLv2 + Universal FOSS Exception v1.0}.
+                \begin{itemize}
+                    \item \textbf{Scenario Didattico (Open Source):} L'eccezione FOSS ne garantisce la compatibilità \textit{open}. Il \textit{team} ha risolto il blocco nella \textit{dashboard} tramite \textit{``Create Exception''}.
+                    \item \textbf{Scenario Commerciale (Closed Source):} In un \textit{software} chiuso, la FOSS \textit{Exception} decade e la GPLv2 diventa virale. Per evitare il rilascio obbligatorio dei sorgenti, la libreria \textbf{deve essere rimossa} e sostituita nel \texttt{pom.xml} con \texttt{mariadb-java-client} (licenza sicura LGPL-2.1) o sostituita acquistando una licenza Oracle commerciale.
+                \end{itemize}
+            };
+            
+            \node[box, below=0.15cm of mysql] (tomcat) {
+                \textbf{2. Pool di Connessioni: Apache Tomcat JDBC} \\[1ex]
+                Il gestore del \textit{pool} (\texttt{tomcat-jdbc}, \texttt{tomcat-juli}) e il motore di serializzazione (\texttt{protobuf-java}) sono parimenti in \textit{scope} \texttt{compile}, ma possiedono un \textbf{Rischio Nullo}.
+                \begin{itemize}
+                    \item \textbf{Licenze Permissive:} Essendo basate su Apache-2.0 e BSD-3-Clause, risultano sicure per l'uso commerciale proprietario senza alcuna necessità di riscrittura del codice.
+                    \item \textbf{Adempimenti Normativi (\textit{Compliance}):} L'unico vincolo legale è l'attribuzione del \textit{copyright}. Invece di copiarli manualmente a rischio di errore, FOSSA genera automaticamente un documento formale (\texttt{THIRD-PARTY-NOTICES.txt}) con i testi integrali da allegare alla distribuzione aziendale.
+                \end{itemize}
+            };
+            
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\large \textbf{Macro-Area: Utilità Generiche e Manipolazione Dati}}
+        \vspace{0.4cm}
+        
+        \begin{tikzpicture}[
+            box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\scriptsize, text width=11.5cm, inner sep=0.3cm}
+        ]
+            
+            \node[box] {
+                \textbf{Componenti Storici e Strato di Utilità Trasversale} \\[1ex]
+                Questa macro-area raggruppa le librerie utilizzate trasversalmente in tutto il codice per operazioni di *routine* e manipolazione dei dati. Tra le principali figurano \texttt{commons-io}, \texttt{org.json} e \texttt{taglibs}, regolate da licenze Apache-2.0, MIT e \textit{Public Domain}.
+                
+                \vspace{0.2cm}
+                \begin{itemize}
+                    \item \textbf{\textit{Scope}:} \texttt{compile} (Librerie fisicamente pacchettizzate nel \texttt{WAR}).
+                    \item \textbf{Categoria di Rischio:} Licenze Permissive / Dominio Pubblico (\textbf{Rischio Nullo}).
+                    \item \textbf{Analisi di Rischio e Sicurezza Commerciale:} Nonostante la loro inclusione diretta nell'artefatto distribuibile, queste librerie non veicolano alcuna minaccia virale. La loro adozione è architetturalmente e legalmente sicura anche per scenari \textit{closed-source}.
+                    \item \textbf{Azione Operativa (\textit{Compliance}):} Essendo esenti da rischi \textit{copyleft}, l'unica azione richiesta al \textit{team} di sviluppo è di natura puramente documentale: l'inclusione dei testi di licenza all'interno del documento \textbf{\texttt{THIRD-PARTY-NOTICES.txt}} al fine di soddisfare l'obbligo di attribuzione.
+                \end{itemize}
+            };
+            
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\large \textbf{Macro-Area: Ecosistema di \textit{Testing} e \textit{Mocking}}}
+        \vspace{0.2cm}
+        
+        \begin{tikzpicture}[
+            box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\tiny, text width=12cm, inner sep=0.18cm}
+        ]
+            
+            \node[box] (junit) {
+                \textbf{1. \textit{Framework} di Base: JUnit 5 (EPL-2.0)} \\[1ex]
+                Pur costituendo una vasta e profonda ramificazione dell'albero delle dipendenze, l'intero ecosistema di \textit{testing} risulta \textbf{intrinsecamente sicuro} sul fronte legale grazie all'isolamento architetturale imposto da Maven.
+                \begin{itemize}
+                    \item \textbf{\textit{Scope}:} \texttt{test} $\vert$ \textbf{Categoria di Rischio Apparente:} \textit{Copyleft} Debole (EPL-2.0).
+                    \item \textbf{Mitigazione Architetturale (\textit{Rischio Nullo}):} La dichiarazione dello \textit{scope} \texttt{test} ordina tassativamente al motore di \textit{build} di \textbf{escludere questi file dall'artefatto finale} di produzione. Non essendoci distribuzione agli utenti o ai server pubblici, il rischio virale del \textit{copyleft} viene annullato preventivamente e alla radice.
+                \end{itemize}
+            };
+            
+            \node[box, below=0.15cm of junit] (mockito) {
+                \textbf{2. Strumenti di Isolamento: Mockito e Byte-Buddy} \\[1ex]
+                Librerie avanzate (\texttt{mockito-core}, \texttt{byte-buddy} e dipendenze transitive) vitali per isolare e simulare il comportamento dei componenti durante i \textit{test} unitari.
+                \begin{itemize}
+                    \item \textbf{\textit{Scope}:} \texttt{test} $\vert$ \textbf{Categoria di Rischio:} Licenze Permissive (MIT / Apache-2.0).
+                    \item \textbf{Sicurezza e \textit{Compliance} (Rischio Nullo):} Questi componenti combinano la massima sicurezza intrinseca (licenze ultra-permissive) con il massimo isolamento distributivo (\textit{scope} confinato al solo ambiente di sviluppo locale). L'impatto sul \texttt{WAR} finale è inesistente e non richiedono alcun tipo di intervento.
+                \end{itemize}
+            };
+            
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\large \textbf{Macro-Area: Strumenti di \textit{Benchmarking} e Qualità}}
+        \vspace{0.2cm}
+        
+        \begin{tikzpicture}[
+            box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\tiny, text width=12cm, inner sep=0.18cm}
+        ]
+            
+            \node[box] (anomalia) {
+                \textbf{1. Anomalie Architetturali: \texttt{jmh-core} e \texttt{pitest-parent}} \\[1ex]
+                L'albero delle dipendenze ha rivelato un'anomalia critica: strumenti puramente diagnostici di \textit{profiling} (\texttt{jmh-core}, licenza GPLv2+CE) e \textit{mutation testing} (\texttt{pitest-parent}) erano erroneamente configurati con \textit{scope} \texttt{compile}, finendo letteralmente "imprigionati" nel \texttt{WAR} di produzione.
+                \begin{itemize}
+                    \item \textbf{Il Rischio (Esposizione Inutile):} L'inclusione forzata nel pacchetto esponeva inutilmente il progetto alla viralità GPLv2 e appesantiva l'artefatto trascinando dipendenze transitive inutili (\texttt{jopt-simple}, \texttt{commons-math3}).
+                    \item \textbf{Intervento Risolutivo (\textit{Fix} architetturale):} Poiché nessuna classe \textit{core} invoca questi \textit{tool}, \textbf{lo \textit{scope} è stato declassato da \texttt{compile} a \texttt{test}} nel \texttt{pom.xml}. Questa singola mossa sradica fisicamente le librerie dal pacchetto distribuito, azzerando totalmente il rischio \textit{copyleft} senza toccare una riga di codice Java.
+                \end{itemize}
+            };
+            
+            \node[box, below=0.15cm of anomalia] (enforcing) {
+                \textbf{2. \textit{Enforcing} Tecnologico: Generatore JMH} \\[1ex]
+                Il generatore \texttt{jmh-generator-annprocess} (GPLv2+CE) risiedeva già in \textit{scope} \texttt{provided}, garantendo un rischio di distribuzione nullo. Tuttavia, FOSSA lo ha bloccato (\textit{Flagged}) preventivamente a causa della licenza virale.
+                \begin{itemize}
+                    \item \textbf{Scenario Didattico:} L'\textit{issue} è stata mitigata tramite approvazione umana manuale (\textit{``Approve as Exception''}).
+                    \item \textbf{Scenario Commerciale (CI/CD \textit{Enforcing}):} In ambito \textit{Enterprise}, affidarsi alle approvazioni manuali contro la GPL è pericoloso. La soluzione strutturale impone regole automatizzate ferree nelle *pipeline* di \textit{Continuous Integration}: le \textit{build} devono fallire istantaneamente se una dipendenza di \textit{benchmarking} viene dichiarata con \textit{scope} distributivi, rendendo l'inclusione accidentale \textbf{tecnicamente impossibile}.
+                \end{itemize}
+            };
+            
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\Large \textbf{Automazione degli Obblighi di Attribuzione}}\\[0.5ex]
+        \textcolor{FooterGreen}{\large \textbf{Generazione Dinamica del \texttt{THIRD-PARTY-NOTICES.txt}}}
+        \vspace{0.4cm}
+        
+        \begin{tikzpicture}[
+            box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\scriptsize, text width=11.5cm, inner sep=0.3cm}
+        ]
+            
+            \node[box] {
+                Per garantire la conformità assoluta ai vincoli normativi delle licenze permissive (es. Apache, MIT, BSD), l'adempimento dell'obbligo di attribuzione è stato interamente delegato alla \textit{suite} di \textbf{\textit{Reporting} nativa di FOSSA Web Service}.
+                
+                \vspace{0.2cm}
+                \begin{itemize}
+                    \item \textbf{Compilazione Dinamica:} Il sistema estrae automaticamente i testi integrali di \textit{copyright} tramite un'analisi profonda dei sorgenti, aggiornando la lista esatta delle dipendenze in uso.
+                    \item \textbf{Artefatti Generati:} Il processo culmina nell'esportazione del documento formale \textbf{\texttt{THIRD-PARTY-NOTICES.txt}} (da allegare fisicamente alla distribuzione) e della sua controparte web interattiva (\texttt{third-party-report.html}).
+                    \item \textbf{\textit{Continuous Compliance}:} Questa generazione automatizzata nel \textit{cloud} assicura che la documentazione legale sia sempre \textbf{sincronizzata con l'ultimo \textit{commit}} validato in CI/CD. Il \textit{team} viene totalmente sollevato dalle ispezioni manuali (soggette a grave errore umano), garantendo una conformità continua, scalabile e inattaccabile.
+                \end{itemize}
+            };
+            
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\Large \textbf{Generazione della Software Bill of Materials (SBOM)}}\\[0.5ex]
+        \textcolor{FooterGreen}{\large \textbf{Trasparenza della \textit{Supply Chain} e Formati Standard}}
+        \vspace{0.2cm}
+        
+        \begin{tikzpicture}[
+            box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\tiny, text width=12cm, inner sep=0.18cm}
+        ]
+            
+            \node[box] (sbom) {
+                \textbf{1. Trasparenza della \textit{Software Supply Chain}} \\[1ex]
+                La \textbf{Software Bill of Materials (SBOM)} è un documento strutturato che descrive univocamente ogni singola libreria, versione esatta e licenza intellettuale integrata nel progetto, divenuto ormai un requisito essenziale per la \textit{compliance} moderna.
+                \begin{itemize}
+                    \item \textbf{Generazione Zero-Config (\textit{Cloud-Native}):} L'enorme vantaggio infrastrutturale risiede nella generazione completamente dinamica effettuata dai server FOSSA nel \textit{cloud}. Questo esime il \textit{team} dall'inquinare e appesantire il \texttt{pom.xml} locale con ulteriori \textit{plugin} Maven invasivi.
+                \end{itemize}
+            };
+            
+            \node[box, below=0.15cm of sbom] (formati) {
+                \textbf{2. Formati Industriali di Esportazione (2Chance)} \\[1ex]
+                Il cruscotto FOSSA Web Service permette l'esportazione nativa della SBOM in due standard \textit{leader} mondiali:
+                \begin{itemize}
+                    \item \textbf{CycloneDX (JSON/XML):} Ottimizzato per la \textbf{sicurezza}. L'artefatto \texttt{sbom.json} non elenca solo le dipendenze, ma integra \textit{hash} crittografici di sicurezza, rendendolo perfetto per l'ingestione automatizzata da parte di sistemi esterni di \textit{Vulnerability Management}.
+                    \item \textbf{SPDX (\textit{ISO Standard}):} Ottimizzato per la \textbf{\textit{compliance} legale}. Esportato nell'artefatto \texttt{sbom.spdx} tramite l'inconfondibile sintassi \textit{Tag:Value}, è lo standard internazionale ufficiale (\textit{ISO/IEC 5962:2021}) per la dichiarazione normativa del \textit{copyright} aperto e proprietario.
+                \end{itemize}
+            };
+            
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\Large \textbf{Integrazione di FOSSA nella Pipeline CI/CD}}\\[0.5ex]
+        \textcolor{FooterGreen}{\large \textbf{\textit{Quality Gate} Legale e Valutazione Industriale Finale}}
+        \vspace{0.4cm}
+        
+        \begin{tikzpicture}[
+            box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\tiny, text width=11.5cm, inner sep=0.3cm}
+        ]
+            
+            \node[box] (cigd) {
+                \textbf{1. Automazione e \textit{Quality Gate} (GitHub Actions)} \\[1ex]
+                Il \textit{workflow} \texttt{main.yml} è stato esteso introducendo il \textbf{\textit{License Compliance Scan}} (\texttt{fossas/fossa-action@v1}) subito dopo l'analisi delle vulnerabilità di Snyk.
+                \begin{itemize}
+                    \item \textbf{Monitoraggio Continuo:} Ad ogni \textit{Push} o \textit{Pull Request}, FOSSA analizza il grafo, esporta la SBOM e compila i report di attribuzione.
+                    \item \textbf{Barriera Architetturale:} Agisce come un \textit{Quality Gate} invalicabile. Se un \textit{commit} introduce dipendenze legalmente non conformi, \textbf{la \textit{pipeline} fallisce in automatico}, bloccando istantaneamente il \textit{merge} nel ramo di produzione.
+                \end{itemize}
+            };
+            
+            \node[box, below=0.15cm of cigd] (conclusioni) {
+                \textbf{2. Conclusioni: Valore Didattico \textit{vs} Industriale} \\[1ex]
+                Essendo 2Chance un progetto unicamente universitario e non destinato alla vendita, la risoluzione delle violazioni ha beneficiato di deroghe didattiche.
+                \begin{itemize}
+                    \item \textbf{Efficacia Comprovata:} Il setup ha dimostrato l'inestimabile valore della \textit{Software Composition Analysis}. In un vero scenario aziendale \textit{closed-source}, questa esatta \textit{pipeline} CI/CD \textbf{avrebbe sventato in automatico il rilascio in produzione} del connettore MySQL, salvando l'azienda da gravissime cause legali e ingiunzioni di distribuzione del codice sorgente.
+                \end{itemize}
+            };
             
         \end{tikzpicture}
     \end{center}
