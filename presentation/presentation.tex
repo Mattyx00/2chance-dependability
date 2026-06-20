@@ -2362,4 +2362,112 @@
     \end{center}
 \end{frame}
 
+\begin{frame}
+    \vfill
+    \begin{center}
+        \textcolor{FooterGreen}{\Huge \textbf{Social Sustainability}}
+    \end{center}
+    \vfill
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\Large \textbf{Installazione di csdetector}}
+        \vspace{0.4cm}
+        
+        \begin{tikzpicture}[
+            box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\scriptsize, text width=12cm, inner sep=0.3cm}
+        ]
+            
+            \node[box] (install) {
+                L'installazione e la configurazione di \texttt{csdetector} richiede alcuni passaggi per preparare l'ambiente e configurare le dipendenze necessarie. Di seguito è riportata una guida passo passo su come è stato installato:
+                \vspace{0.2cm}
+                
+                \begin{enumerate}
+                    \item \textbf{Clonazione della repository} di \texttt{csdetector} da GitHub:\\[1ex]
+                    \colorbox{black!40}{\makebox[10cm][l]{\texttt{git clone https://github.com/Nuri22/csdetector.git}}}\\
+                    \colorbox{black!40}{\makebox[10cm][l]{\texttt{cd csdetector}}}
+                    
+                    \vspace{0.2cm}
+                    \item \textbf{Installazione delle dipendenze Python} necessarie utilizzando \texttt{pip}:\\[1ex]
+                    \colorbox{black!40}{\makebox[10cm][l]{\texttt{pip install -r requirements.txt}}}
+                    
+                    \vspace{0.2cm}
+                    \item \textbf{Configurazione dell'ambiente}: Lo strumento richiede un file di configurazione\\ per memorizzare le credenziali. Copia il file \texttt{.env.example} fornito per creare il file \texttt{.env}:\\[1ex]
+                    \colorbox{black!40}{\makebox[10cm][l]{\texttt{cp .env.example .env}}}
+                \end{enumerate}
+            };
+            
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\Large \textbf{Limitazioni dell'Analisi con csdetector}}
+        \vspace{0.4cm}
+        
+        \begin{tikzpicture}[
+            box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\tiny, inner sep=0.25cm},
+            arrow/.style={->, thick, FooterGreen, >=Latex}
+        ]
+            
+            \node[box, text width=12cm] at (0, 0) (requisito) {
+                \textbf{Requisito Tecnico: Personal Access Token} \\[1ex]
+                Per l'analisi completa, \texttt{csdetector} richiede la configurazione di un \textit{Fine-Grained Token} GitHub nel file \texttt{.env} per scaricare commit, issue e PR al fine di costruire il grafo delle interazioni tra i contributori.
+            };
+            
+            \node[box, text width=5.6cm, minimum height=2.4cm] at (-3.2, -2.2) (limite1) {
+                \textbf{1. Mancanza di Autorizzazioni} \\[1ex]
+                L'app 2chance nasce da una pregressa collaborazione, ma l'owner del repository è un altro utente. Per sicurezza, non è stato concesso l'uso di un token con i permessi necessari. Di conseguenza, è stato impossibile analizzare i \textit{community smells} passati.
+            };
+            
+            \node[box, text width=5.6cm, minimum height=2.4cm] at (3.2, -2.2) (limite2) {
+                \textbf{2. Assenza di Dinamiche di Team} \\[1ex]
+                Nella fase attuale, lo sviluppo è stato condotto \textbf{in solitaria}. Poiché i \textit{community smells} derivano intrinsecamente dalla comunicazione e dalle dinamiche di gruppo, un'analisi su un singolo sviluppatore non produrrebbe alcun risultato.
+            };
+            
+            \draw[arrow] (requisito.south -| limite1.north) -- (limite1.north);
+            \draw[arrow] (requisito.south -| limite2.north) -- (limite2.north);
+            
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \vfill
+    \begin{center}
+        \textcolor{FooterGreen}{\Huge \textbf{Lessons Learned \& Conclusion}}
+    \end{center}
+    \vfill
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \textcolor{FooterGreen}{\Large \textbf{Lessons Learned \& Conclusion}}
+        \vspace{0.4cm}
+        
+        \begin{tikzpicture}[
+            box/.style={draw=FooterGreen, thick, rounded corners, text=white, align=left, fill=BgGreen!50!black, font=\tiny, text width=12cm, inner sep=0.25cm}
+        ]
+            \node[box] (apprese) {
+                \textbf{Cosa hai imparato sull'ingegneria del software sostenibile?} \\[0.5ex]
+                La sostenibilità non è un'attività isolata ma pervade l'intero ciclo di vita: dall'efficienza energetica (Green IT, risoluzione anti-pattern), alla trasparenza legale (SBOM, FOSSA), fino alle dinamiche interpersonali per prevenire i \textit{community smells}.
+            };
+            
+            \node[box, below=0.3cm of apprese] (tradeoff) {
+                \textbf{Quali trade-off hai affrontato (es. performance vs. manutenibilità)?} \\[0.5ex]
+                $\bullet$ \textbf{Performance vs Manutenibilità}: Ottimizzare radicalmente il consumo (es. eliminare il problema N+1 tramite query aggregate) ha reso la logica DAO più complessa.\\
+                $\bullet$ \textbf{Investimento Iniziale}: Il rigoroso setup dei benchmark hardware (EnergiBridge) e delle pipeline CI/CD rallenta lo sviluppo all'inizio, ma garantisce un enorme guadagno architetturale a medio-lungo termine.
+            };
+            
+            \node[box, below=0.3cm of tradeoff] (qualita) {
+                \textbf{In che modo questo progetto si collega alla qualità del software a lungo termine?} \\[0.5ex]
+                La \textbf{prevenzione strutturale} è il vero valore aggiunto: un'applicazione che consuma meno CPU/RAM scala naturalmente meglio ritardando l'obsolescenza dei server (riduzione \textit{e-waste}). Insieme ai controlli CI/CD, impedisce il decadimento del software e lo trasforma in un asset affidabile e sostenibile per il futuro.
+            };
+            
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
 \end{document}

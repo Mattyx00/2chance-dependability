@@ -53,3 +53,7 @@
 \contentsline {subsection}{\numberline {4.2.2}Generazione della Software Bill of Materials (SBOM)}{40}{subsection.4.2.2}%
 \contentsline {section}{\numberline {4.3}Integrazione di FOSSA nel pipeline CI/CD}{40}{section.4.3}%
 \contentsline {subsection}{\numberline {4.3.1}Automazione degli Obblighi di Attribuzione}{40}{subsection.4.3.1}%
+\contentsline {chapter}{\numberline {5}Sostenibilità Sociale}{42}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Installazione di csdetector}{42}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Limitazioni dell'Analisi}{42}{section.5.2}%
+\contentsline {chapter}{\numberline {6}Lezioni Apprese e Riflessioni Conclusive}{43}{chapter.6}%

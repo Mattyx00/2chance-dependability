@@ -1,0 +1,31 @@
+\chapter{Sostenibilità Sociale}
+
+In questo capitolo, discutiamo l'aspetto della sostenibilità sociale del progetto, concentrandoci sulle interazioni e sui "community smells" all'interno della repository. Per fare ciò, l'intenzione era quella di utilizzare \textbf{csdetector}, uno strumento progettato per analizzare le repository GitHub e rilevare i community smells.
+
+\section{Installazione di csdetector}
+L'installazione e la configurazione di \texttt{csdetector} richiedono alcuni passaggi per preparare l'ambiente e configurare le dipendenze necessarie. Di seguito è riportata una guida passo passo su come è stato installato:
+
+\begin{enumerate}
+    \item \textbf{Clonazione della repository}: Per prima cosa, clona la repository di \texttt{csdetector} da GitHub ed entra nella directory:
+    \begin{lstlisting}[language=bash, breaklines=true]
+git clone https://github.com/Nuri22/csdetector.git
+cd csdetector
+    \end{lstlisting}
+    
+    \item \textbf{Installazione delle dipendenze Python}: Assicurati di avere Python installato, quindi installa le librerie Python necessarie utilizzando \texttt{pip}:
+    \begin{lstlisting}[language=bash, breaklines=true]
+pip install -r requirements.txt
+    \end{lstlisting}
+    
+    \item \textbf{Configurazione dell'ambiente}: Lo strumento richiede un file di configurazione per memorizzare le credenziali. Copia il file \texttt{.env.example} fornito per creare un file \texttt{.env}:
+    \begin{lstlisting}[language=bash, breaklines=true]
+cp .env.example .env
+    \end{lstlisting}
+\end{enumerate}
+
+\section{Limitazioni dell'Analisi}
+Per eseguire un'analisi completa della repository utilizzando \texttt{csdetector}, è strettamente necessario configurare il file \texttt{.env} con un Fine-Grained Personal Access Token di GitHub. Questo token consente allo strumento di recuperare i commit, le issue e le pull request per costruire un grafo delle interazioni tra i contributori e identificare successivamente potenziali community smells.
+
+Tuttavia, durante la fase di setup, abbiamo riscontrato limitazioni significative. Questa applicazione web era originariamente il mio progetto di Software Dependability, ma il proprietario della repository è un'altra persona. Per motivi di sicurezza, non ho ricevuto l'autorizzazione per generare o utilizzare un fine-grained token con i permessi necessari sulla sua repository. Di conseguenza, non ho potuto analizzare la cronologia dei commit precedenti per identificare se fossero presenti dei community smells durante la collaborazione originale.
+
+Inoltre, per quanto riguarda la fase attuale del progetto, non è stato possibile effettuare alcuna analisi perché ci ho lavorato da solo. Poiché i community smells derivano intrinsecamente dalle dinamiche di team, dai modelli di comunicazione e dalle interazioni tra più sviluppatori, l'esecuzione di un'analisi dei community smells su un progetto singolo non produrrebbe risultati significativi. Pertanto, l'analisi con \texttt{csdetector} non è stata effettuata per questo progetto.
